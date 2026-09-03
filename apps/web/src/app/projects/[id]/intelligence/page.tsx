@@ -1,9 +1,10 @@
 import { apiClient } from '@/lib/api'
 import Link from 'next/link'
 
-export default async function IntelligencePage({ params }: { params: { id: string } }) {
-  const project = await apiClient.getProject(params.id)
-  const bottlenecks = await apiClient.getProjectBottlenecks(params.id)
+export default async function IntelligencePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const project = await apiClient.getProject(id)
+  const bottlenecks = await apiClient.getProjectBottlenecks(id)
 
   return (
     <div className="space-y-6">

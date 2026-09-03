@@ -1,9 +1,10 @@
 import { apiClient } from '@/lib/api'
 import Link from 'next/link'
 
-export default async function ProjectDetailPage({ params }: { params: { id: string } }) {
-  const project = await apiClient.getProject(params.id)
-  const parcels = await apiClient.getProjectParcels(params.id)
+export default async function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const project = await apiClient.getProject(id)
+  const parcels = await apiClient.getProjectParcels(id)
 
   return (
     <div className="space-y-6">

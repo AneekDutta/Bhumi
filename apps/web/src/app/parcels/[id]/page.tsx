@@ -1,11 +1,12 @@
 import { apiClient } from '@/lib/api'
 import Link from 'next/link'
 
-export default async function ParcelDetailPage({ params }: { params: { id: string } }) {
-  const parcel = await apiClient.getParcel(params.id)
+export default async function ParcelDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const parcel = await apiClient.getParcel(id)
   
   // Fetch cases for this parcel
-  const casesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'}/parcels/${params.id}/cases`, { cache: 'no-store' });
+  const casesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'}/parcels/${id}/cases`, { cache: 'no-store' });
   const cases = casesResponse.ok ? await casesResponse.json() : [];
   
   // For the demo, just take the first case if any
