@@ -1,20 +1,30 @@
-node_modules/
-dist/
-build/
-.cache/
-.env*
-.vite/
-vite.config.*.timestamp-*
-*.tsbuildinfo
-*-debug.log*
-logs/
-*.log
-.claude-replay.*
-.tmp-*
 
 # Platform-managed agentplat state, not project source. In the
+# beside it.
 # client-initiated single-repo workspace layout (make's `Path: "."` spec) the
 # repo root IS the workspace root, so these land inside this repo rather than
-# beside it.
-/.plugins/
+*-debug.log*
+*.log
+*.pyc
+*.tsbuildinfo
+.cache/
+.claude-replay.*
+.env
+.env*
+.next/
+.pytest_cache/
+.ruff_cache/
+.tmp-*
+.venv
+.vite/
 /.opencode-skills/
+/.plugins/
+__pycache__/
+build/
+dist/
+env/
+logs/
+node_modules/
+venv/
+vite.config.*.timestamp-*
+.DS_Store

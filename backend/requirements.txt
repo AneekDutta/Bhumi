@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+sqlalchemy
+alembic
+geoalchemy2
+psycopg2-binary
+asyncpg
+shapely
+pytest
+pytest-asyncio
+ruff
+httpx
+python-dateutil
+greenlet>=3.1.0

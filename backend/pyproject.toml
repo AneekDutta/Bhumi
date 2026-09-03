@@ -1,0 +1,3 @@
+[tool.ruff]
+# Ignore fastapi specific b008, blind exception ble001
+lint.ignore = ["B008", "BLE001"]
