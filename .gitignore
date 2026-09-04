@@ -28,3 +28,9 @@ node_modules/
 venv/
 vite.config.*.timestamp-*
 .DS_Store
+
+# Local agent/workspace artifacts
+.agents/
+.claude/
+agent/
+skills-lock.json
