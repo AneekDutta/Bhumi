@@ -1,82 +1,313 @@
-import { apiClient } from '@/lib/api'
-import Link from 'next/link'
+import { apiClient } from '@/lib/api';
+
+import Link from 'next/link';
+
+import { notFound } from 'next/navigation';
+
+import type { Metadata } from 'next';
+
+
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+
+  const { id } = await params;
+
+  try {
+
+    const project = await apiClient.getProject(id);
+
+    return {
+
+      title: `${project.name} | Bottleneck Intelligence`,
+
+      description: `Dependency graph and milestone exposure analysis for ${project.name}.`,
+
+    };
+
+  } catch {
+
+    return {
+
+      title: 'Bottleneck Intelligence | BHUMI',
+
+    };
+
+  }
+
+}
+
+
 
 export default async function IntelligencePage({ params }: { params: Promise<{ id: string }> }) {
+
   const { id } = await params;
-  const project = await apiClient.getProject(id)
-  const bottlenecks = await apiClient.getProjectBottlenecks(id)
+
+
+
+  let project: any = null;
+
+  let bottlenecks: any[] = [];
+
+
+
+  try {
+
+    project = await apiClient.getProject(id);
+
+    bottlenecks = await apiClient.getProjectBottlenecks(id);
+
+  } catch {
+
+    notFound();
+
+  }
+
+
+
+  if (!project) {
+
+    notFound();
+
+  }
+
+
 
   return (
+
     <div className="space-y-6">
-      <div className="flex items-center space-x-2 text-sm text-gray-500">
-        <Link href="/projects">Projects</Link>
+
+      {/* Breadcrumb Navigation */}
+
+      <nav aria-label="Breadcrumb" className="flex items-center space-x-2 text-xs text-slate-500">
+
+        <Link href="/" className="hover:text-indigo-600">Dashboard</Link>
+
         <span>/</span>
-        <Link href={`/projects/${project.id}`}>{project.name}</Link>
+
+        <Link href="/projects" className="hover:text-indigo-600">Projects</Link>
+
         <span>/</span>
-        <span className="text-gray-900">Intelligence</span>
+
+        <Link href={`/projects/${project.id}`} className="hover:text-indigo-600 font-mono">
+
+          {project.name}
+
+        </Link>
+
+        <span>/</span>
+
+        <span className="text-slate-800 font-medium">Bottlenecks</span>
+
+      </nav>
+
+
+
+      {/* Header */}
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
+
+        <div>
+
+          <div className="flex flex-wrap items-center gap-3">
+
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+
+              Corridor Bottleneck Intelligence
+
+            </h1>
+
+            <span className="bg-amber-100 text-amber-800 text-xs px-2.5 py-0.5 rounded border border-amber-300 font-medium">
+
+              Synthetic Demo Data
+
+            </span>
+
+          </div>
+
+          <p className="mt-1 text-sm text-slate-600">
+
+            Graph traversal of statutory stages, downstream milestone dependencies, and critical chain blockages.
+
+          </p>
+
+        </div>
+
+
+
+        <div className="flex items-center gap-2">
+
+          <Link
+
+            href={`/projects/${project.id}/impact`}
+
+            className="px-3.5 py-2 bg-indigo-600 text-white text-xs sm:text-sm font-semibold rounded shadow-sm hover:bg-indigo-700"
+
+          >
+
+            Schedule Impact View →
+
+          </Link>
+
+        </div>
+
       </div>
-      
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold tracking-tight">Bottleneck Intelligence</h1>
-      </div>
-      
+
+
+
+      {/* Bottlenecks List */}
+
       <div className="space-y-4">
-        {bottlenecks.map((b: any, idx: number) => (
-          <div key={idx} className={`bg-white rounded-lg shadow-sm border overflow-hidden ${
-            b.status === 'CRITICAL' ? 'border-red-500 ring-1 ring-red-500' :
-            b.status === 'HIGH' ? 'border-orange-500' : 'border-amber-400'
-          }`}>
-            <div className={`px-6 py-4 border-b flex justify-between items-center ${
-              b.status === 'CRITICAL' ? 'bg-red-50' :
-              b.status === 'HIGH' ? 'bg-orange-50' : 'bg-amber-50'
-            }`}>
-              <div className="font-semibold text-lg flex items-center space-x-2">
-                <span className={`px-2 py-1 rounded text-xs text-white ${
-                  b.status === 'CRITICAL' ? 'bg-red-600' :
-                  b.status === 'HIGH' ? 'bg-orange-600' : 'bg-amber-500'
-                }`}>{b.status}</span>
-                <span>{b.entity_type} {b.entity_id.substring(0,8)}</span>
+
+        {bottlenecks.map((b: any, idx: number) => {
+
+          const isCritical = b.status === 'CRITICAL';
+
+          const isHigh = b.status === 'HIGH';
+
+          return (
+
+            <div
+
+              key={idx}
+
+              className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden"
+
+            >
+
+              <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+
+                <div className="flex items-center space-x-3">
+
+                  <span className={`px-2.5 py-0.5 rounded text-xs font-semibold uppercase tracking-wider border ${
+
+                    isCritical
+
+                      ? 'bg-red-50 text-red-800 border-red-200'
+
+                      : isHigh
+
+                      ? 'bg-amber-50 text-amber-800 border-amber-200'
+
+                      : 'bg-slate-100 text-slate-700 border-slate-200'
+
+                  }`}>
+
+                    {b.status}
+
+                  </span>
+
+                  <span className="font-mono text-sm font-bold text-slate-900">
+
+                    {b.entity_type} {b.entity_id.substring(0, 8)}
+
+                  </span>
+
+                </div>
+
+                <div className="text-xs font-medium text-slate-600">
+
+                  Downstream Impact: <span className="font-mono font-bold text-slate-900">{b.downstream_impact_count}</span> Entities
+
+                </div>
+
               </div>
-              <div className="text-sm font-medium text-gray-600">
-                Downstream Impact: {b.downstream_impact_count} Entities
-              </div>
-            </div>
-            <div className="p-6 grid md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-medium text-sm text-gray-500 uppercase tracking-wide mb-2">Reasons</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  {b.reasons.map((r: string, i: number) => (
-                    <li key={i} className="text-gray-800">{r}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-medium text-sm text-gray-500 uppercase tracking-wide mb-2">Affected Milestones</h3>
-                {b.affected_milestones.length > 0 ? (
-                  <ul className="list-disc pl-5 space-y-1">
-                    {b.affected_milestones.map((m: string, i: number) => (
-                      <li key={i} className="text-gray-800 font-mono text-sm">Milestone {m.substring(0,8)}</li>
+
+
+
+              <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div>
+
+                  <h3 className="font-semibold text-xs text-slate-500 uppercase tracking-wider mb-2">
+
+                    Identified Impediments
+
+                  </h3>
+
+                  <ul className="list-disc pl-5 space-y-1.5 text-sm text-slate-800">
+
+                    {b.reasons.map((r: string, i: number) => (
+
+                      <li key={i}>{r}</li>
+
                     ))}
+
                   </ul>
-                ) : (
-                  <p className="text-gray-500 italic text-sm">No direct milestone impact.</p>
-                )}
+
+                </div>
+
+
+
+                <div>
+
+                  <h3 className="font-semibold text-xs text-slate-500 uppercase tracking-wider mb-2">
+
+                    Affected Milestones
+
+                  </h3>
+
+                  {b.affected_milestones.length > 0 ? (
+
+                    <ul className="list-disc pl-5 space-y-1 text-sm text-slate-800 font-mono">
+
+                      {b.affected_milestones.map((m: string, i: number) => (
+
+                        <li key={i}>Milestone {m.substring(0, 8)}</li>
+
+                      ))}
+
+                    </ul>
+
+                  ) : (
+
+                    <p className="text-sm text-slate-500 italic">No direct contractual milestone breaches recorded.</p>
+
+                  )}
+
+                </div>
+
               </div>
+
+
+
+              {b.blocking_chain && b.blocking_chain.length > 0 && (
+
+                <div className="bg-slate-50/70 px-6 py-3 border-t border-slate-100 text-xs">
+
+                  <span className="font-semibold text-slate-600">Causal Chain: </span>
+
+                  <span className="text-slate-800 font-mono">
+
+                    {b.blocking_chain.join(" → ")}
+
+                  </span>
+
+                </div>
+
+              )}
+
             </div>
-            <div className="bg-gray-50 px-6 py-3 border-t text-sm">
-              <span className="font-medium text-gray-500">Causal Chain: </span>
-              <span className="text-gray-600 font-mono text-xs">
-                {b.blocking_chain.join(" → ")}
-              </span>
-            </div>
-          </div>
-        ))}
+
+          );
+
+        })}
+
+
+
         {bottlenecks.length === 0 && (
-          <div className="p-8 text-center bg-white rounded-lg border text-gray-500">
-            No critical bottlenecks detected for this project.
+
+          <div className="p-8 text-center bg-white rounded-lg border border-dashed border-slate-300 text-slate-500 text-sm">
+
+            No critical bottlenecks currently detected along this project corridor.
+
           </div>
+
         )}
+
       </div>
+
     </div>
-  )
+
+  );
+
 }

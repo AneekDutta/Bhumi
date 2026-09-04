@@ -85,7 +85,7 @@ class Milestone(BaseModel):
     __tablename__ = "milestones"
     segment_id = Column(UUID(as_uuid=True), ForeignKey("project_segments.id"), nullable=False)
     name = Column(String, nullable=False)
-    target_date = Column(DateTime(timezone=True), nullable=True) 
+    target_date = Column(DateTime(timezone=True), nullable=True)
     status = Column(String, nullable=False, default="PENDING")
     segment = relationship("ProjectSegment", back_populates="milestones")
 
@@ -124,10 +124,10 @@ class ParcelOwnership(BaseModel):
 class AcquisitionCase(BaseModel):
     __tablename__ = "acquisition_cases"
     parcel_id = Column(UUID(as_uuid=True), ForeignKey("parcels.id"), nullable=False)
-    statutory_act = Column(String, nullable=False) 
+    statutory_act = Column(String, nullable=False)
     current_stage = Column(String, nullable=False, default=WorkflowStage.INITIAL.value)
-    stage_started_at = Column(DateTime(timezone=True), nullable=True) 
-    computed_deadline = Column(DateTime(timezone=True), nullable=True) 
+    stage_started_at = Column(DateTime(timezone=True), nullable=True)
+    computed_deadline = Column(DateTime(timezone=True), nullable=True)
     is_lapsed = Column(Boolean, nullable=False, default=False)
     lapse_risk_flag = Column(Boolean, nullable=False, default=False)
 
@@ -147,7 +147,7 @@ class StatutoryRule(BaseModel):
 
 class AuditLog(BaseModel):
     __tablename__ = "audit_logs"
-    actor_id = Column(String, nullable=True) 
+    actor_id = Column(String, nullable=True)
     actor_role = Column(String, nullable=True)
     action = Column(String, nullable=False)
     entity_type = Column(String, nullable=False)
@@ -180,7 +180,7 @@ class ProjectActivity(BaseModel):
     actual_start = Column(DateTime(timezone=True), nullable=True)
     actual_finish = Column(DateTime(timezone=True), nullable=True)
     status = Column(String, nullable=False, default="PLANNED")
-    
+
     project = relationship("Project", back_populates="activities")
     dependencies_as_successor = relationship("ActivityDependency", foreign_keys="[ActivityDependency.successor_id]", back_populates="successor")
     dependencies_as_predecessor = relationship("ActivityDependency", foreign_keys="[ActivityDependency.predecessor_id]", back_populates="predecessor")
@@ -190,7 +190,7 @@ class ActivityDependency(BaseModel):
     predecessor_id = Column(UUID(as_uuid=True), ForeignKey("project_activities.id"), nullable=False)
     successor_id = Column(UUID(as_uuid=True), ForeignKey("project_activities.id"), nullable=False)
     dependency_type = Column(String, nullable=False, default="FINISH_TO_START")
-    
+
     predecessor = relationship("ProjectActivity", foreign_keys=[predecessor_id], back_populates="dependencies_as_predecessor")
     successor = relationship("ProjectActivity", foreign_keys=[successor_id], back_populates="dependencies_as_successor")
 
@@ -201,7 +201,7 @@ class ActivityParcelRequirement(BaseModel):
     activity_id = Column(UUID(as_uuid=True), ForeignKey("project_activities.id"), nullable=False)
     parcel_id = Column(UUID(as_uuid=True), ForeignKey("parcels.id"), nullable=False)
     required_stage = Column(String, nullable=False, default="POSSESSION")
-    
+
     activity = relationship("ProjectActivity", back_populates="parcel_requirements")
     parcel = relationship("Parcel")
 
@@ -210,5 +210,36 @@ ProjectActivity.milestone_id = Column(UUID(as_uuid=True), ForeignKey("milestones
 ProjectActivity.milestone = relationship("Milestone", foreign_keys=[ProjectActivity.milestone_id])
 
 # Add explicit demo assumption fields to Blocker and Case to remove hardcoded engine values
-WorkflowBlocker.assumed_resolution_days = Column(Integer, nullable=True) 
+WorkflowBlocker.assumed_resolution_days = Column(Integer, nullable=True)
 AcquisitionCase.assumed_lapse_recovery_days = Column(Integer, nullable=True)
+
+class Document(BaseModel):
+    __tablename__ = "documents"
+    project_id = Column(UUID(as_uuid=True), ForeignKey("projects.id"), nullable=True)
+    parcel_id = Column(UUID(as_uuid=True), ForeignKey("parcels.id"), nullable=True)
+    acquisition_case_id = Column(UUID(as_uuid=True), ForeignKey("acquisition_cases.id"), nullable=True)
+
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=True)
+    document_type = Column(String, nullable=False) # e.g., NOTICE, DEED, MAP
+
+    current_version = Column(Integer, nullable=False, default=1)
+    status = Column(String, nullable=False, default="ACTIVE") # ACTIVE, DELETED
+
+    versions = relationship("DocumentVersion", back_populates="document", order_by="desc(DocumentVersion.version_number)")
+
+class DocumentVersion(BaseModel):
+    __tablename__ = "document_versions"
+    document_id = Column(UUID(as_uuid=True), ForeignKey("documents.id"), nullable=False)
+    version_number = Column(Integer, nullable=False)
+
+    storage_path = Column(String, nullable=False)
+    original_filename = Column(String, nullable=False)
+    mime_type = Column(String, nullable=False)
+    size_bytes = Column(Integer, nullable=False)
+    sha256_hash = Column(String, nullable=False)
+
+    uploaded_by_id = Column(String, nullable=False)
+    uploaded_by_role = Column(String, nullable=False)
+
+    document = relationship("Document", back_populates="versions")

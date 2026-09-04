@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.get("/{project_id}/bottlenecks")
 async def get_project_bottlenecks(
-    project_id: UUID, 
+    project_id: UUID,
     db: AsyncSession = Depends(get_db),
     current_user: TrustedIdentity = Depends(get_current_user_context)
 ):
@@ -23,8 +23,8 @@ async def get_project_bottlenecks(
     Evaluates the dependency DAG for a project and highlights critical bottlenecks.
     Consumes the 'COMPUTE' quota.
     """
-    AuthorizationService.verify_project_access(current_user, str(project_id))
-    
+    await AuthorizationService.verify_project_access(current_user, str(project_id), db)
+
     if not quota_manager.check_quota(current_user.user_id, "COMPUTE"):
         raise HTTPException(status_code=429, detail="Compute quota exceeded")
 

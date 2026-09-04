@@ -10,7 +10,7 @@ async def test_case_transition():
     import uuid
 
     from app.api.v1.cases import get_db
-    
+
     class MockCase:
         def __init__(self):
             self.id = uuid.uuid4()
@@ -27,7 +27,7 @@ async def test_case_transition():
         def __init__(self):
             self.duration_type = DurationType.CALENDAR_DAYS.value
             self.duration_value = 30
-            
+
     test_case = MockCase()
     test_rule = MockRule()
 
@@ -50,20 +50,18 @@ async def test_case_transition():
 
     async def override_get_db():
         yield MockSession()
-        
+
     app.dependency_overrides[get_db] = override_get_db
-    
+
     payload = {
-        "new_stage": WorkflowStage.PRELIMINARY_NOTIFICATION.value,
-        "actor_id": "user-123",
-        "actor_role": "DISTRICT_OFFICER"
+        "new_stage": WorkflowStage.PRELIMINARY_NOTIFICATION.value
     }
-    
+
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         response = await ac.post(f"/api/v1/acquisition-cases/{test_case.id}/transition", json=payload)
-    
+
     app.dependency_overrides = {}
-    
+
     assert response.status_code == 200
     data = response.json()
     assert data["current_stage"] == WorkflowStage.PRELIMINARY_NOTIFICATION.value

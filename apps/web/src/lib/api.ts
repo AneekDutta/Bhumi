@@ -67,5 +67,15 @@ export const apiClient = {
       throw new Error(err.detail || 'Simulation failed')
     }
     return res.json()
+  },
+  getSpatialGeojson: async (projectId: string) => {
+    const res = await fetch(`${API_URL}/spatial/${projectId}/geojson`, { cache: 'no-store' })
+    if (!res.ok) throw new Error('Failed to fetch spatial GeoJSON')
+    return res.json()
+  },
+  getSpatialClusters: async (projectId: string) => {
+    const res = await fetch(`${API_URL}/spatial/${projectId}/clusters`, { cache: 'no-store' })
+    if (!res.ok) return []
+    return res.json()
   }
 }

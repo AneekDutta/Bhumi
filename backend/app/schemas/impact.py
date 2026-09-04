@@ -47,6 +47,7 @@ class ProjectImpactResponse(BaseModel):
     bottlenecks: List[BottleneckEvidence]
 
 class SimulationRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     type: str # e.g. RESOLVE_BLOCKER
     parcel_id: str
 
@@ -54,4 +55,3 @@ class SimulationResult(BaseModel):
     before: ScheduleForecast
     after: ScheduleForecast
     days_recovered: int
-

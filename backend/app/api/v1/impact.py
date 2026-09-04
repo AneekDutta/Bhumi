@@ -17,11 +17,11 @@ async def get_project_impact(
     db: AsyncSession = Depends(get_db),
     current_user: TrustedIdentity = Depends(get_current_user_context)
 ):
-    AuthorizationService.verify_project_access(current_user, str(project_id))
-    
+    await AuthorizationService.verify_project_access(current_user, str(project_id), db)
+
     if not quota_manager.check_quota(current_user.user_id, "COMPUTE"):
         raise HTTPException(status_code=429, detail="Compute quota exceeded")
-        
+
     engine = ImpactEngine(db)
     await engine.load_project(project_id)
     return engine.analyze_impact()
@@ -33,16 +33,16 @@ async def simulate_intervention(
     db: AsyncSession = Depends(get_db),
     current_user: TrustedIdentity = Depends(get_current_user_context)
 ):
-    AuthorizationService.verify_project_access(current_user, str(project_id))
-    
+    await AuthorizationService.verify_project_access(current_user, str(project_id), db)
+
     if not quota_manager.check_quota(current_user.user_id, "SIMULATION"):
         raise HTTPException(status_code=429, detail="Simulation quota exceeded")
 
     engine = ImpactEngine(db)
     await engine.load_project(project_id)
     engine.analyze_impact() # Prime the current state
-    
+
     try:
         return engine.simulate_intervention(req.model_dump())
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Invalid simulation parameters")
