@@ -3,8 +3,9 @@ CPM (Critical Path Method) and Criticality Scoring Engine
 Implements Sections 10, 11, and 12 of SIH26016_Data_Requirements.md.
 Deterministic graph-based scheduling, zero-float detection, and prescriptive actions.
 """
-from datetime import date, datetime, timedelta
-from typing import Any, Dict, List, Optional, Set, Tuple
+from datetime import date, datetime, timedelta, timezone
+from typing import Any
+
 import networkx as nx
 
 
@@ -22,7 +23,7 @@ class CPMEngine:
             "w4": 20.0,  # incomplete progress fraction
         }
 
-    def build_networkx_graph(self, edges: List[Dict[str, Any]], filter_blocking: bool = True) -> nx.DiGraph:
+    def build_networkx_graph(self, edges: list[dict[str, Any]], filter_blocking: bool = True) -> nx.DiGraph:
         """Construct a directed graph from dependency_edges."""
         G = nx.DiGraph()
         for e in edges:
@@ -37,9 +38,9 @@ class CPMEngine:
     def compute_cpm_schedule(
         self,
         G: nx.DiGraph,
-        project_start_date: Optional[date] = None,
-        base_target_date: Optional[date] = None
-    ) -> Dict[str, Any]:
+        project_start_date: date | None = None,
+        base_target_date: date | None = None
+    ) -> dict[str, Any]:
         """
         Executes standard CPM forward and backward passes.
         Returns:
@@ -50,7 +51,7 @@ class CPMEngine:
             - node_schedules: {node: {ES, EF, LS, LF, float}}
         """
         if G.number_of_nodes() == 0:
-            today = date.today()
+            today = datetime.now(timezone.utc).date()
             return {
                 "total_duration_days": 0.0,
                 "projected_finish_date": today.isoformat(),
@@ -64,15 +65,14 @@ class CPMEngine:
             # Break cycles by removing back-edges
             cycles = list(nx.simple_cycles(G))
             for cycle in cycles:
-                if len(cycle) > 1:
-                    if G.has_edge(cycle[-1], cycle[0]):
-                        G.remove_edge(cycle[-1], cycle[0])
+                if len(cycle) > 1 and G.has_edge(cycle[-1], cycle[0]):
+                    G.remove_edge(cycle[-1], cycle[0])
 
         topo_order = list(nx.topological_sort(G))
 
         # Forward Pass: Compute Earliest Start (ES) and Earliest Finish (EF)
-        es: Dict[str, float] = {}
-        ef: Dict[str, float] = {}
+        es: dict[str, float] = {}
+        ef: dict[str, float] = {}
 
         for node in topo_order:
             preds = list(G.predecessors(node))
@@ -86,8 +86,8 @@ class CPMEngine:
         total_duration = max(ef.values()) if ef else 0.0
 
         # Backward Pass: Compute Latest Finish (LF) and Latest Start (LS)
-        lf: Dict[str, float] = {}
-        ls: Dict[str, float] = {}
+        lf: dict[str, float] = {}
+        ls: dict[str, float] = {}
 
         for node in reversed(topo_order):
             succs = list(G.successors(node))
@@ -135,7 +135,7 @@ class CPMEngine:
         G_full: nx.DiGraph,
         acquisition_status: str,
         is_spof: bool = True
-    ) -> Tuple[float, Dict[str, float]]:
+    ) -> tuple[float, dict[str, float]]:
         """
         Computes Parcel Criticality Score according to Section 10 formula:
         score = w1*downstream_segments + w2*downstream_milestones + w3*spof + w4*(1 - progress)
@@ -184,10 +184,10 @@ class CPMEngine:
 
     def compute_parcel_risk_score(
         self,
-        legal_status: Optional[str],
-        compensation_status: Optional[str],
+        legal_status: str | None,
+        compensation_status: str | None,
         ownership_conflict: bool,
-        document_status: Optional[str],
+        document_status: str | None,
         criticality_factor: float = 50.0
     ) -> float:
         """
@@ -218,11 +218,11 @@ class CPMEngine:
 
     def generate_recommended_action(
         self,
-        legal_status: Optional[str],
-        compensation_status: Optional[str],
+        legal_status: str | None,
+        compensation_status: str | None,
         ownership_conflict: bool,
-        conflict_type: Optional[str],
-        document_status: Optional[str],
+        conflict_type: str | None,
+        document_status: str | None,
         acquisition_status: str
     ) -> str:
         """

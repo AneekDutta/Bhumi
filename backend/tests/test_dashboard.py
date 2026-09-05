@@ -1,16 +1,32 @@
-import pytest
-from httpx import AsyncClient, ASGITransport
-from datetime import datetime, timezone
+import socket
 from uuid import UUID
-import os
 
-from app.services.dashboard_service import DashboardService
+import pytest
+from httpx import ASGITransport, AsyncClient
+
 from app.api.deps import TrustedIdentity, get_current_user_context
 from app.core.database import AsyncSessionLocal
 from app.main import app
+from app.services.dashboard_service import DashboardService
+
+
+@pytest.fixture(autouse=True)
+def cleanup_overrides():
+    yield
+    app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def require_db():
+    try:
+        with socket.create_connection(("127.0.0.1", 5432), timeout=0.3):
+            pass
+    except OSError:
+        pytest.skip("Database unavailable on localhost:5432")
+
 
 @pytest.mark.asyncio
-async def test_dashboard_semantic_parity():
+async def test_dashboard_semantic_parity(require_db):
     async with AsyncSessionLocal() as session:
         identity = TrustedIdentity(user_id="u1", role="ADMIN")
         svc = DashboardService(session, identity)
@@ -21,8 +37,9 @@ async def test_dashboard_semantic_parity():
         assert pune["project_delay_days"] == 20
         assert pune["spatial_cluster_count"] == 2
 
+
 @pytest.mark.asyncio
-async def test_dashboard_rbac_isolation():
+async def test_dashboard_rbac_isolation(require_db):
     async with AsyncSessionLocal() as session:
         identity_all = TrustedIdentity(user_id="u1", role="ADMIN")
         svc_all = DashboardService(session, identity_all)
@@ -40,8 +57,9 @@ async def test_dashboard_rbac_isolation():
         assert len(restricted_impacts) == 1
         assert restricted_impacts[0]["project_id"] == proj_id
 
+
 @pytest.mark.asyncio
-async def test_dashboard_summary_endpoint():
+async def test_dashboard_summary_endpoint(require_db):
     def mock_auth():
         return TrustedIdentity(user_id="u1", role="ADMIN")
     app.dependency_overrides[get_current_user_context] = mock_auth
@@ -49,10 +67,10 @@ async def test_dashboard_summary_endpoint():
         response = await ac.get("/api/v1/dashboard/summary")
         assert response.status_code == 200
         assert "total_projects" in response.json()
-    app.dependency_overrides.pop(get_current_user_context, None)
+
 
 @pytest.mark.asyncio
-async def test_dashboard_reports_endpoint():
+async def test_dashboard_reports_endpoint(require_db):
     def mock_auth():
         return TrustedIdentity(user_id="u1", role="ADMIN")
     app.dependency_overrides[get_current_user_context] = mock_auth
@@ -60,7 +78,6 @@ async def test_dashboard_reports_endpoint():
         response = await ac.get("/api/v1/dashboard/reports?report_type=project_status")
         assert response.status_code == 200
         assert response.json()["report_type"] == "project_status"
-    app.dependency_overrides.pop(get_current_user_context, None)
 
 @pytest.mark.asyncio
 async def test_dashboard_query_count_n_plus_one():
@@ -94,7 +111,7 @@ async def test_dashboard_query_count_n_plus_one():
     assert mock_db.query_count <= 10, f"Expected bounded query count, got {mock_db.query_count}"
 
 @pytest.mark.asyncio
-async def test_dashboard_report_rbac():
+async def test_dashboard_report_rbac(require_db):
     async with AsyncSessionLocal() as session:
         # 1. Admin gets all
         identity_all = TrustedIdentity(user_id="u1", role="ADMIN")
@@ -119,7 +136,8 @@ async def test_dashboard_report_rbac():
 async def test_dashboard_mock_auth_admin_no_header():
     from app.api.deps import get_current_user_context
     class MockRequest:
-        headers = {}
+        def __init__(self, headers=None):
+            self.headers = headers or {}
     req = MockRequest()
     identity = get_current_user_context(req, auth=None)
     assert identity.role == "ADMIN"
@@ -129,14 +147,15 @@ async def test_dashboard_mock_auth_admin_no_header():
 async def test_dashboard_mock_auth_restricted():
     from app.api.deps import get_current_user_context
     class MockRequest:
-        headers = {"x-mock-role": "OFFICER", "x-mock-project-id": "pid-456"}
-    req = MockRequest()
+        def __init__(self, headers=None):
+            self.headers = headers or {}
+    req = MockRequest({"x-mock-role": "OFFICER", "x-mock-project-id": "pid-456"})
     identity = get_current_user_context(req, auth=None)
     assert identity.role == "OFFICER"
     assert identity.assigned_project_id == "pid-456"
 
 @pytest.mark.asyncio
-async def test_dashboard_summary_admin_sees_all():
+async def test_dashboard_summary_admin_sees_all(require_db):
     # If we call summary via endpoint without mocking the auth entirely (just relying on default deps),
     # it should run as ADMIN and see actual DB projects (like the golden dataset).
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
@@ -149,8 +168,9 @@ async def test_dashboard_summary_admin_sees_all():
 async def test_dashboard_mock_auth_officer_no_header():
     from app.api.deps import get_current_user_context
     class MockRequest:
-        headers = {"x-mock-role": "OFFICER"}
-    req = MockRequest()
+        def __init__(self, headers=None):
+            self.headers = headers or {}
+    req = MockRequest({"x-mock-role": "OFFICER"})
     identity = get_current_user_context(req, auth=None)
     assert identity.role == "OFFICER"
     assert identity.assigned_project_id is None

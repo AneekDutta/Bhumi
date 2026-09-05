@@ -3,19 +3,16 @@ SIH26016 Land Acquisition Digital Twin — Domain Models
 Strictly mirrors data/sih26016/schema_postgis.sql.
 All models enforce source_type: REAL_PUBLIC | SYNTHETIC | USER_ENTERED | MODEL_DERIVED.
 """
-from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 from sqlalchemy import (
     Boolean,
     Column,
     Date,
     DateTime,
-    Float,
     ForeignKey,
     Integer,
     Numeric,
-    String,
-    Table,
     Text,
     func,
 )
@@ -65,7 +62,7 @@ class SIHProject(SIHBase):
     segments = relationship("SIHProjectSegment", back_populates="project", cascade="all, delete-orphan")
     milestones = relationship("SIHMilestone", back_populates="project", cascade="all, delete-orphan")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "project_id": self.project_id,
             "name": self.name,
@@ -112,7 +109,7 @@ class SIHVillage(SIHBase):
     project = relationship("SIHProject", back_populates="villages")
     parcels = relationship("SIHParcel", back_populates="village")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "village_id": self.village_id,
             "project_id": self.project_id,
@@ -137,7 +134,7 @@ class SIHDepartment(SIHBase):
 
     officers = relationship("SIHOfficer", back_populates="department")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "department_id": self.department_id,
             "name": self.name,
@@ -158,7 +155,7 @@ class SIHOfficer(SIHBase):
 
     department = relationship("SIHDepartment", back_populates="officers")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "officer_id": self.officer_id,
             "name": self.name,
@@ -180,7 +177,7 @@ class SIHOwner(SIHBase):
 
     parcels = relationship("SIHParcel", back_populates="owner")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "owner_id": self.owner_id,
             "name": self.name,
@@ -223,7 +220,7 @@ class SIHParcel(SIHBase):
     verifications = relationship("SIHVerification", back_populates="parcel")
     land_records = relationship("SIHLandRecord", back_populates="parcel")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "parcel_id": self.parcel_id,
             "project_id": self.project_id,
@@ -256,7 +253,7 @@ class SIHLandRecord(SIHBase):
 
     parcel = relationship("SIHParcel", back_populates="land_records")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "record_id": self.record_id,
             "parcel_id": self.parcel_id,
@@ -284,7 +281,7 @@ class SIHAcquisitionCase(SIHBase):
     rr_records = relationship("SIHRRRecord", back_populates="acquisition_case")
     legal_cases = relationship("SIHLegalCase", back_populates="acquisition_case")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "case_id": self.case_id,
             "parcel_id": self.parcel_id,
@@ -315,7 +312,7 @@ class SIHCompensationRecord(SIHBase):
 
     acquisition_case = relationship("SIHAcquisitionCase", back_populates="compensation_records")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "compensation_id": self.compensation_id,
             "case_id": self.case_id,
@@ -348,7 +345,7 @@ class SIHRRRecord(SIHBase):
 
     acquisition_case = relationship("SIHAcquisitionCase", back_populates="rr_records")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "rr_id": self.rr_id,
             "case_id": self.case_id,
@@ -381,7 +378,7 @@ class SIHLegalCase(SIHBase):
 
     acquisition_case = relationship("SIHAcquisitionCase", back_populates="legal_cases")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "legal_case_id": self.legal_case_id,
             "case_id": self.case_id,
@@ -414,7 +411,7 @@ class SIHDocument(SIHBase):
     parcel = relationship("SIHParcel", back_populates="documents")
     verifications = relationship("SIHVerification", back_populates="document")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "document_id": self.document_id,
             "case_id": self.case_id,
@@ -443,7 +440,7 @@ class SIHVerification(SIHBase):
     document = relationship("SIHDocument", back_populates="verifications")
     parcel = relationship("SIHParcel", back_populates="verifications")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "verification_id": self.verification_id,
             "document_id": self.document_id,
@@ -469,7 +466,7 @@ class SIHApproval(SIHBase):
     resolved_at = Column(DateTime(timezone=True), nullable=True)
     source_type = Column(Text, nullable=False, default="SYNTHETIC")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "approval_id": self.approval_id,
             "entity_type": self.entity_type,
@@ -500,7 +497,7 @@ class SIHProjectSegment(SIHBase):
 
     project = relationship("SIHProject", back_populates="segments")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "segment_id": self.segment_id,
             "project_id": self.project_id,
@@ -518,7 +515,7 @@ class SIHParcelSegmentMap(SIHBase):
     parcel_id = Column(Text, ForeignKey("parcels.parcel_id"), primary_key=True)
     segment_id = Column(Text, ForeignKey("project_segments.segment_id"), primary_key=True)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"parcel_id": self.parcel_id, "segment_id": self.segment_id}
 
 
@@ -535,7 +532,7 @@ class SIHMilestone(SIHBase):
 
     project = relationship("SIHProject", back_populates="milestones")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "milestone_id": self.milestone_id,
             "project_id": self.project_id,
@@ -553,7 +550,7 @@ class SIHSegmentMilestoneMap(SIHBase):
     segment_id = Column(Text, ForeignKey("project_segments.segment_id"), primary_key=True)
     milestone_id = Column(Text, ForeignKey("milestones.milestone_id"), primary_key=True)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"segment_id": self.segment_id, "milestone_id": self.milestone_id}
 
 
@@ -570,7 +567,7 @@ class SIHDependencyEdge(SIHBase):
     weight_days = Column(Numeric, nullable=True)
     source_type = Column(Text, nullable=False, default="SYNTHETIC")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "edge_id": self.edge_id,
             "from_node_type": self.from_node_type,
@@ -598,7 +595,7 @@ class SIHRoad(SIHBase):
     source = Column(Text, default="OpenStreetMap via Geofabrik")
     source_url = Column(Text, default="https://download.geofabrik.de/asia/india.html")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "road_id": self.road_id,
             "name": self.name,
@@ -623,7 +620,7 @@ class SIHInfrastructure(SIHBase):
     source = Column(Text, nullable=True)
     source_url = Column(Text, nullable=True)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "infra_id": self.infra_id,
             "name": self.name,
@@ -647,7 +644,7 @@ class SIHAuditLog(SIHBase):
     timestamp = Column(DateTime(timezone=True), default=func.now())
     source_type = Column(Text, nullable=False, default="USER_ENTERED")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "log_id": self.log_id,
             "entity_type": self.entity_type,

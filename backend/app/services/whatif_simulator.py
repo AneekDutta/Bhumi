@@ -4,9 +4,8 @@ Implements Section 12 of SIH26016_Data_Requirements.md.
 Deterministic before-vs-after CPM calculation derived from dependency graph mutations.
 """
 from copy import deepcopy
-from datetime import date, datetime
-from typing import Any, Dict, List, Optional, Set, Tuple
-import networkx as nx
+from datetime import date
+from typing import Any, ClassVar
 
 from app.services.cpm_engine import cpm_engine
 
@@ -17,7 +16,7 @@ class WhatIfSimulator:
     based on administrative interventions, and recomputing the CPM critical path.
     """
 
-    INTERVENTION_COSTS = {
+    INTERVENTION_COSTS: ClassVar[dict[str, dict[str, Any]]] = {
         "resolve_ownership_conflict": {"officer_days": 14, "cost_inr": 45000, "unit": "Revenue Lok Adalat Hearing"},
         "process_compensation": {"officer_days": 5, "cost_inr": 15000, "unit": "PFMS Direct Treasury Transfer"},
         "complete_field_verification": {"officer_days": 4, "cost_inr": 12000, "unit": "DGPS Cadastral Survey Team"},
@@ -30,14 +29,14 @@ class WhatIfSimulator:
 
     def simulate(
         self,
-        base_edges: List[Dict[str, Any]],
+        base_edges: list[dict[str, Any]],
         intervention_type: str,
-        target_entity_ids: List[str],
-        parcels_lookup: Dict[str, Dict[str, Any]],
-        project_start_date: Optional[date] = None,
-        target_completion_date: Optional[date] = None,
+        target_entity_ids: list[str],
+        parcels_lookup: dict[str, dict[str, Any]],
+        project_start_date: date | None = None,
+        target_completion_date: date | None = None,
         acceleration_factor: float = 1.0
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Runs the deterministic before vs after CPM simulation:
         1. Baseline CPM calculation on original graph
@@ -56,22 +55,20 @@ class WhatIfSimulator:
 
         # Step 2: Validate Preconditions
         preconditions_met = True
-        warnings: List[str] = []
+        warnings: list[str] = []
 
         target_set = set(target_entity_ids)
         for pid in target_set:
             pinfo = parcels_lookup.get(pid, {})
-            if intervention_type == "process_compensation":
-                if pinfo.get("ownership_conflict"):
-                    preconditions_met = False
-                    warnings.append(f"Parcel {pid} has active ownership conflict. Resolution required before compensation.")
-            elif intervention_type == "complete_field_verification":
-                if pinfo.get("missing_documents"):
-                    warnings.append(f"Parcel {pid} has unsubmitted documents; field verification will verify only boundary.")
+            if intervention_type == "process_compensation" and pinfo.get("ownership_conflict"):
+                preconditions_met = False
+                warnings.append(f"Parcel {pid} has active ownership conflict. Resolution required before compensation.")
+            elif intervention_type == "complete_field_verification" and pinfo.get("missing_documents"):
+                warnings.append(f"Parcel {pid} has unsubmitted documents; field verification will verify only boundary.")
 
         # Step 3: Clone Graph in Memory and Apply State Mutations
         G_after = deepcopy(G_before)
-        affected_entities: Set[str] = set()
+        affected_entities: set[str] = set()
 
         for u, v, data in list(G_after.edges(data=True)):
             # Check if edge relates to target entities
@@ -105,17 +102,15 @@ class WhatIfSimulator:
                     if "approval" in u or "approval" in v:
                         data["weight"] = round(data.get("weight", 10.0) * 0.25, 1)
 
-                elif intervention_type == "process_rr":
-                    if "rr_record" in u or "rr_record" in v:
-                        data["weight"] = 0.0
+                elif intervention_type == "process_rr" and ("rr_record" in u or "rr_record" in v):
+                    data["weight"] = 0.0
 
             # General acceleration for deploy_additional_officers across all verifications
-            if intervention_type == "deploy_additional_officers":
-                if "verification" in u or "verification" in v:
-                    factor = max(1.5, acceleration_factor or 2.0)
-                    data["weight"] = round(data.get("weight", 10.0) / factor, 1)
-                    affected_entities.add(u)
-                    affected_entities.add(v)
+            if intervention_type == "deploy_additional_officers" and ("verification" in u or "verification" in v):
+                factor = max(1.5, acceleration_factor or 2.0)
+                data["weight"] = round(data.get("weight", 10.0) / factor, 1)
+                affected_entities.add(u)
+                affected_entities.add(v)
 
         # Step 4: Re-run identical CPM algorithm on modified graph
         after_result = cpm_engine.compute_cpm_schedule(
@@ -127,7 +122,7 @@ class WhatIfSimulator:
         # Step 5: Compute Deterministic Difference
         before_days = before_result["total_duration_days"]
         after_days = after_result["total_duration_days"]
-        delay_reduction = max(0, int(round(before_days - after_days)))
+        delay_reduction = max(0, round(before_days - after_days))
 
         cost_info = self.INTERVENTION_COSTS.get(
             intervention_type,

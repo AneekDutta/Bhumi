@@ -1,5 +1,7 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
+
 from app.services.schedule_engine import ScheduleEngine
+
 
 def test_two_constraints_on_one_activity_uses_max():
     start = datetime(2025, 1, 1, tzinfo=timezone.utc)

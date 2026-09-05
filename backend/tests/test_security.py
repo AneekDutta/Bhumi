@@ -1,13 +1,11 @@
-import pytest
 import os
-import asyncio
-from httpx import AsyncClient, ASGITransport
-from app.main import app
-from app.api.deps import TrustedIdentity
-from app.services.authorization import AuthorizationService
-from fastapi import HTTPException
-import uuid
+
+import pytest
+from httpx import ASGITransport, AsyncClient
+
 from app.core.database import get_db
+from app.main import app
+
 
 class MockResult:
     def scalars(self_):

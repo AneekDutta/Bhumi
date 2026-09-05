@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Try finding .env in current dir, parent dir, or repo root
@@ -7,8 +8,8 @@ for p in [Path(".env"), Path("../.env"), Path(__file__).resolve().parents[2] / "
     if p.exists():
         load_dotenv(p)
         break
-import os
 from pydantic_settings import BaseSettings
+
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "SIH26016 Land Acquisition"
@@ -42,6 +43,5 @@ class Settings(BaseSettings):
 settings = Settings()
 
 # Fail closed if production is misconfigured
-if settings.ENV == "production":
-    if settings.AUTH_MODE == "mock":
-        raise RuntimeError("CRITICAL: Cannot run production environment with mock authentication enabled.")
+if settings.ENV == "production" and settings.AUTH_MODE == "mock":
+    raise RuntimeError("CRITICAL: Cannot run production environment with mock authentication enabled.")

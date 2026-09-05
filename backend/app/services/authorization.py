@@ -1,10 +1,12 @@
 import logging
 from uuid import UUID
+
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+
 from app.api.deps import TrustedIdentity
-from app.models.domain import Project, Parcel, Village
+from app.models.domain import Parcel, Project, Village
 
 logger = logging.getLogger(__name__)
 

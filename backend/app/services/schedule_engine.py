@@ -1,13 +1,15 @@
 from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional
+from typing import Any
+
 import networkx as nx
+
 
 class ScheduleEngine:
     def __init__(self, analysis_date: datetime):
         self.analysis_date = analysis_date
         self.graph = nx.DiGraph()
         
-    def add_activity(self, activity_id: str, duration_days: int, planned_start: datetime, name: str = "", actual_start: Optional[datetime] = None, actual_finish: Optional[datetime] = None, milestone_id: Optional[str] = None):
+    def add_activity(self, activity_id: str, duration_days: int, planned_start: datetime, name: str = "", actual_start: datetime | None = None, actual_finish: datetime | None = None, milestone_id: str | None = None):
         self.graph.add_node(
             activity_id, 
             duration_days=duration_days,
@@ -23,7 +25,7 @@ class ScheduleEngine:
     def add_dependency(self, predecessor_id: str, successor_id: str, type: str = "FINISH_TO_START"):
         self.graph.add_edge(predecessor_id, successor_id, type=type)
 
-    def add_constraint(self, activity_id: str, source_id: str, delay_days: Optional[int]):
+    def add_constraint(self, activity_id: str, source_id: str, delay_days: int | None):
         """
         Injects a temporal constraint. delay_days can be None if unknown.
         """
@@ -34,7 +36,7 @@ class ScheduleEngine:
         if self.graph.has_node(activity_id):
             self.graph.nodes[activity_id]["constraints"].pop(source_id, None)
 
-    def calculate_cpm(self, project_start_date: datetime) -> Dict[str, Any]:
+    def calculate_cpm(self, project_start_date: datetime) -> dict[str, Any]:
         if not nx.is_directed_acyclic_graph(self.graph):
             raise ValueError("Schedule graph has a cycle")
 
@@ -54,9 +56,8 @@ class ScheduleEngine:
             for pred in self.graph.predecessors(node):
                 edge_data = self.graph.get_edge_data(pred, node)
                 pred_attrs = self.graph.nodes[pred]
-                if edge_data["type"] == "FINISH_TO_START":
-                    if pred_attrs["EF"] and pred_attrs["EF"] > max_pred_ef:
-                        max_pred_ef = pred_attrs["EF"]
+                if edge_data["type"] == "FINISH_TO_START" and pred_attrs["EF"] and pred_attrs["EF"] > max_pred_ef:
+                    max_pred_ef = pred_attrs["EF"]
             
             # Incorporate explicit constraint delay
             max_constraint_delay = 0
@@ -102,8 +103,7 @@ class ScheduleEngine:
                     succ_attrs = self.graph.nodes[succ]
                     edge_data = self.graph.get_edge_data(node, succ)
                     if edge_data["type"] == "FINISH_TO_START":
-                        if succ_attrs["LS"] < min_succ_ls:
-                            min_succ_ls = succ_attrs["LS"]
+                        min_succ_ls = min(min_succ_ls, succ_attrs["LS"])
                 attrs["LF"] = min_succ_ls
                 
             attrs["LS"] = attrs["LF"] - timedelta(days=attrs["duration_days"])

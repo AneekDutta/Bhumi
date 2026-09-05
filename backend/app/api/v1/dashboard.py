@@ -1,13 +1,13 @@
-from typing import List, Dict, Any, Optional
+from datetime import datetime, timezone
+from typing import Any
 from uuid import UUID
-from datetime import datetime
+
 from fastapi import APIRouter, Depends, Query
-
-from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.database import get_db
 from app.api.deps import TrustedIdentity, get_current_user_context
+from app.core.database import get_db
 from app.services.dashboard_service import DashboardService
 
 router = APIRouter()
@@ -22,26 +22,26 @@ class DashboardSummaryResponse(BaseModel):
 class ProjectDashboardRow(BaseModel):
     project_id: UUID
     name: str
-    state_id: Optional[UUID]
-    baseline_finish: Optional[datetime]
-    current_finish: Optional[datetime]
+    state_id: UUID | None
+    baseline_finish: datetime | None
+    current_finish: datetime | None
     project_delay_days: int
     critical_path_blocked: bool
     unresolved_parcel_count: int
     spatial_cluster_count: int
     highest_urgency: str
-    centroid: Optional[Dict[str, Any]]
+    centroid: dict[str, Any] | None
 
 class DashboardProjectsResponse(BaseModel):
     total: int
     page: int
     size: int
-    items: List[ProjectDashboardRow]
+    items: list[ProjectDashboardRow]
 
 class MISReportResponse(BaseModel):
     report_type: str
     generated_at: datetime
-    rows: List[Dict[str, Any]]
+    rows: list[dict[str, Any]]
 
 @router.get("/summary", response_model=DashboardSummaryResponse)
 async def get_dashboard_summary(
@@ -69,7 +69,7 @@ async def get_dashboard_projects(
     elif sort_by == "unresolved_parcels":
         key = lambda x: x["unresolved_parcel_count"]
     elif sort_by == "finish_date":
-        key = lambda x: x["current_finish"] if x["current_finish"] else datetime.min
+        key = lambda x: x["current_finish"] if x["current_finish"] else datetime.min.replace(tzinfo=timezone.utc)
     else:
         key = lambda x: x["name"]
 
@@ -99,6 +99,6 @@ async def get_dashboard_reports(
 
     return MISReportResponse(
         report_type=report_type,
-        generated_at=datetime.utcnow(),
+        generated_at=datetime.now(timezone.utc),
         rows=rows
     )

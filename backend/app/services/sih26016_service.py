@@ -5,11 +5,9 @@ Supports database queries with automatic local seed fallback, CPM computations,
 GeoJSON FeatureCollection generation, and full Section 13 parcel dossier compilation.
 """
 import json
-import math
-import os
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from app.services.cpm_engine import cpm_engine
 from app.services.whatif_simulator import whatif_simulator
@@ -17,9 +15,9 @@ from app.services.whatif_simulator import whatif_simulator
 
 class SIH26016Service:
     def __init__(self):
-        self._data_cache: Optional[Dict[str, Any]] = None
-        self._cpm_cache: Optional[Dict[str, Any]] = None
-        self._parcels_geojson_cache: Optional[Dict[str, Any]] = None
+        self._data_cache: dict[str, Any] | None = None
+        self._cpm_cache: dict[str, Any] | None = None
+        self._parcels_geojson_cache: dict[str, Any] | None = None
         self._load_data()
 
     def _get_seed_path(self) -> Path:
@@ -147,7 +145,7 @@ class SIH26016Service:
 
         self._data_cache["parcels"] = enriched_parcels
 
-    def get_projects(self) -> List[Dict[str, Any]]:
+    def get_projects(self) -> list[dict[str, Any]]:
         if not self._data_cache:
             self._load_data()
         projects = self._data_cache.get("projects", [])
@@ -166,14 +164,14 @@ class SIH26016Service:
             result.append(p_copy)
         return result
 
-    def get_project_by_id(self, project_id: str) -> Optional[Dict[str, Any]]:
+    def get_project_by_id(self, project_id: str) -> dict[str, Any] | None:
         projects = self.get_projects()
         for p in projects:
             if p["project_id"] == project_id:
                 return p
         return projects[0] if projects else None
 
-    def get_parcels(self, project_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    def get_parcels(self, project_id: str | None = None) -> list[dict[str, Any]]:
         if not self._data_cache:
             self._load_data()
         parcels = self._data_cache.get("parcels", [])
@@ -181,7 +179,7 @@ class SIH26016Service:
             return [p for p in parcels if p.get("project_id") == project_id]
         return parcels
 
-    def get_parcel_detail(self, parcel_id: str) -> Optional[Dict[str, Any]]:
+    def get_parcel_detail(self, parcel_id: str) -> dict[str, Any] | None:
         if not self._data_cache:
             self._load_data()
         data = self._data_cache
@@ -263,7 +261,7 @@ class SIH26016Service:
             "source_type": parcel.get("source_type", "SYNTHETIC")
         }
 
-    def get_parcels_geojson(self, project_id: Optional[str] = None) -> Dict[str, Any]:
+    def get_parcels_geojson(self, project_id: str | None = None) -> dict[str, Any]:
         """
         Generates GeoJSON FeatureCollection supporting:
         - Normal Mode: acquisition_status
@@ -323,13 +321,12 @@ class SIH26016Service:
             }
         }
 
-    def get_critical_path_report(self, project_id: Optional[str] = None) -> Dict[str, Any]:
+    def get_critical_path_report(self, project_id: str | None = None) -> dict[str, Any]:
         if not self._data_cache or not self._cpm_cache:
             self._load_data()
 
         cpm = self._cpm_cache or {}
         parcels = self.get_parcels(project_id)
-        parcels_map = {p["parcel_id"]: p for p in parcels}
         villages = {v["village_id"]: v["name"] for v in self._data_cache.get("villages", [])}
 
         bottlenecks = []
@@ -374,9 +371,9 @@ class SIH26016Service:
         self,
         project_id: str,
         intervention_type: str,
-        input_entity_ids: List[str],
+        input_entity_ids: list[str],
         acceleration_factor: float = 1.0
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         if not self._data_cache:
             self._load_data()
         edges = self._data_cache.get("dependency_edges", [])

@@ -4,13 +4,12 @@ Exposes endpoints for corridors, cadastral parcels, GeoJSON map layers,
 Section 13 parcel dossiers, CPM critical path analysis, and What-If simulation.
 Preserves source_type provenance on every response.
 """
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 from fastapi import APIRouter, HTTPException, Query
+
 from app.schemas.sih26016 import (
     CriticalPathResponse,
-    SIHParcelDetailSchema,
-    SIHParcelSummarySchema,
-    SIHProjectSchema,
     SimulationRequest,
     SimulationResponse,
 )
@@ -19,13 +18,13 @@ from app.services.sih26016_service import sih_service
 router = APIRouter()
 
 
-@router.get("/projects", response_model=List[Dict[str, Any]])
+@router.get("/projects", response_model=list[dict[str, Any]])
 def list_projects():
     """List all digital twin projects with CPM schedules and provenance."""
     return sih_service.get_projects()
 
 
-@router.get("/projects/{project_id}", response_model=Dict[str, Any])
+@router.get("/projects/{project_id}", response_model=dict[str, Any])
 def get_project(project_id: str):
     """Retrieve detailed project corridor specifications."""
     proj = sih_service.get_project_by_id(project_id)
@@ -34,10 +33,10 @@ def get_project(project_id: str):
     return proj
 
 
-@router.get("/projects/{project_id}/parcels", response_model=List[Dict[str, Any]])
+@router.get("/projects/{project_id}/parcels", response_model=list[dict[str, Any]])
 def list_parcels(
     project_id: str,
-    status: Optional[str] = Query(None, description="Filter by acquisition_status"),
+    status: str | None = Query(None, description="Filter by acquisition_status"),
     critical_only: bool = Query(False, description="Filter only critical-chain parcels")
 ):
     """List parcels for the specified corridor."""
@@ -59,7 +58,7 @@ def get_parcels_geojson(project_id: str):
     return sih_service.get_parcels_geojson(project_id)
 
 
-@router.get("/parcels/{parcel_id}", response_model=Dict[str, Any])
+@router.get("/parcels/{parcel_id}", response_model=dict[str, Any])
 def get_parcel_detail(parcel_id: str):
     """
     Returns Section 13 full parcel dossier:

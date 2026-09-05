@@ -1,6 +1,17 @@
 from fastapi import APIRouter
 
-from app.api.v1 import cases, health, intelligence, parcels, projects, impact, spatial, dashboard, documents, sih26016
+from app.api.v1 import (
+    cases,
+    dashboard,
+    documents,
+    health,
+    impact,
+    intelligence,
+    parcels,
+    projects,
+    sih26016,
+    spatial,
+)
 
 api_router = APIRouter()
 api_router.include_router(health.router, tags=["health"])

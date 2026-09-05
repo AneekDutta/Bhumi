@@ -3,7 +3,8 @@ Pydantic Schemas for SIH26016 Land Acquisition Digital Twin
 Preserves and validates source_type provenance on all payloads.
 """
 from datetime import date, datetime
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Literal
+
 from pydantic import BaseModel, Field
 
 SourceType = Literal["REAL_PUBLIC", "SYNTHETIC", "USER_ENTERED", "MODEL_DERIVED"]
@@ -11,107 +12,107 @@ SourceType = Literal["REAL_PUBLIC", "SYNTHETIC", "USER_ENTERED", "MODEL_DERIVED"
 
 class ProvenanceBase(BaseModel):
     source_type: SourceType = "SYNTHETIC"
-    source: Optional[str] = None
-    source_url: Optional[str] = None
-    source_timestamp: Optional[datetime] = None
-    verification_status: Optional[str] = None
-    confidence: Optional[float] = None
+    source: str | None = None
+    source_url: str | None = None
+    source_timestamp: datetime | None = None
+    verification_status: str | None = None
+    confidence: float | None = None
 
 
 class SIHProjectSchema(ProvenanceBase):
     project_id: str
     name: str
     project_type: str
-    state: Optional[str] = None
-    district: Optional[str] = None
-    estimated_cost: Optional[float] = None
-    start_date: Optional[date] = None
-    target_completion: Optional[date] = None
-    projected_completion: Optional[date] = None
-    status: Optional[str] = None
-    total_parcels: Optional[int] = 0
-    unresolved_parcels: Optional[int] = 0
-    project_delay_days: Optional[int] = 0
-    critical_path_blocked: Optional[bool] = False
+    state: str | None = None
+    district: str | None = None
+    estimated_cost: float | None = None
+    start_date: date | None = None
+    target_completion: date | None = None
+    projected_completion: date | None = None
+    status: str | None = None
+    total_parcels: int | None = 0
+    unresolved_parcels: int | None = 0
+    project_delay_days: int | None = 0
+    critical_path_blocked: bool | None = False
 
 
 class SIHCompensationSchema(ProvenanceBase):
     compensation_id: str
-    case_id: Optional[str] = None
-    market_value_base: Optional[float] = 0.0
-    multiplier_factor: Optional[float] = 1.0
-    asset_value: Optional[float] = 0.0
-    severance_damage: Optional[float] = 0.0
-    subtotal_before_solatium: Optional[float] = 0.0
-    solatium_amount: Optional[float] = 0.0
-    interest_12pct_amount: Optional[float] = 0.0
-    total_compensation: Optional[float] = 0.0
-    compensation_status: Optional[str] = None
+    case_id: str | None = None
+    market_value_base: float | None = 0.0
+    multiplier_factor: float | None = 1.0
+    asset_value: float | None = 0.0
+    severance_damage: float | None = 0.0
+    subtotal_before_solatium: float | None = 0.0
+    solatium_amount: float | None = 0.0
+    interest_12pct_amount: float | None = 0.0
+    total_compensation: float | None = 0.0
+    compensation_status: str | None = None
 
 
 class SIHRRSchema(ProvenanceBase):
     rr_id: str
-    case_id: Optional[str] = None
-    family_type: Optional[str] = None
-    housing_entitlement: Optional[float] = 0.0
-    subsistence_allowance: Optional[float] = 0.0
-    transport_allowance: Optional[float] = 0.0
-    resettlement_allowance: Optional[float] = 0.0
-    livelihood_option: Optional[str] = None
-    rr_status: Optional[str] = None
+    case_id: str | None = None
+    family_type: str | None = None
+    housing_entitlement: float | None = 0.0
+    subsistence_allowance: float | None = 0.0
+    transport_allowance: float | None = 0.0
+    resettlement_allowance: float | None = 0.0
+    livelihood_option: str | None = None
+    rr_status: str | None = None
 
 
 class SIHLegalCaseSchema(ProvenanceBase):
     legal_case_id: str
-    case_id: Optional[str] = None
-    case_name: Optional[str] = None
-    court: Optional[str] = None
-    filed_date: Optional[date] = None
-    legal_issue: Optional[str] = None
-    legal_status: Optional[str] = None
-    decision_notes: Optional[str] = None
-    is_reference_case: Optional[bool] = False
+    case_id: str | None = None
+    case_name: str | None = None
+    court: str | None = None
+    filed_date: date | None = None
+    legal_issue: str | None = None
+    legal_status: str | None = None
+    decision_notes: str | None = None
+    is_reference_case: bool | None = False
 
 
 class SIHDocumentSchema(ProvenanceBase):
     document_id: str
-    case_id: Optional[str] = None
-    parcel_id: Optional[str] = None
-    document_type: Optional[str] = None
-    upload_date: Optional[date] = None
-    document_status: Optional[str] = None
-    file_ref: Optional[str] = None
+    case_id: str | None = None
+    parcel_id: str | None = None
+    document_type: str | None = None
+    upload_date: date | None = None
+    document_status: str | None = None
+    file_ref: str | None = None
 
 
 class SIHVerificationSchema(ProvenanceBase):
     verification_id: str
-    document_id: Optional[str] = None
-    parcel_id: Optional[str] = None
-    verification_type: Optional[str] = None
-    status: Optional[str] = None
-    officer_id: Optional[str] = None
-    verified_at: Optional[datetime] = None
+    document_id: str | None = None
+    parcel_id: str | None = None
+    verification_type: str | None = None
+    status: str | None = None
+    officer_id: str | None = None
+    verified_at: datetime | None = None
 
 
 class SIHParcelSummarySchema(ProvenanceBase):
     parcel_id: str
-    project_id: Optional[str] = None
-    village_id: Optional[str] = None
-    village_name: Optional[str] = None
+    project_id: str | None = None
+    village_id: str | None = None
+    village_name: str | None = None
     survey_number: str
-    area_sqm: Optional[float] = None
-    area_hectares: Optional[float] = None
-    land_use: Optional[str] = None
-    acquisition_status: Optional[str] = None
-    owner_id: Optional[str] = None
-    owner_name: Optional[str] = None
-    ownership_conflict: Optional[bool] = False
-    conflict_type: Optional[str] = None
-    criticality_score: Optional[float] = 0.0
-    risk_score: Optional[float] = 0.0
-    is_hidden_critical: Optional[bool] = False
-    is_critical_path: Optional[bool] = False
-    recommended_action: Optional[str] = None
+    area_sqm: float | None = None
+    area_hectares: float | None = None
+    land_use: str | None = None
+    acquisition_status: str | None = None
+    owner_id: str | None = None
+    owner_name: str | None = None
+    ownership_conflict: bool | None = False
+    conflict_type: str | None = None
+    criticality_score: float | None = 0.0
+    risk_score: float | None = 0.0
+    is_hidden_critical: bool | None = False
+    is_critical_path: bool | None = False
+    recommended_action: str | None = None
 
 
 class CriticalityBreakdown(BaseModel):
@@ -124,29 +125,29 @@ class CriticalityBreakdown(BaseModel):
 
 class SIHParcelDetailSchema(ProvenanceBase):
     parcel_id: str
-    project_id: Optional[str] = None
-    project_name: Optional[str] = None
-    village_id: Optional[str] = None
-    village_name: Optional[str] = None
-    tehsil: Optional[str] = None
-    district: Optional[str] = None
-    state: Optional[str] = None
+    project_id: str | None = None
+    project_name: str | None = None
+    village_id: str | None = None
+    village_name: str | None = None
+    tehsil: str | None = None
+    district: str | None = None
+    state: str | None = None
     survey_number: str
-    area_sqm: Optional[float] = None
-    area_hectares: Optional[float] = None
-    land_use: Optional[str] = None
-    acquisition_status: Optional[str] = None
-    owner: Optional[Dict[str, Any]] = None
-    acquisition_case: Optional[Dict[str, Any]] = None
-    compensation: Optional[SIHCompensationSchema] = None
-    rr: Optional[SIHRRSchema] = None
-    legal_cases: List[SIHLegalCaseSchema] = []
-    documents: List[SIHDocumentSchema] = []
-    verifications: List[SIHVerificationSchema] = []
-    upstream_blockers: List[Dict[str, Any]] = []
-    downstream_dependencies: List[Dict[str, Any]] = []
+    area_sqm: float | None = None
+    area_hectares: float | None = None
+    land_use: str | None = None
+    acquisition_status: str | None = None
+    owner: dict[str, Any] | None = None
+    acquisition_case: dict[str, Any] | None = None
+    compensation: SIHCompensationSchema | None = None
+    rr: SIHRRSchema | None = None
+    legal_cases: list[SIHLegalCaseSchema] = []
+    documents: list[SIHDocumentSchema] = []
+    verifications: list[SIHVerificationSchema] = []
+    upstream_blockers: list[dict[str, Any]] = []
+    downstream_dependencies: list[dict[str, Any]] = []
     criticality_score: float = 0.0
-    criticality_breakdown: Optional[CriticalityBreakdown] = None
+    criticality_breakdown: CriticalityBreakdown | None = None
     risk_score: float = 0.0
     recommended_action: str
     is_critical_path: bool = False
@@ -156,7 +157,7 @@ class SIHParcelDetailSchema(ProvenanceBase):
 class ScheduleForecast(BaseModel):
     project_finish: str
     project_delay_days: int
-    critical_path: List[str]
+    critical_path: list[str]
     total_duration_days: float
 
 
@@ -171,7 +172,7 @@ class BottleneckReport(BaseModel):
     criticality_score: float
     active_blocker: str
     recommended_action: str
-    causal_chain: List[str]
+    causal_chain: list[str]
 
 
 class CriticalPathResponse(BaseModel):
@@ -180,9 +181,9 @@ class CriticalPathResponse(BaseModel):
     projected_finish: str
     project_delay_days: int
     critical_path_length_days: float
-    critical_path_nodes: List[str]
-    critical_path_parcels: List[str]
-    bottlenecks: List[BottleneckReport]
+    critical_path_nodes: list[str]
+    critical_path_parcels: list[str]
+    bottlenecks: list[BottleneckReport]
     source_type: SourceType = "MODEL_DERIVED"
 
 
@@ -197,19 +198,19 @@ class SimulationRequest(BaseModel):
         "process_rr",
         "RESOLVE_BLOCKER"
     ]
-    input_entity_ids: List[str] = Field(..., description="Target parcel_id(s) or case_id(s)")
-    acceleration_factor: Optional[float] = 1.0
-    notes: Optional[str] = None
+    input_entity_ids: list[str] = Field(..., description="Target parcel_id(s) or case_id(s)")
+    acceleration_factor: float | None = 1.0
+    notes: str | None = None
 
 
 class SimulationResponse(BaseModel):
     intervention_type: str
-    target_entities: List[str]
+    target_entities: list[str]
     preconditions_met: bool
-    precondition_warnings: List[str] = []
+    precondition_warnings: list[str] = []
     before: ScheduleForecast
     after: ScheduleForecast
     delay_reduction_days: int
-    cost_estimate_units: Dict[str, Any]
-    affected_entities: List[str]
+    cost_estimate_units: dict[str, Any]
+    affected_entities: list[str]
     source_type: SourceType = "MODEL_DERIVED"

@@ -1,5 +1,7 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
+
 from app.services.impact_engine import ImpactEngine
+
 
 def prep_engine(engine):
     class FakeReq:
@@ -70,5 +72,5 @@ def test_simulation_non_destructive():
     
     payload = {"type": "RESOLVE_BLOCKER", "parcel_id": "parcel_A"}
     sim_result = engine.simulate_intervention(payload)
-    
+    assert sim_result is not None
     assert engine.current_engine.graph.nodes["A"]["constraints"]["parcel_A"] == 10

@@ -4,15 +4,14 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm import selectinload
 
 from app.api.deps import TrustedIdentity, get_current_user_context
 from app.core.database import get_db
-from app.models.domain import AcquisitionCase, AuditLog, StatutoryRule, Parcel
+from app.models.domain import AcquisitionCase, AuditLog, Parcel, StatutoryRule
 from app.schemas.domain import AcquisitionCaseRead, AuditLogRead, CaseTransitionRequest
 from app.services.audit import log_transition
-from app.services.clock import evaluate_deadline
 from app.services.authorization import AuthorizationService
+from app.services.clock import evaluate_deadline
 
 router = APIRouter()
 
@@ -46,7 +45,7 @@ async def transition_case(
     db: AsyncSession = Depends(get_db),
     current_user: TrustedIdentity = Depends(get_current_user_context)
 ):
-    case, parcel = await _verify_case_access(case_id, db, current_user)
+    case, _ = await _verify_case_access(case_id, db, current_user)
     AuthorizationService.verify_mutation_access(current_user)
 
     old_stage = case.current_stage
