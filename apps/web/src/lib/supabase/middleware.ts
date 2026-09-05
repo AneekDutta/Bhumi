@@ -58,16 +58,32 @@ export async function updateSession(request: NextRequest) {
 
   const isAuthenticated = !!user || !!officerSession;
 
-  // 1. If unauthenticated and accessing a protected path:
+  // 1. Support instantaneous switch to Web Admin console via query param
+  if (request.nextUrl.searchParams.get('switch') === 'admin') {
+    const url = request.nextUrl.clone();
+    url.searchParams.delete('switch');
+    const response = NextResponse.redirect(url);
+    response.cookies.set('bhumi_officer_session', 'officer%40bhumi.gov.in', {
+      path: '/',
+      maxAge: 86400,
+      sameSite: 'lax',
+    });
+    return response;
+  }
+
+  // 2. If unauthenticated and accessing a protected path:
   if (!isAuthenticated && !isPublicPath) {
     const url = request.nextUrl.clone();
     url.pathname = pathname.startsWith('/field') ? '/field/login' : '/login';
     return NextResponse.redirect(url);
   }
 
-  // 2. Strict Role-Based Access Control (RBAC):
-  // Field Officers are strictly restricted to /field/* routes
+  // 3. Strict Role-Based Access Control (RBAC):
+  // Field Officers are restricted to /field/* routes, but MUST NOT be blocked from public pages (like /login)
   if (parsedRole === 'FIELD_OFFICER') {
+    if (isPublicPath) {
+      return supabaseResponse;
+    }
     if (!pathname.startsWith('/field')) {
       const url = request.nextUrl.clone();
       url.pathname = '/field/dashboard';

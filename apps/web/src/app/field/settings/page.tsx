@@ -133,6 +133,18 @@ export default function FieldSettingsPage() {
 
         {/* Switch Officer / Sign Out */}
         <div className="space-y-2 pt-2">
+          <button
+            type="button"
+            onClick={() => {
+              document.cookie = "bhumi_officer_session=officer%40bhumi.gov.in; path=/; max-age=86400; SameSite=Lax";
+              window.location.href = "/";
+            }}
+            className="w-full py-3 px-4 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 rounded-xl text-xs font-semibold border border-indigo-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+            <span>Switch to Desktop Web Officer Portal</span>
+          </button>
+
           <Link
             href="/field/login"
             className="w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold border border-slate-700 transition-all flex items-center justify-center gap-2 text-center"

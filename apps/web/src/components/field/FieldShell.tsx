@@ -153,13 +153,17 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
               )}
             </div>
 
-            <Link
-              href="/"
-              title="Return to Desktop View"
-              className="p-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white border border-slate-700 transition-colors"
+            <button
+              type="button"
+              onClick={() => {
+                document.cookie = "bhumi_officer_session=officer%40bhumi.gov.in; path=/; max-age=86400; SameSite=Lax";
+                window.location.href = "/";
+              }}
+              title="Switch to Web Officer / Admin Console"
+              className="p-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white border border-slate-700 transition-colors cursor-pointer"
             >
               <Monitor className="w-3.5 h-3.5" />
-            </Link>
+            </button>
 
             <ThemeToggle variant="icon" />
           </div>

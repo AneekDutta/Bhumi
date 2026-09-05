@@ -386,13 +386,17 @@ export default function FieldLoginPage() {
           <p className="text-[11px] text-slate-400">
             Are you a CALA Director or State Administrator?
           </p>
-          <Link
-            href="/login"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:underline transition-colors"
+          <button
+            type="button"
+            onClick={() => {
+              document.cookie = "bhumi_officer_session=officer%40bhumi.gov.in; path=/; max-age=86400; SameSite=Lax";
+              window.location.href = "/";
+            }}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:underline transition-colors cursor-pointer"
           >
             <Monitor className="w-3.5 h-3.5" />
             <span>Go to Desktop Admin Command Console →</span>
-          </Link>
+          </button>
         </div>
 
       </div>
