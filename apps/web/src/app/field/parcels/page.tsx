@@ -17,6 +17,7 @@ import {
 import { FieldShell } from "@/components/field/FieldShell";
 import { getFieldParcels } from "@/lib/api";
 import { offlineStore } from "@/lib/offlineStore";
+import { useRealtimeDashboard } from "@/lib/supabase/useRealtime";
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371e3;
@@ -39,6 +40,20 @@ export default function AssignedParcelsPage() {
   const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "disputed" | "verified">("all");
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const refreshParcels = async () => {
+    try {
+      const active = offlineStore.getActiveOfficer();
+      const offId = (active ? (active.officer_id || active.id) : "OFF-001") || "OFF-001";
+      const fetched = await getFieldParcels(offId);
+      if (fetched && fetched.length > 0) setParcels(fetched);
+    } catch {}
+  };
+
+  // Real-time synchronization: automatically reloads parcels when Supabase changes
+  useRealtimeDashboard(() => {
+    refreshParcels();
+  });
   const [officer, setOfficer] = useState<any>(null);
 
   useEffect(() => {

@@ -22,6 +22,7 @@ import {
 import { FieldShell } from "@/components/field/FieldShell";
 import { getFieldParcels, getFieldIncidents } from "@/lib/api";
 import { offlineStore } from "@/lib/offlineStore";
+import { useRealtimeDashboard } from "@/lib/supabase/useRealtime";
 
 export default function FieldDashboardPage() {
   const router = useRouter();
@@ -30,6 +31,22 @@ export default function FieldDashboardPage() {
   const [incidents, setIncidents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [queueCount, setQueueCount] = useState(0);
+
+  const refreshData = async () => {
+    try {
+      const active = offlineStore.getActiveOfficer();
+      const offId: string = (active ? (active.officer_id || active.id) : "OF001") || "OF001";
+      const data = await getFieldParcels(offId);
+      if (data && data.length > 0) setParcels(data);
+      const incData = await getFieldIncidents();
+      if (incData) setIncidents(incData);
+    } catch {}
+  };
+
+  // Real-time synchronization: automatically updates dashboard when changes occur in Supabase
+  useRealtimeDashboard(() => {
+    refreshData();
+  });
 
   useEffect(() => {
     const active = offlineStore.getActiveOfficer();

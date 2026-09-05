@@ -21,6 +21,7 @@ import {
 import { FieldShell } from "@/components/field/FieldShell";
 import { FieldSpatialMap } from "@/components/field/FieldSpatialMap";
 import { apiClient, getFieldIncidents } from "@/lib/api";
+import { useRealtimeIncidents } from "@/lib/supabase/useRealtime";
 
 export default function FieldMapPage() {
   const [geojson, setGeojson] = useState<any>(null);
@@ -30,6 +31,18 @@ export default function FieldMapPage() {
   const [selectedIncident, setSelectedIncident] = useState<any>(null);
   const [filterMode, setFilterMode] = useState<"ALL" | "PENDING" | "DISPUTED" | "INCIDENTS">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const reloadIncidents = async () => {
+    try {
+      const incs = await getFieldIncidents();
+      if (incs) setIncidents(incs);
+    } catch {}
+  };
+
+  // Real-time synchronization: updates incident map markers when reported or resolved
+  useRealtimeIncidents(undefined, () => {
+    reloadIncidents();
+  });
 
   useEffect(() => {
     async function loadSpatialData() {

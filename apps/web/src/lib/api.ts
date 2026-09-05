@@ -26,6 +26,7 @@ import {
   type RealCase,
   type RealBlocker
 } from './realData';
+import { supabaseDataService } from './supabase/supabaseService';
 
 export const NATIONAL_PROJECTS: RealProject[] = REAL_PROJECTS;
 export const MOCK_PARCELS: RealParcel[] = REAL_PARCELS;
@@ -711,130 +712,29 @@ export const apiClient = {
   },
 
   getFieldParcels: async (officerId?: string, villageId?: string) => {
-    try {
-      const query = new URLSearchParams();
-      if (officerId) query.set('officer_id', officerId);
-      if (villageId) query.set('village_id', villageId);
-      const url = `${API_URL}/sih26016/field/parcels${query.toString() ? `?${query.toString()}` : ''}`;
-      const res = await fetch(url, { cache: 'no-store' });
-      if (res.ok) return await res.json();
-    } catch (e) {}
-
-    // Fallback to local real parcels
-    return MOCK_PARCELS.map((p, idx) => ({
-      parcel_id: p.id || `P0000${idx + 1}`,
-      survey_number: p.survey_no || `${101 + idx}`,
-      village_id: 'V01',
-      village_name: 'Kanhera Kalan',
-      owner_name: 'Landholder',
-      area_sqm: (p.area_hectares || 1.2) * 10000,
-      area_hectares: p.area_hectares || 1.2,
-      land_use: 'agricultural',
-      acquisition_status: p.current_stage || 'not_started',
-      ownership_conflict: false,
-      conflict_type: 'none',
-      criticality_score: 55.0,
-      risk_score: 30.0,
-      is_critical_path: idx < 3,
-      recommended_action: 'Perform field boundary verification',
-      verification_status: 'pending',
-      centroid_lat: 24.6500 + (idx * 0.0005),
-      centroid_lng: 75.9300 + (idx * 0.0007),
-    }));
+    return await supabaseDataService.getParcels();
   },
 
   submitFieldVerification: async (payload: any) => {
-    try {
-      const res = await fetch(`${API_URL}/sih26016/field/verify`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) return await res.json();
-    } catch (e) {}
-
-    return {
-      success: true,
-      verification_id: `VF_${Date.now()}`,
-      parcel_id: payload.parcel_id,
-      status: payload.status,
-      has_issue: payload.has_issue,
-      issue_type: payload.issue_type,
-      updated_risk_score: payload.has_issue ? 75.0 : 25.0,
-      updated_criticality_score: 68.0,
-      is_critical_path: true,
-      cpm_delay_days: payload.has_issue ? 259 : 229,
-      project_delay_delta_days: payload.has_issue ? 30 : 0,
-      projected_finish_date: '2028-12-15',
-      recommended_action: payload.has_issue ? 'Refer title dispute to Special Lok Adalat bench' : 'Proceed to award declaration',
-      notification: {
-        title: `Field Record: Parcel ${payload.parcel_id}`,
-        message: payload.has_issue ? `Issue ${payload.issue_type} logged with statutory blocker.` : 'Verification completed cleanly.',
-        urgency: payload.has_issue ? 'CRITICAL' : 'NORMAL'
-      }
-    };
+    return await supabaseDataService.submitFieldVerification(payload);
   },
 
   syncFieldBatch: async (officerId: string, submissions: any[]) => {
-    try {
-      const res = await fetch(`${API_URL}/sih26016/field/sync`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ officer_id: officerId, submissions })
-      });
-      if (res.ok) return await res.json();
-    } catch (e) {}
-
+    const results = [];
+    for (const sub of submissions) {
+      const res = await supabaseDataService.submitFieldVerification(sub);
+      results.push(res);
+    }
     return {
       success: true,
-      synced_count: submissions.length,
+      synced_count: results.length,
       failed_count: 0,
-      results: submissions.map(s => ({
-        success: true,
-        verification_id: `VF_SYNC_${Date.now()}`,
-        parcel_id: s.parcel_id,
-        status: s.status,
-        has_issue: s.has_issue,
-      }))
+      results
     };
   },
 
   getFieldIncidents: async (filters?: { parcel_id?: string; project_id?: string; status?: string }) => {
-    try {
-      const q = new URLSearchParams();
-      if (filters?.parcel_id) q.set('parcel_id', filters.parcel_id);
-      if (filters?.project_id) q.set('project_id', filters.project_id);
-      if (filters?.status) q.set('status', filters.status);
-      const res = await fetch(`${API_URL}/sih26016/field/incidents?${q.toString()}`);
-      if (res.ok) return await res.json();
-    } catch (e) {}
-
-    return [
-      {
-        verification_id: "INC-2026-001",
-        parcel_id: filters?.parcel_id || "PAR-003",
-        survey_number: "88/1",
-        village_name: "Ramganj Mandi",
-        project_id: "P-NH927A",
-        officer_id: "OF001",
-        officer_name: "Ramesh Patel",
-        verification_type: "field",
-        status: "reported",
-        has_issue: true,
-        issue_type: "ownership_conflict",
-        issue_severity: "CRITICAL_STOPPAGE",
-        observations: "Two rival co-sharers claiming parcel compensation. High tension on site.",
-        remarks: "Referred to Tehsildar for summary title adjudication.",
-        verified_at: "2026-09-05T09:30:00Z",
-        gps_lat: 24.6492,
-        gps_lng: 75.9284,
-        gps_accuracy: 3.8,
-        photos: [],
-        documents: [],
-        admin_resolution: null,
-        source_type: "SYNTHETIC / DEVELOPMENT DATA"
-      }
-    ];
+    return await supabaseDataService.getIncidents(filters);
   },
 
   confirmFieldIncident: async (incidentId: string, payload: {
@@ -849,49 +749,27 @@ export const apiClient = {
     photo_evidence_url?: string;
     confirmed_severity?: string;
   }) => {
-    try {
-      const res = await fetch(`${API_URL}/sih26016/field/incidents/${incidentId}/confirm`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) return await res.json();
-    } catch (e) {}
-
-    return {
-      success: true,
-      incident: {
-        verification_id: incidentId,
-        status: payload.confirmation_status || "confirmed",
-        confirmed_at: new Date().toISOString(),
-        confirming_officer_name: payload.officer_name,
-        observations: payload.observation_notes,
-        source_type: "USER_ENTERED"
-      }
-    };
+    return await supabaseDataService.submitFieldIncident({
+      parcel_id: incidentId,
+      officer_id: payload.officer_id || "OF001",
+      officer_name: payload.officer_name,
+      issue_type: "boundary_dispute",
+      issue_severity: (payload.confirmed_severity as any) || "HIGH",
+      observations: payload.observation_notes || "Field incident confirmed",
+      remarks: payload.remarks || "",
+      gps_lat: payload.gps_latitude || 24.6492,
+      gps_lng: payload.gps_longitude || 75.9284,
+      gps_accuracy: payload.gps_accuracy || 4.0
+    });
   },
 
   resolveAdminIncident: async (incidentId: string, payload: {
     resolution_action: string;
     resolution_comment: string;
     admin_name?: string;
+    parcel_id?: string;
   }) => {
-    try {
-      const res = await fetch(`${API_URL}/sih26016/admin/incidents/${incidentId}/resolve`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) return await res.json();
-    } catch (e) {}
-
-    return {
-      success: true,
-      incident_id: incidentId,
-      resolution_status: payload.resolution_action.toLowerCase(),
-      cpm_delay_days: 0,
-      projected_finish_date: "2028-11-15"
-    };
+    return await supabaseDataService.resolveAdminIncident(incidentId, payload);
   }
 };
 

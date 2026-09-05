@@ -6,6 +6,7 @@ import { DocumentRegister } from '@/components/documents/DocumentRegister';
 import { FieldIncidentReviewCard } from '@/components/documents/FieldIncidentReviewCard';
 import { CheckCircle2, Clock, AlertTriangle, FileText, MapPin, User, Scale, ArrowRight, ShieldCheck, Calendar, Hash, Building2, AlertCircle, Sparkles, Coins } from 'lucide-react';
 import { ProvenanceBadge, DataRealityBanner } from '@/components/common/ProvenanceBadge';
+import { RealtimeParcelHeader } from '@/components/parcels/RealtimeParcelHeader';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -125,39 +126,23 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
       }}>
         <div style={{ position: 'absolute', top: 0, right: 0, width: 300, height: 300, borderRadius: '50%', background: isLapsed ? 'rgba(244,63,94,0.06)' : 'rgba(245,158,11,0.06)', filter: 'blur(80px)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4, background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              Cadastral Survey Record
-            </span>
-            <ProvenanceBadge sourceType={activeParcel.source_type || 'SYNTHETIC'} size="xs" />
-            <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#6b7a94' }}>
-              ID: {activeParcel.id || activeParcel.parcel_id}
-            </span>
-            {isLapsed ? (
-              <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: 'rgba(244,63,94,0.2)', border: '1px solid rgba(244,63,94,0.4)', color: '#f43f5e', textTransform: 'uppercase', letterSpacing: '0.06em', animation: 'pulse 2s infinite' }}>
-                ⚠ Sec 19(7) LAPSED
-              </span>
-            ) : (
-              <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', textTransform: 'uppercase' }}>
-                {parcel.status}
-              </span>
-            )}
-          </div>
-
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-            <div>
-              <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
-                Survey No. {parcel.survey_no}
-              </h1>
-              <p style={{ fontSize: 12, color: '#4a5568', marginTop: 6 }}>
-                {parcel.village_name || 'Wagholi Village'}, Pune · RFCTLARR Act 2013 · {acqCase?.statutory_act || 'NH Act 1956'}
-              </p>
+            <div style={{ flex: 1 }}>
+              <RealtimeParcelHeader
+                parcelId={activeParcel.id || activeParcel.parcel_id}
+                surveyNo={parcel.survey_no || activeParcel.survey_number}
+                villageName={parcel.village_name || activeParcel.village_name || 'Kanhera Kalan'}
+                statutoryAct={acqCase?.statutory_act || 'RFCTLARR Act 2013'}
+                initialStatus={activeParcel.acquisition_status || parcel.status || 'UNRESOLVED'}
+                isLapsed={isLapsed}
+                sourceType={activeParcel.source_type || 'SYNTHETIC'}
+              />
             </div>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <Link href={`/projects/${parcel.project_id}/spatial`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+              <Link href={`/projects/${parcel.project_id || activeParcel.project_id || 'P-NH927A'}/spatial`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <MapPin style={{ width: 13, height: 13 }} /> GIS View
               </Link>
-              <Link href={`/projects/${parcel.project_id}/impact`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Link href={`/projects/${parcel.project_id || activeParcel.project_id || 'P-NH927A'}/impact`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Scale style={{ width: 13, height: 13 }} /> CPM Path
               </Link>
             </div>

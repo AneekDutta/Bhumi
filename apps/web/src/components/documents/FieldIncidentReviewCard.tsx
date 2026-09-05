@@ -11,6 +11,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import { getFieldIncidents, resolveAdminIncident } from "@/lib/api";
+import { useRealtimeIncidents } from "@/lib/supabase/useRealtime";
 
 interface FieldIncidentReviewCardProps {
   parcelId: string;
@@ -42,6 +43,11 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
     loadIncidents();
   }, [loadIncidents]);
 
+  // Supabase Realtime: automatically updates when Field Officer reports/updates ground incidents
+  useRealtimeIncidents(parcelId, () => {
+    loadIncidents();
+  });
+
   const handleResolve = async (incidentId: string) => {
     if (!comment.trim()) {
       alert("Please provide an administrative resolution note or order reference.");
@@ -54,7 +60,8 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
       const res = await resolveAdminIncident(incidentId, {
         resolution_action: action,
         resolution_comment: comment.trim(),
-        admin_name: "CALA Administrative Office"
+        admin_name: "CALA Administrative Office",
+        parcel_id: parcelId
       });
 
       setFeedback({

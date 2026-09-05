@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
 import { getFieldParcels, getFieldIncidents, confirmFieldIncident } from "@/lib/api";
+import { useRealtimeParcel } from "@/lib/supabase/useRealtime";
 import { CaptureLocation } from "@/components/field/CaptureLocation";
 import { offlineStore } from "@/lib/offlineStore";
 
@@ -35,6 +36,21 @@ export default function ParcelDetailsPage() {
   const [confirmNotes, setConfirmNotes] = useState<string>("");
   const [confirmingSubmitting, setConfirmingSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+
+  const loadParcel = async () => {
+    try {
+      const list = await getFieldParcels();
+      const match = list.find((p: any) => p.parcel_id === parcelId || p.id === parcelId);
+      if (match) setParcel(match);
+      const incs = await getFieldIncidents({ parcel_id: parcelId });
+      setIncidents(incs || []);
+    } catch {}
+  };
+
+  // Supabase Realtime: updates when Admin resolves issues or verifies from desktop
+  useRealtimeParcel(parcelId, () => {
+    loadParcel();
+  });
 
   useEffect(() => {
     async function load() {
