@@ -8,7 +8,7 @@ export interface LocationCoordinates {
   lat: number;
   lng: number;
   accuracy: number;
-  timestamp: number;
+  timestamp?: number;
   altitude?: number | null;
   heading?: number | null;
   speed?: number | null;

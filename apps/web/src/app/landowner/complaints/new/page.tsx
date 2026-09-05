@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { 
@@ -16,8 +16,11 @@ import {
   FileCheck,
   Compass,
   AlertCircle,
-  HelpCircle,
-  Eye
+  Plus,
+  Trash2,
+  ShieldAlert,
+  ShieldCheck,
+  Crosshair
 } from "lucide-react";
 import { LandownerShell } from "@/components/landowner/LandownerShell";
 import { 
@@ -26,6 +29,12 @@ import {
   uploadEvidenceDocument 
 } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
+import { getCurrentGPSPosition, LocationCoordinates } from "@/lib/native/geolocation";
+import { 
+  calculatePolygonAreaAndUncertainty, 
+  AreaAndUncertaintyResult,
+  BoundaryPointWithAccuracy
+} from "@/lib/spatial/geodesicArea";
 
 const COMPLAINT_CATEGORIES = [
   "Compensation not received / delayed",
@@ -38,26 +47,52 @@ const COMPLAINT_CATEGORIES = [
   "Other acquisition-related issue"
 ];
 
+const DOCUMENT_TYPES = [
+  "Land Title Deed / Registry",
+  "Jamabandi / Khatauni / Revenue Extract",
+  "Property Tax Receipt",
+  "Electricity / Utility Bill",
+  "Boundary Demarcation Photo",
+  "Physical Possession Proof"
+];
+
+interface CapturedCornerPoint extends BoundaryPointWithAccuracy {
+  sequence: number;
+  lat: number;
+  lng: number;
+  accuracy: number;
+  timestamp: string;
+}
+
 export default function NewComplaintPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const preselectedParcel = searchParams.get("parcel_id") || "";
   const supabase = createClient();
 
+  // Mode: Real Hardware GPS vs Demo Simulation
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
+
   // Form Inputs
   const [parcels, setParcels] = useState<any[]>([]);
-  const [selectedParcel, setSelectedParcel] = useState<string>(preselectedParcel);
+  const [selectedParcel, setSelectedParcel] = useState<string>(preselectedParcel || "unregistered");
   const [category, setCategory] = useState<string>(COMPLAINT_CATEGORIES[0]);
   const [description, setDescription] = useState<string>("");
   const [priority, setPriority] = useState<"NORMAL" | "URGENT" | "CRITICAL">("NORMAL");
 
-  // COMPULSORY GPS State
+  // GPS Location State (Primary Coordinates)
   const [gpsLocation, setGpsLocation] = useState<{ lat: number; lng: number; accuracy: number; timestamp: string } | null>(null);
   const [capturingGps, setCapturingGps] = useState(false);
   const [gpsError, setGpsError] = useState<string | null>(null);
+  const [accuracyWarning, setAccuracyWarning] = useState<string | null>(null);
 
-  // COMPULSORY Document Evidence State
+  // Multi-point Boundary Polygon Marking (Optional / Recommended)
+  const [boundaryPoints, setBoundaryPoints] = useState<CapturedCornerPoint[]>([]);
+  const [capturingCorner, setCapturingCorner] = useState(false);
+
+  // Document Evidence State (Classified as LANDOWNER-SUBMITTED / UNVERIFIED)
   const [evidenceFile, setEvidenceFile] = useState<File | null>(null);
+  const [docCategory, setDocCategory] = useState<string>(DOCUMENT_TYPES[0]);
   const [fileError, setFileError] = useState<string | null>(null);
 
   // Flow State
@@ -67,6 +102,12 @@ export default function NewComplaintPage() {
 
   // Landowner Session Identity
   const [currentUser, setCurrentUser] = useState<any>(null);
+
+  // Area & Uncertainty Calculation
+  const areaResult: AreaAndUncertaintyResult | null = useMemo(() => {
+    if (boundaryPoints.length < 4) return null;
+    return calculatePolygonAreaAndUncertainty(boundaryPoints);
+  }, [boundaryPoints]);
 
   // Load authenticated session & parcels
   useEffect(() => {
@@ -105,84 +146,164 @@ export default function NewComplaintPage() {
 
       // 2. Load authorized parcels from Supabase
       try {
-        let pData = await getLandownerParcels(activeUserId);
-        if (!pData || pData.length === 0) {
-          // If citizen has no pre-assigned parcels, fetch all corridor parcels so they can file against any affected project parcel
-          const { getFieldParcels } = await import("@/lib/api");
-          pData = await getFieldParcels();
-        }
+        const pData = await getLandownerParcels(activeUserId);
         setParcels(pData || []);
-        if (!selectedParcel && pData && pData.length > 0) {
-          setSelectedParcel(pData[0].parcel_id || pData[0].id);
+        if (pData && pData.length > 0) {
+          if (!preselectedParcel) {
+            setSelectedParcel(pData[0].parcel_id || pData[0].id);
+          }
+        } else {
+          // Unregistered citizen without linked parcels: default to unregistered claim
+          setSelectedParcel("unregistered");
         }
       } catch (err) {
         console.warn("Could not load landowner parcels:", err);
+        setSelectedParcel("unregistered");
       }
     }
 
     initSession();
-  }, [selectedParcel, supabase]);
+  }, [preselectedParcel, supabase]);
 
   // =========================================================================
-  // COMPULSORY GPS CAPTURE HANDLER (Browser Geolocation API)
-  // Rejects fake, hardcoded, or random coordinates.
+  // GPS FIX HANDLER (Real Hardware GPS vs Demo Simulation Mode)
   // =========================================================================
-  const handleCaptureRealGps = () => {
+  const handleCaptureLocation = async () => {
     setGpsError(null);
-
-    if (!navigator.geolocation) {
-      setGpsError("Geolocation is not supported by your browser. Please use a modern mobile or desktop browser.");
-      setGpsLocation(null);
-      return;
-    }
-
+    setAccuracyWarning(null);
     setCapturingGps(true);
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const lat = Number(pos.coords.latitude.toFixed(6));
-        const lng = Number(pos.coords.longitude.toFixed(6));
-        const accuracy = Number(pos.coords.accuracy.toFixed(1));
+    try {
+      let pos: LocationCoordinates;
 
-        // Strict verification: coordinates must not be 0,0
-        if (lat === 0 && lng === 0) {
-          setGpsError("Location is required to submit this complaint. Invalid coordinates obtained.");
-          setGpsLocation(null);
-          setCapturingGps(false);
-          return;
-        }
-
-        setGpsLocation({
-          lat,
-          lng,
-          accuracy,
-          timestamp: new Date().toISOString()
+      if (isDemoMode) {
+        // DEMO / SIMULATION MODE: Realistic accuracy within ±12m to ±15m range (not wildly varying)
+        const simAccuracy = Number((12.0 + Math.random() * 3.0).toFixed(1));
+        const baseLat = 24.6650;
+        const baseLng = 75.9520;
+        pos = {
+          lat: Number(baseLat.toFixed(6)),
+          lng: Number(baseLng.toFixed(6)),
+          accuracy: simAccuracy
+        };
+      } else {
+        // REAL GPS MODE: Hardware GPS only. Real coordinates & accuracy only. NEVER fabricate.
+        pos = await getCurrentGPSPosition({
+          enableHighAccuracy: true,
+          timeout: 15000
         });
-        setCapturingGps(false);
-      },
-      (err) => {
-        setCapturingGps(false);
-        setGpsLocation(null);
-        if (err.code === 1) {
-          // Permission denied
-          setGpsError("Location permission denied. Location is required to submit this complaint so CALA and Field Officers can verify the parcel on the ground. Please grant location access in your browser settings and tap 'Capture Live GPS Location' again.");
-        } else if (err.code === 2) {
-          setGpsError("Location is required to submit this complaint. Unable to acquire satellite GPS fix. Please ensure device location is enabled and retry.");
-        } else {
-          setGpsError("Location is required to submit this complaint. GPS acquisition timed out. Please tap retry.");
-        }
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 0
       }
-    );
+
+      if (pos.lat === 0 && pos.lng === 0) {
+        throw new Error("Invalid 0,0 coordinates received from GPS sensor.");
+      }
+
+      if (pos.accuracy > 15) {
+        setAccuracyWarning(`GPS accuracy is ±${pos.accuracy}m. Move to an open area away from tall structures for optimal precision.`);
+      }
+
+      const timestamp = new Date().toISOString();
+      const locData = {
+        lat: pos.lat,
+        lng: pos.lng,
+        accuracy: pos.accuracy,
+        timestamp
+      };
+
+      setGpsLocation(locData);
+
+      // If no boundary corner 1 exists, also record it as Corner 1
+      if (boundaryPoints.length === 0) {
+        setBoundaryPoints([
+          {
+            sequence: 1,
+            lat: pos.lat,
+            lng: pos.lng,
+            accuracy: pos.accuracy,
+            timestamp
+          }
+        ]);
+      }
+    } catch (err: any) {
+      setGpsError(err?.message || "GPS location unavailable. Please enable location permissions and try again.");
+      setGpsLocation(null);
+    } finally {
+      setCapturingGps(false);
+    }
   };
 
   // =========================================================================
-  // COMPULSORY DOCUMENT EVIDENCE HANDLER
-  // Validates file format (.pdf, .jpg, .png, .webp) and max 50MB
+  // CORNER POINT CAPTURE (P1 -> P2 -> P3 -> P4 -> P1 polygon)
+  // =========================================================================
+  const handleAddCornerPoint = async () => {
+    setGpsError(null);
+    setCapturingCorner(true);
+
+    try {
+      let pos: LocationCoordinates;
+
+      if (isDemoMode) {
+        // DEMO / SIMULATION MODE: Realistic simulated accuracy within ±12m to ±15m
+        const simAccuracy = Number((12.0 + Math.random() * 3.0).toFixed(1));
+        const seq = boundaryPoints.length;
+        const baseLat = gpsLocation?.lat || 24.6650;
+        const baseLng = gpsLocation?.lng || 75.9520;
+        const offsets = [
+          [0.0, 0.0],
+          [0.0012, 0.0001],
+          [0.0011, 0.0009],
+          [-0.0001, 0.0008],
+          [0.0005, 0.0013]
+        ];
+        const offset = offsets[seq % offsets.length];
+        pos = {
+          lat: Number((baseLat + offset[1]).toFixed(6)),
+          lng: Number((baseLng + offset[0]).toFixed(6)),
+          accuracy: simAccuracy
+        };
+      } else {
+        // REAL GPS MODE: Hardware GPS only
+        pos = await getCurrentGPSPosition({
+          enableHighAccuracy: true,
+          timeout: 15000
+        });
+      }
+
+      const newPoint: CapturedCornerPoint = {
+        sequence: boundaryPoints.length + 1,
+        lat: pos.lat,
+        lng: pos.lng,
+        accuracy: pos.accuracy,
+        timestamp: new Date().toISOString()
+      };
+
+      setBoundaryPoints((prev) => [...prev, newPoint]);
+
+      if (!gpsLocation) {
+        setGpsLocation({
+          lat: pos.lat,
+          lng: pos.lng,
+          accuracy: pos.accuracy,
+          timestamp: newPoint.timestamp
+        });
+      }
+    } catch (err: any) {
+      setGpsError(err?.message || "GPS location unavailable. Please enable location permissions and try again.");
+    } finally {
+      setCapturingCorner(false);
+    }
+  };
+
+  const handleRemoveCorner = (idxToRemove: number) => {
+    setBoundaryPoints((prev) => {
+      const filtered = prev.filter((_, idx) => idx !== idxToRemove);
+      return filtered.map((pt, idx) => ({ ...pt, sequence: idx + 1 }));
+    });
+  };
+
+  // =========================================================================
+  // DOCUMENT EVIDENCE HANDLER
+  // Classified as: LANDOWNER-SUBMITTED / UNVERIFIED
   // =========================================================================
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFileError(null);
@@ -192,14 +313,7 @@ export default function NewComplaintPage() {
     }
 
     const file = e.target.files[0];
-
-    // Allowed MIME types
-    const allowedTypes = [
-      "application/pdf",
-      "image/jpeg",
-      "image/png",
-      "image/webp"
-    ];
+    const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
 
     if (!allowedTypes.includes(file.type) && !file.name.match(/\.(pdf|jpg|jpeg|png|webp)$/i)) {
       setFileError("Unsupported file format. Please upload a PDF document (.pdf) or image (.jpg, .png, .webp).");
@@ -207,7 +321,6 @@ export default function NewComplaintPage() {
       return;
     }
 
-    // Maximum 50 MB
     if (file.size > 52428800) {
       setFileError("File too large. Maximum allowed file size for supporting documents is 50 MB.");
       setEvidenceFile(null);
@@ -218,71 +331,109 @@ export default function NewComplaintPage() {
   };
 
   // =========================================================================
-  // FORM SUBMISSION (Compulsory Document Upload + Compulsory GPS Enforcement)
+  // FORM SUBMISSION (No Pre-existing Land Parcel Required)
+  // Initial Status: SUBMITTED — AWAITING FIELD REVIEW
   // =========================================================================
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
 
-    // 1. Validate Parcel Selection
-    if (!selectedParcel) {
-      setErrorMsg("Please select the affected land parcel from your authorized landholdings.");
-      return;
-    }
-
-    // 2. Validate Description Length
+    // 1. Description Length Validation
     if (description.trim().length < 15) {
       setErrorMsg("Please provide a detailed explanation of the issue (minimum 15 characters).");
       return;
     }
 
-    // 3. Strict GPS Requirement
+    // 2. GPS Requirement
     if (!gpsLocation) {
-      setErrorMsg("Location is required to submit this complaint. Please tap 'Capture Live GPS Location' to obtain satellite coordinates.");
+      setErrorMsg("Location is required to submit this complaint. Please capture your GPS location.");
       return;
     }
 
-    // 4. Strict Document Requirement
+    // 3. Document Evidence Requirement
     if (!evidenceFile) {
-      setErrorMsg("Supporting documentation is compulsory. Please attach your land deed, passbook, mutation notice, or physical evidence.");
+      setErrorMsg("Supporting documentation is compulsory. Please attach your title deed, tax receipt, or boundary photo.");
       return;
     }
 
     setSubmitting(true);
 
     try {
-      // Phase A: Upload compulsory document to Supabase Storage
+      // Phase A: Upload supporting document to Supabase Storage (parcel_id = null if unregistered)
       setSubmitPhase("Uploading supporting document to Supabase Storage...");
+      const folderParcelId = selectedParcel === "unregistered" ? null : selectedParcel;
       const uploadedDocMetadata = await uploadEvidenceDocument(
         evidenceFile,
         evidenceFile.name,
-        selectedParcel
+        folderParcelId
       );
 
       if (!uploadedDocMetadata || !uploadedDocMetadata.storage_path) {
         throw new Error("Document upload failed to return storage metadata. Complaint submission aborted.");
       }
 
-      // Phase B: Write complaint record to Supabase documents & audit_logs
+      // Attach classification: LANDOWNER-SUBMITTED / UNVERIFIED
+      const docRecord = {
+        ...uploadedDocMetadata,
+        document_category: docCategory,
+        classification: "LANDOWNER-SUBMITTED / UNVERIFIED",
+        uploaded_at: new Date().toISOString()
+      };
+
+      // Phase B: Build boundary GeoJSON polygon if >= 4 corner points captured
+      let boundaryGeoJSON: any = null;
+      if (boundaryPoints.length >= 4) {
+        const ring: [number, number][] = boundaryPoints.map((p) => [p.lng, p.lat]);
+        ring.push([boundaryPoints[0].lng, boundaryPoints[0].lat]); // Close polygon P1->P2->P3->P4->P1
+        boundaryGeoJSON = {
+          type: "Polygon",
+          coordinates: [ring],
+          points: boundaryPoints
+        };
+      }
+
+      // Phase C: Write complaint record to Supabase
       setSubmitPhase("Registering statutory grievance in Supabase Database...");
+      const isUnregistered = selectedParcel === "unregistered" || !selectedParcel;
+      const targetParcelId = isUnregistered ? null : selectedParcel;
+      const targetSurvey = isUnregistered ? "UNREGISTERED_CLAIM" : selectedParcel;
+
       const payload = {
         owner_id: currentUser.user_id,
         owner_name: currentUser.name,
         contact_village: currentUser.village,
         mobile_number: "+91 98290 41234",
-        parcel_id: selectedParcel,
-        survey_number: selectedParcel,
+        parcel_id: targetParcelId,
+        survey_number: targetSurvey,
         project_id: "P-NH927A",
         complaint_type: category,
         description: description.trim(),
         priority: priority,
-        document_evidence: uploadedDocMetadata, // COMPULSORY
+        document_evidence: docRecord,
         gps: {
           lat: gpsLocation.lat,
           lng: gpsLocation.lng,
           accuracy: gpsLocation.accuracy,
           captured_at: gpsLocation.timestamp
-        } // COMPULSORY
+        },
+        landowner_reported_boundary: boundaryGeoJSON,
+        landowner_reported_location: {
+          lat: gpsLocation.lat,
+          lng: gpsLocation.lng,
+          accuracy: gpsLocation.accuracy,
+          captured_at: gpsLocation.timestamp
+        },
+        landowner_declared_area: areaResult ? {
+          sqm: areaResult.areaSqm,
+          acres: areaResult.areaAcres,
+          hectares: areaResult.areaHectares,
+          uncertainty: areaResult.uncertaintySqm,
+          uncertainty_acres: areaResult.uncertaintyAcres,
+          uncertainty_explanation: areaResult.uncertaintyExplanation,
+          status: "LANDOWNER-REPORTED / ESTIMATED"
+        } : null,
+        landowner_documents: [docRecord],
+        is_demo_simulation: isDemoMode
       };
 
       const result = await submitLandownerComplaint(payload);
@@ -291,8 +442,8 @@ export default function NewComplaintPage() {
         throw new Error(result?.message || "Failed to create complaint record in database.");
       }
 
-      // Phase C: Done! Redirect to live tracking
-      setSubmitPhase("Complaint registered! Dispatching real-time alert to CALA...");
+      // Phase D: Done! Redirect to live tracking
+      setSubmitPhase("Complaint registered! Status: SUBMITTED — AWAITING FIELD REVIEW...");
       setTimeout(() => {
         router.push(`/landowner/complaints/${result.complaint_id}`);
       }, 800);
@@ -305,11 +456,12 @@ export default function NewComplaintPage() {
     }
   };
 
-  const isSubmitReady = !!selectedParcel && description.trim().length >= 15 && !!gpsLocation && !!evidenceFile && !submitting;
+  const isSubmitReady = description.trim().length >= 15 && !!gpsLocation && !!evidenceFile && !submitting;
+  const isUnregistered = selectedParcel === "unregistered" || parcels.length === 0;
 
   return (
     <LandownerShell>
-      <div className="p-4 space-y-6 pb-24">
+      <div className="p-4 space-y-6 pb-24 max-w-lg mx-auto">
         
         {/* Navigation / Header */}
         <div className="flex items-center justify-between">
@@ -321,7 +473,7 @@ export default function NewComplaintPage() {
             <span>Back to Grievances</span>
           </Link>
           <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/30">
-            Form 20E · Section 20
+            SUBMITTED — AWAITING FIELD REVIEW
           </span>
         </div>
 
@@ -330,9 +482,111 @@ export default function NewComplaintPage() {
             Lodge Official Grievance
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Submit an official objection to the Competent Authority (CALA) with compulsory GPS coordinates and documentary evidence.
+            Submit an official objection to the Competent Authority (CALA) with GPS boundary capture and supporting documentation.
           </p>
         </div>
+
+        {/* Real Mode vs Demo Simulation Switcher */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+              Operating GPS Mode
+            </span>
+            <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
+              isDemoMode 
+                ? "bg-purple-500/20 text-purple-300 border border-purple-500/40" 
+                : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+            }`}>
+              {isDemoMode ? "DEMO DATA / SIMULATION" : "REAL HARDWARE GPS"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => setIsDemoMode(false)}
+              className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                !isDemoMode
+                  ? "bg-emerald-600 text-white shadow-md"
+                  : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-white"
+              }`}
+            >
+              <Compass className="w-3.5 h-3.5" />
+              <span>Real Hardware GPS</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsDemoMode(true)}
+              className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                isDemoMode
+                  ? "bg-purple-600 text-white shadow-md"
+                  : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-white"
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>Demo Simulation</span>
+            </button>
+          </div>
+
+          {isDemoMode ? (
+            <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-200 text-xs space-y-1">
+              <div className="flex items-center gap-1.5 font-bold text-[10px] uppercase tracking-wider text-purple-300">
+                <AlertTriangle className="w-3.5 h-3.5 text-purple-400" />
+                <span>DEMO DATA / SIMULATION</span>
+              </div>
+              <p className="text-[10px] text-purple-200/90 leading-relaxed">
+                Simulated coordinates modeled strictly within ±12m to ±15m accuracy (never wildly varying, not presented as real).
+              </p>
+            </div>
+          ) : (
+            <p className="text-[10px] text-slate-400">
+              Real Mode: Hardware GPS accuracy only. Zero fake or fabricated coordinates.
+            </p>
+          )}
+        </div>
+
+        {/* Fallback Banner for Landowners without Pre-existing Land Parcels */}
+        {isUnregistered && (
+          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs space-y-3 animate-fadeIn">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 flex-shrink-0 text-amber-400 mt-0.5" />
+              <div className="space-y-1">
+                <span className="font-bold text-white uppercase tracking-wider text-[11px] block">
+                  No registered parcel linked to this account.
+                </span>
+                <p className="text-slate-300 leading-relaxed text-xs">
+                  You can still report an issue by providing your documents and marking the approximate land boundary.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 pt-1 font-mono text-[10px]">
+              <a
+                href="#boundary-marking-section"
+                className="py-1.5 px-2 rounded-lg bg-emerald-600/30 hover:bg-emerald-600/40 border border-emerald-500/40 text-emerald-300 text-center font-bold"
+              >
+                1. Mark Boundary
+              </a>
+              <a
+                href="#documents-section"
+                className="py-1.5 px-2 rounded-lg bg-amber-600/30 hover:bg-amber-600/40 border border-amber-500/40 text-amber-300 text-center font-bold"
+              >
+                2. Upload Docs
+              </a>
+              <button
+                type="button"
+                onClick={() => {
+                  const submitBtn = document.getElementById("submit-complaint-btn");
+                  submitBtn?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-center font-bold border border-slate-700 cursor-pointer"
+              >
+                3. Submit
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Global Error Banner */}
         {errorMsg && (
@@ -348,9 +602,7 @@ export default function NewComplaintPage() {
         {/* Form Container */}
         <form onSubmit={handleSubmit} className="space-y-6">
           
-          {/* ========================================================================= */}
-          {/* SECTION 1: PARCEL & DISPUTE DETAILS                                       */}
-          {/* ========================================================================= */}
+          {/* SECTION 1: PARCEL & DISPUTE DETAILS */}
           <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
             <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
               <span className="w-5 h-5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs font-bold flex items-center justify-center font-mono">
@@ -364,23 +616,25 @@ export default function NewComplaintPage() {
             {/* Affected Parcel Dropdown */}
             <div>
               <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Select Affected Land Parcel <span className="text-amber-400">*</span>
+                Impacted Land Parcel
               </label>
-              <div className="relative">
-                <select
-                  value={selectedParcel}
-                  onChange={(e) => setSelectedParcel(e.target.value)}
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-amber-500 font-mono"
-                >
-                  <option value="" disabled>-- Select from authorized parcels --</option>
-                  {parcels.map((p) => (
-                    <option key={p.parcel_id || p.id} value={p.parcel_id || p.id}>
-                      {p.parcel_id || p.id} · Survey {p.survey_number || p.survey_no || "Khasra"} · {p.village_name || "Chandwas"} ({p.area_hectares || 1.2} Ha)
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <select
+                value={selectedParcel}
+                onChange={(e) => setSelectedParcel(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-amber-500 font-mono"
+              >
+                <option value="unregistered">Unregistered Land Claim (No Official Parcel Linked)</option>
+                {parcels.map((p) => (
+                  <option key={p.parcel_id || p.id} value={p.parcel_id || p.id}>
+                    {p.parcel_id || p.id} · Survey {p.survey_number || p.survey_no || "Khasra"} · {p.village_name || "Chandwas"} ({p.area_hectares || 1.2} Ha)
+                  </option>
+                ))}
+              </select>
+              {selectedParcel === "unregistered" && (
+                <span className="text-[10px] text-amber-400 font-mono block mt-1">
+                  Claim without pre-registered parcel. An official parcel will be linked during field verification.
+                </span>
+              )}
             </div>
 
             {/* Complaint Category */}
@@ -450,50 +704,57 @@ export default function NewComplaintPage() {
             </div>
           </div>
 
-          {/* ========================================================================= */}
-          {/* SECTION 2: COMPULSORY GPS LOCATION                                        */}
-          {/* ========================================================================= */}
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
+          {/* SECTION 2: GPS LOCATION & BOUNDARY MARKING */}
+          <div id="boundary-marking-section" className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-2">
               <div className="flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs font-bold flex items-center justify-center font-mono">
                   2
                 </span>
                 <h2 className="text-xs font-bold text-white uppercase tracking-wider">
-                  Mandatory GPS Location
+                  GPS Land Location & Corner Marking
                 </h2>
               </div>
-              <span className="text-[10px] font-mono font-bold text-red-400 uppercase tracking-wider bg-red-500/10 px-2 py-0.5 rounded border border-red-500/30">
-                Compulsory
+              <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                Satellite Capture
               </span>
             </div>
 
             <p className="text-xs text-slate-300 leading-relaxed">
-              Statutory verification requires your actual physical coordinates so Revenue Officers can locate the dispute on the cadastral map.
+              Capture your physical device GPS coordinates. You can also walk the corners of your parcel (P1 → P2 → P3 → P4 → P1) to mark your claimed boundary.
             </p>
 
-            {/* GPS Error Alert */}
+            {/* Error / Warning Alert */}
             {gpsError && (
               <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-start gap-2.5 animate-fadeIn">
                 <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-400 mt-0.5" />
                 <div className="space-y-1">
-                  <span className="font-bold block text-[11px] uppercase tracking-wider">Location Permission Required</span>
+                  <span className="font-bold block text-[11px] uppercase tracking-wider">Location Error</span>
                   <p>{gpsError}</p>
                 </div>
               </div>
             )}
 
-            {/* Verified GPS Status or Capture Button */}
+            {accuracyWarning && (
+              <div className="p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2 animate-fadeIn">
+                <ShieldAlert className="w-4 h-4 flex-shrink-0 text-amber-400" />
+                <span>{accuracyWarning}</span>
+              </div>
+            )}
+
+            {/* Primary GPS Status */}
             {gpsLocation ? (
               <div className="p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span className="text-xs font-bold">GPS Coordinates Verified</span>
+                    <span className="text-xs font-bold">
+                      {isDemoMode ? "Simulated GPS Position" : "Device GPS Coordinates Verified"}
+                    </span>
                   </div>
                   <button
                     type="button"
-                    onClick={handleCaptureRealGps}
+                    onClick={handleCaptureLocation}
                     className="text-[10px] font-mono text-emerald-400 hover:underline cursor-pointer"
                   >
                     [ Refresh Fix ]
@@ -515,53 +776,171 @@ export default function NewComplaintPage() {
                 </div>
               </div>
             ) : (
-              <div className="space-y-2">
+              <button
+                type="button"
+                disabled={capturingGps}
+                onClick={handleCaptureLocation}
+                className="w-full py-3 px-4 rounded-xl bg-slate-950 hover:bg-slate-800 border-2 border-dashed border-amber-500/50 hover:border-amber-400 text-amber-300 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 shadow-inner"
+              >
+                {capturingGps ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
+                    <span>Acquiring Device GPS Coordinates...</span>
+                  </>
+                ) : (
+                  <>
+                    <Compass className="w-4 h-4 text-amber-400" />
+                    <span>Capture Current GPS Location (Required)</span>
+                  </>
+                )}
+              </button>
+            )}
+
+            {/* Corner Marking Sub-flow (P1 -> P2 -> P3 -> P4 -> P1) */}
+            <div className="pt-2 border-t border-slate-800 space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-bold text-white block">
+                    Mark Land Boundary Corners (P1 → P2 → P3 → P4)
+                  </span>
+                  <span className="text-[10px] text-slate-400">
+                    Walk to each corner of your land plot to record a closed polygon
+                  </span>
+                </div>
                 <button
                   type="button"
-                  disabled={capturingGps}
-                  onClick={handleCaptureRealGps}
-                  className="w-full py-3 px-4 rounded-xl bg-slate-950 hover:bg-slate-800 border-2 border-dashed border-amber-500/50 hover:border-amber-400 text-amber-300 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 shadow-inner"
+                  disabled={capturingCorner}
+                  onClick={handleAddCornerPoint}
+                  className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold font-mono uppercase flex items-center gap-1.5 transition-all cursor-pointer"
                 >
-                  {capturingGps ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
-                      <span>Acquiring Device Satellite Coordinates...</span>
-                    </>
+                  {capturingCorner ? (
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                   ) : (
-                    <>
-                      <Compass className="w-4 h-4 text-amber-400" />
-                      <span>Capture Live GPS Location (Required)</span>
-                    </>
+                    <Plus className="w-3.5 h-3.5" />
                   )}
+                  <span>+ Point {boundaryPoints.length + 1}</span>
                 </button>
-                <p className="text-[11px] text-slate-500 text-center">
-                  Browser location prompt will request permission. Hardcoded/fake coordinates are strictly prohibited.
-                </p>
               </div>
-            )}
+
+              {/* Recorded Vertices List */}
+              {boundaryPoints.length > 0 && (
+                <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                  {boundaryPoints.map((pt, idx) => (
+                    <div
+                      key={idx}
+                      className="p-2 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs font-mono"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="w-5 h-5 rounded-md bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center text-[10px]">
+                          P{pt.sequence}
+                        </span>
+                        <span className="text-white text-[11px]">
+                          {pt.lat}°, {pt.lng}°
+                        </span>
+                        <span className="text-slate-400 text-[10px]">
+                          (±{pt.accuracy}m)
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveCorner(idx)}
+                        className="text-red-400 hover:text-red-300 p-1"
+                        title="Remove point"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Calculated Area Card if >= 4 points */}
+              {boundaryPoints.length >= 4 && (
+                <div className="p-3.5 rounded-xl bg-slate-950 border border-amber-500/40 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono uppercase font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                      LANDOWNER-REPORTED / ESTIMATED
+                    </span>
+                    <span className="text-[10px] font-mono text-slate-400">
+                      {isDemoMode ? "SIMULATED ESTIMATE" : "GPS-based estimate"}
+                    </span>
+                  </div>
+
+                  {areaResult ? (
+                    <div className="space-y-1.5 pt-1">
+                      <div className="text-xl font-bold font-mono text-white text-center">
+                        {areaResult.areaAcres} <span className="text-sm font-medium text-amber-400">acres</span>
+                        <span className="text-xs text-slate-400 font-normal block mt-0.5">
+                          {areaResult.areaSqm.toLocaleString()} m² · {areaResult.areaHectares} Ha
+                        </span>
+                      </div>
+
+                      <div className="text-[10px] text-slate-400 font-mono border-t border-slate-800 pt-1.5">
+                        <span className="text-slate-300 font-bold block mb-0.5">Uncertainty:</span>
+                        {areaResult.uncertaintySqm !== null ? (
+                          <span className="text-amber-300">
+                            ±{areaResult.uncertaintySqm} m² (±{areaResult.uncertaintyAcres} acres)
+                          </span>
+                        ) : (
+                          <span className="text-slate-400 italic">
+                            Area uncertainty cannot be reliably calculated from the available GPS data.
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-[10px] text-slate-400 italic">
+                      Area uncertainty cannot be reliably calculated from the available GPS data.
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {boundaryPoints.length > 0 && boundaryPoints.length < 4 && (
+                <p className="text-[11px] text-slate-400 italic">
+                  Recorded {boundaryPoints.length} of 4 points. Capture at least 4 corner points to define a closed land boundary polygon.
+                </p>
+              )}
+            </div>
           </div>
 
-          {/* ========================================================================= */}
-          {/* SECTION 3: COMPULSORY DOCUMENT EVIDENCE UPLOAD                            */}
-          {/* ========================================================================= */}
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
+          {/* SECTION 3: COMPULSORY DOCUMENT EVIDENCE UPLOAD */}
+          <div id="documents-section" className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
             <div className="flex items-center justify-between border-b border-slate-800 pb-2">
               <div className="flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs font-bold flex items-center justify-center font-mono">
                   3
                 </span>
                 <h2 className="text-xs font-bold text-white uppercase tracking-wider">
-                  Mandatory Supporting Document
+                  Supporting Legal Document
                 </h2>
               </div>
-              <span className="text-[10px] font-mono font-bold text-red-400 uppercase tracking-wider bg-red-500/10 px-2 py-0.5 rounded border border-red-500/30">
-                Compulsory
+              <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                LANDOWNER-SUBMITTED / UNVERIFIED
               </span>
             </div>
 
             <p className="text-xs text-slate-300 leading-relaxed">
-              Upload at least one legal title document, revenue notice, passbook photograph, or boundary photo. Stored securely in the Supabase Storage system.
+              Upload title deed, tax receipt, electricity bill, boundary demarcation photo, or physical possession proof.
             </p>
+
+            {/* Document Type Dropdown */}
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                Document Type
+              </label>
+              <select
+                value={docCategory}
+                onChange={(e) => setDocCategory(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-amber-500"
+              >
+                {DOCUMENT_TYPES.map((dt) => (
+                  <option key={dt} value={dt}>
+                    {dt}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {/* File Error Alert */}
             {fileError && (
@@ -583,7 +962,7 @@ export default function NewComplaintPage() {
                       {evidenceFile.name}
                     </span>
                     <span className="text-[10px] font-mono text-slate-400">
-                      {(evidenceFile.size / (1024 * 1024)).toFixed(2)} MB · {evidenceFile.type || "Document"}
+                      {(evidenceFile.size / (1024 * 1024)).toFixed(2)} MB · {docCategory}
                     </span>
                   </div>
                 </div>
@@ -618,9 +997,7 @@ export default function NewComplaintPage() {
             )}
           </div>
 
-          {/* ========================================================================= */}
-          {/* SECTION 4: SUBMIT ACTION                                                  */}
-          {/* ========================================================================= */}
+          {/* SECTION 4: SUBMIT ACTION */}
           <div className="space-y-3 pt-2">
             
             {/* Progress Phase Notification */}
@@ -632,6 +1009,7 @@ export default function NewComplaintPage() {
             )}
 
             <button
+              id="submit-complaint-btn"
               type="submit"
               disabled={!isSubmitReady}
               className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xl cursor-pointer ${
@@ -658,7 +1036,7 @@ export default function NewComplaintPage() {
             </button>
 
             <p className="text-[10px] text-slate-500 text-center">
-              Recorded in the immutable Supabase audit log under Section 20E of the National Highways Act.
+              Initial status: SUBMITTED — AWAITING FIELD REVIEW. Recorded in immutable Supabase audit log.
             </p>
           </div>
 

@@ -45,19 +45,43 @@ export interface LandownerComplaintPayload {
   owner_name: string;
   contact_village?: string;
   mobile_number?: string;
-  parcel_id: string;
-  survey_number?: string;
+  parcel_id?: string | null; // Optional: A Landowner DOES NOT need a pre-existing parcel
+  survey_number?: string | null;
   project_id?: string;
   complaint_type: string;
   description: string;
   priority?: "NORMAL" | "URGENT" | "CRITICAL";
-  document_evidence: DocumentEvidence; // Compulsory
-  gps: {
+  document_evidence?: DocumentEvidence; // Compulsory evidence (single)
+  documents?: DocumentEvidence[]; // Compulsory evidence (multiple)
+  gps?: {
     lat: number;
     lng: number;
     accuracy?: number;
     captured_at?: string;
-  }; // Compulsory
+  };
+  landowner_reported_location?: {
+    lat: number;
+    lng: number;
+    accuracy: number;
+    timestamp: string | number;
+    is_simulated?: boolean;
+  };
+  landowner_reported_boundary?: {
+    points: LandownerBoundaryPoint[];
+    polygon?: any;
+    area_sqm?: number;
+    area_acres?: number;
+    area_hectares?: number;
+    area_uncertainty_sqm?: number | null;
+    is_simulated?: boolean;
+  };
+  landowner_declared_area?: {
+    sqm: number;
+    acres: number;
+    hectares: number;
+    label?: string;
+  };
+  is_demo_simulation?: boolean;
   photos?: Array<{
     id: string;
     url: string;
@@ -79,13 +103,14 @@ export interface LandownerBoundaryPoint {
 
 export interface LandownerBoundaryPayload {
   boundary_id?: string;
+  complaint_id?: string; // Optional: Link directly to a complaint case
   owner_id: string; // authenticated landowner user ID
   owner_name: string;
   contact_village?: string;
-  parcel_id: string;
-  survey_number: string;
+  parcel_id?: string | null; // Optional: May be null for unregistered land claim
+  survey_number?: string | null;
   project_id?: string;
-  points: LandownerBoundaryPoint[]; // at least 4 actual GPS points
+  points: LandownerBoundaryPoint[]; // at least 4 GPS points
   calculated_area: {
     sqm: number;
     acres: number;
@@ -99,6 +124,7 @@ export interface LandownerBoundaryPayload {
   } | null;
   perimeter_m?: number;
   notes?: string;
+  is_demo_simulation?: boolean;
   provenance?: {
     source: string;
     boundary_type: string;
@@ -1375,10 +1401,11 @@ class SupabaseDataService {
   /**
    * Upload supporting evidence document (PDF, JPG, PNG) to Supabase Storage
    */
-  async uploadEvidenceDocument(file: File | Blob, fileName: string, parcelId: string): Promise<DocumentEvidence> {
+  async uploadEvidenceDocument(file: File | Blob, fileName: string, parcelId?: string | null): Promise<DocumentEvidence> {
     const supabase = this.getClient();
     const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const filePath = `landowner_evidence/${parcelId}/${Date.now()}_${sanitizedFileName}`;
+    const folder = parcelId || "unregistered";
+    const filePath = `landowner_evidence/${folder}/${Date.now()}_${sanitizedFileName}`;
 
     try {
       const { data, error } = await supabase.storage
@@ -1588,14 +1615,15 @@ class SupabaseDataService {
   async submitLandownerComplaint(payload: LandownerComplaintPayload): Promise<any> {
     const supabase = this.getClient();
 
-    // 1. Mandatory Document Validation
-    if (!payload.document_evidence || !payload.document_evidence.storage_path) {
+    // 1. Mandatory Document Validation (supports single or multiple documents)
+    const docs = payload.documents || (payload.document_evidence ? [payload.document_evidence] : []);
+    if (docs.length === 0 || !docs[0].storage_path) {
       throw new Error("A supporting document/evidence file is compulsory. Please attach your deed, passbook, or photo evidence before submitting.");
     }
 
-    // 2. Mandatory GPS Validation
-    const lat = payload.gps?.lat ?? payload.gps_lat;
-    const lng = payload.gps?.lng ?? payload.gps_lng;
+    // 2. Mandatory GPS Location Validation
+    const lat = payload.landowner_reported_location?.lat ?? payload.gps?.lat ?? payload.gps_lat;
+    const lng = payload.landowner_reported_location?.lng ?? payload.gps?.lng ?? payload.gps_lng;
     if (typeof lat !== "number" || typeof lng !== "number" || isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) {
       throw new Error("Location is required to submit this complaint. Please grant device location access and capture GPS coordinates.");
     }
@@ -1604,54 +1632,81 @@ class SupabaseDataService {
     const complaintId = `CMP-${complaintNum}`;
     const nowIso = new Date().toISOString();
     const complaintUuid = toUuid(`complaint-${complaintId}-${Date.now()}`);
-    const parcelUuid = toUuid(payload.parcel_id);
+
+    // Check if a registered parcel ID was provided (NOT required)
+    let targetParcelId: string | null = null;
+    if (payload.parcel_id && payload.parcel_id !== "unregistered" && payload.parcel_id !== "unassigned") {
+      try {
+        const parcelUuid = toUuid(payload.parcel_id);
+        const { data: pCheck } = await supabase.from("parcels").select("id").eq("id", parcelUuid).maybeSingle();
+        if (pCheck?.id) {
+          targetParcelId = pCheck.id;
+        }
+      } catch {}
+    }
 
     // 3. Upload additional photos to Supabase Storage if any
-    const processedPhotos = await this.uploadPhotos(payload.photos || [], payload.parcel_id);
+    const processedPhotos = await this.uploadPhotos(payload.photos || [], payload.parcel_id || complaintId);
 
-    // 4. Structured Grievance Payload with verified document & GPS
+    const isSimulated = !!payload.is_demo_simulation;
+    const initialStatus = "SUBMITTED — AWAITING FIELD REVIEW";
+
+    // 4. Structured Grievance Claim Payload
     const descriptionPayload = JSON.stringify({
       complaint_id: complaintId,
       owner_id: payload.owner_id,
       owner_name: payload.owner_name,
-      contact_village: payload.contact_village || "Kanhera Kalan",
+      contact_village: payload.contact_village || "Corridor Sector",
       mobile_number: payload.mobile_number || "",
-      parcel_id: payload.parcel_id,
-      survey_number: payload.survey_number || payload.parcel_id,
+      parcel_id: payload.parcel_id || null,
+      survey_number: payload.survey_number || (payload.parcel_id ? payload.parcel_id : "Unregistered Claim"),
       project_id: payload.project_id || "P-NH927A",
       complaint_type: payload.complaint_type,
       description: payload.description,
       priority: payload.priority || "NORMAL",
-      document_evidence: payload.document_evidence,
+      document_evidence: docs[0],
+      landowner_documents: docs,
+      landowner_reported_location: {
+        lat: lat,
+        lng: lng,
+        accuracy: payload.landowner_reported_location?.accuracy ?? payload.gps?.accuracy ?? payload.gps_accuracy ?? (isSimulated ? 14.2 : 5.0),
+        timestamp: payload.landowner_reported_location?.timestamp || payload.gps?.captured_at || nowIso,
+        is_simulated: isSimulated
+      },
+      landowner_reported_boundary: payload.landowner_reported_boundary || null,
+      landowner_declared_area: payload.landowner_declared_area || (payload.landowner_reported_boundary ? {
+        sqm: payload.landowner_reported_boundary.area_sqm,
+        acres: payload.landowner_reported_boundary.area_acres,
+        hectares: payload.landowner_reported_boundary.area_hectares,
+        label: "LANDOWNER-REPORTED / ESTIMATED"
+      } : null),
+      is_demo_simulation: isSimulated,
+      data_classification: isSimulated ? "DEMO DATA / SIMULATION" : "LANDOWNER-REPORTED / UNVERIFIED",
       photos: processedPhotos,
       gps: {
         lat: lat,
         lng: lng,
-        accuracy: payload.gps?.accuracy ?? payload.gps_accuracy ?? 5.0,
+        accuracy: payload.landowner_reported_location?.accuracy ?? payload.gps?.accuracy ?? payload.gps_accuracy ?? 5.0,
         captured_at: payload.gps?.captured_at || nowIso
       },
       submitted_at: nowIso,
+      status: initialStatus,
       assigned_officer: null,
+      site_visit_accepted: null,
+      field_verified_boundary: null,
+      field_verified_location: null,
       verification: null,
       resolution: null
     });
 
     // A. Insert in Supabase 'documents' table (type: 'landowner_complaint')
     try {
-      let targetParcelId: string | null = null;
-      try {
-        const { data: pCheck } = await supabase.from("parcels").select("id").eq("id", parcelUuid).maybeSingle();
-        if (pCheck?.id) {
-          targetParcelId = pCheck.id;
-        }
-      } catch {}
-
       await supabase.from("documents").insert({
         id: complaintUuid,
         title: `Grievance #${complaintId}: ${payload.complaint_type}`,
         description: descriptionPayload,
         document_type: "landowner_complaint",
-        status: "SUBMITTED",
+        status: initialStatus,
         parcel_id: targetParcelId,
         current_version: 1
       });
@@ -1674,9 +1729,10 @@ class SupabaseDataService {
         state_after: {
           complaint_id: complaintId,
           owner_name: payload.owner_name,
-          parcel_id: payload.parcel_id,
+          parcel_id: payload.parcel_id || null,
           complaint_type: payload.complaint_type,
-          status: "SUBMITTED"
+          has_reported_boundary: !!payload.landowner_reported_boundary,
+          status: initialStatus
         }
       });
     } catch (e) {
@@ -1687,11 +1743,11 @@ class SupabaseDataService {
       success: true,
       complaint_id: complaintId,
       id: complaintUuid,
-      status: "SUBMITTED",
-      parcel_id: payload.parcel_id,
+      status: initialStatus,
+      parcel_id: payload.parcel_id || null,
       submitted_at: nowIso,
       photos: processedPhotos,
-      message: `Grievance #${complaintId} successfully registered in Supabase. Real-time alert dispatched to CALA authority.`
+      message: `Grievance #${complaintId} successfully registered in Supabase. Initial status: SUBMITTED — AWAITING FIELD REVIEW.`
     };
   }
 
@@ -1713,34 +1769,54 @@ class SupabaseDataService {
               parsed = { description: d.description };
             }
 
+            const docs = parsed.landowner_documents || (parsed.document_evidence ? [parsed.document_evidence] : []);
+
             return {
               id: d.id,
               complaint_id: parsed.complaint_id || `CMP-${d.id.slice(0, 6).toUpperCase()}`,
               title: d.title,
               owner_id: parsed.owner_id || "O00004",
-              owner_name: parsed.owner_name || "Geeta Meena",
-              contact_village: parsed.contact_village || "Chandwas (V03)",
+              owner_name: parsed.owner_name || "Landowner",
+              contact_village: parsed.contact_village || "Corridor Sector",
               mobile_number: parsed.mobile_number || "",
-              parcel_id: parsed.parcel_id || d.parcel_id,
-              survey_number: parsed.survey_number || "V02-KH-0001",
+              parcel_id: parsed.parcel_id || d.parcel_id || null,
+              survey_number: parsed.survey_number || "Unregistered Claim",
               project_id: parsed.project_id || "P-NH927A",
-              complaint_type: parsed.complaint_type || "Compensation not received",
+              complaint_type: parsed.complaint_type || "Compensation or Boundary Issue",
               description: parsed.description || d.title,
               priority: parsed.priority || "NORMAL",
-              status: parsed.status || d.status || "SUBMITTED",
+              status: parsed.status || d.status || "SUBMITTED — AWAITING FIELD REVIEW",
               submitted_at: parsed.submitted_at || d.created_at,
               updated_at: d.updated_at || d.created_at,
               photos: parsed.photos || [],
-              gps: parsed.gps || null,
-              document_evidence: parsed.document_evidence || null,
+              gps: parsed.gps || parsed.landowner_reported_location || null,
+              document_evidence: parsed.document_evidence || (docs.length > 0 ? docs[0] : null),
+              landowner_documents: docs,
+              landowner_reported_location: parsed.landowner_reported_location || parsed.gps || null,
+              landowner_reported_boundary: parsed.landowner_reported_boundary || null,
+              landowner_declared_area: parsed.landowner_declared_area || null,
+              is_demo_simulation: !!parsed.is_demo_simulation,
+              data_classification: parsed.data_classification || (parsed.is_demo_simulation ? "DEMO DATA / SIMULATION" : "LANDOWNER-REPORTED / UNVERIFIED"),
               assigned_officer: parsed.assigned_officer || null,
+              site_visit_accepted: parsed.site_visit_accepted || null,
+              field_verified_boundary: parsed.field_verified_boundary || null,
+              field_verified_location: parsed.field_verified_location || null,
+              field_verified_area: parsed.field_verified_area || null,
+              field_gps_accuracy: parsed.field_gps_accuracy || null,
+              verification_status: parsed.verification_status || null,
+              linked_official_parcel_id: parsed.linked_official_parcel_id || null,
               verification: parsed.verification || null,
-              resolution: parsed.resolution || null
+              resolution: parsed.resolution || parsed.admin_decision || null,
+              admin_decision: parsed.admin_decision || null
             };
           })
           .filter((c: any) => {
-            if (filters?.parcel_id && c.parcel_id !== filters.parcel_id && c.parcel_id !== toUuid(filters.parcel_id)) {
-              return false;
+            if (filters?.parcel_id && filters.parcel_id !== "all") {
+              if (filters.parcel_id === "unregistered") {
+                if (c.parcel_id) return false;
+              } else if (c.parcel_id !== filters.parcel_id && c.parcel_id !== toUuid(filters.parcel_id)) {
+                return false;
+              }
             }
             if (filters?.owner_id && c.owner_id !== filters.owner_id) {
               return false;
@@ -1754,9 +1830,6 @@ class SupabaseDataService {
     } catch (e) {
       console.warn("Supabase complaints notice:", e);
     }
-
-    // No demo complaints: return only real database records
-    return [];
 
     return [];
   }
@@ -2041,15 +2114,17 @@ class SupabaseDataService {
     const boundaryId = payload.boundary_id || `BND-${boundaryNum}`;
     const nowIso = new Date().toISOString();
     const boundaryUuid = toUuid(`boundary-${boundaryId}-${Date.now()}`);
-    const parcelUuid = toUuid(payload.parcel_id);
+
+    const isSimulated = !!payload.is_demo_simulation;
 
     const descriptionPayload = JSON.stringify({
       boundary_id: boundaryId,
+      complaint_id: payload.complaint_id || null,
       owner_id: payload.owner_id,
       owner_name: payload.owner_name,
       contact_village: payload.contact_village || "Corridor Sector",
-      parcel_id: payload.parcel_id,
-      survey_number: payload.survey_number,
+      parcel_id: payload.parcel_id || null,
+      survey_number: payload.survey_number || (payload.parcel_id ? payload.parcel_id : "Unregistered Claim"),
       project_id: payload.project_id || "P-NH927A",
       points: payload.points,
       polygon: {
@@ -2060,29 +2135,34 @@ class SupabaseDataService {
       uncertainty: payload.uncertainty || null,
       perimeter_m: payload.perimeter_m,
       notes: payload.notes || "",
+      is_demo_simulation: isSimulated,
       provenance: {
-        source: "LANDOWNER GPS CAPTURE",
+        source: isSimulated ? "DEMO DATA / SIMULATION" : "LANDOWNER GPS CAPTURE",
         boundary_type: "landowner_reported_boundary",
-        status: "CLAIMED / UNVERIFIED",
-        area_source: "CALCULATED FROM LANDOWNER GPS POLYGON",
-        area_status: "ESTIMATED"
+        status: isSimulated ? "DEMO DATA / SIMULATION" : "CLAIMED / UNVERIFIED",
+        area_source: isSimulated ? "SIMULATED FROM BOUNDARY COORDINATES" : "CALCULATED FROM LANDOWNER GPS POLYGON",
+        area_status: "ESTIMATED",
+        is_simulated: isSimulated
       },
       submitted_at: nowIso,
       field_verified_boundary: null
     });
 
     let targetParcelId: string | null = null;
-    try {
-      const { data: pCheck } = await supabase.from("parcels").select("id").eq("id", parcelUuid).maybeSingle();
-      if (pCheck?.id) targetParcelId = pCheck.id;
-    } catch {}
+    if (payload.parcel_id && payload.parcel_id !== "unregistered" && payload.parcel_id !== "unassigned") {
+      try {
+        const parcelUuid = toUuid(payload.parcel_id);
+        const { data: pCheck } = await supabase.from("parcels").select("id").eq("id", parcelUuid).maybeSingle();
+        if (pCheck?.id) targetParcelId = pCheck.id;
+      } catch {}
+    }
 
     const { error: insertErr } = await supabase.from("documents").insert({
       id: boundaryUuid,
-      title: `Landowner Boundary: Survey ${payload.survey_number} (#${boundaryId})`,
+      title: `Landowner Boundary: ${payload.survey_number || "Unregistered Claim"} (#${boundaryId})`,
       description: descriptionPayload,
       document_type: "landowner_boundary",
-      status: "CLAIMED_UNVERIFIED",
+      status: isSimulated ? "DEMO DATA / SIMULATION" : "CLAIMED / UNVERIFIED",
       parcel_id: targetParcelId,
       current_version: 1
     });
@@ -2281,6 +2361,360 @@ class SupabaseDataService {
       boundary_id: payload.boundary_id,
       field_verified_boundary: parsedDesc.field_verified_boundary,
       message: `Field verification recorded for Boundary #${payload.boundary_id}. Original landowner claimed data preserved.`
+    };
+  }
+
+  /**
+   * Field Officer accepts citizen complaint for on-site inspection
+   * Transitions status to 'SITE VISIT ACCEPTED'
+   */
+  async acceptComplaintForSiteVisit(
+    complaintId: string,
+    officerId: string,
+    officerName: string,
+    notes?: string
+  ): Promise<any> {
+    const supabase = this.getClient();
+    const nowIso = new Date().toISOString();
+    const cUuid = toUuid(complaintId);
+
+    let existing: any = null;
+    try {
+      const { data } = await supabase.from("documents").select("*").or(`id.eq.${cUuid},title.ilike.%${complaintId}%`).single();
+      existing = data;
+    } catch {}
+
+    let parsedDesc: any = {};
+    if (existing) {
+      try {
+        parsedDesc = JSON.parse(existing.description || "{}");
+      } catch {}
+    }
+
+    parsedDesc.site_visit_accepted = {
+      officer_id: officerId,
+      officer_name: officerName,
+      accepted_at: nowIso,
+      notes: notes || "Accepted for on-site cadastral inspection and boundary survey."
+    };
+    parsedDesc.status = "SITE VISIT ACCEPTED";
+
+    try {
+      await supabase
+        .from("documents")
+        .update({
+          status: "SITE VISIT ACCEPTED",
+          description: JSON.stringify(parsedDesc),
+          updated_at: nowIso
+        })
+        .or(`id.eq.${cUuid},title.ilike.%${complaintId}%`);
+    } catch (e) {
+      console.warn("Could not update site visit status in documents:", e);
+    }
+
+    try {
+      await supabase.from("audit_logs").insert({
+        id: toUuid(`audit-accept-${complaintId}-${Date.now()}`),
+        actor_id: officerId,
+        actor_role: "FIELD_OFFICER",
+        action: "SITE_VISIT_ACCEPTED",
+        entity_type: "complaint",
+        entity_id: cUuid,
+        source: "BHUMI_MOBILE_FIELD_OPS",
+        created_at: nowIso,
+        updated_at: nowIso,
+        state_after: {
+          complaint_id: complaintId,
+          status: "SITE VISIT ACCEPTED",
+          site_visit_accepted: parsedDesc.site_visit_accepted
+        }
+      });
+    } catch (e) {}
+
+    return {
+      success: true,
+      complaint_id: complaintId,
+      status: "SITE VISIT ACCEPTED",
+      message: `Site visit accepted for Case #${complaintId}. Realtime notification dispatched.`
+    };
+  }
+
+  /**
+   * Field Officer conducts on-ground verification survey
+   * Captures NEW actual GPS data and new verified polygon.
+   * Stores separately: field_verified_boundary, field_verified_location, field_verified_area, field_gps_accuracy.
+   * NEVER overwrites landowner_reported_boundary!
+   */
+  async submitFieldGroundVerification(payload: {
+    complaint_id: string;
+    officer_id: string;
+    officer_name: string;
+    field_verified_boundary?: {
+      points: LandownerBoundaryPoint[];
+      polygon?: any;
+      area_sqm?: number;
+      area_acres?: number;
+      area_hectares?: number;
+    };
+    field_verified_location: {
+      lat: number;
+      lng: number;
+      accuracy: number;
+      timestamp?: string;
+    };
+    field_gps_accuracy: number;
+    verification_status: "VERIFIED" | "PARTIALLY VERIFIED" | "NOT VERIFIED";
+    verification_notes: string;
+    linked_official_parcel_id?: string | null;
+    photos?: any[];
+  }): Promise<any> {
+    const supabase = this.getClient();
+    const nowIso = new Date().toISOString();
+    const cUuid = toUuid(payload.complaint_id);
+
+    // Upload photos if any
+    const processedPhotos = await this.uploadPhotos(payload.photos || [], payload.complaint_id);
+
+    let existing: any = null;
+    try {
+      const { data } = await supabase.from("documents").select("*").or(`id.eq.${cUuid},title.ilike.%${payload.complaint_id}%`).single();
+      existing = data;
+    } catch {}
+
+    let parsedDesc: any = {};
+    if (existing) {
+      try {
+        parsedDesc = JSON.parse(existing.description || "{}");
+      } catch {}
+    }
+
+    // STRICT PRESERVATION: Ensure landowner_reported_boundary is NEVER altered!
+    const originalLandownerBoundary = parsedDesc.landowner_reported_boundary || null;
+
+    parsedDesc.field_verified_boundary = payload.field_verified_boundary || null;
+    parsedDesc.field_verified_location = payload.field_verified_location;
+    parsedDesc.field_verified_area = payload.field_verified_boundary
+      ? {
+          sqm: payload.field_verified_boundary.area_sqm,
+          acres: payload.field_verified_boundary.area_acres,
+          hectares: payload.field_verified_boundary.area_hectares
+        }
+      : null;
+    parsedDesc.field_gps_accuracy = payload.field_gps_accuracy;
+    parsedDesc.verification_timestamp = nowIso;
+    parsedDesc.verification_status = payload.verification_status;
+    parsedDesc.verification = {
+      officer_id: payload.officer_id,
+      officer_name: payload.officer_name,
+      verified_at: nowIso,
+      status: payload.verification_status,
+      observations: payload.verification_notes,
+      gps: payload.field_verified_location,
+      photos: processedPhotos
+    };
+    parsedDesc.status = payload.verification_status;
+
+    let targetParcelId = existing?.parcel_id || null;
+    if (payload.linked_official_parcel_id) {
+      parsedDesc.linked_official_parcel_id = payload.linked_official_parcel_id;
+      try {
+        const { data: pCheck } = await supabase.from("parcels").select("id").eq("id", toUuid(payload.linked_official_parcel_id)).maybeSingle();
+        if (pCheck?.id) targetParcelId = pCheck.id;
+      } catch {}
+    }
+
+    try {
+      await supabase
+        .from("documents")
+        .update({
+          status: payload.verification_status,
+          description: JSON.stringify(parsedDesc),
+          parcel_id: targetParcelId,
+          updated_at: nowIso
+        })
+        .or(`id.eq.${cUuid},title.ilike.%${payload.complaint_id}%`);
+    } catch (e) {
+      console.warn("Could not update verification in documents:", e);
+    }
+
+    // Write immutable audit log
+    try {
+      await supabase.from("audit_logs").insert({
+        id: toUuid(`audit-grd-ver-${payload.complaint_id}-${Date.now()}`),
+        actor_id: payload.officer_id,
+        actor_role: "FIELD_OFFICER",
+        action: "FIELD_GROUND_VERIFIED",
+        entity_type: "complaint",
+        entity_id: cUuid,
+        source: "BHUMI_MOBILE_FIELD_OPS",
+        created_at: nowIso,
+        updated_at: nowIso,
+        state_after: {
+          complaint_id: payload.complaint_id,
+          verification_status: payload.verification_status,
+          field_verified_location: payload.field_verified_location,
+          has_verified_boundary: !!payload.field_verified_boundary,
+          linked_official_parcel_id: payload.linked_official_parcel_id
+        }
+      });
+    } catch (e) {}
+
+    return {
+      success: true,
+      complaint_id: payload.complaint_id,
+      verification_status: payload.verification_status,
+      landowner_reported_boundary: originalLandownerBoundary,
+      field_verified_boundary: parsedDesc.field_verified_boundary,
+      message: `Field verification recorded as ${payload.verification_status}. Original landowner claim preserved for comparison.`
+    };
+  }
+
+  /**
+   * Link an official corridor parcel to a complaint after on-site verification
+   */
+  async linkOfficialParcelToComplaint(complaintId: string, parcelId: string, actorName: string): Promise<any> {
+    const supabase = this.getClient();
+    const nowIso = new Date().toISOString();
+    const cUuid = toUuid(complaintId);
+    const pUuid = toUuid(parcelId);
+
+    let existing: any = null;
+    try {
+      const { data } = await supabase.from("documents").select("*").or(`id.eq.${cUuid},title.ilike.%${complaintId}%`).single();
+      existing = data;
+    } catch {}
+
+    let parsedDesc: any = {};
+    if (existing) {
+      try {
+        parsedDesc = JSON.parse(existing.description || "{}");
+      } catch {}
+    }
+
+    parsedDesc.linked_official_parcel_id = parcelId;
+    parsedDesc.parcel_linked_at = nowIso;
+    parsedDesc.parcel_linked_by = actorName;
+
+    let targetParcelId: string | null = null;
+    try {
+      const { data: pCheck } = await supabase.from("parcels").select("id").eq("id", pUuid).maybeSingle();
+      if (pCheck?.id) targetParcelId = pCheck.id;
+    } catch {}
+
+    try {
+      await supabase
+        .from("documents")
+        .update({
+          parcel_id: targetParcelId,
+          description: JSON.stringify(parsedDesc),
+          updated_at: nowIso
+        })
+        .or(`id.eq.${cUuid},title.ilike.%${complaintId}%`);
+    } catch (e) {
+      console.warn("Could not update linked parcel on complaint:", e);
+    }
+
+    try {
+      await supabase.from("audit_logs").insert({
+        id: toUuid(`audit-link-${complaintId}-${Date.now()}`),
+        actor_id: actorName,
+        actor_role: "ADMIN",
+        action: "OFFICIAL_PARCEL_LINKED",
+        entity_type: "complaint",
+        entity_id: cUuid,
+        source: "BHUMI_SYSTEM",
+        created_at: nowIso,
+        updated_at: nowIso,
+        state_after: {
+          complaint_id: complaintId,
+          linked_official_parcel_id: parcelId
+        }
+      });
+    } catch (e) {}
+
+    return {
+      success: true,
+      complaint_id: complaintId,
+      linked_official_parcel_id: parcelId,
+      message: `Official parcel ${parcelId} linked to Case #${complaintId}.`
+    };
+  }
+
+  /**
+   * Admin Decision on Complaint
+   * Resolve | Escalate | Request Additional Verification | Request Additional Documents | Reject
+   */
+  async adminDecisionOnComplaint(
+    complaintId: string,
+    decision: {
+      action: "RESOLVED" | "ESCALATED" | "REQUEST_VERIFICATION" | "REQUEST_DOCUMENTS" | "REJECTED";
+      notes: string;
+      admin_name?: string;
+    }
+  ): Promise<any> {
+    const supabase = this.getClient();
+    const nowIso = new Date().toISOString();
+    const cUuid = toUuid(complaintId);
+
+    let existing: any = null;
+    try {
+      const { data } = await supabase.from("documents").select("*").or(`id.eq.${cUuid},title.ilike.%${complaintId}%`).single();
+      existing = data;
+    } catch {}
+
+    let parsedDesc: any = {};
+    if (existing) {
+      try {
+        parsedDesc = JSON.parse(existing.description || "{}");
+      } catch {}
+    }
+
+    parsedDesc.admin_decision = {
+      action: decision.action,
+      notes: decision.notes,
+      admin_name: decision.admin_name || "CALA Authority",
+      decided_at: nowIso
+    };
+    parsedDesc.status = decision.action;
+
+    try {
+      await supabase
+        .from("documents")
+        .update({
+          status: decision.action,
+          description: JSON.stringify(parsedDesc),
+          updated_at: nowIso
+        })
+        .or(`id.eq.${cUuid},title.ilike.%${complaintId}%`);
+    } catch (e) {
+      console.warn("Could not update admin decision:", e);
+    }
+
+    try {
+      await supabase.from("audit_logs").insert({
+        id: toUuid(`audit-dec-${complaintId}-${Date.now()}`),
+        actor_id: decision.admin_name || "ADMIN_CALA",
+        actor_role: "ADMIN",
+        action: `ADMIN_DECISION_${decision.action}`,
+        entity_type: "complaint",
+        entity_id: cUuid,
+        source: "BHUMI_ADMIN_WEB",
+        created_at: nowIso,
+        updated_at: nowIso,
+        state_after: {
+          complaint_id: complaintId,
+          status: decision.action,
+          admin_decision: parsedDesc.admin_decision
+        }
+      });
+    } catch (e) {}
+
+    return {
+      success: true,
+      complaint_id: complaintId,
+      status: decision.action,
+      admin_decision: parsedDesc.admin_decision,
+      message: `Administrative decision '${decision.action}' recorded for Case #${complaintId}.`
     };
   }
 

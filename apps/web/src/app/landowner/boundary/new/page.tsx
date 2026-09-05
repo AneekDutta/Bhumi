@@ -53,10 +53,14 @@ export default function MarkBoundaryPage() {
   const mapRef = useRef<MapRef | null>(null);
   const supabase = createClient();
 
+  // URL Params & Mode
+  const complaintId = searchParams.get("complaint_id") || null;
+  const [isDemoMode, setIsDemoMode] = useState(false);
+
   // Authentication & session
   const [owner, setOwner] = useState<any>(null);
   const [parcels, setParcels] = useState<any[]>([]);
-  const [selectedParcelId, setSelectedParcelId] = useState<string>(preselectedParcel);
+  const [selectedParcelId, setSelectedParcelId] = useState<string>(preselectedParcel || "unregistered");
 
   // GPS points capture state
   const [points, setPoints] = useState<CapturedPoint[]>([]);
@@ -212,7 +216,7 @@ export default function MarkBoundaryPage() {
     }
   }, [points, deviceLocation]);
 
-  // 5. Capture Real Device GPS Point
+  // 5. Capture Real Device GPS Point or Demo Simulation Point
   const handleCapturePoint = async (targetIndex?: number) => {
     setCapturing(true);
     setGpsError(null);
@@ -222,10 +226,35 @@ export default function MarkBoundaryPage() {
     }
 
     try {
-      const pos: LocationCoordinates = await getCurrentGPSPosition({
-        enableHighAccuracy: true,
-        timeout: 15000
-      });
+      let pos: LocationCoordinates;
+
+      if (isDemoMode) {
+        // DEMO / SIMULATION MODE: Simulated accuracy strictly within ±12m to ±15m range (NEVER fake or wild numbers)
+        const simAccuracy = Number((12.0 + Math.random() * 3.0).toFixed(1)); // strictly between 12.0m and 15.0m
+        const seq = typeof targetIndex === "number" ? targetIndex : points.length;
+        const baseLat = deviceLocation?.lat || activeParcel?.lat || 24.6650;
+        const baseLng = deviceLocation?.lng || activeParcel?.lng || 75.9520;
+
+        // 4 corners of approximate quadrilateral
+        const offsets: [number, number][] = [
+          [0.0, 0.0],
+          [0.0012, 0.0001],
+          [0.0011, 0.0009],
+          [-0.0001, 0.0008]
+        ];
+        const offset = offsets[seq % offsets.length];
+        pos = {
+          lat: Number((baseLat + offset[1]).toFixed(6)),
+          lng: Number((baseLng + offset[0]).toFixed(6)),
+          accuracy: simAccuracy
+        };
+      } else {
+        // REAL GPS MODE: Real GPS hardware data only. Real device accuracy only. NEVER fabricate or alter accuracy.
+        pos = await getCurrentGPSPosition({
+          enableHighAccuracy: true,
+          timeout: 15000
+        });
+      }
 
       // Update live device location
       setDeviceLocation({ lat: pos.lat, lng: pos.lng });
@@ -293,11 +322,6 @@ export default function MarkBoundaryPage() {
       return;
     }
 
-    if (!selectedParcelId) {
-      setSubmitError("Please select the land parcel this boundary corresponds to.");
-      return;
-    }
-
     if (!areaResult) {
       setSubmitError("Area calculation unavailable. Please verify your boundary points.");
       return;
@@ -306,13 +330,17 @@ export default function MarkBoundaryPage() {
     setSubmitting(true);
 
     try {
-      const surveyNumber = activeParcel?.survey_number || activeParcel?.survey_no || selectedParcelId;
+      const isUnregistered = !selectedParcelId || selectedParcelId === "unregistered";
+      const surveyNumber = isUnregistered
+        ? "UNREGISTERED_CLAIM"
+        : (activeParcel?.survey_number || activeParcel?.survey_no || selectedParcelId);
 
       const payload = {
         owner_id: owner.owner_id,
         owner_name: owner.name,
         contact_village: owner.contact_village,
-        parcel_id: selectedParcelId,
+        parcel_id: isUnregistered ? null : selectedParcelId,
+        complaint_id: complaintId,
         survey_number: surveyNumber,
         project_id: activeParcel?.project_id || "P-NH927A",
         points: points,
@@ -331,8 +359,9 @@ export default function MarkBoundaryPage() {
           : null,
         perimeter_m: areaResult.perimeterMeters,
         notes: notes.trim(),
+        is_demo_simulation: isDemoMode,
         provenance: {
-          source: "LANDOWNER GPS CAPTURE",
+          source: isDemoMode ? "DEMO DATA / SIMULATION" : "LANDOWNER GPS CAPTURE",
           boundary_type: "landowner_reported_boundary",
           status: "CLAIMED / UNVERIFIED",
           area_source: "CALCULATED FROM LANDOWNER GPS POLYGON",
@@ -348,7 +377,11 @@ export default function MarkBoundaryPage() {
 
       setSubmitSuccess(`Boundary #${result.boundary_id} saved to Supabase. Synchronized to CALA and Field Officers.`);
       setTimeout(() => {
-        router.push("/landowner/home");
+        if (complaintId) {
+          router.push(`/landowner/complaints/${complaintId}`);
+        } else {
+          router.push("/landowner/home");
+        }
       }, 1200);
     } catch (err: any) {
       setSubmitError(err?.message || "Unable to save boundary. Please try again.");
@@ -387,6 +420,66 @@ export default function MarkBoundaryPage() {
           </p>
         </div>
 
+        {/* Operating GPS Mode Switcher: Real Hardware GPS vs Demo Simulation */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+              Operating GPS Mode
+            </label>
+            <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
+              isDemoMode 
+                ? "bg-purple-500/20 text-purple-300 border border-purple-500/40" 
+                : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+            }`}>
+              {isDemoMode ? "DEMO DATA / SIMULATION" : "REAL HARDWARE GPS"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => setIsDemoMode(false)}
+              className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                !isDemoMode
+                  ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/40"
+                  : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-white"
+              }`}
+            >
+              <Compass className="w-3.5 h-3.5" />
+              <span>Real Hardware GPS</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsDemoMode(true)}
+              className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                isDemoMode
+                  ? "bg-purple-600 text-white shadow-md shadow-purple-950/40"
+                  : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-white"
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>Demo Simulation</span>
+            </button>
+          </div>
+
+          {isDemoMode ? (
+            <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-200 text-xs space-y-1">
+              <div className="flex items-center gap-1.5 font-bold text-[11px] uppercase tracking-wider text-purple-300">
+                <AlertTriangle className="w-3.5 h-3.5 text-purple-400" />
+                <span>DEMO DATA / SIMULATION</span>
+              </div>
+              <p className="text-[11px] leading-relaxed text-purple-200/90">
+                Simulated coordinates for demonstration. Simulated GPS accuracy is modeled strictly within ±12m to ±15m range (not wildly varying, not presented as real).
+              </p>
+            </div>
+          ) : (
+            <p className="text-[11px] text-slate-400">
+              Real Mode: Uses device satellite GPS hardware accuracy only. Zero fake or fabricated coordinates.
+            </p>
+          )}
+        </div>
+
         {/* Parcel Selector */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
           <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider">
@@ -397,26 +490,27 @@ export default function MarkBoundaryPage() {
             onChange={(e) => setSelectedParcelId(e.target.value)}
             className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500 font-mono"
           >
-            {parcels.length === 0 ? (
-              <option value="">No parcels linked to your account</option>
-            ) : (
-              parcels.map((p) => {
-                const id = p.parcel_id || p.id;
-                const survey = p.survey_number || p.survey_no || id;
-                return (
-                  <option key={id} value={id}>
-                    Survey #{survey} ({id}) · {p.village_name || owner?.contact_village}
-                  </option>
-                );
-              })
-            )}
+            <option value="unregistered">Unregistered Land Claim (No Official Parcel Linked)</option>
+            {parcels.map((p) => {
+              const id = p.parcel_id || p.id;
+              const survey = p.survey_number || p.survey_no || id;
+              return (
+                <option key={id} value={id}>
+                  Survey #{survey} ({id}) · {p.village_name || owner?.contact_village}
+                </option>
+              );
+            })}
           </select>
-          {activeParcel && (
+          {selectedParcelId === "unregistered" ? (
+            <div className="text-[11px] font-mono text-amber-300 bg-amber-500/10 p-2 rounded-lg border border-amber-500/30">
+              Unregistered Land Claim: No pre-existing registered land parcel required. This spatial polygon will serve as your initial claimed boundary.
+            </div>
+          ) : activeParcel ? (
             <div className="text-[11px] font-mono text-slate-400 flex items-center justify-between pt-1">
               <span>Official Extent: {activeParcel.area_hectares || (activeParcel.area_sqm ? (activeParcel.area_sqm / 10000).toFixed(2) : "-")} Ha</span>
               <span className="text-emerald-400 font-semibold">{activeParcel.classification || "Agricultural"}</span>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* Global Error Banner */}
@@ -654,11 +748,11 @@ export default function MarkBoundaryPage() {
         {isPolygonReady && (
           <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/30 border border-amber-500/40 rounded-2xl p-4 shadow-xl space-y-4 animate-fadeIn">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold bg-amber-500/15 px-2 py-0.5 rounded-full border border-amber-500/30">
-                GPS-based estimate
+              <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold bg-amber-500/15 px-2.5 py-1 rounded-full border border-amber-500/30">
+                LANDOWNER-REPORTED / ESTIMATED
               </span>
               <span className="text-[10px] font-mono text-slate-400">
-                Chamberlain-Duquette WGS-84
+                {isDemoMode ? "DEMO SIMULATION" : "GPS-based estimate"}
               </span>
             </div>
 
@@ -705,11 +799,11 @@ export default function MarkBoundaryPage() {
             <div className="p-3 rounded-xl bg-slate-950/90 border border-white/5 space-y-2 text-[10px] font-mono">
               <div className="flex items-center justify-between border-b border-white/5 pb-1">
                 <span className="text-slate-400">SOURCE:</span>
-                <span className="text-slate-200 font-bold">LANDOWNER GPS CAPTURE</span>
+                <span className="text-slate-200 font-bold">{isDemoMode ? "DEMO DATA / SIMULATION" : "LANDOWNER GPS CAPTURE"}</span>
               </div>
               <div className="flex items-center justify-between border-b border-white/5 pb-1">
                 <span className="text-slate-400">STATUS:</span>
-                <span className="text-amber-400 font-bold">CLAIMED / UNVERIFIED</span>
+                <span className="text-amber-400 font-bold">LANDOWNER-REPORTED / ESTIMATED</span>
               </div>
               <div className="flex items-center justify-between border-b border-white/5 pb-1">
                 <span className="text-slate-400">AREA SOURCE:</span>

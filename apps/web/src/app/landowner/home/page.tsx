@@ -12,7 +12,9 @@ import {
   Clock,
   RefreshCw,
   AlertCircle,
-  Compass
+  Compass,
+  UploadCloud,
+  FileText
 } from "lucide-react";
 import { LandownerShell } from "@/components/landowner/LandownerShell";
 import { getLandownerParcels, getLandownerComplaints, getLandownerBoundaries } from "@/lib/api";
@@ -206,28 +208,39 @@ export default function LandownerHomePage() {
 
           <div className="space-y-2.5">
             {parcels.length === 0 ? (
-              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 text-center space-y-3">
-                <Layers className="w-8 h-8 text-slate-600 mx-auto" />
-                <div className="space-y-1">
-                  <h3 className="text-sm font-bold text-white">No Land Parcels Linked Yet</h3>
-                  <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
-                    No cadastral survey parcels are currently associated with your account in the project registry. If your land is impacted by the corridor, you can mark your boundary or file an inquiry.
+              <div className="bg-slate-900/80 border border-amber-500/30 rounded-2xl p-6 text-center space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mx-auto">
+                  <AlertCircle className="w-6 h-6" />
+                </div>
+                <div className="space-y-1.5 max-w-md mx-auto">
+                  <h3 className="text-sm font-bold text-white uppercase tracking-wide">
+                    No registered parcel linked to this account.
+                  </h3>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    You can still report an issue by providing your documents and marking the approximate land boundary.
                   </p>
                 </div>
-                <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2">
                   <Link
                     href="/landowner/boundary/new"
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-semibold hover:bg-emerald-500/30 transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md"
                   >
                     <Compass className="w-3.5 h-3.5" />
-                    <span>Mark Land Boundary (GPS)</span>
+                    <span>Mark Land Boundary</span>
+                  </Link>
+                  <Link
+                    href="/landowner/complaints/new#documents"
+                    className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-bold transition-all"
+                  >
+                    <UploadCloud className="w-3.5 h-3.5" />
+                    <span>Upload Documents</span>
                   </Link>
                   <Link
                     href="/landowner/complaints/new"
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-semibold hover:bg-amber-500/30 transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white text-xs font-bold transition-all shadow-md"
                   >
                     <PlusCircle className="w-3.5 h-3.5" />
-                    <span>Submit Land Record Inquiry</span>
+                    <span>Submit Complaint</span>
                   </Link>
                 </div>
               </div>

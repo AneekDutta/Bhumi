@@ -17,7 +17,8 @@ import {
   Sparkles,
   Settings,
   Layers,
-  Database
+  Database,
+  FileText
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
 import { getFieldParcels, getFieldIncidents, getLandownerComplaints } from "@/lib/api";
@@ -142,12 +143,18 @@ export default function FieldDashboardPage() {
         {complaints.filter((c) => c.status !== "RESOLVED" && c.status !== "REJECTED").length > 0 && (
           <div className="bg-amber-950/30 border border-amber-500/40 rounded-2xl p-4 shadow-lg space-y-2">
             <div className="flex items-center justify-between">
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold">
-                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> Citizen Grievances For Verification
-              </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold">
-                {complaints.filter((c) => c.status !== "RESOLVED" && c.status !== "REJECTED").length} Pending
-              </span>
+              <Link
+                href="/field/complaints"
+                className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold hover:underline"
+              >
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> Citizen Grievances & Claims
+              </Link>
+              <Link
+                href="/field/complaints"
+                className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold hover:bg-amber-500/30 transition-colors"
+              >
+                {complaints.filter((c) => c.status !== "RESOLVED" && c.status !== "REJECTED").length} Pending →
+              </Link>
             </div>
 
             <p className="text-xs text-slate-300">
@@ -155,20 +162,20 @@ export default function FieldDashboardPage() {
             </p>
 
             <div className="space-y-1.5 pt-1">
-              {complaints.filter((c) => c.status !== "RESOLVED" && c.status !== "REJECTED").slice(0, 2).map((cmp) => (
+              {complaints.filter((c) => c.status !== "RESOLVED" && c.status !== "REJECTED").slice(0, 3).map((cmp) => (
                 <Link
-                  key={cmp.id}
-                  href={`/field/parcels/${cmp.parcel_id}`}
+                  key={cmp.id || cmp.complaint_id}
+                  href={`/field/complaints/${cmp.id || cmp.complaint_id}`}
                   className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-amber-500/40 flex items-center justify-between text-xs transition-colors"
                 >
                   <div>
                     <span className="font-bold text-white block text-[11px]">{cmp.complaint_type}</span>
                     <span className="text-[10px] text-slate-400 font-mono">
-                      Parcel: {cmp.parcel_id} · Citizen: {cmp.owner_name}
+                      {cmp.parcel_id ? `Parcel: ${cmp.parcel_id}` : "Unregistered Land Claim"} · Citizen: {cmp.owner_name}
                     </span>
                   </div>
                   <span className="text-amber-400 text-[11px] font-semibold flex items-center gap-1">
-                    <span>Inspect</span>
+                    <span>Review & Survey</span>
                     <ArrowRight className="w-3 h-3" />
                   </span>
                 </Link>
@@ -210,10 +217,10 @@ export default function FieldDashboardPage() {
             <span>Field Workflows</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <Link
               href="/field/parcels"
-              className="p-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow-lg shadow-emerald-950/40 flex flex-col justify-between h-24 transition-all"
+              className="p-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow-lg shadow-emerald-950/40 flex flex-col justify-between h-24 transition-all"
             >
               <div className="flex items-center justify-between">
                 <ClipboardList className="w-5 h-5" />
@@ -226,8 +233,22 @@ export default function FieldDashboardPage() {
             </Link>
 
             <Link
+              href="/field/complaints"
+              className="p-3.5 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs shadow-lg shadow-amber-950/40 flex flex-col justify-between h-24 transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <FileText className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="block font-bold text-sm">Citizen Claims</span>
+                <span className="text-[10px] text-amber-100 opacity-90">Review & Ground Survey</span>
+              </div>
+            </Link>
+
+            <Link
               href="/field/sync"
-              className="p-4 rounded-2xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-slate-200 font-semibold text-xs shadow-md flex flex-col justify-between h-24 transition-all"
+              className="p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-slate-200 font-semibold text-xs shadow-md flex flex-col justify-between h-24 transition-all"
             >
               <div className="flex items-center justify-between">
                 <Database className="w-5 h-5 text-indigo-400" />
