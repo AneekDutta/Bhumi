@@ -265,12 +265,12 @@ function LoginPageContent() {
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col lg:flex-row overflow-hidden bg-[#070a14] text-[#e2e8f0] select-none font-sans">
+    <div className="w-full min-h-screen flex flex-col lg:flex-row bg-[#070a14] text-[#e2e8f0] select-none font-sans">
       
       {/* ========================================================================= */}
       {/* LEFT SIDE — PRODUCT INTELLIGENCE PREVIEW (58% desktop width)              */}
       {/* ========================================================================= */}
-      <div className="hidden lg:flex lg:w-[58%] h-full flex-col justify-between p-10 xl:p-14 relative overflow-hidden border-r border-[#1e293b]/70 bg-[#060811]">
+      <div className="hidden lg:flex lg:w-[58%] min-h-screen flex-col justify-between p-10 xl:p-14 relative overflow-hidden border-r border-[#1e293b]/70 bg-[#060811]">
         
         {/* Subtle GIS Background Grid Pattern */}
         <div 
@@ -490,7 +490,7 @@ function LoginPageContent() {
       {/* ========================================================================= */}
       {/* RIGHT SIDE — AUTHENTICATION PANEL (42% desktop width)                     */}
       {/* ========================================================================= */}
-      <div className="w-full lg:w-[42%] h-full flex flex-col justify-between p-6 sm:p-10 xl:p-12 overflow-y-auto bg-[#070a14]">
+      <div className="w-full lg:w-[42%] min-h-screen lg:h-screen flex flex-col justify-between p-6 sm:p-10 xl:p-12 overflow-y-auto bg-[#070a14]">
         
         {/* Top Header / System Identification (Mobile & Desktop) */}
         <div className="flex items-center justify-between">

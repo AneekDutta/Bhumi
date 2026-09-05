@@ -158,7 +158,7 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full max-w-lg mx-auto">
+      <main className="flex-1 w-full max-w-lg mx-auto pb-24">
         {children}
       </main>
 

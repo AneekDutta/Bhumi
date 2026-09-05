@@ -309,7 +309,7 @@ export default function NewComplaintPage() {
 
   return (
     <LandownerShell>
-      <div className="space-y-6 pb-20">
+      <div className="p-4 space-y-6 pb-24">
         
         {/* Navigation / Header */}
         <div className="flex items-center justify-between">

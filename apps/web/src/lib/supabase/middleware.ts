@@ -42,21 +42,23 @@ export async function updateSession(request: NextRequest) {
 
   // Check for either Supabase user or verified session cookie
   const officerSession = request.cookies.get('bhumi_officer_session')?.value;
+  const landownerSession = request.cookies.get('bhumi_landowner_session')?.value;
   let parsedRole: string | null = null;
-  if (officerSession) {
+  const activeSession = officerSession || landownerSession;
+  if (activeSession) {
     try {
-      const decoded = decodeURIComponent(officerSession);
+      const decoded = decodeURIComponent(activeSession);
       const parsed = JSON.parse(decoded);
       parsedRole = parsed?.role || null;
     } catch {
       try {
-        const parsed = JSON.parse(officerSession);
+        const parsed = JSON.parse(activeSession);
         parsedRole = parsed?.role || null;
       } catch {}
     }
   }
 
-  const isAuthenticated = !!user || !!officerSession;
+  const isAuthenticated = !!user || !!officerSession || !!landownerSession;
 
   // 1. Support instantaneous role switching via query param
   if (request.nextUrl.searchParams.get('switch') === 'admin') {
