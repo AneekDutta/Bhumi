@@ -41,6 +41,7 @@ export default function LandownerComplaintDetailPage() {
 
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [complaintId]);
 
   // Realtime hook for immediate sync
@@ -211,7 +212,7 @@ export default function LandownerComplaintDetailPage() {
                   <div className="text-[11px] text-slate-300 space-y-0.5 mt-0.5">
                     <p>Officer: <strong className="text-emerald-400">{complaint.assigned_officer.officer_name}</strong> ({complaint.assigned_officer.officer_id})</p>
                     {complaint.assigned_officer.admin_notes && (
-                      <p className="text-slate-400 italic">"{complaint.assigned_officer.admin_notes}"</p>
+                      <p className="text-slate-400 italic">&ldquo;{complaint.assigned_officer.admin_notes}&rdquo;</p>
                     )}
                   </div>
                 ) : (

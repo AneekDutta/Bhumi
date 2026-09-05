@@ -815,11 +815,24 @@ export const apiClient = {
 
   getLandownerProfile: async (userId: string) => {
     return await supabaseDataService.getLandownerProfile(userId);
+  },
+
+  submitLandownerBoundary: async (payload: any) => {
+    return await supabaseDataService.submitLandownerBoundary(payload);
+  },
+
+  getLandownerBoundaries: async (filters?: any) => {
+    return await supabaseDataService.getLandownerBoundaries(filters);
+  },
+
+  submitFieldBoundaryVerification: async (payload: any) => {
+    return await supabaseDataService.submitFieldBoundaryVerification(payload);
   }
 };
 
 export const getFieldOfficers = () => apiClient.getFieldOfficers();
 export const getFieldParcels = (officerId?: string, villageId?: string) => apiClient.getFieldParcels(officerId, villageId);
+export const getParcels = (officerId?: string, villageId?: string) => apiClient.getFieldParcels(officerId, villageId);
 export const submitFieldVerification = (payload: any) => apiClient.submitFieldVerification(payload);
 export const syncFieldBatch = (officerId: string, submissions: any[]) => apiClient.syncFieldBatch(officerId, submissions);
 export const getFieldIncidents = (filters?: { parcel_id?: string; project_id?: string; status?: string }) => apiClient.getFieldIncidents(filters);
@@ -840,4 +853,7 @@ export const uploadEvidenceDocument = (file: File | Blob, fileName: string, parc
   apiClient.uploadEvidenceDocument(file, fileName, parcelId);
 export const createOrUpdateLandownerProfile = (profile: any) => apiClient.createOrUpdateLandownerProfile(profile);
 export const getLandownerProfile = (userId: string) => apiClient.getLandownerProfile(userId);
+export const submitLandownerBoundary = (payload: any) => apiClient.submitLandownerBoundary(payload);
+export const getLandownerBoundaries = (filters?: any) => apiClient.getLandownerBoundaries(filters);
+export const submitFieldBoundaryVerification = (payload: any) => apiClient.submitFieldBoundaryVerification(payload);
 

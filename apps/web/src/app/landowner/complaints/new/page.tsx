@@ -108,8 +108,8 @@ export default function NewComplaintPage() {
         let pData = await getLandownerParcels(activeUserId);
         if (!pData || pData.length === 0) {
           // If citizen has no pre-assigned parcels, fetch all corridor parcels so they can file against any affected project parcel
-          const { getParcels } = await import("@/lib/api");
-          pData = await getParcels();
+          const { getFieldParcels } = await import("@/lib/api");
+          pData = await getFieldParcels();
         }
         setParcels(pData || []);
         if (!selectedParcel && pData && pData.length > 0) {
