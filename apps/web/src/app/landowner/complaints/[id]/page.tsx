@@ -123,6 +123,64 @@ export default function LandownerComplaintDetailPage() {
               {complaint.description}
             </p>
           </div>
+
+          {/* Verified GPS Coordinates */}
+          {complaint.gps && (
+            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-400 text-[10px] block uppercase tracking-wide flex items-center gap-1">
+                  <MapPin className="w-3 h-3 text-amber-400" />
+                  <span>Verified Citizen GPS Location</span>
+                </span>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30 font-bold">
+                  Satellite Fix
+                </span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 font-mono text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-500 block">Latitude</span>
+                  <span className="text-white font-bold">{complaint.gps.lat}° N</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 block">Longitude</span>
+                  <span className="text-white font-bold">{complaint.gps.lng}° E</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 block">Accuracy</span>
+                  <span className="text-slate-300">±{complaint.gps.accuracy}m</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Supporting Document Evidence from Supabase Storage */}
+          {complaint.document_evidence && (
+            <div className="bg-amber-950/20 border border-amber-500/30 p-3 rounded-xl space-y-2">
+              <span className="text-amber-400 text-[10px] font-bold uppercase tracking-wider block">
+                Supporting Legal Document (Supabase Storage)
+              </span>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 overflow-hidden">
+                  <FileText className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                  <span className="text-xs text-white font-medium truncate">
+                    {complaint.document_evidence.file_name}
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400 flex-shrink-0">
+                    ({(complaint.document_evidence.file_size / (1024 * 1024)).toFixed(2)} MB)
+                  </span>
+                </div>
+
+                <a
+                  href={complaint.document_evidence.public_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition-colors flex-shrink-0"
+                >
+                  View File →
+                </a>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 4-Stage Lifecycle Stepper */}

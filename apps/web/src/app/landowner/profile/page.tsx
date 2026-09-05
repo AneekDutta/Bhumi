@@ -21,6 +21,7 @@ export default function LandownerProfilePage() {
   const [owner, setOwner] = useState<any>({
     owner_id: "O00004",
     name: "Geeta Meena",
+    email: "demo.landowner@bhumi.gov.in",
     contact_village: "Chandwas (V03)",
     owner_type: "individual",
     mobile_number: "+91 98290 41234"
@@ -28,21 +29,54 @@ export default function LandownerProfilePage() {
   const [parcelsCount, setParcelsCount] = useState(3);
 
   useEffect(() => {
-    const cookies = document.cookie.split(";").map((c) => c.trim());
-    const sessionCookie = cookies.find((c) => c.startsWith("bhumi_officer_session="));
-    if (sessionCookie) {
-      try {
-        const val = decodeURIComponent(sessionCookie.split("=")[1]);
-        const parsed = JSON.parse(val);
-        if (parsed?.owner_id) {
-          setOwner(parsed);
-          getLandownerParcels(parsed.owner_id).then((p) => setParcelsCount(p?.length || 3));
+    async function fetchAuth() {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      const { data: authData } = await supabase.auth.getUser();
+
+      let activeId = "O00004";
+      let activeName = "Geeta Meena";
+      let activeEmail = "demo.landowner@bhumi.gov.in";
+
+      if (authData?.user) {
+        activeId = authData.user.id;
+        activeEmail = authData.user.email || activeEmail;
+        activeName = authData.user.user_metadata?.full_name || activeName;
+
+        setOwner((prev: any) => ({
+          ...prev,
+          owner_id: activeId,
+          email: activeEmail,
+          name: activeName
+        }));
+      } else {
+        const cookies = document.cookie.split(";").map((c) => c.trim());
+        const sessionCookie = cookies.find((c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session="));
+        if (sessionCookie) {
+          try {
+            const val = decodeURIComponent(sessionCookie.split("=")[1]);
+            const parsed = JSON.parse(val);
+            if (parsed?.owner_id || parsed?.user_id) {
+              activeId = parsed.owner_id || parsed.user_id;
+              setOwner(parsed);
+            }
+          } catch {}
         }
-      } catch {}
+      }
+
+      getLandownerParcels(activeId).then((p) => setParcelsCount(p?.length || 3));
     }
+
+    fetchAuth();
   }, []);
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    try {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      await supabase.auth.signOut();
+    } catch {}
+    document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     router.push("/landowner/login");
   };

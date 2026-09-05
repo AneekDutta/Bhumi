@@ -254,9 +254,54 @@ export function LandownerGrievanceReviewCard({ parcelId }: LandownerGrievanceRev
                   </span>
                 </div>
 
-                <p style={{ fontSize: 12, color: "#cbd5e1", lineHeight: 1.5, margin: "0 0 12px" }}>
+                <p style={{ fontSize: 12, color: "#cbd5e1", lineHeight: 1.5, margin: "0 0 10px" }}>
                   {cmp.description}
                 </p>
+
+                {/* Citizen GPS & Document Evidence Metadata */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
+                  {cmp.gps && (
+                    <div style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
+                      padding: "4px 8px",
+                      borderRadius: 6,
+                      background: "rgba(245,158,11,0.08)",
+                      border: "1px solid rgba(245,158,11,0.2)",
+                      fontSize: 10,
+                      fontFamily: "JetBrains Mono, monospace",
+                      color: "#fbbf24"
+                    }}>
+                      <MapPin style={{ width: 11, height: 11 }} />
+                      <span>GPS: {cmp.gps.lat}°, {cmp.gps.lng}° (±{cmp.gps.accuracy || 5}m)</span>
+                    </div>
+                  )}
+
+                  {cmp.document_evidence && (
+                    <a
+                      href={cmp.document_evidence.public_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 4,
+                        padding: "4px 8px",
+                        borderRadius: 6,
+                        background: "rgba(56,189,248,0.08)",
+                        border: "1px solid rgba(56,189,248,0.25)",
+                        fontSize: 10,
+                        fontWeight: 600,
+                        color: "#38bdf8",
+                        textDecoration: "none"
+                      }}
+                    >
+                      <FileText style={{ width: 11, height: 11 }} />
+                      <span>Evidence: {cmp.document_evidence.file_name} ↗</span>
+                    </a>
+                  )}
+                </div>
 
                 {/* Assigned Officer Badge */}
                 {cmp.assigned_officer && (

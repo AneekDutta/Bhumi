@@ -803,6 +803,18 @@ export const apiClient = {
 
   resolveComplaint: async (complaintId: string, resolution: any) => {
     return await supabaseDataService.resolveComplaint(complaintId, resolution);
+  },
+
+  uploadEvidenceDocument: async (file: File | Blob, fileName: string, parcelId: string) => {
+    return await supabaseDataService.uploadEvidenceDocument(file, fileName, parcelId);
+  },
+
+  createOrUpdateLandownerProfile: async (profile: any) => {
+    return await supabaseDataService.createOrUpdateLandownerProfile(profile);
+  },
+
+  getLandownerProfile: async (userId: string) => {
+    return await supabaseDataService.getLandownerProfile(userId);
   }
 };
 
@@ -824,4 +836,8 @@ export const assignComplaintToOfficer = (complaintId: string, officerId: string,
   apiClient.assignComplaintToOfficer(complaintId, officerId, officerName, adminNotes);
 export const submitComplaintVerification = (payload: any) => apiClient.submitComplaintVerification(payload);
 export const resolveComplaint = (complaintId: string, resolution: any) => apiClient.resolveComplaint(complaintId, resolution);
+export const uploadEvidenceDocument = (file: File | Blob, fileName: string, parcelId: string) =>
+  apiClient.uploadEvidenceDocument(file, fileName, parcelId);
+export const createOrUpdateLandownerProfile = (profile: any) => apiClient.createOrUpdateLandownerProfile(profile);
+export const getLandownerProfile = (userId: string) => apiClient.getLandownerProfile(userId);
 

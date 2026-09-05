@@ -20,8 +20,28 @@ export interface Landowner {
   parcels_count?: number;
 }
 
+export interface DocumentEvidence {
+  storage_path: string;
+  public_url: string;
+  file_name: string;
+  file_size: number;
+  mime_type: string;
+  uploaded_at: string;
+}
+
+export interface LandownerProfile {
+  id?: string;
+  user_id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  contact_village?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface LandownerComplaintPayload {
-  owner_id: string;
+  owner_id: string; // Supabase Auth user_id
   owner_name: string;
   contact_village?: string;
   mobile_number?: string;
@@ -31,6 +51,13 @@ export interface LandownerComplaintPayload {
   complaint_type: string;
   description: string;
   priority?: "NORMAL" | "URGENT" | "CRITICAL";
+  document_evidence: DocumentEvidence; // Compulsory
+  gps: {
+    lat: number;
+    lng: number;
+    accuracy?: number;
+    captured_at?: string;
+  }; // Compulsory
   photos?: Array<{
     id: string;
     url: string;
@@ -579,21 +606,184 @@ class SupabaseDataService {
   }
 
   /**
+   * Upload Compulsory Supporting Document to Supabase Storage ('documents' bucket)
+   */
+  async uploadEvidenceDocument(file: File | Blob, fileName: string, parcelId: string): Promise<DocumentEvidence> {
+    const supabase = this.getClient();
+    const cleanFileName = (fileName || "evidence_doc.pdf").replace(/[^a-zA-Z0-9._-]/g, "_");
+    const storagePath = `evidence/${parcelId}/${Date.now()}_${cleanFileName}`;
+
+    // Validate size (max 50MB)
+    if (file.size > 52428800) {
+      throw new Error("File exceeds maximum allowed size of 50 MB.");
+    }
+
+    // Determine content type
+    let contentType = file.type || "application/pdf";
+    if (cleanFileName.endsWith(".pdf")) contentType = "application/pdf";
+    else if (cleanFileName.endsWith(".jpg") || cleanFileName.endsWith(".jpeg")) contentType = "image/jpeg";
+    else if (cleanFileName.endsWith(".png")) contentType = "image/png";
+    else if (cleanFileName.endsWith(".webp")) contentType = "image/webp";
+
+    const { data, error } = await supabase.storage.from("documents").upload(storagePath, file, {
+      contentType,
+      upsert: true
+    });
+
+    if (error) {
+      console.error("Supabase Storage evidence upload error:", error);
+      throw new Error(`Document upload failed: ${error.message}. Complaint submission aborted.`);
+    }
+
+    const { data: pubData } = supabase.storage.from("documents").getPublicUrl(storagePath);
+    const publicUrl = pubData?.publicUrl || `https://ykxcoihvfzgykrkabbdy.supabase.co/storage/v1/object/public/documents/${storagePath}`;
+
+    return {
+      storage_path: storagePath,
+      public_url: publicUrl,
+      file_name: cleanFileName,
+      file_size: file.size,
+      mime_type: contentType,
+      uploaded_at: new Date().toISOString()
+    };
+  }
+
+  /**
+   * Create or update Landowner Profile in Supabase (linked via auth.users.id)
+   */
+  async createOrUpdateLandownerProfile(profile: LandownerProfile): Promise<LandownerProfile> {
+    const supabase = this.getClient();
+    const nowIso = new Date().toISOString();
+
+    // 1. Try public.landowners table first
+    try {
+      const { data, error } = await supabase
+        .from("landowners")
+        .upsert(
+          {
+            user_id: profile.user_id,
+            name: profile.name,
+            email: profile.email,
+            phone: profile.phone || null,
+            contact_village: profile.contact_village || "Chandwas (V03)",
+            updated_at: nowIso
+          },
+          { onConflict: "user_id" }
+        )
+        .select()
+        .single();
+
+      if (!error && data) {
+        return {
+          id: data.id,
+          user_id: data.user_id,
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          contact_village: data.contact_village,
+          created_at: data.created_at,
+          updated_at: data.updated_at
+        };
+      }
+    } catch (e) {
+      console.warn("Notice: landowners table upsert attempt:", e);
+    }
+
+    // 2. Also ensure public.owners table has matching record with id = user_id
+    try {
+      await supabase.from("owners").upsert(
+        {
+          id: profile.user_id,
+          name: profile.name,
+          contact: profile.email,
+          updated_at: nowIso,
+          created_at: nowIso
+        },
+        { onConflict: "id" }
+      );
+    } catch (e) {
+      console.warn("Notice: owners table sync attempt:", e);
+    }
+
+    return {
+      user_id: profile.user_id,
+      name: profile.name,
+      email: profile.email,
+      phone: profile.phone,
+      contact_village: profile.contact_village || "Chandwas (V03)",
+      updated_at: nowIso
+    };
+  }
+
+  /**
+   * Get Landowner Profile by Supabase Auth User ID
+   */
+  async getLandownerProfile(userId: string): Promise<LandownerProfile | null> {
+    const supabase = this.getClient();
+    try {
+      const { data, error } = await supabase
+        .from("landowners")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (!error && data) {
+        return data as LandownerProfile;
+      }
+    } catch {}
+
+    try {
+      const { data: oData, error: oErr } = await supabase
+        .from("owners")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (!oErr && oData) {
+        return {
+          user_id: oData.id,
+          name: oData.name,
+          email: oData.contact || "",
+          contact_village: "Chandwas (V03)",
+          created_at: oData.created_at,
+          updated_at: oData.updated_at
+        };
+      }
+    } catch {}
+
+    return null;
+  }
+
+  /**
    * Submit Landowner Grievance / Complaint directly to Supabase
    * Real database record in 'documents' and immutable 'audit_logs'
+   * Enforces COMPULSORY document evidence and COMPULSORY GPS coordinates.
    */
   async submitLandownerComplaint(payload: LandownerComplaintPayload): Promise<any> {
     const supabase = this.getClient();
+
+    // 1. Mandatory Document Validation
+    if (!payload.document_evidence || !payload.document_evidence.storage_path) {
+      throw new Error("A supporting document/evidence file is compulsory. Please attach your deed, passbook, or photo evidence before submitting.");
+    }
+
+    // 2. Mandatory GPS Validation
+    const lat = payload.gps?.lat ?? payload.gps_lat;
+    const lng = payload.gps?.lng ?? payload.gps_lng;
+    if (typeof lat !== "number" || typeof lng !== "number" || isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) {
+      throw new Error("Location is required to submit this complaint. Please grant device location access and capture GPS coordinates.");
+    }
+
     const complaintNum = Math.floor(1000 + Math.random() * 9000);
     const complaintId = `CMP-${complaintNum}`;
     const nowIso = new Date().toISOString();
     const complaintUuid = toUuid(`complaint-${complaintId}-${Date.now()}`);
     const parcelUuid = toUuid(payload.parcel_id);
 
-    // 1. Upload photos to Supabase Storage if any
+    // 3. Upload additional photos to Supabase Storage if any
     const processedPhotos = await this.uploadPhotos(payload.photos || [], payload.parcel_id);
 
-    // 2. Structured Grievance Payload
+    // 4. Structured Grievance Payload with verified document & GPS
     const descriptionPayload = JSON.stringify({
       complaint_id: complaintId,
       owner_id: payload.owner_id,
@@ -606,8 +796,14 @@ class SupabaseDataService {
       complaint_type: payload.complaint_type,
       description: payload.description,
       priority: payload.priority || "NORMAL",
+      document_evidence: payload.document_evidence,
       photos: processedPhotos,
-      gps: payload.gps_lat ? { lat: payload.gps_lat, lng: payload.gps_lng, accuracy: payload.gps_accuracy } : null,
+      gps: {
+        lat: lat,
+        lng: lng,
+        accuracy: payload.gps?.accuracy ?? payload.gps_accuracy ?? 5.0,
+        captured_at: payload.gps?.captured_at || nowIso
+      },
       submitted_at: nowIso,
       assigned_officer: null,
       verification: null,
@@ -710,6 +906,7 @@ class SupabaseDataService {
               updated_at: d.updated_at || d.created_at,
               photos: parsed.photos || [],
               gps: parsed.gps || null,
+              document_evidence: parsed.document_evidence || null,
               assigned_officer: parsed.assigned_officer || null,
               verification: parsed.verification || null,
               resolution: parsed.resolution || null
