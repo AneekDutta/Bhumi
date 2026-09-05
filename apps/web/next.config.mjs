@@ -12,7 +12,8 @@ const nextConfig = {
     const csp = `
       default-src 'self';
       script-src 'self' 'unsafe-eval' 'unsafe-inline';
-      style-src 'self' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com data:;
       img-src 'self' data: blob: https://api.maptiler.com https://*.supabase.co https://*.cartocdn.com https://basemaps.cartocdn.com https://*.tile.openstreetmap.org https://demotiles.maplibre.org;
       connect-src 'self' ${apiOrigin} https://api.maptiler.com https://*.supabase.co https://*.cartocdn.com https://basemaps.cartocdn.com https://demotiles.maplibre.org;
       worker-src 'self' blob:;
