@@ -1,11 +1,11 @@
 from datetime import datetime
-from typing import List, Optional
+
 from pydantic import BaseModel, ConfigDict
-from uuid import UUID
+
 
 class ScheduleActivityInfo(BaseModel):
     name: str
-    milestone_id: Optional[str]
+    milestone_id: str | None
     ES: datetime
     EF: datetime
     LS: datetime
@@ -17,8 +17,8 @@ class ScheduleActivityInfo(BaseModel):
 
 class ScheduleForecast(BaseModel):
     project_finish: datetime
-    critical_path: List[str]
-    project_delay_days: Optional[int] = None
+    critical_path: list[str]
+    project_delay_days: int | None = None
     impact_status: str = "QUANTIFIED_IMPACT" # NO_BLOCKING_CONSTRAINT, QUANTIFIED_IMPACT, UNQUANTIFIED_IMPACT
 
 class CausalHop(BaseModel):
@@ -32,19 +32,19 @@ class CausalHop(BaseModel):
 
 class BottleneckEvidence(BaseModel):
     parcel_id: str
-    delay_days: Optional[int]
+    delay_days: int | None
     urgency: str
     reason: str
-    cases: List[str]
-    blockers: List[str]
+    cases: list[str]
+    blockers: list[str]
     is_critical_path: bool
-    project_delay_days: Optional[int]
-    causal_path: List[CausalHop]
+    project_delay_days: int | None
+    causal_path: list[CausalHop]
 
 class ProjectImpactResponse(BaseModel):
     baseline: ScheduleForecast
     current_forecast: ScheduleForecast
-    bottlenecks: List[BottleneckEvidence]
+    bottlenecks: list[BottleneckEvidence]
 
 class SimulationRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")

@@ -1,10 +1,11 @@
+import json
+import uuid
+from unittest.mock import patch
+
 import pytest
 from httpx import ASGITransport, AsyncClient
-import uuid
-import json
-from unittest.mock import patch
+
 from app.main import app
-import asyncio
 
 pytestmark = pytest.mark.asyncio
 
@@ -32,7 +33,6 @@ def mock_auth(monkeypatch):
 # And we mock DB operations to just return fake models
 @pytest.fixture(autouse=True)
 def mock_db_deps(monkeypatch):
-    from app.api.deps import get_current_user_context
     from app.core.database import get_db
 
     class MockSession:
@@ -48,8 +48,9 @@ def mock_db_deps(monkeypatch):
                 def scalars(self):
                     class MockScalars:
                         def first(self):
-                            from app.models.domain import Document
                             from datetime import datetime, timezone
+
+                            from app.models.domain import Document
                             now = datetime.now(timezone.utc)
                             d = Document(id=uuid.uuid4(), project_id=uuid.uuid4(), title="Mock", document_type="DEED", current_version=1, status="ACTIVE", created_at=now, updated_at=now)
                             d.versions = []
@@ -59,8 +60,9 @@ def mock_db_deps(monkeypatch):
                     return MockScalars()
             return MockResult()
         async def get(self, model, ident):
-            from app.models.domain import Document, Parcel, AcquisitionCase
             from datetime import datetime, timezone
+
+            from app.models.domain import AcquisitionCase, Document, Parcel
             now = datetime.now(timezone.utc)
             if model == Document:
                 d = Document(id=ident, project_id=uuid.uuid4(), title="Mock", document_type="DEED", current_version=1, status="ACTIVE", created_at=now, updated_at=now)

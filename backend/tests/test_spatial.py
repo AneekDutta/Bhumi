@@ -1,12 +1,19 @@
-import pytest
 import uuid
-import asyncio
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete
+
+import pytest
 
 from app.core.database import AsyncSessionLocal
-from app.models.domain import Project, ProjectSegment, Parcel, AcquisitionCase, WorkflowBlocker, State, District, Village
+from app.models.domain import (
+    AcquisitionCase,
+    District,
+    Parcel,
+    Project,
+    ProjectSegment,
+    State,
+    Village,
+)
 from app.services.spatial_engine import SpatialEngine
+
 
 @pytest.mark.asyncio
 async def test_spatial_engine_semantics():
@@ -36,8 +43,9 @@ async def test_spatial_engine_semantics():
         session.add(seg2)
         await session.flush()
 
-        from app.models.domain import ProjectActivity
         from datetime import datetime, timezone
+
+        from app.models.domain import ProjectActivity
         act = ProjectActivity(id=uuid.uuid4(), project_id=proj_id, segment_id=seg1_id, name="A1", duration_days=10, planned_start=datetime.now(timezone.utc), planned_finish=datetime.now(timezone.utc))
         session.add(act)
 

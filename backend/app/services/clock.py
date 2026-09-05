@@ -15,7 +15,7 @@ def compute_deadline(triggered_at: datetime, rule: StatutoryRule) -> datetime:
         return triggered_at + relativedelta(years=rule.duration_value)
     raise ValueError(f"Unknown duration_type: {rule.duration_type}")
 
-def evaluate_deadline(case: AcquisitionCase, rule: StatutoryRule, now: datetime = None) -> dict:
+def evaluate_deadline(case: AcquisitionCase, rule: StatutoryRule, now: datetime | None = None) -> dict:
     if now is None:
         now = datetime.now(timezone.utc)
     

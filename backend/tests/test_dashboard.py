@@ -1,13 +1,14 @@
-import pytest
-from httpx import AsyncClient, ASGITransport
-from datetime import datetime, timezone
+import typing
 from uuid import UUID
-import os
 
-from app.services.dashboard_service import DashboardService
+import pytest
+from httpx import ASGITransport, AsyncClient
+
 from app.api.deps import TrustedIdentity, get_current_user_context
 from app.core.database import AsyncSessionLocal
 from app.main import app
+from app.services.dashboard_service import DashboardService
+
 
 @pytest.mark.asyncio
 async def test_dashboard_semantic_parity():
@@ -119,7 +120,7 @@ async def test_dashboard_report_rbac():
 async def test_dashboard_mock_auth_admin_no_header():
     from app.api.deps import get_current_user_context
     class MockRequest:
-        headers = {}
+        headers: typing.ClassVar[dict] = {}
     req = MockRequest()
     identity = get_current_user_context(req, auth=None)
     assert identity.role == "ADMIN"
@@ -129,7 +130,7 @@ async def test_dashboard_mock_auth_admin_no_header():
 async def test_dashboard_mock_auth_restricted():
     from app.api.deps import get_current_user_context
     class MockRequest:
-        headers = {"x-mock-role": "OFFICER", "x-mock-project-id": "pid-456"}
+        headers: typing.ClassVar[dict] = {"x-mock-role": "OFFICER", "x-mock-project-id": "pid-456"}
     req = MockRequest()
     identity = get_current_user_context(req, auth=None)
     assert identity.role == "OFFICER"
@@ -149,7 +150,7 @@ async def test_dashboard_summary_admin_sees_all():
 async def test_dashboard_mock_auth_officer_no_header():
     from app.api.deps import get_current_user_context
     class MockRequest:
-        headers = {"x-mock-role": "OFFICER"}
+        headers: typing.ClassVar[dict] = {"x-mock-role": "OFFICER"}
     req = MockRequest()
     identity = get_current_user_context(req, auth=None)
     assert identity.role == "OFFICER"

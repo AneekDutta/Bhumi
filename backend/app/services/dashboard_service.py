@@ -1,26 +1,33 @@
-from typing import Any, Dict, List, Optional
-from uuid import UUID
-from datetime import datetime, timezone
 import json
+from datetime import datetime, timezone
+from typing import Any
+from uuid import UUID
 
+from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy import func, and_, or_
 
+from app.api.deps import TrustedIdentity
 from app.models.domain import (
-    Project, ProjectActivity, ActivityDependency,
-    ActivityParcelRequirement, Parcel, AcquisitionCase, WorkflowBlocker,
-    ProjectSegment, Village, District
+    AcquisitionCase,
+    ActivityDependency,
+    ActivityParcelRequirement,
+    Parcel,
+    Project,
+    ProjectActivity,
+    ProjectSegment,
+    Village,
+    WorkflowBlocker,
 )
 from app.services.schedule_engine import ScheduleEngine
-from app.api.deps import TrustedIdentity
+
 
 class DashboardService:
     def __init__(self, db: AsyncSession, identity: TrustedIdentity):
         self.db = db
         self.identity = identity
 
-    async def _get_authorized_project_ids(self) -> List[UUID]:
+    async def _get_authorized_project_ids(self) -> list[UUID]:
         query = select(Project.id)
         if self.identity.assigned_project_id:
             query = query.where(Project.id == UUID(self.identity.assigned_project_id))
@@ -34,7 +41,7 @@ class DashboardService:
         result = await self.db.execute(query)
         return list(result.scalars().all())
 
-    async def get_portfolio_summary(self) -> Dict[str, Any]:
+    async def get_portfolio_summary(self) -> dict[str, Any]:
         projects = await self._get_projects_impact()
 
         total_projects = len(projects)
@@ -51,10 +58,10 @@ class DashboardService:
             "critical_path_blocked_projects": critical_path_blocked
         }
 
-    async def get_projects_impact(self) -> List[Dict[str, Any]]:
+    async def get_projects_impact(self) -> list[dict[str, Any]]:
         return await self._get_projects_impact()
 
-    async def _get_projects_impact(self) -> List[Dict[str, Any]]:
+    async def _get_projects_impact(self) -> list[dict[str, Any]]:
         project_ids = await self._get_authorized_project_ids()
         if not project_ids:
             return []
@@ -208,8 +215,7 @@ class DashboardService:
                 current_stage_idx = 0
                 for c in p_cases:
                     idx = stage_order.get(c.current_stage, 0)
-                    if idx > current_stage_idx:
-                        current_stage_idx = idx
+                    current_stage_idx = max(current_stage_idx, idx)
 
                 required_stage_idx = stage_order.get(req.required_stage, stage_order["POSSESSION"])
 
@@ -269,7 +275,7 @@ class DashboardService:
 
         return results
 
-    async def get_reports(self, report_type: str) -> List[Dict[str, Any]]:
+    async def get_reports(self, report_type: str) -> list[dict[str, Any]]:
         impacts = await self.get_projects_impact()
         rows = []
 
