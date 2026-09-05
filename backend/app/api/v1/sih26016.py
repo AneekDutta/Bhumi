@@ -10,6 +10,11 @@ from fastapi import APIRouter, HTTPException, Query
 
 from app.schemas.sih26016 import (
     CriticalPathResponse,
+    FieldOfficerRead,
+    FieldSyncBatchRequest,
+    FieldSyncBatchResponse,
+    FieldVerificationSubmitRequest,
+    FieldVerificationSubmitResponse,
     SimulationRequest,
     SimulationResponse,
 )
@@ -125,3 +130,46 @@ def get_corridor_summary(project_id: str):
         "projected_completion": cpm.get("projected_finish", "2028-11-15"),
         "source_type": "MODEL_DERIVED"
     }
+
+
+# -------------------------------------------------------------
+# Field Verification & Issue Reporting Endpoints
+# -------------------------------------------------------------
+@router.get("/field/officers", response_model=list[FieldOfficerRead])
+def list_field_officers():
+    """Returns available field officers with their assigned villages and pending task counts."""
+    return sih_service.get_field_officers()
+
+
+@router.get("/field/parcels", response_model=list[dict[str, Any]])
+def list_field_parcels(
+    officer_id: str | None = Query(None, description="Filter by officer_id"),
+    village_id: str | None = Query(None, description="Filter by village_id")
+):
+    """Returns assigned parcels for a field officer, enriched with cadastral centroids and verification state."""
+    return sih_service.get_officer_parcels(officer_id=officer_id, village_id=village_id)
+
+
+@router.post("/field/verify", response_model=FieldVerificationSubmitResponse)
+def submit_field_verification(report: FieldVerificationSubmitRequest):
+    """
+    Submits field inspection, owner verification, GPS coordinates, photos, and issue reports.
+    If an issue is reported, triggers real-time causal propagation across the dependency
+    graph, CPM calculations, composite risk engine, and desktop dashboard alerts.
+    """
+    try:
+        res = sih_service.record_field_verification(report.model_dump())
+        return res
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to record field verification: {e}")
+
+
+@router.post("/field/sync", response_model=FieldSyncBatchResponse)
+def batch_sync_field_verifications(payload: FieldSyncBatchRequest):
+    """Processes queued offline submissions for an officer upon network reconnection."""
+    submissions = [s.model_dump() for s in payload.submissions]
+    res = sih_service.batch_sync_verifications(payload.officer_id, submissions)
+    return res
+

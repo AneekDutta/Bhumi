@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { DocumentRegister } from '@/components/documents/DocumentRegister';
-import { CheckCircle2, Clock, AlertTriangle, FileText, MapPin, User, Scale, ArrowRight, ShieldCheck, Calendar, Hash, Building2, AlertCircle, Sparkles, Coins } from 'lucide-react';
+import { CheckCircle2, Clock, AlertTriangle, FileText, MapPin, User, Scale, ArrowRight, ShieldCheck, Calendar, Hash, Building2, AlertCircle, Sparkles, Coins, Smartphone } from 'lucide-react';
 import { ProvenanceBadge, DataRealityBanner } from '@/components/common/ProvenanceBadge';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -152,7 +152,10 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
                 {parcel.village_name || 'Wagholi Village'}, Pune · RFCTLARR Act 2013 · {acqCase?.statutory_act || 'NH Act 1956'}
               </p>
             </div>
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <Link href={`/field/verify/${activeParcel.id || activeParcel.parcel_id || id}`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(16,185,129,0.18)', border: '1px solid rgba(16,185,129,0.4)', color: '#34d399', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Smartphone style={{ width: 13, height: 13 }} /> Field Verify
+              </Link>
               <Link href={`/projects/${parcel.project_id}/spatial`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <MapPin style={{ width: 13, height: 13 }} /> GIS View
               </Link>

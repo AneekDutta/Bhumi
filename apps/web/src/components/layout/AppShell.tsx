@@ -4,12 +4,13 @@ import React, { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
-import { ShieldCheck, Activity } from "lucide-react";
+import { ShieldCheck, Activity, Smartphone } from "lucide-react";
 import Link from "next/link";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname === "/login" || pathname.startsWith("/login/") || pathname.startsWith("/auth/");
+  const isFieldPage = pathname.startsWith("/field");
 
   if (isAuthPage) {
     return (
@@ -17,6 +18,14 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="fixed top-4 right-4 z-50">
           <ThemeToggle variant="icon" />
         </div>
+        {children}
+      </div>
+    );
+  }
+
+  if (isFieldPage) {
+    return (
+      <div className="w-full min-h-screen bg-slate-900 text-slate-100 antialiased selection:bg-emerald-500/30">
         {children}
       </div>
     );
@@ -39,6 +48,13 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
+              <Link
+                href="/field"
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-600/20 dark:hover:bg-emerald-600/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30 transition-colors shadow-sm"
+              >
+                <Smartphone className="w-3 h-3 text-emerald-500 dark:text-emerald-400" />
+                <span>Field Ops (Mobile)</span>
+              </Link>
               <Link
                 href="/projects/P-NH927A/impact"
                 className="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-600/20 dark:hover:bg-indigo-600/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 transition-colors shadow-sm"

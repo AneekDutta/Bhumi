@@ -5,7 +5,7 @@ Supports database queries with automatic local seed fallback, CPM computations,
 GeoJSON FeatureCollection generation, and full Section 13 parcel dossier compilation.
 """
 import json
-from datetime import date
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -244,6 +244,8 @@ class SIH26016Service:
             "area_hectares": area_ha,
             "land_use": parcel.get("land_use"),
             "acquisition_status": parcel.get("acquisition_status"),
+            "ownership_conflict": bool(parcel.get("ownership_conflict")),
+            "conflict_type": parcel.get("conflict_type", "none"),
             "owner": o_info,
             "acquisition_case": case_info,
             "compensation": comp_info,
@@ -389,5 +391,292 @@ class SIH26016Service:
             acceleration_factor=acceleration_factor
         )
 
+    def get_field_officers(self) -> list[dict[str, Any]]:
+        if not self._data_cache:
+            self._load_data()
+        officers = self._data_cache.get("officers", [])
+        departments = {d["department_id"]: d["name"] for d in self._data_cache.get("departments", [])}
+        verifications = self._data_cache.get("verifications", [])
+        parcels = self._data_cache.get("parcels", [])
+
+        results = []
+        for o in officers:
+            oid = o["officer_id"]
+            assigned_vils = o.get("assigned_villages") or []
+            if not assigned_vils:
+                if oid == "OF001":
+                    assigned_vils = ["V01", "V02", "V03"]
+                elif oid == "OF002":
+                    assigned_vils = ["V01"]
+                elif oid == "OF003":
+                    assigned_vils = ["V02"]
+                elif oid == "OF004":
+                    assigned_vils = ["V02", "V03"]
+                elif oid == "OF005":
+                    assigned_vils = ["V01", "V02"]
+                else:
+                    assigned_vils = ["V01", "V02", "V03"]
+
+            assigned_parcels = [p for p in parcels if p.get("village_id") in assigned_vils]
+            verified_pids = {v["parcel_id"] for v in verifications if v.get("status") == "verified"}
+            pending_count = sum(1 for p in assigned_parcels if p["parcel_id"] not in verified_pids)
+
+            results.append({
+                "officer_id": oid,
+                "name": o["name"],
+                "designation": o.get("designation", "Field Officer"),
+                "department_id": o.get("department_id"),
+                "department_name": departments.get(o.get("department_id"), "Revenue & Land Acquisition"),
+                "assigned_villages": assigned_vils,
+                "pending_tasks_count": pending_count,
+                "source_type": o.get("source_type", "SYNTHETIC"),
+            })
+        return results
+
+    def get_officer_parcels(
+        self,
+        officer_id: str | None = None,
+        village_id: str | None = None
+    ) -> list[dict[str, Any]]:
+        if not self._data_cache:
+            self._load_data()
+
+        parcels = self.get_parcels()
+        villages = {v["village_id"]: v for v in self._data_cache.get("villages", [])}
+        owners = {o["owner_id"]: o["name"] for o in self._data_cache.get("owners", [])}
+        verifs = self._data_cache.get("verifications", [])
+        verifs_by_parcel: dict[str, list[dict[str, Any]]] = {}
+        for v in verifs:
+            verifs_by_parcel.setdefault(v.get("parcel_id"), []).append(v)
+
+        assigned_vils: list[str] | None = None
+        if officer_id:
+            officers = self.get_field_officers()
+            officer = next((o for o in officers if o["officer_id"] == officer_id), None)
+            if officer and officer.get("assigned_villages"):
+                assigned_vils = officer["assigned_villages"]
+
+        results = []
+        for p in parcels:
+            v_id = p.get("village_id")
+            if village_id and v_id != village_id:
+                continue
+            if assigned_vils is not None and v_id not in assigned_vils:
+                continue
+
+            v_info = villages.get(v_id, {})
+            coords = p.get("geometry_coordinates", [])
+            c_lat = None
+            c_lng = None
+            if coords:
+                c_lng = sum(pt[0] for pt in coords) / len(coords)
+                c_lat = sum(pt[1] for pt in coords) / len(coords)
+
+            p_verifs = verifs_by_parcel.get(p["parcel_id"], [])
+            latest_verif = p_verifs[-1] if p_verifs else None
+            verif_status = latest_verif.get("status", "pending") if latest_verif else "pending"
+
+            results.append({
+                "parcel_id": p["parcel_id"],
+                "survey_number": p["survey_number"],
+                "village_id": v_id,
+                "village_name": v_info.get("name", "Ramganj Mandi"),
+                "owner_id": p.get("owner_id"),
+                "owner_name": owners.get(p.get("owner_id"), "Registered Landholder"),
+                "area_sqm": float(p.get("area_sqm") or 0.0),
+                "area_hectares": round(float(p.get("area_sqm") or 0.0) / 10000.0, 4),
+                "land_use": p.get("land_use", "agricultural"),
+                "acquisition_status": p.get("acquisition_status", "not_started"),
+                "ownership_conflict": bool(p.get("ownership_conflict")),
+                "conflict_type": p.get("conflict_type", "none"),
+                "criticality_score": float(p.get("criticality_score") or 0.0),
+                "risk_score": float(p.get("risk_score") or 0.0),
+                "is_critical_path": bool(p.get("is_critical_path")),
+                "recommended_action": p.get("recommended_action"),
+                "verification_status": verif_status,
+                "latest_verification": latest_verif,
+                "centroid_lat": round(c_lat, 6) if c_lat else None,
+                "centroid_lng": round(c_lng, 6) if c_lng else None,
+                "geometry_coordinates": coords,
+                "source_type": p.get("source_type", "SYNTHETIC"),
+            })
+        return results
+
+    def record_field_verification(self, report: dict[str, Any]) -> dict[str, Any]:
+        if not self._data_cache:
+            self._load_data()
+
+        pid = report["parcel_id"]
+        officer_id = report.get("officer_id", "OF001")
+        officer_name = report.get("officer_name", "Field Officer")
+        has_issue = bool(report.get("has_issue")) or report.get("status") in ["rejected", "disputed"]
+        issue_type = report.get("issue_type") or ("ownership_mismatch" if has_issue else None)
+        issue_severity = report.get("issue_severity", "MEDIUM")
+
+        before_cpm = self._cpm_cache or {}
+        before_delay = int(before_cpm.get("project_delay_days", 0))
+
+        parcels = self._data_cache.get("parcels", [])
+        parcel = next((p for p in parcels if p["parcel_id"] == pid), None)
+        if not parcel:
+            raise ValueError(f"Parcel {pid} not found in digital twin")
+
+        old_status = parcel.get("acquisition_status")
+        old_conflict = parcel.get("ownership_conflict", False)
+
+        if has_issue:
+            parcel["ownership_conflict"] = True
+            parcel["conflict_type"] = issue_type or "ownership_mismatch"
+            parcel["source_type"] = "USER_ENTERED"
+        else:
+            if parcel.get("acquisition_status") == "not_started":
+                parcel["acquisition_status"] = "notified"
+            parcel["source_type"] = "USER_ENTERED"
+
+        verif_timestamp = datetime.now(timezone.utc).isoformat()
+        verif_id = f"VF_{int(datetime.now(timezone.utc).timestamp())}_{pid}"
+        verif_record = {
+            "verification_id": verif_id,
+            "parcel_id": pid,
+            "officer_id": officer_id,
+            "officer_name": officer_name,
+            "verification_type": report.get("verification_type", "field"),
+            "status": "rejected" if has_issue else report.get("status", "verified"),
+            "verified_at": verif_timestamp,
+            "gps_lat": report.get("gps_lat"),
+            "gps_lng": report.get("gps_lng"),
+            "gps_accuracy": report.get("gps_accuracy"),
+            "measured_area_sqm": report.get("measured_area_sqm"),
+            "boundary_confirmed": report.get("boundary_confirmed", True),
+            "possession_status": report.get("possession_status", "cultivated"),
+            "owner_present": report.get("owner_present", True),
+            "owner_verified_name": report.get("owner_verified_name"),
+            "has_issue": has_issue,
+            "issue_type": issue_type,
+            "issue_severity": issue_severity,
+            "observations": report.get("observations", ""),
+            "remarks": report.get("remarks", ""),
+            "photos": report.get("photos", []),
+            "documents": report.get("documents", []),
+            "source_type": "USER_ENTERED",
+        }
+        self._data_cache.setdefault("verifications", []).append(verif_record)
+
+        if has_issue:
+            edge_id_1 = f"E_VERIF_{pid}_{int(datetime.now(timezone.utc).timestamp())}"
+            self._data_cache.setdefault("dependency_edges", []).append({
+                "edge_id": edge_id_1,
+                "from_node_type": "verification",
+                "from_node_id": verif_id,
+                "to_node_type": "parcel",
+                "to_node_id": pid,
+                "edge_type": "blocks",
+                "weight_days": 35.0,
+                "is_blocking": True,
+                "source_type": "USER_ENTERED",
+            })
+
+            case = next((c for c in self._data_cache.get("acquisition_cases", []) if c.get("parcel_id") == pid), None)
+            comp_target = f"CR_{case.get('case_id')}" if case else f"comp_{pid}"
+            edge_id_2 = f"E_COMP_{pid}_{int(datetime.now(timezone.utc).timestamp())}"
+            self._data_cache.setdefault("dependency_edges", []).append({
+                "edge_id": edge_id_2,
+                "from_node_type": "parcel",
+                "from_node_id": pid,
+                "to_node_type": "compensation",
+                "to_node_id": comp_target,
+                "edge_type": "blocks",
+                "weight_days": 30.0,
+                "is_blocking": True,
+                "source_type": "USER_ENTERED",
+            })
+
+        self._enrich_and_compute()
+
+        after_cpm = self._cpm_cache or {}
+        after_delay = int(after_cpm.get("project_delay_days", 0))
+        delay_delta = max(0, after_delay - before_delay)
+
+        updated_parcel = next((p for p in self._data_cache.get("parcels", []) if p["parcel_id"] == pid), parcel)
+        new_risk = float(updated_parcel.get("risk_score") or 0.0)
+        new_crit = float(updated_parcel.get("criticality_score") or 0.0)
+        is_cp = bool(updated_parcel.get("is_critical_path"))
+
+        log_id = len(self._data_cache.get("audit_logs", [])) + 1
+        audit_entry = {
+            "log_id": log_id,
+            "entity_type": "PARCEL",
+            "entity_id": pid,
+            "action": "FIELD_ISSUE_REPORTED" if has_issue else "FIELD_VERIFICATION_COMPLETED",
+            "actor_id": officer_id,
+            "before_value": {"ownership_conflict": old_conflict, "status": old_status},
+            "after_value": {
+                "ownership_conflict": updated_parcel.get("ownership_conflict"),
+                "status": updated_parcel.get("acquisition_status"),
+                "issue_type": issue_type,
+                "risk_score": new_risk,
+                "criticality_score": new_crit,
+            },
+            "timestamp": verif_timestamp,
+            "source_type": "USER_ENTERED",
+        }
+        self._data_cache.setdefault("audit_logs", []).append(audit_entry)
+
+        notification = {
+            "id": f"NOTIF_{int(datetime.now(timezone.utc).timestamp())}",
+            "title": f"Field Alert: Parcel {updated_parcel.get('survey_number')} ({issue_type or 'Verified'})",
+            "message": (
+                f"Field Officer {officer_name} ({officer_id}) reported {issue_type} "
+                f"[Severity: {issue_severity}]. Schedule impact delta: +{delay_delta} days. "
+                f"Action required: {updated_parcel.get('recommended_action')}"
+                if has_issue else
+                f"Field Officer {officer_name} successfully verified Parcel {updated_parcel.get('survey_number')}."
+            ),
+            "urgency": "CRITICAL" if has_issue else "NORMAL",
+            "parcel_id": pid,
+            "officer_id": officer_id,
+            "timestamp": verif_timestamp,
+        }
+
+        return {
+            "success": True,
+            "verification_id": verif_id,
+            "parcel_id": pid,
+            "status": verif_record["status"],
+            "has_issue": has_issue,
+            "issue_type": issue_type,
+            "updated_risk_score": new_risk,
+            "updated_criticality_score": new_crit,
+            "is_critical_path": is_cp,
+            "cpm_delay_days": after_delay,
+            "project_delay_delta_days": delay_delta,
+            "projected_finish_date": after_cpm.get("projected_finish_date", "2028-11-15"),
+            "recommended_action": updated_parcel.get("recommended_action", "Proceed with statutory process"),
+            "audit_log_id": log_id,
+            "notification": notification,
+            "source_type": "USER_ENTERED",
+        }
+
+    def batch_sync_verifications(self, officer_id: str, submissions: list[dict[str, Any]]) -> dict[str, Any]:
+        results = []
+        synced = 0
+        failed = 0
+        for sub in submissions:
+            try:
+                sub["officer_id"] = sub.get("officer_id") or officer_id
+                res = self.record_field_verification(sub)
+                results.append(res)
+                synced += 1
+            except Exception as e:
+                print(f"[batch_sync_verifications] Failed sub {sub.get('parcel_id')}: {e}")
+                failed += 1
+        return {
+            "success": failed == 0,
+            "synced_count": synced,
+            "failed_count": failed,
+            "results": results,
+        }
+
 
 sih_service = SIH26016Service()
+

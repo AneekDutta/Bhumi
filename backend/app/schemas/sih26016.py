@@ -214,3 +214,78 @@ class SimulationResponse(BaseModel):
     cost_estimate_units: dict[str, Any]
     affected_entities: list[str]
     source_type: SourceType = "MODEL_DERIVED"
+
+
+class FieldOfficerRead(ProvenanceBase):
+    officer_id: str
+    name: str
+    designation: str | None = None
+    department_id: str | None = None
+    department_name: str | None = None
+    assigned_villages: list[str] = []
+    pending_tasks_count: int = 0
+
+
+class FieldPhotoAttachment(BaseModel):
+    id: str | None = None
+    url: str | None = None
+    caption: str | None = None
+    category: str | None = "boundary"
+    timestamp: str | None = None
+    gps_lat: float | None = None
+    gps_lng: float | None = None
+
+
+class FieldVerificationSubmitRequest(BaseModel):
+    parcel_id: str
+    officer_id: str
+    officer_name: str | None = "Field Officer"
+    verification_type: str = "field"
+    status: Literal["verified", "rejected", "disputed", "pending"] = "verified"
+    gps_lat: float | None = None
+    gps_lng: float | None = None
+    gps_accuracy: float | None = None
+    measured_area_sqm: float | None = None
+    boundary_confirmed: bool = True
+    possession_status: str | None = "cultivated"
+    owner_present: bool = True
+    owner_verified_name: str | None = None
+    has_issue: bool = False
+    issue_type: str | None = None
+    issue_severity: Literal["LOW", "MEDIUM", "HIGH", "CRITICAL_STOPPAGE"] | None = "MEDIUM"
+    observations: str | None = None
+    remarks: str | None = None
+    photos: list[FieldPhotoAttachment] = []
+    documents: list[dict[str, Any]] = []
+
+
+class FieldVerificationSubmitResponse(BaseModel):
+    success: bool
+    verification_id: str
+    parcel_id: str
+    status: str
+    has_issue: bool
+    issue_type: str | None = None
+    updated_risk_score: float
+    updated_criticality_score: float
+    is_critical_path: bool
+    cpm_delay_days: int
+    project_delay_delta_days: int
+    projected_finish_date: str
+    recommended_action: str
+    audit_log_id: int | None = None
+    notification: dict[str, Any]
+    source_type: SourceType = "USER_ENTERED"
+
+
+class FieldSyncBatchRequest(BaseModel):
+    officer_id: str
+    submissions: list[FieldVerificationSubmitRequest]
+
+
+class FieldSyncBatchResponse(BaseModel):
+    success: bool
+    synced_count: int
+    failed_count: int = 0
+    results: list[FieldVerificationSubmitResponse]
+
