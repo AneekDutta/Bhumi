@@ -68,9 +68,15 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
   const navItems = [
     {
       label: "Parcels",
-      href: "/field",
+      href: "/field/parcels",
       icon: ClipboardList,
       active: pathname === "/field" || pathname === "/field/parcels"
+    },
+    {
+      label: "GIS Map",
+      href: "/field/map",
+      icon: MapPin,
+      active: pathname === "/field/map"
     },
     {
       label: "Sync",
@@ -84,12 +90,6 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
       href: "/field/login",
       icon: User,
       active: pathname === "/field/login"
-    },
-    {
-      label: "Desktop",
-      href: "/",
-      icon: Monitor,
-      active: false
     }
   ];
 

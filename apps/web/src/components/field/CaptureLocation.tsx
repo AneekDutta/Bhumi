@@ -1,25 +1,82 @@
 "use client";
 
-import React, { useState } from "react";
-import { MapPin, Navigation, Crosshair, CheckCircle2, AlertTriangle } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { MapPin, Navigation, Crosshair, CheckCircle2, AlertTriangle, RefreshCw } from "lucide-react";
 import { getCurrentGPSPosition, LocationCoordinates } from "@/lib/native/geolocation";
+import { FieldSpatialMap } from "./FieldSpatialMap";
 
 interface CaptureLocationProps {
   targetLat?: number;
   targetLng?: number;
   surveyNo?: string;
+  parcelId?: string;
+  polygonCoords?: [number, number][];
   onLocationCaptured: (coords: LocationCoordinates) => void;
 }
 
 export function CaptureLocation({
-  targetLat = 25.321,
-  targetLng = 82.987,
+  targetLat = 24.6492,
+  targetLng = 75.9284,
   surveyNo = "-",
+  parcelId,
+  polygonCoords,
   onLocationCaptured
 }: CaptureLocationProps) {
   const [coords, setCoords] = useState<LocationCoordinates | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Construct real GeoJSON polygon for this parcel
+  const parcelGeoJSON = useMemo(() => {
+    if (polygonCoords && polygonCoords.length > 0) {
+      return {
+        type: "FeatureCollection",
+        features: [{
+          type: "Feature",
+          geometry: {
+            type: "Polygon",
+            coordinates: [polygonCoords]
+          },
+          properties: {
+            parcel_id: parcelId || "TARGET",
+            survey_number: surveyNo,
+            acquisition_status: "notified"
+          }
+        }],
+        properties: {
+          center: [targetLng, targetLat]
+        }
+      };
+    }
+
+    // Centered cadastral bounding box from real coordinates
+    const dLng = 0.0006;
+    const dLat = 0.0004;
+    return {
+      type: "FeatureCollection",
+      features: [{
+        type: "Feature",
+        geometry: {
+          type: "Polygon",
+          coordinates: [[
+            [targetLng - dLng, targetLat - dLat],
+            [targetLng + dLng, targetLat - dLat],
+            [targetLng + dLng, targetLat + dLat],
+            [targetLng - dLng, targetLat + dLat],
+            [targetLng - dLng, targetLat - dLat],
+          ]]
+        },
+        properties: {
+          parcel_id: parcelId || "TARGET",
+          survey_number: surveyNo,
+          acquisition_status: "notified"
+        }
+      }],
+      properties: {
+        center: [targetLng, targetLat]
+      }
+    };
+  }, [targetLat, targetLng, surveyNo, parcelId, polygonCoords]);
 
   const handleAcquireGPS = async () => {
     setLoading(true);
@@ -28,18 +85,30 @@ export function CaptureLocation({
       const pos = await getCurrentGPSPosition({ enableHighAccuracy: true, timeout: 10000 });
       setCoords(pos);
       onLocationCaptured(pos);
-    } catch (err: any) {
-      // If indoors / GPS blocked, generate near-centroid fallback with clear tag
-      const fallback: LocationCoordinates = {
-        lat: Number((targetLat + (Math.random() - 0.5) * 0.0004).toFixed(6)),
-        lng: Number((targetLng + (Math.random() - 0.5) * 0.0004).toFixed(6)),
-        accuracy: 9,
-        timestamp: Date.now()
-      };
-      setCoords(fallback);
-      onLocationCaptured(fallback);
-    } finally {
-      setLoading(false);
+    } catch {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const acquired: LocationCoordinates = {
+              lat: Number(pos.coords.latitude.toFixed(6)),
+              lng: Number(pos.coords.longitude.toFixed(6)),
+              accuracy: Math.round(pos.coords.accuracy),
+              timestamp: Date.now()
+            };
+            setCoords(acquired);
+            onLocationCaptured(acquired);
+            setLoading(false);
+          },
+          (err) => {
+            setError(err.message || "GPS signal unavailable. Please enable device location.");
+            setLoading(false);
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      } else {
+        setError("Geolocation is not supported by your device browser.");
+        setLoading(false);
+      }
     }
   };
 
@@ -50,7 +119,7 @@ export function CaptureLocation({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-xs font-semibold text-white">
           <Crosshair className="w-4 h-4 text-emerald-400" />
-          <span>GPS & Cadastral Geolocation</span>
+          <span>Real Spatial Map & Cadastral Demarcation</span>
         </div>
         {coords && (
           <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
@@ -63,44 +132,18 @@ export function CaptureLocation({
         )}
       </div>
 
-      {/* Mini Interactive Cadastral Map Representation */}
-      <div className="relative w-full h-32 bg-slate-950/90 rounded-xl border border-slate-700/80 overflow-hidden flex items-center justify-center">
-        <svg className="w-full h-full p-3" viewBox="0 0 200 110">
-          <line x1="15" y1="55" x2="185" y2="55" stroke="#334155" strokeWidth="0.5" strokeDasharray="3,3" />
-          <line x1="100" y1="10" x2="100" y2="100" stroke="#334155" strokeWidth="0.5" strokeDasharray="3,3" />
-
-          {/* Cadastral Boundary Polygon */}
-          <polygon
-            points="45,20 155,15 175,90 65,95"
-            fill="rgba(16, 185, 129, 0.12)"
-            stroke="#10b981"
-            strokeWidth="1.8"
-          />
-          <text x="105" y="58" fill="#6ee7b7" fontSize="8" fontFamily="monospace" textAnchor="middle">
-            Survey {surveyNo}
-          </text>
-
-          {/* Centroid Reference */}
-          <circle cx="105" cy="55" r="2.5" fill="#10b981" />
-
-          {/* Officer Live GPS Indicator */}
-          <circle
-            cx={coords ? "115" : "55"}
-            cy={coords ? "50" : "80"}
-            r="4.5"
-            fill="#38bdf8"
-            className="animate-ping"
-          />
-          <circle
-            cx={coords ? "115" : "55"}
-            cy={coords ? "50" : "80"}
-            r="3.5"
-            fill="#0284c7"
-          />
-        </svg>
-
-        <div className="absolute bottom-2 left-2 text-[10px] font-mono text-slate-400 bg-slate-900/80 px-2 py-0.5 rounded border border-white/5">
-          Centroid: {targetLat.toFixed(4)}°, {targetLng.toFixed(4)}°
+      {/* Real MapLibre GL Cadastral Map */}
+      <div className="relative w-full h-44 rounded-xl border border-slate-700/80 overflow-hidden shadow-inner">
+        <FieldSpatialMap
+          geojson={parcelGeoJSON}
+          height="100%"
+          initialCenter={[targetLng, targetLat]}
+          initialZoom={16}
+          showControls={false}
+          interactive={true}
+        />
+        <div className="absolute bottom-2 left-2 text-[10px] font-mono text-slate-200 bg-slate-900/90 px-2 py-0.5 rounded border border-white/10 z-10">
+          Centroid: {targetLat.toFixed(4)}°N, {targetLng.toFixed(4)}°E
         </div>
       </div>
 
@@ -110,14 +153,14 @@ export function CaptureLocation({
           type="button"
           onClick={handleAcquireGPS}
           disabled={loading}
-          className="py-2.5 px-3 rounded-xl bg-slate-700/80 hover:bg-slate-700 text-white text-xs font-semibold flex items-center justify-center gap-2 border border-slate-600 transition-all cursor-pointer"
+          className="py-2.5 px-3 rounded-xl bg-slate-700/80 hover:bg-slate-700 text-white text-xs font-semibold flex items-center justify-center gap-2 border border-slate-600 transition-all cursor-pointer disabled:opacity-60"
         >
           {loading ? (
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <RefreshCw className="w-4 h-4 animate-spin text-emerald-400" />
           ) : (
             <MapPin className="w-4 h-4 text-emerald-400" />
           )}
-          <span>{coords ? "Re-acquire GPS" : "Capture GPS Fix"}</span>
+          <span>{coords ? "Re-acquire GPS" : "Capture Real GPS Fix"}</span>
         </button>
 
         <a
@@ -132,15 +175,18 @@ export function CaptureLocation({
       </div>
 
       {coords && (
-        <div className="text-[11px] font-mono text-slate-300 bg-slate-900/60 p-2.5 rounded-lg border border-white/5 flex items-center justify-between">
+        <div className="text-[11px] font-mono text-slate-300 bg-slate-900/80 p-2.5 rounded-lg border border-white/5 flex items-center justify-between">
           <span>Lat: {coords.lat}°, Lng: {coords.lng}°</span>
-          <span className="text-emerald-400 font-semibold">Within Geofence</span>
+          <span className="text-emerald-400 font-semibold flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Fixed
+          </span>
         </div>
       )}
 
       {error && (
-        <div className="text-xs text-red-400 bg-red-500/10 p-2 rounded-lg border border-red-500/20">
-          {error}
+        <div className="text-xs text-red-400 bg-red-500/10 p-2 rounded-lg border border-red-500/20 flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
+          <span>{error}</span>
         </div>
       )}
     </div>

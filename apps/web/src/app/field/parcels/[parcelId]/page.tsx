@@ -15,7 +15,8 @@ import {
   Scale,
   Sparkles,
   Send,
-  Camera
+  Camera,
+  Compass
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
 import { getFieldParcels, getFieldIncidents, confirmFieldIncident } from "@/lib/api";
@@ -383,18 +384,28 @@ export default function ParcelDetailsPage() {
           </div>
         </div>
 
-        {/* Embedded Location Component */}
+        {/* Real Spatial Map & Location Component */}
         <CaptureLocation
           targetLat={parcel.centroid_lat || 24.6492}
           targetLng={parcel.centroid_lng || 75.9284}
           surveyNo={sNo}
+          parcelId={parcelId}
+          polygonCoords={parcel.geometry_coordinates}
           onLocationCaptured={(pos) => {
             console.log("Captured GPS:", pos);
           }}
         />
 
+        <Link
+          href="/field/map"
+          className="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2"
+        >
+          <Compass className="w-4 h-4 text-emerald-400" />
+          <span>Inspect on Corridor Spatial GIS Map</span>
+        </Link>
+
         {/* Action Buttons */}
-        <div className="space-y-2 pt-2">
+        <div className="space-y-2 pt-1">
           <Link
             href={`/field/parcels/${parcelId}/verify`}
             className="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-bold shadow-xl shadow-emerald-950/40 transition-all flex items-center justify-center gap-2 cursor-pointer"

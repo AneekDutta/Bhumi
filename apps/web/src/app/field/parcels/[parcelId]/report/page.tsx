@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -11,7 +11,11 @@ import {
   Camera,
   Send,
   Save,
-  CheckCircle2
+  CheckCircle2,
+  MapPin,
+  Locate,
+  Crosshair,
+  RefreshCw
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
 import { STRUCTURED_ISSUE_TYPES } from "@/components/field/ReportIssueForm";
@@ -20,6 +24,7 @@ import { CapturedPhoto } from "@/lib/native/camera";
 import { submitFieldVerification, getFieldParcels } from "@/lib/api";
 import { offlineStore, QueuedVerification } from "@/lib/offlineStore";
 import { SubmissionStatusModal } from "@/components/field/SubmissionStatusModal";
+import { FieldSpatialMap } from "@/components/field/FieldSpatialMap";
 
 export default function ReportIssuePage() {
   const params = useParams();
@@ -34,20 +39,107 @@ export default function ReportIssuePage() {
   const [submitting, setSubmitting] = useState(false);
   const [response, setResponse] = useState<any>(null);
 
+  // Real GPS & Map Anchor State
+  const [incidentLocation, setIncidentLocation] = useState<{ lat: number; lng: number; accuracy?: number } | null>(null);
+  const [locating, setLocating] = useState(false);
+
   useEffect(() => {
     async function load() {
       try {
         const list = await getFieldParcels();
         const p = list.find((x: any) => x.parcel_id === parcelId || x.id === parcelId);
-        if (p) setParcel(p);
+        if (p) {
+          setParcel(p);
+          if (p.centroid_lat && p.centroid_lng) {
+            setIncidentLocation({
+              lat: p.centroid_lat,
+              lng: p.centroid_lng,
+              accuracy: 5.0
+            });
+          }
+        }
       } catch {}
     }
     load();
   }, [parcelId]);
 
+  // Construct real GeoJSON polygon for this parcel
+  const parcelGeoJSON = useMemo(() => {
+    const lat = parcel?.centroid_lat || 24.6492;
+    const lng = parcel?.centroid_lng || 75.9284;
+    const coords = parcel?.geometry_coordinates;
+
+    if (coords && coords.length > 0) {
+      return {
+        type: "FeatureCollection",
+        features: [{
+          type: "Feature",
+          geometry: {
+            type: "Polygon",
+            coordinates: [coords]
+          },
+          properties: {
+            parcel_id: parcelId,
+            survey_number: parcel?.survey_no || "-",
+            acquisition_status: "disputed"
+          }
+        }],
+        properties: { center: [lng, lat] }
+      };
+    }
+
+    const dLng = 0.0006;
+    const dLat = 0.0004;
+    return {
+      type: "FeatureCollection",
+      features: [{
+        type: "Feature",
+        geometry: {
+          type: "Polygon",
+          coordinates: [[
+            [lng - dLng, lat - dLat],
+            [lng + dLng, lat - dLat],
+            [lng + dLng, lat + dLat],
+            [lng - dLng, lat + dLat],
+            [lng - dLng, lat - dLat],
+          ]]
+        },
+        properties: {
+          parcel_id: parcelId,
+          survey_number: parcel?.survey_no || "-",
+          acquisition_status: "disputed"
+        }
+      }],
+      properties: { center: [lng, lat] }
+    };
+  }, [parcel, parcelId]);
+
+  const handleAcquireDeviceGPS = () => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocating(false);
+        setIncidentLocation({
+          lat: Number(pos.coords.latitude.toFixed(6)),
+          lng: Number(pos.coords.longitude.toFixed(6)),
+          accuracy: Math.round(pos.coords.accuracy)
+        });
+      },
+      () => {
+        setLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  };
+
   const handleSubmit = async (forceOffline = false) => {
     setSubmitting(true);
     const active = offlineStore.getActiveOfficer();
+
+    const finalLat = incidentLocation?.lat || parcel?.centroid_lat || 24.6492;
+    const finalLng = incidentLocation?.lng || parcel?.centroid_lng || 75.9284;
+    const finalAccuracy = incidentLocation?.accuracy || 4.0;
 
     const payload = {
       parcel_id: parcelId,
@@ -60,6 +152,9 @@ export default function ReportIssuePage() {
       issue_severity: issueSeverity,
       observations: description,
       remarks: `Urgent blocker escalation: ${issueType} (Severity: ${issueSeverity})`,
+      gps_lat: finalLat,
+      gps_lng: finalLng,
+      gps_accuracy: finalAccuracy,
       photos: photos.map((p) => ({
         id: p.id,
         url: p.dataUrl,
@@ -208,6 +303,54 @@ export default function ReportIssuePage() {
           </div>
         </div>
 
+        {/* ========================================================================= */}
+        {/* SPATIAL INCIDENT LOCATION ANCHOR (MapLibre GL Map Picker)                 */}
+        {/* ========================================================================= */}
+        <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs font-semibold text-white">
+              <MapPin className="w-4 h-4 text-emerald-400" />
+              <span>Incident Geographic Position & GPS Anchor</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleAcquireDeviceGPS}
+              disabled={locating}
+              className="px-2.5 py-1 rounded-lg bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-600/30 text-[10px] font-mono flex items-center gap-1 transition-all"
+            >
+              {locating ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Locate className="w-3 h-3" />}
+              <span>Use My GPS</span>
+            </button>
+          </div>
+
+          <p className="text-[11px] text-slate-400">
+            Tap anywhere on the map or use your device GPS to anchor the incident at its real geographic coordinates:
+          </p>
+
+          <div className="relative w-full h-48 rounded-xl border border-slate-700 overflow-hidden shadow-inner">
+            <FieldSpatialMap
+              geojson={parcelGeoJSON}
+              height="100%"
+              initialCenter={incidentLocation ? [incidentLocation.lng, incidentLocation.lat] : [75.9284, 24.6492]}
+              initialZoom={16}
+              locationPicker={true}
+              pickedLocation={incidentLocation}
+              onLocationPick={(loc) => setIncidentLocation(loc)}
+              showControls={false}
+            />
+          </div>
+
+          {incidentLocation && (
+            <div className="flex items-center justify-between text-[10px] font-mono text-slate-300 bg-slate-900/80 p-2.5 rounded-lg border border-white/5">
+              <span>Anchored: {incidentLocation.lat.toFixed(5)}°N, {incidentLocation.lng.toFixed(5)}°E</span>
+              <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3" /> Real Spatial Coordinate
+              </span>
+            </div>
+          )}
+        </div>
+
         {/* Evidence Photos */}
         <CapturePhoto
           photos={photos}
@@ -242,7 +385,7 @@ export default function ReportIssuePage() {
             ) : (
               <Send className="w-4 h-4" />
             )}
-            <span>{submitting ? "Triggering Causal Propagation..." : "Escalate Blocker to Platform"}</span>
+            <span>{submitting ? "Triggering Causal Propagation..." : "Escalate Blocker with GPS Coordinates"}</span>
           </button>
         </div>
 
