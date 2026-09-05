@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { 
   Shield, 
@@ -19,7 +20,8 @@ import {
   RefreshCw,
   Database,
   Radio,
-  Server
+  Server,
+  Smartphone
 } from "lucide-react";
 
 type AuthMode = "LOGIN" | "FORGOT_PASSWORD" | "UPDATE_PASSWORD";
@@ -661,15 +663,25 @@ function LoginPageContent() {
                 </form>
 
                 {/* Quick-Fill Demonstration Utility */}
-                <div className="mt-4 pt-4 border-t border-[#1e293b] text-center">
+                <div className="mt-4 pt-4 border-t border-[#1e293b] text-center space-y-2.5">
                   <button
                     type="button"
                     onClick={handleQuickFill}
                     className="text-[11px] font-mono text-[#64748b] hover:text-[#38bdf8] transition-colors inline-flex items-center gap-1.5"
                   >
                     <KeyRound className="w-3 h-3" />
-                    <span>[ Load Authorized Officer Demo Credentials ]</span>
+                    <span>[ Load Authorized Admin Demo Credentials ]</span>
                   </button>
+
+                  <div>
+                    <Link
+                      href="/field/login"
+                      className="text-[11px] font-mono text-[#10b981] hover:text-[#34d399] hover:underline transition-colors inline-flex items-center gap-1.5"
+                    >
+                      <Smartphone className="w-3.5 h-3.5" />
+                      <span>Switch to Field Officer Mobile Login →</span>
+                    </Link>
+                  </div>
                 </div>
               </>
             )}
