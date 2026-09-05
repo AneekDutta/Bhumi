@@ -682,6 +682,16 @@ function LoginPageContent() {
                       <span>Switch to Field Officer Mobile Login →</span>
                     </Link>
                   </div>
+
+                  <div>
+                    <Link
+                      href="/landowner/login"
+                      className="text-[11px] font-mono text-teal-400 hover:text-teal-300 hover:underline transition-colors inline-flex items-center gap-1.5"
+                    >
+                      <Layers className="w-3.5 h-3.5" />
+                      <span>Switch to Citizen / Landowner Portal →</span>
+                    </Link>
+                  </div>
                 </div>
               </>
             )}

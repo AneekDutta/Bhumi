@@ -11,6 +11,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname === "/login" || pathname.startsWith("/login/") || pathname.startsWith("/auth/");
   const isFieldPage = pathname.startsWith("/field");
+  const isLandownerPage = pathname.startsWith("/landowner");
 
   if (isAuthPage) {
     return (
@@ -26,6 +27,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   if (isFieldPage) {
     return (
       <div className="w-full min-h-screen bg-slate-900 text-slate-100 antialiased selection:bg-emerald-500/30">
+        {children}
+      </div>
+    );
+  }
+
+  if (isLandownerPage) {
+    return (
+      <div className="w-full min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-emerald-500/30">
         {children}
       </div>
     );

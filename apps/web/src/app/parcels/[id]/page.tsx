@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { DocumentRegister } from '@/components/documents/DocumentRegister';
 import { FieldIncidentReviewCard } from '@/components/documents/FieldIncidentReviewCard';
+import { LandownerGrievanceReviewCard } from '@/components/documents/LandownerGrievanceReviewCard';
 import { CheckCircle2, Clock, AlertTriangle, FileText, MapPin, User, Scale, ArrowRight, ShieldCheck, Calendar, Hash, Building2, AlertCircle, Sparkles, Coins } from 'lucide-react';
 import { ProvenanceBadge, DataRealityBanner } from '@/components/common/ProvenanceBadge';
 import { RealtimeParcelHeader } from '@/components/parcels/RealtimeParcelHeader';
@@ -450,6 +451,9 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
 
       {/* Field Incidents & On-Site Verification Review */}
       <FieldIncidentReviewCard parcelId={parcel.id} projectId={parcel.project_id} />
+
+      {/* Citizen Landowner Grievances & Redressal */}
+      <LandownerGrievanceReviewCard parcelId={parcel.id} projectId={parcel.project_id} />
 
       {/* Document Register */}
       <div>

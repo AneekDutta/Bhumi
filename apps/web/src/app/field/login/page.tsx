@@ -381,22 +381,37 @@ export default function FieldLoginPage() {
           </div>
         )}
 
-        {/* Link to Admin Login */}
-        <div className="pt-3 text-center space-y-1">
-          <p className="text-[11px] text-slate-400">
-            Are you a CALA Director or State Administrator?
-          </p>
-          <button
-            type="button"
-            onClick={() => {
-              document.cookie = "bhumi_officer_session=officer%40bhumi.gov.in; path=/; max-age=86400; SameSite=Lax";
-              window.location.href = "/";
-            }}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:underline transition-colors cursor-pointer"
-          >
-            <Monitor className="w-3.5 h-3.5" />
-            <span>Go to Desktop Admin Command Console →</span>
-          </button>
+        {/* Link to Admin Login & Landowner Portal */}
+        <div className="pt-3 text-center space-y-2">
+          <div>
+            <p className="text-[11px] text-slate-400">
+              Are you an affected landowner or project-impacted citizen?
+            </p>
+            <Link
+              href="/landowner/login"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:underline transition-colors mt-0.5"
+            >
+              <UserCheck className="w-3.5 h-3.5 text-amber-400" />
+              <span>Go to Landowner / Citizen Grievance Portal →</span>
+            </Link>
+          </div>
+
+          <div className="pt-1">
+            <p className="text-[11px] text-slate-400">
+              Are you a CALA Director or State Administrator?
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                document.cookie = "bhumi_officer_session=officer%40bhumi.gov.in; path=/; max-age=86400; SameSite=Lax";
+                window.location.href = "/";
+              }}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:underline transition-colors cursor-pointer mt-0.5"
+            >
+              <Monitor className="w-3.5 h-3.5" />
+              <span>Go to Desktop Admin Command Console →</span>
+            </button>
+          </div>
         </div>
 
       </div>

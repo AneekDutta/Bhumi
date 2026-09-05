@@ -192,3 +192,58 @@ export function useRealtimeDashboard(
     };
   }, []);
 }
+
+/**
+ * Hook to subscribe to real-time Citizen Grievance updates.
+ * Listens for changes on 'documents' (document_type = 'landowner_complaint') and 'audit_logs'.
+ * Synchronizes across Landowner, Admin Web, and Field Operations.
+ */
+export function useRealtimeComplaints(
+  filterId: string | undefined,
+  onUpdate: (payload?: any) => void
+) {
+  const onUpdateRef = useRef(onUpdate);
+  onUpdateRef.current = onUpdate;
+
+  useEffect(() => {
+    const supabase = createClient();
+    const tag = filterId ? filterId.replace(/[^a-zA-Z0-9_-]/g, "_") : "all";
+    const channelName = `rt-complaints-${tag}-${Date.now()}`;
+
+    const channel: RealtimeChannel = supabase
+      .channel(channelName)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "documents"
+        },
+        (payload) => {
+          const rec: any = payload.new || payload.old;
+          if (rec?.document_type === "landowner_complaint") {
+            onUpdateRef.current(payload);
+          }
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "audit_logs"
+        },
+        (payload) => {
+          const rec: any = payload.new;
+          if (rec?.action?.includes("COMPLAINT") || rec?.entity_type === "complaint") {
+            onUpdateRef.current(payload);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [filterId]);
+}

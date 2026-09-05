@@ -19,8 +19,8 @@ import {
   Compass
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
-import { getFieldParcels, getFieldIncidents, confirmFieldIncident } from "@/lib/api";
-import { useRealtimeParcel } from "@/lib/supabase/useRealtime";
+import { getFieldParcels, getFieldIncidents, confirmFieldIncident, getLandownerComplaints, submitComplaintVerification } from "@/lib/api";
+import { useRealtimeParcel, useRealtimeComplaints } from "@/lib/supabase/useRealtime";
 import { CaptureLocation } from "@/components/field/CaptureLocation";
 import { offlineStore } from "@/lib/offlineStore";
 
@@ -36,6 +36,11 @@ export default function ParcelDetailsPage() {
   const [confirmNotes, setConfirmNotes] = useState<string>("");
   const [confirmingSubmitting, setConfirmingSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [complaints, setComplaints] = useState<any[]>([]);
+  const [verifyingComplaintId, setVerifyingComplaintId] = useState<string | null>(null);
+  const [complaintObservations, setComplaintObservations] = useState("");
+  const [verifyingSubmitting, setVerifyingSubmitting] = useState(false);
+
 
   const loadParcel = async () => {
     try {
@@ -44,11 +49,17 @@ export default function ParcelDetailsPage() {
       if (match) setParcel(match);
       const incs = await getFieldIncidents({ parcel_id: parcelId });
       setIncidents(incs || []);
+      const cmps = await getLandownerComplaints({ parcel_id: parcelId });
+      setComplaints(cmps || []);
     } catch {}
   };
 
   // Supabase Realtime: updates when Admin resolves issues or verifies from desktop
   useRealtimeParcel(parcelId, () => {
+    loadParcel();
+  });
+
+  useRealtimeComplaints(parcelId, () => {
     loadParcel();
   });
 
@@ -125,6 +136,35 @@ export default function ParcelDetailsPage() {
     load();
   }, [parcelId]);
 
+
+  const handleVerifyComplaint = async (complaintId: string) => {
+    if (!complaintObservations.trim()) {
+      alert("Please provide on-ground verification observations.");
+      return;
+    }
+    setVerifyingSubmitting(true);
+    try {
+      const officer = offlineStore.getActiveOfficer();
+      const res = await submitComplaintVerification({
+        complaint_id: complaintId,
+        officer_id: officer?.officer_id || officer?.id || "OFF-001",
+        officer_name: officer?.name || "Ramesh Patel",
+        observations: complaintObservations.trim(),
+        gps_lat: parcel?.centroid_lat || 24.6492,
+        gps_lng: parcel?.centroid_lng || 75.9284,
+        gps_accuracy: 3.8
+      });
+      setFeedback(res.message || "Citizen grievance verified on ground. Realtime sync complete.");
+      setVerifyingComplaintId(null);
+      setComplaintObservations("");
+      await loadParcel();
+    } catch (err: any) {
+      alert(err?.message || "Failed to submit ground verification.");
+    } finally {
+      setVerifyingSubmitting(false);
+    }
+  };
+
   const handleConfirmIncident = async (incidentId: string) => {
     setConfirmingSubmitting(true);
     setFeedback(null);
@@ -145,6 +185,8 @@ export default function ParcelDetailsPage() {
       setConfirmNotes("");
       const incs = await getFieldIncidents({ parcel_id: parcelId });
       setIncidents(incs || []);
+      const cmps = await getLandownerComplaints({ parcel_id: parcelId });
+      setComplaints(cmps || []);
     } catch {
       setFeedback("Failed to confirm incident. Please check connection.");
     } finally {
@@ -229,6 +271,119 @@ export default function ParcelDetailsPage() {
           <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
             <span>{feedback}</span>
+          </div>
+        )}
+
+
+        {/* Citizen Landowner Grievances on this parcel */}
+        {complaints.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold text-amber-400 px-1">
+              <span className="flex items-center gap-1.5">
+                <FileText className="w-4 h-4 text-amber-400" /> Assigned Citizen Grievances ({complaints.length})
+              </span>
+              <span className="text-[10px] font-mono text-slate-400">Citizen → Field Redressal</span>
+            </div>
+
+            {complaints.map((cmp) => {
+              const isResolved = cmp.status === "RESOLVED";
+              const isVerified = cmp.status === "VERIFIED";
+
+              return (
+                <div
+                  key={cmp.id}
+                  className={`p-3.5 rounded-xl border text-xs space-y-2.5 ${
+                    isResolved
+                      ? "bg-emerald-950/20 border-emerald-500/30"
+                      : isVerified
+                      ? "bg-teal-950/20 border-teal-500/30"
+                      : "bg-amber-950/20 border-amber-500/35"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="font-bold text-white uppercase text-[11px] block">
+                        {cmp.complaint_type}
+                      </span>
+                      <span className="text-[10px] text-slate-400">
+                        Citizen: <strong className="text-slate-200">{cmp.owner_name}</strong> ({cmp.contact_village})
+                      </span>
+                    </div>
+                    <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase ${
+                      isResolved
+                        ? "bg-emerald-500/20 text-emerald-300"
+                        : isVerified
+                        ? "bg-teal-500/20 text-teal-300"
+                        : "bg-amber-500/20 text-amber-300"
+                    }`}>
+                      {cmp.status.replace(/_/g, " ")}
+                    </span>
+                  </div>
+
+                  <p className="text-slate-300 text-[11px] leading-relaxed">
+                    {cmp.description}
+                  </p>
+
+                  {cmp.verification && (
+                    <div className="p-2.5 rounded-lg bg-slate-900/80 border border-teal-500/20 text-[11px] space-y-1">
+                      <span className="text-teal-300 font-bold block flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Ground Verification Recorded:
+                      </span>
+                      <p className="text-slate-300">{cmp.verification.observations}</p>
+                    </div>
+                  )}
+
+                  {!isVerified && !isResolved && (
+                    <div>
+                      {verifyingComplaintId === cmp.id ? (
+                        <div className="space-y-2 pt-2 border-t border-slate-700/50">
+                          <label className="block text-[10px] font-bold text-slate-300 uppercase">
+                            Record Ground Inspection Observations:
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={complaintObservations}
+                            onChange={(e) => setComplaintObservations(e.target.value)}
+                            placeholder="Physical boundary peg verified, title discrepancy notes, passbook inspected..."
+                            className="w-full p-2 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                          />
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              disabled={verifyingSubmitting}
+                              onClick={() => handleVerifyComplaint(cmp.complaint_id || cmp.id)}
+                              className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold uppercase transition-colors flex items-center gap-1 cursor-pointer"
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>{verifyingSubmitting ? "Submitting..." : "Submit Ground Verification"}</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setVerifyingComplaintId(null)}
+                              className="px-2.5 py-1.5 rounded-lg bg-slate-800 text-slate-400 text-[11px] cursor-pointer"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setVerifyingComplaintId(cmp.id);
+                            setComplaintObservations("");
+                          }}
+                          className="w-full py-2 px-3 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 font-semibold text-[11px] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                          <span>Conduct On-Site Grievance Verification</span>
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
 

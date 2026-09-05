@@ -20,7 +20,7 @@ import {
   Database
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
-import { getFieldParcels, getFieldIncidents } from "@/lib/api";
+import { getFieldParcels, getFieldIncidents, getLandownerComplaints } from "@/lib/api";
 import { offlineStore } from "@/lib/offlineStore";
 import { useRealtimeDashboard } from "@/lib/supabase/useRealtime";
 
@@ -29,6 +29,7 @@ export default function FieldDashboardPage() {
   const [officer, setOfficer] = useState<any>(null);
   const [parcels, setParcels] = useState<any[]>([]);
   const [incidents, setIncidents] = useState<any[]>([]);
+  const [complaints, setComplaints] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [queueCount, setQueueCount] = useState(0);
 
@@ -40,6 +41,8 @@ export default function FieldDashboardPage() {
       if (data && data.length > 0) setParcels(data);
       const incData = await getFieldIncidents();
       if (incData) setIncidents(incData);
+      const cData = await getLandownerComplaints();
+      if (cData) setComplaints(cData);
     } catch {}
   };
 
@@ -75,6 +78,8 @@ export default function FieldDashboardPage() {
       try {
         const incData = await getFieldIncidents();
         setIncidents(incData || []);
+        const cData = await getLandownerComplaints();
+        setComplaints(cData || []);
       } catch {
         setIncidents([]);
       } finally {
@@ -131,6 +136,46 @@ export default function FieldDashboardPage() {
             </Link>
           )}
         </div>
+
+
+        {/* Assigned Citizen Grievances Banner */}
+        {complaints.filter((c) => c.status !== "RESOLVED" && c.status !== "REJECTED").length > 0 && (
+          <div className="bg-amber-950/30 border border-amber-500/40 rounded-2xl p-4 shadow-lg space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> Citizen Grievances For Verification
+              </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold">
+                {complaints.filter((c) => c.status !== "RESOLVED" && c.status !== "REJECTED").length} Pending
+              </span>
+            </div>
+
+            <p className="text-xs text-slate-300">
+              Affected citizens have submitted land or compensation grievances requiring ground verification.
+            </p>
+
+            <div className="space-y-1.5 pt-1">
+              {complaints.filter((c) => c.status !== "RESOLVED" && c.status !== "REJECTED").slice(0, 2).map((cmp) => (
+                <Link
+                  key={cmp.id}
+                  href={`/field/parcels/${cmp.parcel_id}`}
+                  className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-amber-500/40 flex items-center justify-between text-xs transition-colors"
+                >
+                  <div>
+                    <span className="font-bold text-white block text-[11px]">{cmp.complaint_type}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      Parcel: {cmp.parcel_id} · Citizen: {cmp.owner_name}
+                    </span>
+                  </div>
+                  <span className="text-amber-400 text-[11px] font-semibold flex items-center gap-1">
+                    <span>Inspect</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 4 KPI Metrics */}
         <div className="grid grid-cols-2 gap-2 text-xs">

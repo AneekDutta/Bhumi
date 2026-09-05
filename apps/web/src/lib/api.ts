@@ -770,6 +770,39 @@ export const apiClient = {
     parcel_id?: string;
   }) => {
     return await supabaseDataService.resolveAdminIncident(incidentId, payload);
+  },
+
+  // Landowner / Affected Person Methods
+  getLandowners: async () => {
+    return await supabaseDataService.getLandowners();
+  },
+
+  getLandownerById: async (ownerId: string) => {
+    return await supabaseDataService.getLandownerById(ownerId);
+  },
+
+  getLandownerParcels: async (ownerId: string) => {
+    return await supabaseDataService.getLandownerParcels(ownerId);
+  },
+
+  submitLandownerComplaint: async (payload: any) => {
+    return await supabaseDataService.submitLandownerComplaint(payload);
+  },
+
+  getLandownerComplaints: async (filters?: { owner_id?: string; parcel_id?: string; status?: string }) => {
+    return await supabaseDataService.getLandownerComplaints(filters);
+  },
+
+  assignComplaintToOfficer: async (complaintId: string, officerId: string, officerName: string, adminNotes?: string) => {
+    return await supabaseDataService.assignComplaintToOfficer(complaintId, officerId, officerName, adminNotes);
+  },
+
+  submitComplaintVerification: async (payload: any) => {
+    return await supabaseDataService.submitComplaintVerification(payload);
+  },
+
+  resolveComplaint: async (complaintId: string, resolution: any) => {
+    return await supabaseDataService.resolveComplaint(complaintId, resolution);
   }
 };
 
@@ -780,4 +813,15 @@ export const syncFieldBatch = (officerId: string, submissions: any[]) => apiClie
 export const getFieldIncidents = (filters?: { parcel_id?: string; project_id?: string; status?: string }) => apiClient.getFieldIncidents(filters);
 export const confirmFieldIncident = (incidentId: string, payload: any) => apiClient.confirmFieldIncident(incidentId, payload);
 export const resolveAdminIncident = (incidentId: string, payload: any) => apiClient.resolveAdminIncident(incidentId, payload);
+
+// Landowner helper exports
+export const getLandowners = () => apiClient.getLandowners();
+export const getLandownerById = (ownerId: string) => apiClient.getLandownerById(ownerId);
+export const getLandownerParcels = (ownerId: string) => apiClient.getLandownerParcels(ownerId);
+export const submitLandownerComplaint = (payload: any) => apiClient.submitLandownerComplaint(payload);
+export const getLandownerComplaints = (filters?: any) => apiClient.getLandownerComplaints(filters);
+export const assignComplaintToOfficer = (complaintId: string, officerId: string, officerName: string, adminNotes?: string) =>
+  apiClient.assignComplaintToOfficer(complaintId, officerId, officerName, adminNotes);
+export const submitComplaintVerification = (payload: any) => apiClient.submitComplaintVerification(payload);
+export const resolveComplaint = (complaintId: string, resolution: any) => apiClient.resolveComplaint(complaintId, resolution);
 

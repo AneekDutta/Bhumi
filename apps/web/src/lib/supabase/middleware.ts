@@ -37,10 +37,10 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Public paths that don't require auth
-  const publicPaths = ['/login', '/auth/callback', '/auth/confirm', '/field/login'];
+  const publicPaths = ['/login', '/auth/callback', '/auth/confirm', '/field/login', '/landowner/login'];
   const isPublicPath = publicPaths.some((p) => pathname.startsWith(p));
 
-  // Check for either Supabase user or verified officer session cookie
+  // Check for either Supabase user or verified session cookie
   const officerSession = request.cookies.get('bhumi_officer_session')?.value;
   let parsedRole: string | null = null;
   if (officerSession) {
@@ -58,7 +58,7 @@ export async function updateSession(request: NextRequest) {
 
   const isAuthenticated = !!user || !!officerSession;
 
-  // 1. Support instantaneous switch to Web Admin console via query param
+  // 1. Support instantaneous role switching via query param
   if (request.nextUrl.searchParams.get('switch') === 'admin') {
     const url = request.nextUrl.clone();
     url.searchParams.delete('switch');
@@ -71,15 +71,60 @@ export async function updateSession(request: NextRequest) {
     return response;
   }
 
+  if (request.nextUrl.searchParams.get('switch') === 'landowner') {
+    const url = request.nextUrl.clone();
+    url.searchParams.delete('switch');
+    url.pathname = '/landowner/home';
+    const response = NextResponse.redirect(url);
+    const sessionData = {
+      owner_id: 'O00004',
+      name: 'Geeta Meena',
+      contact_village: 'Chandwas (V03)',
+      role: 'LANDOWNER'
+    };
+    response.cookies.set('bhumi_officer_session', encodeURIComponent(JSON.stringify(sessionData)), {
+      path: '/',
+      maxAge: 86400 * 7,
+      sameSite: 'lax',
+    });
+    return response;
+  }
+
+  if (request.nextUrl.searchParams.get('switch') === 'field') {
+    const url = request.nextUrl.clone();
+    url.searchParams.delete('switch');
+    url.pathname = '/field/dashboard';
+    const response = NextResponse.redirect(url);
+    const sessionData = {
+      officer_id: 'OFF-001',
+      name: 'Ramesh Patel',
+      designation: 'Patwari / Revenue Lekhpal',
+      assigned_villages: ['Ramganj Mandi', 'Kanhera Kalan', 'Wagholi'],
+      role: 'FIELD_OFFICER'
+    };
+    response.cookies.set('bhumi_officer_session', encodeURIComponent(JSON.stringify(sessionData)), {
+      path: '/',
+      maxAge: 86400 * 7,
+      sameSite: 'lax',
+    });
+    return response;
+  }
+
   // 2. If unauthenticated and accessing a protected path:
   if (!isAuthenticated && !isPublicPath) {
     const url = request.nextUrl.clone();
-    url.pathname = pathname.startsWith('/field') ? '/field/login' : '/login';
+    if (pathname.startsWith('/field')) {
+      url.pathname = '/field/login';
+    } else if (pathname.startsWith('/landowner')) {
+      url.pathname = '/landowner/login';
+    } else {
+      url.pathname = '/login';
+    }
     return NextResponse.redirect(url);
   }
 
   // 3. Strict Role-Based Access Control (RBAC):
-  // Field Officers are restricted to /field/* routes, but MUST NOT be blocked from public pages (like /login)
+  // Field Officers are restricted to /field/* routes
   if (parsedRole === 'FIELD_OFFICER') {
     if (isPublicPath) {
       return supabaseResponse;
@@ -87,6 +132,18 @@ export async function updateSession(request: NextRequest) {
     if (!pathname.startsWith('/field')) {
       const url = request.nextUrl.clone();
       url.pathname = '/field/dashboard';
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // Landowners are strictly restricted to /landowner/* routes
+  if (parsedRole === 'LANDOWNER') {
+    if (isPublicPath) {
+      return supabaseResponse;
+    }
+    if (!pathname.startsWith('/landowner')) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/landowner/home';
       return NextResponse.redirect(url);
     }
   }
