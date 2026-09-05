@@ -43,6 +43,7 @@ export default function LandownerComplaintDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [complaintId]);
 
   // Realtime hook for immediate sync

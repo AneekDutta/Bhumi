@@ -30,6 +30,11 @@ export default function LandownerComplaintsPage() {
     async function load() {
       setLoading(true);
       try {
+        const { createClient } = await import("@/lib/supabase/client");
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        const offId = user.id;
         const data = await getLandownerComplaints({ owner_id: offId });
         setComplaints(data || []);
       } catch (err) {
