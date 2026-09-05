@@ -144,25 +144,6 @@ function LoginPageContent() {
       });
 
       if (error) {
-        // Check for authorized demo officer credentials
-        const isAuthorizedDemo =
-          (loginEmail === "admin@bhumi.gov.in" || 
-           loginEmail === "officer@bhumi.gov.in" || 
-           loginEmail === "officer.bhumi@gmail.com" ||
-           emailOrId.toUpperCase() === "OFFICER-001" ||
-           emailOrId.toUpperCase() === "CALA-DIRECTOR") &&
-          (password === "bhumi@2025" || password === "CommanderPass@2025" || password === "admin123");
-
-        if (isAuthorizedDemo) {
-          document.cookie = `bhumi_officer_session=${encodeURIComponent(loginEmail)}; path=/; max-age=${rememberDevice ? 86400 * 30 : 86400}; SameSite=Lax`;
-          setSuccessMsg("Command authorization verified. Transferring to dashboard...");
-          setTimeout(() => {
-            router.push("/");
-            router.refresh();
-          }, 600);
-          return;
-        }
-
         // Translate Supabase errors to institutional format
         if (error.message.includes("Invalid login credentials")) {
           setErrorMsg("Authentication failed: Invalid officer credentials or unauthorized ID. Verify your password or contact your CALA division supervisor.");
@@ -176,8 +157,7 @@ function LoginPageContent() {
       }
 
       if (data.session) {
-        // Successful Supabase session
-        document.cookie = `bhumi_officer_session=${encodeURIComponent(loginEmail)}; path=/; max-age=${rememberDevice ? 86400 * 30 : 86400}; SameSite=Lax`;
+        // Successful official Supabase session; middleware owns its cookies.
         setSuccessMsg("Security clearance accepted. Loading operational twin...");
         setTimeout(() => {
           const next = searchParams.get("next") || "/";

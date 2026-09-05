@@ -1,18 +1,20 @@
 import asyncio
-from logging.config import fileConfig
-from sqlalchemy import pool
-from sqlalchemy.ext.asyncio import async_engine_from_config
-from alembic import context
-from geoalchemy2 import alembic_helpers
 
 # Import models
 import os
 import sys
+from logging.config import fileConfig
+
+from geoalchemy2 import alembic_helpers
+from sqlalchemy import pool
+from sqlalchemy.ext.asyncio import async_engine_from_config
+
+from alembic import context
+
 sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), '..')))
 
-from app.models.base import Base
-from app.models import domain
 from app.core.config import settings
+from app.models.base import Base
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL.replace("%", "%%"))

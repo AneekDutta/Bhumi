@@ -62,6 +62,7 @@ class User(BaseModel):
     role = Column(String, nullable=False, default=UserRole.FIELD_OFFICER.value)
     assigned_state_id = Column(UUID(as_uuid=True), ForeignKey("states.id"), nullable=True)
     assigned_district_id = Column(UUID(as_uuid=True), ForeignKey("districts.id"), nullable=True)
+    assigned_project_id = Column(UUID(as_uuid=True), ForeignKey("projects.id"), nullable=True)
 
 class Project(BaseModel):
     __tablename__ = "projects"

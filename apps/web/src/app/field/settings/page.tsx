@@ -47,10 +47,11 @@ export default function FieldSettingsPage() {
     }
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     offlineStore.clearActiveOfficer();
-    document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    router.push("/field/login");
+    const supabase = await import("@/lib/supabase/client").then(m => m.createClient());
+    await supabase.auth.signOut();
+    router.push("/login");
   };
 
   return (

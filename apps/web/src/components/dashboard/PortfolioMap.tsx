@@ -29,12 +29,22 @@ export function PortfolioMap({ projects }: { projects: any[] }) {
   }
 
   const mapKey = process.env.NEXT_PUBLIC_MAPTILER_KEY;
-  // Free Carto basemap switching based on light/dark mode
-  const mapStyle = mapKey 
-    ? `https://api.maptiler.com/maps/basic-v2/style.json?key=${mapKey}` 
-    : isLight
-      ? 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
-      : 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+  // Aerial imagery is the default operational view; retain a dependable
+  // standard-map fallback when a MapTiler key is not configured.
+  const mapStyle = mapKey
+    ? `https://api.maptiler.com/maps/hybrid/style.json?key=${mapKey}`
+    : {
+        version: 8 as 8,
+        sources: {
+          imagery: {
+            type: 'raster',
+            tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+            tileSize: 256,
+            attribution: 'Esri, Maxar, Earthstar Geographics',
+          },
+        },
+        layers: [{ id: 'imagery', type: 'raster', source: 'imagery' }],
+      };
 
   return (
     <div className="h-[380px] sm:h-[460px] w-full bg-slate-100 dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200/90 dark:border-white/10 shadow-gov relative group transition-colors">
@@ -52,7 +62,7 @@ export function PortfolioMap({ projects }: { projects: any[] }) {
           latitude,
           zoom
         }}
-        mapStyle={mapStyle}
+        mapStyle={mapStyle as any}
       >
         <NavigationControl position="top-right" />
 
@@ -143,4 +153,3 @@ export function PortfolioMap({ projects }: { projects: any[] }) {
     </div>
   );
 }
-

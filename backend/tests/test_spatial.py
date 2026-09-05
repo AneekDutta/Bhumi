@@ -1,29 +1,23 @@
 import socket
 import uuid
-
 import pytest
-
 from app.core.database import AsyncSessionLocal
-from app.models.domain import (
-    AcquisitionCase,
-    District,
-    Parcel,
-    Project,
-    ProjectSegment,
-    State,
-    Village,
-)
+from app.models.domain import AcquisitionCase, District, Parcel, Project, ProjectSegment, State, Village
 from app.services.spatial_engine import SpatialEngine
 
+from urllib.parse import urlparse
+from app.core.config import settings
 
 @pytest.fixture
 def require_db():
     try:
-        with socket.create_connection(("127.0.0.1", 5432), timeout=0.3):
+        url = urlparse(settings.DATABASE_URL)
+        host = url.hostname or "127.0.0.1"
+        port = url.port or 5432
+        with socket.create_connection((host, port), timeout=2.0):
             pass
     except OSError:
-        pytest.skip("Database unavailable on localhost:5432")
-
+        pytest.skip(f"Database unavailable on {host}:{port}")
 
 @pytest.mark.asyncio
 async def test_spatial_engine_semantics(require_db):

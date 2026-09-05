@@ -5,9 +5,10 @@ Revises: 002_dependency_layer
 Create Date: 2026-09-03 21:55:00.000000
 
 """
-from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 revision = '7a0000000000'
 down_revision = '002_dependency_layer'

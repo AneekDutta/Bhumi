@@ -63,13 +63,19 @@ export function DocumentRegister({
       if (projectId) params.append("project_id", projectId);
       if (parcelId) params.append("parcel_id", parcelId);
 
-      const res = await fetch(`/api/v1/documents?${params.toString()}`);
-      if (!res.ok) throw new Error("Unable to load documents.");
+      const { authenticatedFetch } = await import('@/lib/api');
+      const res = await authenticatedFetch(`/documents?${params.toString()}`);
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("Unauthorized to view documents. Please login.");
+        if (res.status === 403) throw new Error("You do not have permission to view these documents.");
+        if (res.status === 404) throw new Error("Document register not found.");
+        throw new Error("Unable to load documents.");
+      }
 
       const data = await res.json();
       setDocuments(data);
     } catch (err: any) {
-      setError("Unable to load documents.");
+      setError(err.message || "Unable to load documents.");
     } finally {
       setLoading(false);
     }
@@ -109,12 +115,15 @@ export function DocumentRegister({
       formData.append("metadata", JSON.stringify(metadata));
       formData.append("file", file);
 
-      const res = await fetch("/api/v1/documents", {
+      const { authenticatedFetch } = await import('@/lib/api');
+      const res = await authenticatedFetch("/documents", {
         method: "POST",
         body: formData,
       });
 
       if (!res.ok) {
+        if (res.status === 401) throw new Error("Unauthorized to upload documents.");
+        if (res.status === 403) throw new Error("You do not have permission to upload documents.");
         throw new Error("Document upload failed.");
       }
 
@@ -124,7 +133,7 @@ export function DocumentRegister({
 
       fetchDocuments();
     } catch (err: any) {
-      setError("Document upload failed.");
+      setError(err.message || "Document upload failed.");
     } finally {
       setUploading(false);
     }
@@ -142,12 +151,15 @@ export function DocumentRegister({
       const formData = new FormData();
       formData.append("file", versionFile);
 
-      const res = await fetch(`/api/v1/documents/${docId}/versions`, {
+      const { authenticatedFetch } = await import('@/lib/api');
+      const res = await authenticatedFetch(`/documents/${docId}/versions`, {
         method: "POST",
         body: formData,
       });
 
       if (!res.ok) {
+        if (res.status === 401) throw new Error("Unauthorized to upload version.");
+        if (res.status === 403) throw new Error("You do not have permission to upload version.");
         throw new Error("Version upload failed.");
       }
 
@@ -158,7 +170,7 @@ export function DocumentRegister({
       fetchDocuments();
       setTimeout(() => setVersionSuccess(null), 3000);
     } catch (err: any) {
-      setVersionError("Version upload failed.");
+      setVersionError(err.message || "Version upload failed.");
     } finally {
       setVersionUploading(false);
     }
@@ -166,17 +178,23 @@ export function DocumentRegister({
 
   const handleDownload = async (docId: string, version?: number) => {
     try {
-      let url = `/api/v1/documents/${docId}/download`;
+      let url = `/documents/${docId}/download`;
       if (version) {
         url += `?version=${version}`;
       }
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Document download could not be completed.");
+      const { authenticatedFetch } = await import('@/lib/api');
+      const res = await authenticatedFetch(url);
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("Unauthorized to download document.");
+        if (res.status === 403) throw new Error("You do not have permission to download this document.");
+        if (res.status === 404) throw new Error("Document or version not found.");
+        throw new Error("Document download could not be completed.");
+      }
 
       const data = await res.json();
       window.open(data.download_url, "_blank");
     } catch (err: any) {
-      alert("Document download could not be completed.");
+      setError(err.message || "Document download could not be completed.");
     }
   };
 
@@ -184,13 +202,19 @@ export function DocumentRegister({
     if (!confirm("Are you sure you want to delete this document?")) return;
 
     try {
-      const res = await fetch(`/api/v1/documents/${docId}`, {
+      const { authenticatedFetch } = await import('@/lib/api');
+      const res = await authenticatedFetch(`/documents/${docId}`, {
         method: "DELETE",
       });
-      if (!res.ok) throw new Error("Document deletion could not be completed.");
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("Unauthorized to delete document.");
+        if (res.status === 403) throw new Error("You do not have permission to delete this document.");
+        if (res.status === 404) throw new Error("Document not found.");
+        throw new Error("Document deletion could not be completed.");
+      }
       fetchDocuments();
     } catch (err: any) {
-      alert("Document deletion could not be completed.");
+      setError(err.message || "Document deletion could not be completed.");
     }
   };
 

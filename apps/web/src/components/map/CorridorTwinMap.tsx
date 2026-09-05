@@ -17,8 +17,22 @@ interface CorridorTwinMapProps {
   height?: string | number;
 }
 
-const DARK_MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
-const LIGHT_MAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+const mapKey = process.env.NEXT_PUBLIC_MAPTILER_KEY;
+const SATELLITE_STYLE = mapKey
+  ? `https://api.maptiler.com/maps/hybrid/style.json?key=${mapKey}`
+  : {
+      version: 8 as 8,
+      sources: {
+        imagery: {
+          type: 'raster',
+          tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+          tileSize: 256,
+          attribution: 'Esri, Maxar, Earthstar Geographics',
+        },
+      },
+      layers: [{ id: 'imagery', type: 'raster', source: 'imagery' }],
+    };
+const STANDARD_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
 
 export function CorridorTwinMap({
   geojson,
@@ -31,6 +45,7 @@ export function CorridorTwinMap({
   const [mode, setMode] = useState<MapMode>('NORMAL');
   const [selectedParcel, setSelectedParcel] = useState<any>(null);
   const [hoveredFeature, setHoveredFeature] = useState<any>(null);
+  const [mapBase, setMapBase] = useState<'aerial' | 'standard'>('aerial');
 
   // Derive dynamic map layer styles per mode (Section 13)
   const parcelLayerStyle: any = useMemo(() => {
@@ -199,6 +214,14 @@ export function CorridorTwinMap({
         </button>
       </div>
 
+      <button
+        type="button"
+        onClick={() => setMapBase(base => base === 'aerial' ? 'standard' : 'aerial')}
+        className="absolute right-3 bottom-12 z-10 border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+      >
+        {mapBase === 'aerial' ? 'Standard map' : 'Aerial map'}
+      </button>
+
       {/* Top Right Reality / Corridor Badge */}
       <div
         style={{
@@ -230,7 +253,7 @@ export function CorridorTwinMap({
           pitch: 25,
           bearing: -15
         }}
-        mapStyle={isLight ? LIGHT_MAP_STYLE : DARK_MAP_STYLE}
+        mapStyle={(mapBase === 'aerial' ? SATELLITE_STYLE : STANDARD_STYLE) as any}
         interactiveLayerIds={['parcels-fill']}
         onClick={onMapClick}
         onMouseMove={onMouseMove}

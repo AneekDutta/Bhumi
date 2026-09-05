@@ -15,6 +15,14 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "SIH26016 Land Acquisition"
     API_V1_STR: str = "/api/v1"
 
+    @property
+    def get_async_db_url(self) -> str:
+        url = self.DATABASE_URL
+        if url.startswith("postgres://"):
+            url = url.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif url.startswith("postgresql://"):
+            url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return url
     DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/sih26016")
 
     # Environment & Security
@@ -23,6 +31,7 @@ class Settings(BaseSettings):
 
     # Supabase Storage
     SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
+    SUPABASE_JWT_AUDIENCE: str = os.getenv("SUPABASE_JWT_AUDIENCE", "authenticated")
     SUPABASE_SERVICE_ROLE_KEY: str = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
     STORAGE_BUCKET_NAME: str = os.getenv("STORAGE_BUCKET_NAME", "documents")
 
@@ -43,5 +52,11 @@ class Settings(BaseSettings):
 settings = Settings()
 
 # Fail closed if production is misconfigured
-if settings.ENV == "production" and settings.AUTH_MODE == "mock":
-    raise RuntimeError("CRITICAL: Cannot run production environment with mock authentication enabled.")
+if settings.AUTH_MODE not in {"mock", "prod"}:
+    raise RuntimeError("AUTH_MODE must be either 'mock' or 'prod'.")
+
+if settings.ENV == "production":
+    if settings.AUTH_MODE != "prod":
+        raise RuntimeError("CRITICAL: Production requires AUTH_MODE=prod.")
+    if not settings.SUPABASE_URL or not settings.SUPABASE_JWT_AUDIENCE:
+        raise RuntimeError("CRITICAL: Production requires Supabase JWT configuration.")
