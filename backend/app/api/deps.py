@@ -114,16 +114,19 @@ async def get_current_user_context(
         )
 
     # --- MOCK MODE ONLY ---
+
     mock_role = request.headers.get("x-mock-role", "ADMIN")
     mock_pid = request.headers.get("x-mock-project-id")
     mock_did = request.headers.get("x-mock-district-id")
+    mock_uid = request.headers.get("x-mock-user-id", "dev-admin-123")
 
     if mock_role == "ADMIN" and not mock_pid and not mock_did:
-        return TrustedIdentity(user_id="dev-admin-123", role=mock_role)
+        return TrustedIdentity(user_id=mock_uid, role=mock_role)
 
     return TrustedIdentity(
-        user_id="dev-admin-123",
+        user_id=mock_uid,
         role=mock_role,
         assigned_project_id=mock_pid,
         assigned_district_id=mock_did
     )
+

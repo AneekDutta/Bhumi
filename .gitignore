@@ -34,3 +34,4 @@ vite.config.*.timestamp-*
 .claude/
 agent/
 skills-lock.json
+.vercel

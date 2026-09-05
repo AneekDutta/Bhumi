@@ -24,33 +24,38 @@ export default function LandownerHomePage() {
   const [loading, setLoading] = useState(true);
   const [owner, setOwner] = useState<any>(null);
 
+  
   useEffect(() => {
-    // 1. Read authenticated session
-    
-    if (!activeOwnerId) {
-      // Redirect to login if unauthenticated
-      router.push("/landowner/login");
-      return;
-    }
+    async function init() {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        router.push("/landowner/login");
+        return;
+      }
+      
+      const activeOwnerId = user.id;
 
-    async function fetchData() {
       setLoading(true);
       try {
         const [pData, cData] = await Promise.all([
-          getLandownerParcels(activeOwnerId!),
-          getLandownerComplaints({ owner_id: activeOwnerId! })
+          getLandownerParcels(activeOwnerId),
+          getLandownerComplaints({ owner_id: activeOwnerId })
         ]);
         setParcels(pData || []);
         setComplaints(cData || []);
       } catch (err) {
-        console.error(err);
+        console.error("Error loading home data:", err);
       } finally {
         setLoading(false);
       }
     }
-
-    fetchData();
+    
+    init();
   }, [router]);
+
 
   // Supabase Realtime for instant grievance status updates
   useRealtimeComplaints(owner?.owner_id || "", async () => {

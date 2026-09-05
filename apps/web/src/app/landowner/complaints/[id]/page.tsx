@@ -30,7 +30,7 @@ export default function LandownerComplaintDetailPage() {
   const loadData = async () => {
     try {
       const all = await getLandownerComplaints();
-      const match = all.find((c) => c.id === complaintId || c.complaint_id === complaintId);
+      const match = all.find((c: any) => c.id === complaintId || c.complaint_id === complaintId);
       setComplaint(match || null);
     } catch {
       setComplaint(null);

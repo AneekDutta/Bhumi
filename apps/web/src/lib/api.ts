@@ -13,7 +13,7 @@ const getBaseUrl = () => {
 export const API_URL = getBaseUrl();
 
 import { createClient } from '@/lib/supabase/client';
-import { supabaseDataService } from '@/lib/supabase/supabaseService';
+
 
 export const authenticatedFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
   const supabase = createClient();
@@ -938,46 +938,88 @@ export const apiClient = {
 
   // Landowner / Affected Person Methods
   getParcels: async () => {
-    return await supabaseDataService.getParcels();
+    const res = await authenticatedFetch(`/landowner/parcels`);
+    if (!res.ok) return [];
+    return await res.json();
   },
 
   getLandowners: async () => {
-    return await supabaseDataService.getLandowners();
+    const res = await authenticatedFetch(`/landowner/owners`);
+    if (!res.ok) return [];
+    return await res.json();
   },
 
   getLandownerById: async (ownerId: string) => {
-    return await supabaseDataService.getLandownerById(ownerId);
+    const res = await authenticatedFetch(`/landowner/owners/${ownerId}`);
+    if (!res.ok) return null;
+    return await res.json();
   },
 
   getLandownerParcels: async (ownerId: string) => {
-    return await supabaseDataService.getLandownerParcels(ownerId);
+    const res = await authenticatedFetch(`/landowner/owners/${ownerId}/parcels`);
+    if (!res.ok) return [];
+    return await res.json();
   },
 
   submitLandownerComplaint: async (payload: any) => {
-    return await supabaseDataService.submitLandownerComplaint(payload);
+    const res = await authenticatedFetch(`/landowner/complaints`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error("Failed to submit complaint");
+    return await res.json();
   },
 
   getLandownerComplaints: async (filters?: { owner_id?: string; parcel_id?: string; status?: string }) => {
-    return await supabaseDataService.getLandownerComplaints(filters);
+    const params = new URLSearchParams();
+    if (filters?.owner_id) params.append("owner_id", filters.owner_id);
+    if (filters?.parcel_id) params.append("parcel_id", filters.parcel_id);
+    if (filters?.status) params.append("status", filters.status);
+    const res = await authenticatedFetch(`/landowner/complaints?${params.toString()}`);
+    if (!res.ok) return [];
+    return await res.json();
   },
 
   assignComplaintToOfficer: async (complaintId: string, officerId: string, officerName: string, adminNotes?: string) => {
-    return await supabaseDataService.assignComplaintToOfficer(complaintId, officerId, officerName, adminNotes);
+    const res = await authenticatedFetch(`/landowner/complaints/${complaintId}/assign`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ officer_id: officerId, officer_name: officerName, admin_notes: adminNotes })
+    });
+    if (!res.ok) throw new Error("Failed to assign complaint");
+    return await res.json();
   },
 
   submitComplaintVerification: async (payload: any) => {
-    return await supabaseDataService.submitComplaintVerification(payload);
+    const res = await authenticatedFetch(`/landowner/complaints/${payload.complaint_id}/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error("Failed to verify complaint");
+    return await res.json();
   },
 
   resolveComplaint: async (complaintId: string, resolution: any) => {
-    return await supabaseDataService.resolveComplaint(complaintId, resolution);
+    const res = await authenticatedFetch(`/landowner/complaints/${complaintId}/resolve`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(resolution)
+    });
+    if (!res.ok) throw new Error("Failed to resolve complaint");
+    return await res.json();
   },
 
   
   uploadEvidenceDocument: async (file: File | Blob, fileName: string, parcelId: string) => {
     const { createClient } = await import("@/lib/supabase/client");
     const supabase = createClient();
-    const filePath = `evidence/${parcelId}/${Date.now()}_${fileName}`;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Must be logged in to upload evidence");
+    
+    // Path structure: auth.uid() / parcelId / timestamp_filename
+    const filePath = `${user.id}/${parcelId}/${Date.now()}_${fileName}`;
     
     const { data, error } = await supabase.storage
       .from('documents')
@@ -1001,11 +1043,19 @@ export const apiClient = {
   },
 
   createOrUpdateLandownerProfile: async (profile: any) => {
-    return await supabaseDataService.createOrUpdateLandownerProfile(profile);
+    const res = await authenticatedFetch(`/landowner/profile`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(profile)
+    });
+    if (!res.ok) throw new Error("Failed to update profile");
+    return await res.json();
   },
 
   getLandownerProfile: async (userId: string) => {
-    return await supabaseDataService.getLandownerProfile(userId);
+    const res = await authenticatedFetch(`/landowner/profile/${userId}`);
+    if (!res.ok) return null;
+    return await res.json();
   }
 };
 

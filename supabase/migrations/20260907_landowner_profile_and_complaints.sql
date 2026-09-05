@@ -25,21 +25,21 @@ ALTER TABLE public.landowners ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Public read landowners" ON public.landowners;
 CREATE POLICY "Public read landowners" ON public.landowners
-    FOR SELECT USING (true);
+    FOR SELECT USING (auth.uid() = user_id);
 
 DROP POLICY IF EXISTS "Users can insert their own landowner profile" ON public.landowners;
 CREATE POLICY "Users can insert their own landowner profile" ON public.landowners
-    FOR INSERT WITH CHECK (true);
+    FOR INSERT WITH CHECK (false); /* Mutations must go through FastAPI */
 
 DROP POLICY IF EXISTS "Users can update their own landowner profile" ON public.landowners;
 CREATE POLICY "Users can update their own landowner profile" ON public.landowners
-    FOR UPDATE USING (true) WITH CHECK (true);
+    FOR UPDATE USING (false) WITH CHECK (false); /* Mutations must go through FastAPI */
 
 -- Ensure owners table permissions are open for synchronization
 ALTER TABLE IF EXISTS public.owners ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow all owners access" ON public.owners;
 CREATE POLICY "Allow all owners access" ON public.owners
-    FOR ALL USING (true) WITH CHECK (true);
+    FOR ALL USING (false) WITH CHECK (false); /* Direct DB mutations disabled */
 
 -- 3. EVIDENCE STORAGE PERMISSIONS
 -- Ensure storage bucket 'documents' is public and allows uploads
@@ -56,9 +56,41 @@ ON CONFLICT (id) DO UPDATE SET
     file_size_limit = 52428800,
     allowed_mime_types = ARRAY['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf'];
 
-DROP POLICY IF EXISTS "Public evidence storage upload" ON storage.objects;
-CREATE POLICY "Public evidence storage upload" ON storage.objects
-    FOR ALL USING (bucket_id = 'documents') WITH CHECK (bucket_id = 'documents');
+DROP POLICY IF EXISTS "Landowner evidence upload" ON storage.objects;
+CREATE POLICY "Landowner evidence upload" ON storage.objects
+    FOR INSERT WITH CHECK (
+        bucket_id = 'documents' 
+        AND auth.role() = 'authenticated' 
+        AND (storage.foldername(name))[1] = auth.uid()::text
+    );
+    
+DROP POLICY IF EXISTS "Landowner evidence read" ON storage.objects;
+CREATE POLICY "Landowner evidence read" ON storage.objects
+    FOR SELECT USING (
+        bucket_id = 'documents'
+        AND (
+            -- Owner can read their own
+            (storage.foldername(name))[1] = auth.uid()::text
+            OR 
+            -- Or if accessed by an officer/admin, handled by signed URLs or backend in a real system,
+            -- but for this demo, we allow authenticated users to read if they have the URL.
+            -- Actually, let's enforce strict ownership or backend access:
+            auth.role() = 'service_role' OR (storage.foldername(name))[1] = auth.uid()::text
+        )
+    );
+
+DROP POLICY IF EXISTS "Landowner evidence update" ON storage.objects;
+CREATE POLICY "Landowner evidence update" ON storage.objects
+    FOR UPDATE USING (
+        bucket_id = 'documents' AND (storage.foldername(name))[1] = auth.uid()::text
+    );
+
+DROP POLICY IF EXISTS "Landowner evidence delete" ON storage.objects;
+CREATE POLICY "Landowner evidence delete" ON storage.objects
+    FOR DELETE USING (
+        bucket_id = 'documents' AND (storage.foldername(name))[1] = auth.uid()::text
+    );
+
 
 -- 4. REALTIME PUBLICATION
 DO $$

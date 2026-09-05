@@ -11,6 +11,7 @@ from app.api.v1 import (
     projects,
     sih26016,
     spatial,
+    landowner,
 )
 
 api_router = APIRouter()
@@ -27,3 +28,5 @@ from app.api.deps import get_current_user_context
 from fastapi import Depends
 
 api_router.include_router(sih26016.router, prefix="/sih26016", tags=["sih26016"], dependencies=[Depends(get_current_user_context)])
+
+api_router.include_router(landowner.router, prefix="/landowner", tags=["Landowner Profile & Grievance"], dependencies=[Depends(get_current_user_context)])

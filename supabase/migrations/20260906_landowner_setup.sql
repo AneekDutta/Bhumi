@@ -14,22 +14,26 @@ ALTER TABLE IF EXISTS documents ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Allow citizen read complaints" ON documents;
 CREATE POLICY "Allow citizen read complaints" ON documents
-FOR SELECT USING (true);
+FOR SELECT USING (
+    -- Only the owning Landowner can read their own complaints via Realtime/Browser
+    auth.uid()::text = (description->>'owner_id')
+    -- We assume backend (service_role) handles Admin/Officer reads bypassing RLS
+);
 
 DROP POLICY IF EXISTS "Allow citizen insert complaints" ON documents;
 CREATE POLICY "Allow citizen insert complaints" ON documents
-FOR INSERT WITH CHECK (true);
+FOR INSERT WITH CHECK (false); /* Mutations must go through FastAPI */
 
 DROP POLICY IF EXISTS "Allow citizen update complaints" ON documents;
 CREATE POLICY "Allow citizen update complaints" ON documents
-FOR UPDATE USING (true) WITH CHECK (true);
+FOR UPDATE USING (false) WITH CHECK (false); /* Mutations must go through FastAPI */
 
 -- Ensure table public permissions for audit_logs
 ALTER TABLE IF EXISTS audit_logs ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Allow citizen audit logs" ON audit_logs;
 CREATE POLICY "Allow citizen audit logs" ON audit_logs
-FOR ALL USING (true) WITH CHECK (true);
+FOR ALL USING (false) WITH CHECK (false); /* Direct DB mutations disabled */
 
 -- Ensure table public permissions for parcels
 ALTER TABLE IF EXISTS parcels ENABLE ROW LEVEL SECURITY;
