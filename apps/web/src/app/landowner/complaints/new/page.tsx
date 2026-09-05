@@ -81,19 +81,6 @@ export default function NewComplaintPage() {
         activeUserId = authData.user.id;
         activeEmail = authData.user.email || activeEmail;
         activeName = authData.user.user_metadata?.full_name || activeName;
-      } else {
-        // Fallback check for session cookie
-        const cookies = document.cookie.split(";").map((c) => c.trim());
-        const sessionCookie = cookies.find((c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session="));
-        if (sessionCookie) {
-          try {
-            const val = decodeURIComponent(sessionCookie.split("=")[1]);
-            const parsed = JSON.parse(val);
-            if (parsed?.user_id) activeUserId = parsed.user_id;
-            if (parsed?.name) activeName = parsed.name;
-            if (parsed?.email) activeEmail = parsed.email;
-          } catch {}
-        }
       }
 
       setCurrentUser({

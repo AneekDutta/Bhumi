@@ -26,20 +26,7 @@ export default function LandownerComplaintsPage() {
   const [owner, setOwner] = useState<any>(null);
 
   useEffect(() => {
-    const cookies = document.cookie.split(";").map((c) => c.trim());
-    const sessionCookie = cookies.find((c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session="));
-    let offId = "";
-    if (sessionCookie) {
-      try {
-        const val = decodeURIComponent(sessionCookie.split("=")[1]);
-        const parsed = JSON.parse(val);
-        if (parsed?.owner_id || parsed?.user_id) {
-          setOwner(parsed);
-          offId = parsed.owner_id || parsed.user_id;
-        }
-      } catch {}
-    }
-
+    
     async function load() {
       setLoading(true);
       try {

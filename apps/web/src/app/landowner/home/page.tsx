@@ -26,31 +26,7 @@ export default function LandownerHomePage() {
 
   useEffect(() => {
     // 1. Read authenticated session
-    const cookies = document.cookie.split(";").map((c) => c.trim());
-    const sessionCookie = cookies.find((c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session="));
     
-    let activeOwnerId: string | null = null;
-    let activeOwnerName = "Citizen Titleholder";
-    let activeVillage = "Corridor Sector";
-
-    if (sessionCookie) {
-      try {
-        const val = decodeURIComponent(sessionCookie.split("=")[1]);
-        const parsed = JSON.parse(val);
-        if (parsed?.user_id || parsed?.owner_id) {
-          activeOwnerId = parsed.user_id || parsed.owner_id;
-          activeOwnerName = parsed.name || activeOwnerName;
-          activeVillage = parsed.contact_village || parsed.village || activeVillage;
-          setOwner({
-            owner_id: activeOwnerId,
-            name: activeOwnerName,
-            contact_village: activeVillage,
-            email: parsed.email
-          });
-        }
-      } catch {}
-    }
-
     if (!activeOwnerId) {
       // Redirect to login if unauthenticated
       router.push("/landowner/login");

@@ -156,7 +156,6 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
             <button
               type="button"
               onClick={() => {
-                document.cookie = "bhumi_officer_session=officer%40bhumi.gov.in; path=/; max-age=86400; SameSite=Lax";
                 window.location.href = "/";
               }}
               title="Switch to Web Officer / Admin Console"

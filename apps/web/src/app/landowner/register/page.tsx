@@ -113,8 +113,6 @@ export default function LandownerRegisterPage() {
         email: cleanEmail,
         role: "LANDOWNER"
       };
-      document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=86400; SameSite=Lax`;
-      document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=86400; SameSite=Lax`;
 
       setSuccessMsg("Account registered successfully! Entering Citizen Portal...");
       setTimeout(() => {

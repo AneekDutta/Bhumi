@@ -32,18 +32,18 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
 
   useEffect(() => {
     // Read session cookie
-    const cookies = document.cookie.split(";").map((c) => c.trim());
-    const sessionCookie = cookies.find((c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session="));
-    if (sessionCookie) {
-      try {
-        const val = decodeURIComponent(sessionCookie.split("=")[1]);
-        const parsed = JSON.parse(val);
-        if (parsed) {
-          setOwner(parsed);
-          return;
+    import("@/lib/supabase/client").then(({ createClient }) => {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data }) => {
+        if (data?.user) {
+          setOwner({
+            user_id: data.user.id,
+            name: data.user.user_metadata?.full_name || data.user.email?.split('@')[0],
+            email: data.user.email
+          });
         }
-      } catch {}
-    }
+      });
+    });
     setOwner(null);
   }, []);
 
@@ -130,7 +130,6 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
                   assigned_villages: ["Ramganj Mandi", "Kanhera Kalan"],
                   role: "FIELD_OFFICER"
                 };
-                document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(sessionData))}; path=/; max-age=604800; SameSite=Lax`;
                 window.location.href = "/field/dashboard";
               }}
               title="Switch to Field Officer Console"
@@ -143,7 +142,6 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
             <button
               type="button"
               onClick={() => {
-                document.cookie = "bhumi_officer_session=officer%40bhumi.gov.in; path=/; max-age=86400; SameSite=Lax";
                 window.location.href = "/";
               }}
               title="Switch to Desktop Admin Console"

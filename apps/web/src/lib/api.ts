@@ -937,6 +937,10 @@ export const apiClient = {
 ,
 
   // Landowner / Affected Person Methods
+  getParcels: async () => {
+    return await supabaseDataService.getParcels();
+  },
+
   getLandowners: async () => {
     return await supabaseDataService.getLandowners();
   },
@@ -983,6 +987,7 @@ export const apiClient = {
 };
 
 export const getFieldOfficers = () => apiClient.getFieldOfficers();
+export const getParcels = () => apiClient.getParcels();
 export const getFieldParcels = (officerId?: string, villageId?: string) => apiClient.getFieldParcels(officerId, villageId);
 export const submitFieldVerification = (payload: any) => apiClient.submitFieldVerification(payload);
 export const syncFieldBatch = (officerId: string, submissions: any[]) => apiClient.syncFieldBatch(officerId, submissions);

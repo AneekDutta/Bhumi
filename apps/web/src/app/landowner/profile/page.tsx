@@ -43,19 +43,6 @@ export default function LandownerProfilePage() {
           name: activeName,
           contact_village: activeVillage
         });
-      } else {
-        const cookies = document.cookie.split(";").map((c) => c.trim());
-        const sessionCookie = cookies.find((c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session="));
-        if (sessionCookie) {
-          try {
-            const val = decodeURIComponent(sessionCookie.split("=")[1]);
-            const parsed = JSON.parse(val);
-            if (parsed?.owner_id || parsed?.user_id) {
-              activeId = parsed.owner_id || parsed.user_id;
-              setOwner(parsed);
-            }
-          } catch {}
-        }
       }
 
       if (!activeId) {
@@ -75,8 +62,6 @@ export default function LandownerProfilePage() {
       const supabase = createClient();
       await supabase.auth.signOut();
     } catch {}
-    document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     router.push("/landowner/login");
   };
 

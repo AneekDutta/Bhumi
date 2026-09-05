@@ -137,7 +137,6 @@ export default function FieldSettingsPage() {
           <button
             type="button"
             onClick={() => {
-              document.cookie = "bhumi_officer_session=officer%40bhumi.gov.in; path=/; max-age=86400; SameSite=Lax";
               window.location.href = "/";
             }}
             className="w-full py-3 px-4 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 rounded-xl text-xs font-semibold border border-indigo-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer"

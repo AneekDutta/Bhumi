@@ -74,8 +74,6 @@ export default function LandownerLoginPage() {
             email: cleanEmail,
             role: "LANDOWNER"
           };
-          document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=86400; SameSite=Lax`;
-          document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=86400; SameSite=Lax`;
 
           setSuccessMsg("Authentication verified! Entering Landowner Portal...");
           setTimeout(() => {
@@ -112,8 +110,6 @@ export default function LandownerLoginPage() {
         email: cleanEmail,
         role: "LANDOWNER"
       };
-      document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=86400; SameSite=Lax`;
-      document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=86400; SameSite=Lax`;
 
       setSuccessMsg("Login successful! Loading Landowner Portal...");
       setTimeout(() => {
