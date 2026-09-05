@@ -1,0 +1,9 @@
+{
+  "appId": "gov.in.bhumi.field",
+  "appName": "BHUMI Field",
+  "webDir": "out",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}

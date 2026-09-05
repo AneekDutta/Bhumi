@@ -98,7 +98,9 @@ export default function FieldLoginPage() {
       designation: officer.designation,
       assigned_villages: officer.assigned_villages
     });
-    router.push("/field");
+    // Set officer session cookie for middleware authentication
+    document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(officer))}; path=/; max-age=604800; SameSite=Lax`;
+    router.push("/field/dashboard");
   };
 
   return (

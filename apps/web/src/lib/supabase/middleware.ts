@@ -37,7 +37,7 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Public paths that don't require auth
-  const publicPaths = ['/login', '/auth/callback', '/auth/confirm'];
+  const publicPaths = ['/login', '/auth/callback', '/auth/confirm', '/field/login'];
   const isPublicPath = publicPaths.some((p) => pathname.startsWith(p));
 
   // Check for either Supabase user or verified officer session cookie

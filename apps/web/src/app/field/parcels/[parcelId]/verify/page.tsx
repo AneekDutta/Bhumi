@@ -1,0 +1,453 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  AlertTriangle,
+  XCircle,
+  ShieldCheck,
+  Send,
+  Save,
+  Clock
+} from "lucide-react";
+import { FieldShell } from "@/components/field/FieldShell";
+import { CaptureLocation } from "@/components/field/CaptureLocation";
+import { CapturePhoto } from "@/components/field/CapturePhoto";
+import { DocumentUpload, FieldDocument } from "@/components/field/DocumentUpload";
+import { ReportIssueForm } from "@/components/field/ReportIssueForm";
+import { SubmissionStatusModal } from "@/components/field/SubmissionStatusModal";
+import { getFieldParcels, submitFieldVerification } from "@/lib/api";
+import { offlineStore, QueuedVerification } from "@/lib/offlineStore";
+import { LocationCoordinates } from "@/lib/native/geolocation";
+import { CapturedPhoto } from "@/lib/native/camera";
+
+export default function ParcelVerificationPage() {
+  const params = useParams();
+  const router = useRouter();
+  const parcelId = (params?.parcelId as string) || "";
+
+  const [parcel, setParcel] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
+  const [activeOfficer, setActiveOfficer] = useState<any>(null);
+
+  // Verification Checklist State
+  const [ownerPresent, setOwnerPresent] = useState(true);
+  const [ownerVerifiedName, setOwnerVerifiedName] = useState("");
+  const [boundaryConfirmed, setBoundaryConfirmed] = useState(true);
+  const [possessionStatus, setPossessionStatus] = useState("cultivated");
+  
+  // GPS, Photos, Docs
+  const [gpsCoords, setGpsCoords] = useState<LocationCoordinates | null>(null);
+  const [photos, setPhotos] = useState<CapturedPhoto[]>([]);
+  const [documents, setDocuments] = useState<FieldDocument[]>([]);
+
+  // Issue reporting
+  const [hasIssue, setHasIssue] = useState(false);
+  const [issueType, setIssueType] = useState("ownership_mismatch");
+  const [issueSeverity, setIssueSeverity] = useState<"LOW" | "MEDIUM" | "HIGH" | "CRITICAL_STOPPAGE">("HIGH");
+
+  // Observations & Remarks
+  const [observations, setObservations] = useState("");
+  const [remarks, setRemarks] = useState("");
+  const [status, setStatus] = useState<"verified" | "disputed" | "rejected">("verified");
+
+  // Success response
+  const [submissionResponse, setSubmissionResponse] = useState<any>(null);
+
+  useEffect(() => {
+    setIsOnline(navigator.onLine);
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    const off = offlineStore.getActiveOfficer();
+    setActiveOfficer(off || { id: "OFF-001", name: "Ramesh Patel", designation: "Patwari" });
+
+    async function load() {
+      try {
+        const list = await getFieldParcels();
+        const found = list.find((p: any) => p.parcel_id === parcelId || p.id === parcelId);
+        if (found) {
+          setParcel(found);
+          setOwnerVerifiedName(found.owner_name || "");
+        } else {
+          const fb = {
+            parcel_id: parcelId,
+            survey_no: "104/2B",
+            village_name: "Rampur",
+            owner_name: "Raghunath Yadav",
+            centroid_lat: 25.321,
+            centroid_lng: 82.987
+          };
+          setParcel(fb);
+          setOwnerVerifiedName(fb.owner_name);
+        }
+      } catch {
+        const fb = {
+          parcel_id: parcelId,
+          survey_no: "104/2B",
+          village_name: "Rampur",
+          owner_name: "Raghunath Yadav",
+          centroid_lat: 25.321,
+          centroid_lng: 82.987
+        };
+        setParcel(fb);
+        setOwnerVerifiedName(fb.owner_name);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    load();
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [parcelId]);
+
+  const handleSubmit = async (forceOffline = false) => {
+    setSubmitting(true);
+
+    const payload = {
+      parcel_id: parcelId,
+      officer_id: activeOfficer?.officer_id || activeOfficer?.id || "OFF-001",
+      officer_name: activeOfficer?.name || "Field Officer",
+      verification_type: "field",
+      status,
+      gps_lat: gpsCoords?.lat || parcel?.centroid_lat || 25.321,
+      gps_lng: gpsCoords?.lng || parcel?.centroid_lng || 82.987,
+      gps_accuracy: gpsCoords?.accuracy || 8,
+      boundary_confirmed: boundaryConfirmed,
+      possession_status: possessionStatus,
+      owner_present: ownerPresent,
+      owner_verified_name: ownerVerifiedName,
+      has_issue: hasIssue,
+      issue_type: hasIssue ? issueType : undefined,
+      issue_severity: hasIssue ? issueSeverity : "LOW",
+      observations,
+      remarks,
+      photos: photos.map((p) => ({
+        id: p.id,
+        url: p.dataUrl,
+        caption: p.caption,
+        category: p.category,
+        timestamp: p.timestamp,
+        gps_lat: p.lat,
+        gps_lng: p.lng
+      })),
+      documents: documents.map((d) => ({
+        id: d.id,
+        name: d.name,
+        size: d.sizeBytes,
+        category: d.category,
+        timestamp: d.timestamp
+      }))
+    };
+
+    if (!isOnline || forceOffline) {
+      const queued: QueuedVerification = {
+        id: `queue_${Date.now()}`,
+        timestamp: Date.now(),
+        payload: payload as any,
+        synced: false
+      };
+      offlineStore.add(queued);
+      setSubmitting(false);
+      setSubmissionResponse({
+        success: true,
+        offline: true,
+        verification_id: queued.id,
+        parcel_id: parcelId,
+        message: "Stored offline in local device storage. Auto-sync will run when connection resumes."
+      });
+      return;
+    }
+
+    try {
+      const res = await submitFieldVerification(payload);
+      setSubmissionResponse(res);
+    } catch (e) {
+      console.warn("API failed, saving offline:", e);
+      const queued: QueuedVerification = {
+        id: `queue_${Date.now()}`,
+        timestamp: Date.now(),
+        payload: payload as any,
+        synced: false
+      };
+      offlineStore.add(queued);
+      setSubmissionResponse({
+        success: true,
+        offline: true,
+        verification_id: queued.id,
+        parcel_id: parcelId,
+        message: "Network connection lost. Verified report securely queued offline."
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (submissionResponse) {
+    return (
+      <FieldShell title="Verification Confirmed">
+        <SubmissionStatusModal
+          response={submissionResponse}
+          parcelId={parcelId}
+          surveyNo={parcel?.survey_no}
+          villageName={parcel?.village_name}
+          onDone={() => router.push("/field/parcels")}
+        />
+      </FieldShell>
+    );
+  }
+
+  const sNo = parcel?.survey_no || parcel?.survey_number || "-";
+
+  return (
+    <FieldShell title={`Verify: Survey ${sNo}`} showBack>
+      <div className="p-4 space-y-4 max-w-lg mx-auto pb-24">
+        
+        {/* Breadcrumb */}
+        <div className="flex items-center justify-between">
+          <Link
+            href={`/field/parcels/${parcelId}`}
+            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" /> Cancel & Return
+          </Link>
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">
+            ID: {parcelId}
+          </span>
+        </div>
+
+        {/* 1. Ownership & Boundary Checklist */}
+        <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-4">
+          <div className="flex items-center gap-2 text-xs font-semibold text-white">
+            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <span>Title & Physical Demarcation</span>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs text-slate-300 font-medium block">Owner / Representative Presence</label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setOwnerPresent(true)}
+                className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                  ownerPresent
+                    ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
+                    : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+                }`}
+              >
+                Present at Survey
+              </button>
+              <button
+                type="button"
+                onClick={() => setOwnerPresent(false)}
+                className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                  !ownerPresent
+                    ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
+                    : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+                }`}
+              >
+                Absentee / Non-Responsive
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs text-slate-300 font-medium block">Verified Claimant Name</label>
+            <input
+              type="text"
+              value={ownerVerifiedName}
+              onChange={(e) => setOwnerVerifiedName(e.target.value)}
+              placeholder="Confirm legal landowner name"
+              className="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-medium"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs text-slate-300 font-medium block">Boundary Pillars Intact</label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setBoundaryConfirmed(true)}
+                className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                  boundaryConfirmed
+                    ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
+                    : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+                }`}
+              >
+                Pillars Match RoR
+              </button>
+              <button
+                type="button"
+                onClick={() => setBoundaryConfirmed(false)}
+                className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                  !boundaryConfirmed
+                    ? "bg-red-500/20 border-red-500/40 text-red-300"
+                    : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+                }`}
+              >
+                Discrepancy / Encroached
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs text-slate-300 font-medium block">Physical Possession Status</label>
+            <select
+              value={possessionStatus}
+              onChange={(e) => setPossessionStatus(e.target.value)}
+              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium cursor-pointer"
+            >
+              <option value="cultivated">Active Agricultural Crop</option>
+              <option value="vacant">Vacant / Fallow Open Land</option>
+              <option value="residential_structure">Residential Pucca / Kuccha House</option>
+              <option value="commercial_shed">Commercial Shed / Workshop</option>
+              <option value="encroached">Encroached / Third-Party Claim</option>
+            </select>
+          </div>
+        </div>
+
+        {/* 2. GPS Location Capture */}
+        <CaptureLocation
+          targetLat={parcel?.centroid_lat || 25.321}
+          targetLng={parcel?.centroid_lng || 82.987}
+          surveyNo={sNo}
+          onLocationCaptured={(pos) => setGpsCoords(pos)}
+        />
+
+        {/* 3. Photo Capture */}
+        <CapturePhoto
+          photos={photos}
+          onAddPhoto={(p) => setPhotos((prev) => [...prev, p])}
+          onRemovePhoto={(id) => setPhotos((prev) => prev.filter((p) => p.id !== id))}
+          currentCoords={gpsCoords ? { lat: gpsCoords.lat, lng: gpsCoords.lng } : undefined}
+        />
+
+        {/* 4. Document Upload */}
+        <DocumentUpload
+          documents={documents}
+          onAddDocument={(d) => setDocuments((prev) => [...prev, d])}
+          onRemoveDocument={(id) => setDocuments((prev) => prev.filter((d) => d.id !== id))}
+        />
+
+        {/* 5. Issue Reporting Hook */}
+        <ReportIssueForm
+          hasIssue={hasIssue}
+          issueType={issueType}
+          issueSeverity={issueSeverity}
+          onToggleIssue={(val) => {
+            setHasIssue(val);
+            if (val) setStatus("disputed");
+            else setStatus("verified");
+          }}
+          onChangeType={(t) => setIssueType(t)}
+          onChangeSeverity={(s) => setIssueSeverity(s)}
+        />
+
+        {/* 6. Observations & Remarks */}
+        <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+          <span className="text-xs font-semibold text-white block">Field Observations & Officer Remarks</span>
+          <textarea
+            value={observations}
+            onChange={(e) => setObservations(e.target.value)}
+            rows={2}
+            placeholder="Observed crop types, structures, boundary markers, borewells..."
+            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 resize-none"
+          />
+          <textarea
+            value={remarks}
+            onChange={(e) => setRemarks(e.target.value)}
+            rows={2}
+            placeholder="Statutory remarks for Tehsildar / CALA legal review..."
+            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 resize-none"
+          />
+        </div>
+
+        {/* 7. Final Decision Selector */}
+        <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+          <label className="text-xs text-slate-300 font-medium block">Officer Statutory Recommendation</label>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={() => setStatus("verified")}
+              className={`py-2.5 px-2 rounded-xl text-xs font-bold border transition-all flex flex-col items-center gap-1 cursor-pointer ${
+                status === "verified"
+                  ? "bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-md"
+                  : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+              }`}
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              <span>Verified Clear</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setStatus("disputed")}
+              className={`py-2.5 px-2 rounded-xl text-xs font-bold border transition-all flex flex-col items-center gap-1 cursor-pointer ${
+                status === "disputed"
+                  ? "bg-amber-500/20 border-amber-500 text-amber-300 shadow-md"
+                  : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+              }`}
+            >
+              <AlertTriangle className="w-4 h-4" />
+              <span>Contested</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setStatus("rejected")}
+              className={`py-2.5 px-2 rounded-xl text-xs font-bold border transition-all flex flex-col items-center gap-1 cursor-pointer ${
+                status === "rejected"
+                  ? "bg-red-500/20 border-red-500 text-red-300 shadow-md"
+                  : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+              }`}
+            >
+              <XCircle className="w-4 h-4" />
+              <span>Rejected</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 8. Action Submission Buttons */}
+        <div className="space-y-2 pt-2">
+          <button
+            type="button"
+            disabled={submitting}
+            onClick={() => handleSubmit(false)}
+            className="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 text-white rounded-xl text-sm font-bold shadow-xl shadow-emerald-950/40 transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            {submitting ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Send className="w-4 h-4" />
+            )}
+            <span>
+              {submitting ? "Propagating to Platform..." : isOnline ? "Submit Field Verification" : "Queue Offline Submission"}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            disabled={submitting}
+            onClick={() => handleSubmit(true)}
+            className="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <Save className="w-3.5 h-3.5 text-slate-400" />
+            <span>Save to Device (Force Offline Storage)</span>
+          </button>
+        </div>
+
+      </div>
+    </FieldShell>
+  );
+}

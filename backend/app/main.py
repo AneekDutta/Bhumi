@@ -26,6 +26,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root():
+    """Root entrypoint linking to API documentation and system health."""
+    return {
+        "app": settings.PROJECT_NAME,
+        "status": "online",
+        "docs_url": "/docs",
+        "openapi_url": f"{settings.API_V1_STR}/openapi.json",
+        "health": "/health",
+        "api_v1": settings.API_V1_STR,
+    }
+
 @app.get("/health")
 async def root_health():
     """Basic root health check."""

@@ -13,12 +13,19 @@ export const metadata: Metadata = {
   icons: {
     icon: '/icon.svg',
   },
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'BHUMI Field',
+  },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  themeColor: '#059669',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
