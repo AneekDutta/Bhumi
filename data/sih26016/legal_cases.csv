@@ -1,0 +1,8 @@
+case_id,case_name,court,decision_notes,filed_date,is_reference_case,legal_case_id,legal_issue,legal_status,source_type
+AC00010,Prem Yadav vs State of Rajasthan,Rajasthan High Court,,2024-05-07,False,LC00010,compensation_dispute,filed,SYNTHETIC
+AC00023,Kamla Rathore vs State of Rajasthan,Rajasthan High Court,,2025-05-07,False,LC00023,compensation_dispute,in_hearing,SYNTHETIC
+AC00062,Mahesh Rathore vs State of Rajasthan,Rajasthan High Court,,2024-07-24,False,LC00062,notification_challenge,in_hearing,SYNTHETIC
+AC00101,Champa Mali vs State of Rajasthan,Rajasthan High Court,,2025-04-22,False,LC00101,notification_challenge,in_hearing,SYNTHETIC
+AC00114,Girdhari Gujjar vs State of Rajasthan,Rajasthan High Court,,2024-11-05,False,LC00114,possession_dispute,in_hearing,SYNTHETIC
+AC00136,Suresh Yadav vs State of Rajasthan,Rajasthan High Court,,2025-12-20,False,LC00136,notification_challenge,filed,SYNTHETIC
+AC00147,Sita Mali vs State of Rajasthan,Rajasthan High Court,,2024-12-23,False,LC00147,notification_challenge,filed,SYNTHETIC

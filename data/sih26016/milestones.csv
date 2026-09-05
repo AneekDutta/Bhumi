@@ -1,0 +1,3 @@
+milestone_id,name,project_id,source_type,status,target_date
+M01,Milestone 1,P-NH927A,SYNTHETIC,pending,2027-01-01
+M02,Milestone 2,P-NH927A,SYNTHETIC,pending,2027-04-01

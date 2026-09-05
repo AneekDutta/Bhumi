@@ -1,25 +1,25 @@
 import copy
-from datetime import datetime, timezone
-from typing import Any
+from datetime import datetime, timezone, timedelta
+from typing import Dict, List, Any
 from uuid import UUID
+import networkx as nx
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from app.models.domain import (
     AcquisitionCase,
+    ProjectActivity,
     ActivityDependency,
     ActivityParcelRequirement,
     Parcel,
-    Project,
-    ProjectActivity,
     WorkflowBlocker,
+    Project
 )
 from app.services.schedule_engine import ScheduleEngine
 
-
 class ImpactEngine:
-    def __init__(self, db: AsyncSession, analysis_date: datetime | None = None):
+    def __init__(self, db: AsyncSession, analysis_date: datetime = None):
         self.db = db
         self.analysis_date = analysis_date or datetime.now(timezone.utc)
         self.baseline_engine = ScheduleEngine(self.analysis_date)
@@ -113,7 +113,8 @@ class ImpactEngine:
             if current_stage_idx < stage_order["PHYSICAL"]:
                 for c in parcel_cases:
                     idx = stage_order.get(c.current_stage, 0)
-                    current_stage_idx = max(current_stage_idx, idx)
+                    if idx > current_stage_idx:
+                        current_stage_idx = idx
                         
             required_stage_idx = stage_order.get(req.required_stage, stage_order["POSSESSION"])
             
@@ -165,7 +166,7 @@ class ImpactEngine:
                     }
                 self.bottleneck_evidence[parcel_id_str]["affected_activities"].add(act_id_str)
 
-    def _get_causal_path(self, result: dict[str, Any], start_activities: list[str], evidence: dict[str, Any]) -> list[dict[str, Any]]:
+    def _get_causal_path(self, result: Dict[str, Any], start_activities: List[str], evidence: Dict[str, Any]) -> List[Dict[str, Any]]:
         path = []
         parcel_id = str(evidence["parcel_id"])
         
@@ -300,7 +301,7 @@ class ImpactEngine:
             
         return path
 
-    def analyze_impact(self) -> dict[str, Any]:
+    def analyze_impact(self) -> Dict[str, Any]:
         baseline_result = self.baseline_engine.calculate_cpm(self.project_start_date)
         current_result = self.current_engine.calculate_cpm(self.project_start_date)
         
@@ -382,7 +383,7 @@ class ImpactEngine:
             "bottlenecks": ranked_bottlenecks
         }
         
-    def simulate_intervention(self, intervention: dict[str, Any]) -> dict[str, Any]:
+    def simulate_intervention(self, intervention: Dict[str, Any]) -> Dict[str, Any]:
         """
         Non-destructive simulation. 
         """

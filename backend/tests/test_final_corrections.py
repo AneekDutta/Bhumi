@@ -1,8 +1,6 @@
-from datetime import datetime, timedelta, timezone
-
-from app.services.impact_engine import ImpactEngine
+from datetime import datetime, timezone, timedelta
 from app.services.schedule_engine import ScheduleEngine
-
+from app.services.impact_engine import ImpactEngine
 
 def test_milestone_forecast_and_project_finish():
     start = datetime(2025, 1, 1, tzinfo=timezone.utc)
@@ -41,17 +39,11 @@ def test_unknown_duration_and_no_blocker():
     # But warns of unknown constraint
     assert result["has_unknown_constraint"] is True
 
-from app.models.domain import (
-    AcquisitionCase,
-    ActivityParcelRequirement,
-    Parcel,
-    ProjectActivity,
-)
-
+from app.models.domain import Parcel, AcquisitionCase, ProjectActivity, ActivityParcelRequirement
 
 def test_workflow_stages(monkeypatch):
-    import asyncio
     import uuid
+    import asyncio
     
     start = datetime(2025, 1, 1, tzinfo=timezone.utc)
     proj_id = uuid.uuid4()

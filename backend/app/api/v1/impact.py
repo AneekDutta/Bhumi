@@ -1,18 +1,13 @@
 from uuid import UUID
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import TrustedIdentity, get_current_user_context
 from app.core.database import get_db
 from app.core.security import quota_manager
-from app.schemas.impact import (
-    ProjectImpactResponse,
-    SimulationRequest,
-    SimulationResult,
-)
 from app.services.authorization import AuthorizationService
 from app.services.impact_engine import ImpactEngine
+from app.schemas.impact import ProjectImpactResponse, SimulationRequest, SimulationResult
 
 router = APIRouter()
 
@@ -49,5 +44,5 @@ async def simulate_intervention(
 
     try:
         return engine.simulate_intervention(req.model_dump())
-    except ValueError:
+    except ValueError as e:
         raise HTTPException(status_code=400, detail="Invalid simulation parameters")

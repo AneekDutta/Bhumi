@@ -9,25 +9,6 @@ on:
 jobs:
   backend-test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
-    services:
-      postgres:
-        image: postgis/postgis:15-3.3
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: sih26016
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    env:
-      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/sih26016
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python
@@ -36,17 +17,17 @@ jobs:
         python-version: '3.11'
     - name: Install dependencies
       run: |
+        cd backend
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Ruff
       run: |
+        cd backend
         ruff check app tests
-    - name: Apply Migrations
-      run: |
-        PYTHONPATH=. alembic upgrade head
     - name: Run Pytest
       run: |
-        PYTHONPATH=. pytest tests/
+        cd backend
+        pytest tests/
 
   frontend-test:
     runs-on: ubuntu-latest

@@ -1,11 +1,10 @@
-import json
-import logging
 import uuid
-from datetime import datetime, timezone
-
+import time
+import logging
+import json
+from datetime import datetime
+from starlette.types import ASGIApp, Receive, Scope, Send, Message
 from starlette.responses import JSONResponse
-from starlette.types import ASGIApp, Message, Receive, Scope, Send
-
 from app.core.config import settings
 from app.core.security import rate_limiter
 
@@ -132,9 +131,9 @@ class GlobalSecurityMiddleware:
 
         try:
             await self.app(scope, receive_wrapper, send_wrapper)
-        except Exception:
+        except Exception as e:
             if not body_too_large:
-                raise
+                raise e
 
         if body_too_large:
             self._log_security_event(request_id, path, method, 413, client_ip, "Payload too large via ASGI stream")
@@ -148,7 +147,7 @@ class GlobalSecurityMiddleware:
     def _log_security_event(self, req_id, route, method, status, ip, reason):
         log_payload = {
             "event": "SECURITY_EVENT",
-            "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+            "timestamp": datetime.utcnow().isoformat() + "Z",
             "request_id": req_id,
             "route": route,
             "method": method,

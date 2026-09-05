@@ -1,17 +1,12 @@
-import json
-from typing import Any
+from typing import List, Dict, Any
 from uuid import UUID
+from datetime import datetime, timezone
 
-from sqlalchemy import and_, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, func, and_
+import json
 
-from app.models.domain import (
-    AcquisitionCase,
-    Parcel,
-    ProjectActivity,
-    ProjectSegment,
-    WorkflowBlocker,
-)
+from app.models.domain import Parcel, ProjectSegment, AcquisitionCase, WorkflowBlocker, ProjectActivity
 from app.services.impact_engine import ImpactEngine
 
 
@@ -19,7 +14,7 @@ class SpatialEngine:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def get_clusters(self, project_id: UUID) -> list[dict[str, Any]]:
+    async def get_clusters(self, project_id: UUID) -> List[Dict[str, Any]]:
         """
         Derives connected clusters of unresolved parcels using ST_ClusterDBSCAN(eps=0)
         which acts as a topological 'touches' or 'intersects' grouping.
@@ -28,6 +23,8 @@ class SpatialEngine:
         await impact_engine.load_project(project_id)
         
         unresolved_parcel_ids = []
+        parcels_q = await self.db.execute(select(Parcel).where(Parcel.project_id == project_id))
+        all_parcels = parcels_q.scalars().all()
         
         # Fetch all active blockers for the project
         blockers_q = await self.db.execute(
@@ -150,7 +147,7 @@ class SpatialEngine:
 
         return clusters
 
-    async def get_project_geojson(self, project_id: UUID) -> dict[str, Any]:
+    async def get_project_geojson(self, project_id: UUID) -> Dict[str, Any]:
         seg_q = await self.db.execute(
             select(
                 ProjectSegment.id, 

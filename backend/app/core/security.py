@@ -1,10 +1,9 @@
-import ipaddress
-import threading
-import typing
-from datetime import datetime, timedelta, timezone
-
 import httpx
-
+import ipaddress
+import socket
+from datetime import datetime, timedelta
+from typing import Optional, List, Dict
+import threading
 
 # ---------------------------------------------------------
 # BOT PROTECTION ABSTRACTION
@@ -36,12 +35,12 @@ class RateLimiter:
     def __init__(self, max_keys=10000):
         # Configurable in-memory store with eviction.
         # Production requires Redis.
-        self._store: dict[str, list[datetime]] = {}
+        self._store: Dict[str, List[datetime]] = {}
         self._lock = threading.Lock()
         self.max_keys = max_keys
 
     def check_limit(self, key: str, max_requests: int, window_seconds: int) -> bool:
-        now = datetime.now(timezone.utc)
+        now = datetime.utcnow()
         with self._lock:
             if key in self._store:
                 self._store[key] = [t for t in self._store[key] if now - t < timedelta(seconds=window_seconds)]
@@ -89,7 +88,7 @@ quota_manager = QuotaManager()
 # SSRF PROTECTION
 # ---------------------------------------------------------
 class SafeFetcher:
-    ALLOWED_HOSTS: typing.ClassVar[list[str]] = ["api.sandbox.local", "trusted-partner.com", "example.com"]
+    ALLOWED_HOSTS = ["api.sandbox.local", "trusted-partner.com", "example.com"]
     
     @staticmethod
     def _is_private_ip(ip_str: str) -> bool:
@@ -109,13 +108,14 @@ class SafeFetcher:
 
     @staticmethod
     async def fetch(url: str):
-        import asyncio
         from urllib.parse import urlparse
+        import asyncio
         
         parsed = urlparse(url)
         # HTTPS is required by default, though HTTP may be used in test environments if strictly overriden
-        if parsed.scheme not in ["https"] and parsed.hostname != "api.sandbox.local": # Mock exception
-            raise ValueError("SSRF Prevention: HTTPS is required")
+        if parsed.scheme not in ["https"]:
+            if parsed.hostname != "api.sandbox.local": # Mock exception
+                raise ValueError("SSRF Prevention: HTTPS is required")
             
         domain = parsed.hostname
         if domain not in SafeFetcher.ALLOWED_HOSTS:

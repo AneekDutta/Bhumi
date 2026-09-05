@@ -1,16 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.v1 import (
-    cases,
-    dashboard,
-    documents,
-    health,
-    impact,
-    intelligence,
-    parcels,
-    projects,
-    spatial,
-)
+from app.api.v1 import cases, health, intelligence, parcels, projects, impact, spatial, dashboard, documents, sih26016
 
 api_router = APIRouter()
 api_router.include_router(health.router, tags=["health"])
@@ -22,3 +12,4 @@ api_router.include_router(impact.router, prefix="/impact", tags=["impact"])
 api_router.include_router(spatial.router, prefix="/spatial", tags=["spatial"])
 api_router.include_router(dashboard.router, prefix="/dashboard", tags=["dashboard"])
 api_router.include_router(documents.router, prefix="/documents", tags=["documents"])
+api_router.include_router(sih26016.router, prefix="/sih26016", tags=["sih26016"])

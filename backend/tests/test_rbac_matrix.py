@@ -1,12 +1,12 @@
-from uuid import uuid4
-
 import pytest
-from httpx import ASGITransport, AsyncClient
+from uuid import uuid4
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+from httpx import AsyncClient, ASGITransport
 
+from app.main import app
 from app.api.deps import TrustedIdentity, get_current_user_context
 from app.core.database import get_db
-from app.main import app
-
 
 @pytest.fixture(autouse=True)
 def clean_overrides():

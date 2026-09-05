@@ -1,0 +1,7 @@
+department_id,designation,name,officer_id,source_type
+D02,Tehsildar,Ramesh Meena,OF001,SYNTHETIC
+D04,Field Surveyor,Kamla Jat,OF002,SYNTHETIC
+D02,Tehsildar,Geeta Jat,OF003,SYNTHETIC
+D03,Field Surveyor,Om Prakash Meena,OF004,SYNTHETIC
+D04,Patwari,Girdhari Rathore,OF005,SYNTHETIC
+D02,Land Acquisition Officer,Sita Rathore,OF006,SYNTHETIC

@@ -1,17 +1,17 @@
-import hashlib
 import uuid
-
+import hashlib
 import httpx
-from fastapi import HTTPException, UploadFile
+from typing import Optional
+from fastapi import UploadFile, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from app.api.deps import TrustedIdentity
-from app.core.config import settings
 from app.models.domain import Document, DocumentVersion, Parcel
 from app.schemas.domain import DocumentCreate
-from app.services.audit import log_transition
 from app.services.authorization import AuthorizationService
+from app.services.audit import log_transition
+from app.api.deps import TrustedIdentity
+from app.core.config import settings
 
 ALLOWED_MIME_TYPES = {"application/pdf", "image/jpeg", "image/png"}
 ALLOWED_EXTENSIONS = {".pdf", ".jpeg", ".jpg", ".png"}
@@ -187,14 +187,14 @@ class DocumentService:
 
         try:
             await cls._upload_to_supabase(storage_path, file, file.content_type)
-        except Exception:
+        except Exception as e:
             await db.rollback()
             raise HTTPException(status_code=502, detail="Storage failed. Transaction rolled back.")
 
         try:
             await db.commit()
             await db.refresh(new_doc)
-        except Exception:
+        except Exception as e:
             await db.rollback()
             # Try to cleanup orphaned object
             await cls._delete_from_supabase(storage_path)
@@ -269,14 +269,14 @@ class DocumentService:
 
         try:
             await cls._upload_to_supabase(storage_path, file, file.content_type)
-        except Exception:
+        except Exception as e:
             await db.rollback()
             raise HTTPException(status_code=502, detail="Storage failed. Transaction rolled back.")
 
         try:
             await db.commit()
             await db.refresh(doc)
-        except Exception:
+        except Exception as e:
             await db.rollback()
             await cls._delete_from_supabase(storage_path)
             raise HTTPException(status_code=500, detail="Database persistence failed. Upload cleaned up.")
@@ -305,7 +305,7 @@ class DocumentService:
         return doc
 
     @classmethod
-    async def list_documents(cls, db: AsyncSession, user: TrustedIdentity, project_id: str | None = None, parcel_id: str | None = None) -> list[Document]:
+    async def list_documents(cls, db: AsyncSession, user: TrustedIdentity, project_id: Optional[str] = None, parcel_id: Optional[str] = None) -> list[Document]:
         if project_id:
             await AuthorizationService.verify_project_access(user, project_id, db)
             query = select(Document).where(Document.project_id == uuid.UUID(project_id), Document.status == "ACTIVE")
@@ -367,7 +367,7 @@ class DocumentService:
         await db.commit()
 
     @classmethod
-    async def generate_download_url(cls, db: AsyncSession, user: TrustedIdentity, document_id: str, version_number: int | None = None) -> str:
+    async def generate_download_url(cls, db: AsyncSession, user: TrustedIdentity, document_id: str, version_number: Optional[int] = None) -> str:
         doc = await db.get(Document, uuid.UUID(document_id))
         if not doc or doc.status != "ACTIVE":
             raise HTTPException(status_code=404, detail="Document not found")

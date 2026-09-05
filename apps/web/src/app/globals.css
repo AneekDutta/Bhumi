@@ -1,8 +1,325 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+@layer base {
+  :root {
+    --bg: #07080f;
+    --bg-mesh: radial-gradient(ellipse 80% 60% at 10% -10%, rgba(99,60,180,0.18) 0%, transparent 60%),
+               radial-gradient(ellipse 60% 50% at 90% 100%, rgba(20,100,200,0.12) 0%, transparent 60%),
+               radial-gradient(ellipse 40% 40% at 50% 50%, rgba(240,120,40,0.04) 0%, transparent 60%);
+    --glass: rgba(255,255,255,0.03);
+    --glass-border: rgba(255,255,255,0.07);
+    --glass-hover: rgba(255,255,255,0.055);
+    --card-bg: rgba(15, 23, 42, 0.65);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --sidebar-bg: #05060e;
+    --sidebar-border: rgba(255, 255, 255, 0.07);
+    --text-primary: #f0f4ff;
+    --text-secondary: #8892a4;
+    --text-muted: #4a5568;
+    --amber: #f59e0b;
+    --amber-dim: rgba(245,158,11,0.15);
+    --indigo: #6366f1;
+    --indigo-dim: rgba(99,102,241,0.15);
+    --emerald: #10b981;
+    --emerald-dim: rgba(16,185,129,0.12);
+    --rose: #f43f5e;
+    --rose-dim: rgba(244,63,94,0.12);
+    --cyan: #06b6d4;
+    --sidebar-w: 240px;
+  }
+
+  html.light {
+    --bg: #f8fafc;
+    --bg-mesh: radial-gradient(ellipse 80% 60% at 10% -10%, rgba(99,102,241,0.06) 0%, transparent 60%),
+               radial-gradient(ellipse 60% 50% at 90% 100%, rgba(20,100,200,0.04) 0%, transparent 60%),
+               radial-gradient(ellipse 40% 40% at 50% 50%, rgba(240,120,40,0.02) 0%, transparent 60%);
+    --glass: rgba(255, 255, 255, 0.92);
+    --glass-border: rgba(226, 232, 240, 0.9);
+    --glass-hover: #ffffff;
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --sidebar-bg: #ffffff;
+    --sidebar-border: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --amber: #d97706;
+    --amber-dim: rgba(217, 119, 6, 0.12);
+    --indigo: #4f46e5;
+    --indigo-dim: rgba(79, 70, 229, 0.1);
+    --emerald: #059669;
+    --emerald-dim: rgba(5, 150, 105, 0.1);
+    --rose: #e11d48;
+    --rose-dim: rgba(225, 29, 72, 0.1);
+    --cyan: #0891b2;
+  }
+
+  body {
+    background: var(--bg);
+    background-image: var(--bg-mesh);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
 }
+
+.font-display { font-family: 'Sora', sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Glass card */
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass:hover {
+  background: var(--glass-hover);
+}
+
+/* Glow effects */
+.glow-amber { box-shadow: 0 0 20px rgba(245,158,11,0.25), 0 0 60px rgba(245,158,11,0.08); }
+.glow-rose { box-shadow: 0 0 20px rgba(244,63,94,0.25), 0 0 60px rgba(244,63,94,0.08); }
+.glow-indigo { box-shadow: 0 0 20px rgba(99,102,241,0.2), 0 0 60px rgba(99,102,241,0.06); }
+.glow-emerald { box-shadow: 0 0 20px rgba(16,185,129,0.2), 0 0 60px rgba(16,185,129,0.06); }
+
+/* Animated pulse dot */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.pulse-dot {
+  position: relative;
+}
+
+.pulse-dot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+
+/* Number glow */
+.num-glow-amber { text-shadow: 0 0 30px rgba(245,158,11,0.5); }
+.num-glow-rose { text-shadow: 0 0 30px rgba(244,63,94,0.5); }
+.num-glow-emerald { text-shadow: 0 0 30px rgba(16,185,129,0.4); }
+.num-glow-indigo { text-shadow: 0 0 30px rgba(99,102,241,0.4); }
+
+/* Sleek dark scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Table row hover */
+.tr-hover { transition: background 0.12s ease; }
+.tr-hover:hover { background: rgba(255,255,255,0.035); }
+
+/* Progress bar shimmer */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.progress-shimmer { animation: shimmer 2s infinite; }
+
+/* Gradient text */
+.grad-text-amber {
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.grad-text-indigo {
+  background: linear-gradient(135deg, #818cf8, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.grad-text-purple {
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Status badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Sidebar active */
+.nav-active {
+  background: linear-gradient(90deg, rgba(99,102,241,0.18) 0%, rgba(99,102,241,0.04) 100%);
+  border-left: 2px solid #6366f1;
+}
+
+/* Stage node */
+.stage-node {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace;
+  position: relative;
+  transition: all 0.2s;
+}
+
+/* Input */
+.input {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-primary);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.input:focus { border-color: rgba(99,102,241,0.5); }
+.input::placeholder { color: var(--text-muted); }
+
+/* Primary Button */
+.btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+/* Divider */
+.divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); }
+
+/* ==========================================================================
+   LIGHT MODE OVERRIDES & ADAPTIVE STYLES
+   ========================================================================== */
+
+html.light .glass {
+  background: var(--glass);
+  border-color: var(--glass-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+html.light .glass:hover {
+  background: var(--glass-hover);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+html.light .input {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+html.light .input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+html.light .input::placeholder {
+  color: #94a3b8;
+}
+
+html.light .divider {
+  border-top-color: #e2e8f0;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.25);
+  border-radius: 2px;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.45);
+}
+
+html.light .tr-hover:hover {
+  background: rgba(15, 23, 42, 0.035);
+}
+
+/* Light mode overrides for existing inline card colors and dark text */
+html.light [style*="color: rgb(226, 232, 240)"],
+html.light [style*="color: #e2e8f0"],
+html.light [style*="color: rgb(240, 244, 255)"],
+html.light [style*="color: #f0f4ff"],
+html.light [style*="color: rgb(248, 250, 252)"],
+html.light [style*="color: #f8fafc"] {
+  color: #0f172a !important;
+}
+
+html.light [style*="color: rgb(136, 146, 164)"],
+html.light [style*="color: #8892a4"],
+html.light [style*="color: rgb(148, 163, 184)"],
+html.light [style*="color: #94a3b8"],
+html.light [style*="color: #8899b4"],
+html.light [style*="color: #c4cfe4"],
+html.light [style*="color: #cbd5e1"],
+html.light [style*="color: #c8d4e8"] {
+  color: #334155 !important;
+}
+
+html.light [style*="color: rgb(74, 85, 104)"],
+html.light [style*="color: #4a5568"],
+html.light [style*="color: rgb(107, 122, 148)"],
+html.light [style*="color: #6b7a94"],
+html.light [style*="color: #64748b"],
+html.light [style*="color: #5a6680"],
+html.light [style*="color: #3a4258"] {
+  color: #64748b !important;
+}
+
+html.light [style*="background: rgba(255, 255, 255, 0.03)"],
+html.light [style*="background: rgba(255, 255, 255, 0.04)"],
+html.light [style*="background: rgba(255, 255, 255, 0.05)"],
+html.light [style*="background: rgba(255, 255, 255, 0.06)"],
+html.light [style*="background: rgba(15, 23, 42, 0.5)"],
+html.light [style*="background: rgba(15, 23, 42, 0.75)"],
+html.light [style*="background: rgb(11, 12, 22)"],
+html.light [style*="background: #0b0c16"],
+html.light [style*="background: #0d1322"],
+html.light [style*="background: rgb(9, 13, 22)"],
+html.light [style*="background: #090d16"],
+html.light [style*="background: #0d111d"] {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+html.light [style*="border: 1px solid rgba(255, 255, 255, 0.06)"],
+html.light [style*="border: 1px solid rgba(255, 255, 255, 0.07)"],
+html.light [style*="border: 1px solid rgba(255, 255, 255, 0.08)"],
+html.light [style*="border: 1px solid rgba(255, 255, 255, 0.1)"],
+html.light [style*="border: 1px solid rgba(255, 255, 255, 0.12)"],
+html.light [style*="borderLeft: 1px solid rgba(255, 255, 255, 0.12)"],
+html.light [style*="border-left: 1px solid rgba(255, 255, 255, 0.12)"] {
+  border-color: #e2e8f0 !important;
+}
+

@@ -8,8 +8,8 @@ from app.api.deps import TrustedIdentity, get_current_user_context
 from app.core.database import get_db
 from app.core.security import quota_manager
 from app.models.domain import Project
-from app.services.authorization import AuthorizationService
 from app.services.graph_engine import IntelligenceEngine
+from app.services.authorization import AuthorizationService
 
 router = APIRouter()
 

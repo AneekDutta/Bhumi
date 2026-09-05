@@ -1,7 +1,5 @@
-from datetime import datetime, timedelta, timezone
-
+from datetime import datetime, timezone, timedelta
 from app.services.schedule_engine import ScheduleEngine
-
 
 def test_cpm_parallel_work():
     start = datetime(2025, 1, 1, tzinfo=timezone.utc)

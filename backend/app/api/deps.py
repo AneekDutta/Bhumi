@@ -1,18 +1,18 @@
 import os
-
-from fastapi import HTTPException, Request, Security
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import HTTPException, Security, Request
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
+from typing import Optional
 
 security = HTTPBearer(auto_error=False)
 
 class TrustedIdentity(BaseModel):
     user_id: str
     role: str
-    assigned_project_id: str | None = None
-    assigned_district_id: str | None = None
+    assigned_project_id: Optional[str] = None
+    assigned_district_id: Optional[str] = None
 
-def decode_and_verify_jwt(token: str) -> TrustedIdentity | None:
+def decode_and_verify_jwt(token: str) -> Optional[TrustedIdentity]:
     """
     Identity Provider Abstraction.
     In a fully configured production environment, this decodes the JWT

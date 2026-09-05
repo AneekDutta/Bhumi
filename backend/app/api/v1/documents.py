@@ -1,12 +1,13 @@
+import uuid
 import json
-
-from fastapi import APIRouter, Depends, File, Form, HTTPException, Response, UploadFile
-from pydantic import ValidationError
+from typing import List, Optional
+from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, Response
 from sqlalchemy.ext.asyncio import AsyncSession
+from pydantic import ValidationError
 
-from app.api.deps import TrustedIdentity, get_current_user_context
 from app.core.database import get_db
-from app.schemas.domain import DocumentCreate, DocumentRead
+from app.api.deps import get_current_user_context, TrustedIdentity
+from app.schemas.domain import DocumentRead, DocumentCreate
 from app.services.document_service import DocumentService
 
 router = APIRouter()
@@ -21,15 +22,15 @@ async def create_document(
     try:
         data_dict = json.loads(metadata)
         data = DocumentCreate(**data_dict)
-    except (json.JSONDecodeError, ValidationError):
+    except (json.JSONDecodeError, ValidationError) as e:
         raise HTTPException(status_code=400, detail="Invalid metadata format")
 
     return await DocumentService.upload_document(db, user, data, file)
 
-@router.get("/", response_model=list[DocumentRead])
+@router.get("/", response_model=List[DocumentRead])
 async def list_documents(
-    project_id: str | None = None,
-    parcel_id: str | None = None,
+    project_id: Optional[str] = None,
+    parcel_id: Optional[str] = None,
     db: AsyncSession = Depends(get_db),
     user: TrustedIdentity = Depends(get_current_user_context)
 ):
@@ -55,7 +56,7 @@ async def delete_document(
 @router.get("/{document_id}/download")
 async def download_document(
     document_id: str,
-    version: int | None = None,
+    version: Optional[int] = None,
     db: AsyncSession = Depends(get_db),
     user: TrustedIdentity = Depends(get_current_user_context)
 ):

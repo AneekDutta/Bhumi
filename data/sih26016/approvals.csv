@@ -1,0 +1,15 @@
+approval_id,approval_status,department_id,entity_id,entity_type,officer_id,source_type
+AP00015,escalated,D03,AC00015,compensation,OF006,SYNTHETIC
+AP00063,escalated,D02,AC00063,compensation,OF004,SYNTHETIC
+AP00068,escalated,D01,AC00068,compensation,OF006,SYNTHETIC
+AP00073,escalated,D02,AC00073,compensation,OF002,SYNTHETIC
+AP00078,escalated,D03,AC00078,compensation,OF004,SYNTHETIC
+AP00079,escalated,D04,AC00079,compensation,OF002,SYNTHETIC
+AP00086,escalated,D04,AC00086,compensation,OF003,SYNTHETIC
+AP00110,escalated,D01,AC00110,compensation,OF005,SYNTHETIC
+AP00121,escalated,D01,AC00121,compensation,OF003,SYNTHETIC
+AP00143,escalated,D01,AC00143,compensation,OF004,SYNTHETIC
+AP00159,escalated,D04,AC00159,compensation,OF006,SYNTHETIC
+AP00165,escalated,D01,AC00165,compensation,OF003,SYNTHETIC
+AP00166,escalated,D04,AC00166,compensation,OF005,SYNTHETIC
+AP00171,escalated,D03,AC00171,compensation,OF006,SYNTHETIC

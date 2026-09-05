@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict
@@ -11,8 +12,8 @@ from app.models.domain import WorkflowStage
 class ParcelBase(BaseModel):
     survey_no: str
     area_hectares: float
-    classification: str | None = None
-    possession_type: str | None = None
+    classification: Optional[str] = None
+    possession_type: Optional[str] = None
     status: str
 
 class ParcelRead(ParcelBase):
@@ -23,7 +24,7 @@ class ParcelRead(ParcelBase):
 
 class ProjectBase(BaseModel):
     name: str
-    total_length_km: float | None = None
+    total_length_km: Optional[float] = None
 
 class ProjectRead(ProjectBase):
     id: UUID
@@ -32,8 +33,8 @@ class ProjectRead(ProjectBase):
 class AcquisitionCaseBase(BaseModel):
     statutory_act: str
     current_stage: str
-    stage_started_at: datetime | None = None
-    computed_deadline: datetime | None = None
+    stage_started_at: Optional[datetime] = None
+    computed_deadline: Optional[datetime] = None
     is_lapsed: bool
     lapse_risk_flag: bool
 
@@ -50,10 +51,10 @@ class CaseTransitionRequest(BaseModel):
 class AuditLogRead(BaseModel):
     id: UUID
     action: str
-    actor_id: str | None
-    actor_role: str | None
-    state_before: dict | None
-    state_after: dict | None
+    actor_id: Optional[str]
+    actor_role: Optional[str]
+    state_before: Optional[dict]
+    state_after: Optional[dict]
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
@@ -75,19 +76,19 @@ class DocumentVersionRead(BaseModel):
 
 class DocumentBase(BaseModel):
     title: str
-    description: str | None = None
+    description: Optional[str] = None
     document_type: str
 
 class DocumentCreate(DocumentBase):
-    project_id: UUID | None = None
-    parcel_id: UUID | None = None
-    acquisition_case_id: UUID | None = None
+    project_id: Optional[UUID] = None
+    parcel_id: Optional[UUID] = None
+    acquisition_case_id: Optional[UUID] = None
 
 class DocumentRead(DocumentBase):
     id: UUID
-    project_id: UUID | None
-    parcel_id: UUID | None
-    acquisition_case_id: UUID | None
+    project_id: Optional[UUID]
+    parcel_id: Optional[UUID]
+    acquisition_case_id: Optional[UUID]
     current_version: int
     status: str
     created_at: datetime

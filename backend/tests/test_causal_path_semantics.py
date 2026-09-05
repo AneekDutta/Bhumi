@@ -1,10 +1,8 @@
-import uuid
 from datetime import datetime, timezone
-
+import uuid
 import pytest
-
 from app.services.impact_engine import ImpactEngine
-
+from app.models.domain import AcquisitionCase, ActivityParcelRequirement
 
 def test_causal_path_invalid_case():
     start = datetime(2025, 1, 1, tzinfo=timezone.utc)

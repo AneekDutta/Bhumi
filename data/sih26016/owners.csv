@@ -1,0 +1,61 @@
+contact_village,name,owner_id,owner_type,source_type
+V01,Geeta Yadav,O00001,individual,SYNTHETIC
+V01,Suresh Sharma,O00002,individual,SYNTHETIC
+V03,Ramesh Meena,O00003,individual,SYNTHETIC
+V03,Geeta Meena,O00004,individual,SYNTHETIC
+V01,Sita Jat,O00005,individual,SYNTHETIC
+V01,Kailash Suthar,O00006,joint,SYNTHETIC
+V01,Ramesh Gujjar,O00007,individual,SYNTHETIC
+V01,Radha Suthar,O00008,individual,SYNTHETIC
+V02,Girdhari Mali,O00009,individual,SYNTHETIC
+V01,Om Prakash Sharma,O00010,individual,SYNTHETIC
+V03,Radha Suthar,O00011,joint,SYNTHETIC
+V01,Sita Rathore,O00012,individual,SYNTHETIC
+V02,Om Prakash Sharma,O00013,individual,SYNTHETIC
+V03,Champa Mali,O00014,individual,SYNTHETIC
+V02,Sita Sharma,O00015,individual,SYNTHETIC
+V01,Geeta Suthar,O00016,institutional,SYNTHETIC
+V03,Champa Yadav,O00017,joint,SYNTHETIC
+V01,Om Prakash Suthar,O00018,individual,SYNTHETIC
+V03,Champa Mali,O00019,individual,SYNTHETIC
+V03,Radha Yadav,O00020,individual,SYNTHETIC
+V03,Sita Sharma,O00021,individual,SYNTHETIC
+V02,Kamla Yadav,O00022,individual,SYNTHETIC
+V01,Om Prakash Suthar,O00023,institutional,SYNTHETIC
+V02,Prem Yadav,O00024,individual,SYNTHETIC
+V02,Champa Meena,O00025,individual,SYNTHETIC
+V01,Ramesh Mali,O00026,individual,SYNTHETIC
+V01,Suresh Yadav,O00027,joint,SYNTHETIC
+V01,Kailash Mali,O00028,individual,SYNTHETIC
+V03,Shanti Jat,O00029,joint,SYNTHETIC
+V02,Prem Rathore,O00030,individual,SYNTHETIC
+V02,Kamla Yadav,O00031,individual,SYNTHETIC
+V02,Bhanwar Suthar,O00032,individual,SYNTHETIC
+V02,Om Prakash Jat,O00033,individual,SYNTHETIC
+V02,Kamla Rathore,O00034,individual,SYNTHETIC
+V03,Ramesh Sharma,O00035,individual,SYNTHETIC
+V01,Kamla Jat,O00036,individual,SYNTHETIC
+V03,Om Prakash Jat,O00037,individual,SYNTHETIC
+V03,Shanti Suthar,O00038,joint,SYNTHETIC
+V03,Champa Meena,O00039,individual,SYNTHETIC
+V01,Suresh Suthar,O00040,individual,SYNTHETIC
+V01,Radha Sharma,O00041,individual,SYNTHETIC
+V02,Kamla Rathore,O00042,individual,SYNTHETIC
+V03,Sita Suthar,O00043,joint,SYNTHETIC
+V02,Girdhari Gujjar,O00044,individual,SYNTHETIC
+V01,Suresh Suthar,O00045,joint,SYNTHETIC
+V01,Bhanwar Yadav,O00046,individual,SYNTHETIC
+V01,Girdhari Gujjar,O00047,individual,SYNTHETIC
+V01,Girdhari Meena,O00048,individual,SYNTHETIC
+V03,Shanti Meena,O00049,individual,SYNTHETIC
+V02,Radha Suthar,O00050,individual,SYNTHETIC
+V01,Geeta Sharma,O00051,individual,SYNTHETIC
+V02,Shanti Sharma,O00052,joint,SYNTHETIC
+V01,Bhanwar Gujjar,O00053,individual,SYNTHETIC
+V02,Shanti Gujjar,O00054,individual,SYNTHETIC
+V02,Champa Jat,O00055,joint,SYNTHETIC
+V01,Bhanwar Yadav,O00056,individual,SYNTHETIC
+V01,Om Prakash Mali,O00057,individual,SYNTHETIC
+V02,Bhanwar Rathore,O00058,individual,SYNTHETIC
+V03,Geeta Sharma,O00059,individual,SYNTHETIC
+V01,Kailash Yadav,O00060,individual,SYNTHETIC

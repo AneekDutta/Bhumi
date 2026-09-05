@@ -1,8 +1,7 @@
-from datetime import datetime, timedelta, timezone
-
-from app.services.impact_engine import ImpactEngine
+from datetime import datetime, timezone, timedelta
 from app.services.schedule_engine import ScheduleEngine
-
+from app.services.impact_engine import ImpactEngine
+import copy
 
 def test_cpm_parallel_counterfactual():
     start = datetime(2025, 1, 1, tzinfo=timezone.utc)

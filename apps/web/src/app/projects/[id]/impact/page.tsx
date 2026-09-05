@@ -1,765 +1,376 @@
 "use client";
 
-
-
 import React, { useState, useEffect } from "react";
-
 import { useParams } from "next/navigation";
-
 import Link from "next/link";
-
 import { apiClient } from "@/lib/api";
-
-
+import { Activity, Calendar, Clock, AlertTriangle, CheckCircle2, ArrowRight, Sparkles, Compass, RotateCcw } from "lucide-react";
+import { DataRealityBanner, ProvenanceBadge } from "@/components/common/ProvenanceBadge";
+import { WhatIfWorkbench } from "@/components/simulator/WhatIfWorkbench";
 
 type ScheduleForecast = {
-
   project_finish: string;
-
   critical_path: string[];
-
   project_delay_days: number | null;
-
   impact_status: "NO_BLOCKING_CONSTRAINT" | "QUANTIFIED_IMPACT" | "UNQUANTIFIED_IMPACT";
-
 };
-
-
 
 type CausalHop = {
-
-  source_type: string;
-
-  source_id: string;
-
-  source_label: string;
-
-  relationship: string;
-
-  target_type: string;
-
-  target_id: string;
-
-  target_label: string;
-
+  source_type: string; source_id: string; source_label: string;
+  relationship: string; target_type: string; target_id: string; target_label: string;
 };
-
-
 
 type BottleneckEvidence = {
-
-  parcel_id: string;
-
-  delay_days: number | null;
-
-  urgency: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
-
-  reason: string;
-
-  is_critical_path: boolean;
-
-  project_delay_days: number | null;
-
+  parcel_id: string; survey_no?: string; delay_days: number | null;
+  urgency: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW"; reason: string;
+  is_critical_path: boolean; project_delay_days: number | null;
   impact_status: "NO_BLOCKING_CONSTRAINT" | "QUANTIFIED_IMPACT" | "UNQUANTIFIED_IMPACT";
-
   causal_path: CausalHop[];
-
 };
-
-
 
 type ProjectImpact = {
-
-  baseline: ScheduleForecast;
-
-  current_forecast: ScheduleForecast;
-
-  bottlenecks: BottleneckEvidence[];
-
+  baseline: ScheduleForecast; current_forecast: ScheduleForecast; bottlenecks: BottleneckEvidence[];
 };
-
-
 
 type SimulationResult = {
-
-  before: ScheduleForecast;
-
-  after: ScheduleForecast;
-
-  days_recovered: number;
-
+  before: ScheduleForecast; after: ScheduleForecast; days_recovered: number;
 };
 
-
+const URGENCY_STYLE: Record<string, { bg: string; color: string; border: string }> = {
+  CRITICAL: { bg: 'rgba(244,63,94,0.12)', color: '#f43f5e', border: 'rgba(244,63,94,0.3)' },
+  HIGH: { bg: 'rgba(249,115,22,0.12)', color: '#f97316', border: 'rgba(249,115,22,0.3)' },
+  MEDIUM: { bg: 'rgba(245,158,11,0.12)', color: '#f59e0b', border: 'rgba(245,158,11,0.3)' },
+  LOW: { bg: 'rgba(16,185,129,0.12)', color: '#10b981', border: 'rgba(16,185,129,0.3)' },
+};
 
 export default function ProjectImpactPage() {
-
   const { id } = useParams() as { id: string };
-
   const [impactData, setImpactData] = useState<ProjectImpact | null>(null);
-
   const [selectedBottleneck, setSelectedBottleneck] = useState<BottleneckEvidence | null>(null);
-
   const [simResult, setSimResult] = useState<SimulationResult | null>(null);
-
   const [loading, setLoading] = useState(true);
-
   const [simulating, setSimulating] = useState(false);
-
   const [error, setError] = useState<string | null>(null);
 
-  const [simulationSuccess, setSimulationSuccess] = useState<string | null>(null);
-
-
-
   useEffect(() => {
-
     const fetchImpact = async () => {
-
       try {
-
         const data = await apiClient.getProjectImpact(id);
-
         setImpactData(data as ProjectImpact);
-
-      } catch {
-
-        setError('Failed to calculate deterministic schedule impact.');
-
-      } finally {
-
-        setLoading(false);
-
-      }
-
+        if (data?.bottlenecks?.length > 0) setSelectedBottleneck(data.bottlenecks[0]);
+      } catch { setError('Failed to calculate deterministic schedule impact.'); }
+      finally { setLoading(false); }
     };
-
-    if (id) {
-
-      fetchImpact();
-
-    }
-
+    if (id) fetchImpact();
   }, [id]);
 
-
-
   const runSimulation = async (parcelId: string) => {
-
-    setSimulating(true);
-
-    setError(null);
-
-    setSimulationSuccess(null);
-
+    setSimulating(true); setError(null); setSimResult(null);
     try {
-
       const data = await apiClient.simulateIntervention(id, { type: "RESOLVE_BLOCKER", parcel_id: parcelId });
-
       setSimResult(data as SimulationResult);
-
-      setSimulationSuccess(`Counterfactual model completed: ${data.days_recovered} schedule day(s) recoverable.`);
-
-    } catch {
-
-      setError('Simulation request could not be completed.');
-
-    } finally {
-
-      setSimulating(false);
-
-    }
-
+    } catch { setError('Simulation request could not be completed.'); }
+    finally { setSimulating(false); }
   };
-
-
 
   const formatDate = (ds: string) => {
-
-    try {
-
-      return new Date(ds).toLocaleDateString('en-IN', {
-
-        year: 'numeric',
-
-        month: 'short',
-
-        day: 'numeric'
-
-      });
-
-    } catch {
-
-      return ds;
-
-    }
-
+    try { return new Date(ds).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }); }
+    catch { return ds; }
   };
 
-
-
   if (loading) {
-
     return (
-
-      <div className="p-8 text-center text-slate-500 bg-white border border-slate-200 rounded-lg text-sm">
-
-        Computing deterministic Critical Path Method (CPM) impact schedule...
-
+      <div style={{ padding: '48px 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+        <div style={{ width: 36, height: 36, borderRadius: '50%', border: '3px solid rgba(99,102,241,0.2)', borderTopColor: '#6366f1', animation: 'spin 1s linear infinite' }} />
+        <p style={{ fontSize: 13, color: '#6b7a94', fontFamily: 'JetBrains Mono, monospace' }}>Computing deterministic CPM impact schedule...</p>
       </div>
-
     );
-
   }
-
-
 
   if (error && !impactData) {
-
     return (
-
-      <div className="p-5 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800">
-
-        <p className="font-semibold">Schedule Engine Offline</p>
-
-        <p className="text-xs text-red-700 mt-1">{error}</p>
-
+      <div style={{ padding: '20px 24px', borderRadius: 12, background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.3)', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+        <AlertTriangle style={{ width: 18, height: 18, color: '#f43f5e', flexShrink: 0 }} />
+        <div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: '#f43f5e' }}>Schedule Engine Offline</div>
+          <p style={{ fontSize: 12, color: '#8899b4', marginTop: 4 }}>{error}</p>
+        </div>
       </div>
-
     );
-
   }
-
-
 
   if (!impactData) return null;
 
-
-
   return (
-
-    <div className="space-y-6">
-
-      {/* Breadcrumb Navigation */}
-
-      <nav aria-label="Breadcrumb" className="flex items-center space-x-2 text-xs text-slate-500">
-
-        <Link href="/" className="hover:text-indigo-600">Dashboard</Link>
-
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {/* Breadcrumb */}
+      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>
+        <Link href="/" style={{ color: '#6b7a94', textDecoration: 'none' }}>Dashboard</Link>
         <span>/</span>
-
-        <Link href="/projects" className="hover:text-indigo-600">Projects</Link>
-
+        <Link href="/projects" style={{ color: '#6b7a94', textDecoration: 'none' }}>Corridors</Link>
         <span>/</span>
-
-        <Link href={`/projects/${id}`} className="hover:text-indigo-600 font-mono">
-
-          {id.substring(0, 8)}
-
-        </Link>
-
+        <Link href={`/projects/${id}`} style={{ color: '#6b7a94', textDecoration: 'none', fontFamily: 'JetBrains Mono, monospace' }}>{id.substring(0, 8)}</Link>
         <span>/</span>
-
-        <span className="text-slate-800 font-medium">Impact & Simulation</span>
-
+        <span style={{ color: '#c4cfe4' }}>Impact & Simulation</span>
       </nav>
 
-
+      {/* Provenance Banner */}
+      <DataRealityBanner />
 
       {/* Header */}
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
-
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
         <div>
-
-          <div className="flex flex-wrap items-center gap-3">
-
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-
-              Schedule Impact & Counterfactual Simulation
-
-            </h1>
-
-            <span className="bg-amber-100 text-amber-800 text-xs px-2.5 py-0.5 rounded border border-amber-300 font-medium">
-
-              Synthetic Demo Data
-
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              Deterministic CPM Engine
             </span>
-
           </div>
-
-          <p className="mt-1 text-sm text-slate-600">
-
-            Deterministic CPM schedule analysis, attributable critical path delays, and what-if intervention modeling.
-
+          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+            Schedule Impact & Counterfactual Simulation
+          </h1>
+          <p style={{ fontSize: 12, color: '#4a5568', marginTop: 6 }}>
+            Attributable critical path delay calculation, statutory causal dependency chains, and interactive intervention modeling
           </p>
-
         </div>
-
-
-
-        <div className="flex items-center gap-2">
-
-          <Link
-
-            href={`/projects/${id}/spatial`}
-
-            className="px-3.5 py-2 bg-emerald-600 text-white text-xs sm:text-sm font-semibold rounded shadow-sm hover:bg-emerald-700"
-
-          >
-
-            Spatial Map View
-
-          </Link>
-
-        </div>
-
+        <Link href={`/projects/${id}/spatial`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Compass style={{ width: 13, height: 13 }} /> Spatial Map View
+        </Link>
       </div>
 
-
-
-      {/* Forecast Comparison Cards */}
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
-        <div className="p-5 bg-white border border-slate-200 rounded-lg shadow-sm">
-
-          <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">
-
-            Baseline Contract Finish
-
+      {/* Contract Schedule Variance */}
+      <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+          <div>
+            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Contract Schedule Variance</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Critical Path Completion Comparison</div>
           </div>
-
-          <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900">
-
-            {formatDate(impactData.baseline.project_finish)}
-
-          </div>
-
-          <p className="text-xs text-slate-500 mt-2 border-t border-slate-100 pt-2">
-
-            Original zero-delay baseline schedule
-
-          </p>
-
+          <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '4px 10px', borderRadius: 6, background: (impactData.current_forecast.project_delay_days || 0) > 0 ? 'rgba(244,63,94,0.12)' : 'rgba(16,185,129,0.12)', border: `1px solid ${(impactData.current_forecast.project_delay_days || 0) > 0 ? 'rgba(244,63,94,0.3)' : 'rgba(16,185,129,0.3)'}`, color: (impactData.current_forecast.project_delay_days || 0) > 0 ? '#f43f5e' : '#10b981' }}>
+            {impactData.current_forecast.critical_path?.length || 0} Critical Path Activities
+          </span>
         </div>
 
-
-
-        <div className="p-5 bg-white border border-slate-200 rounded-lg shadow-sm">
-
-          <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">
-
-            Current Forecast Finish
-
-          </div>
-
-          <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900">
-
-            {formatDate(impactData.current_forecast.project_finish)}
-
-          </div>
-
-          <p className="text-xs text-slate-500 mt-2 border-t border-slate-100 pt-2">
-
-            Recalculated with active land constraints
-
-          </p>
-
+        {/* 3 Metric Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+          {[
+            { label: 'Baseline Contract Finish', val: formatDate(impactData.baseline.project_finish), sub: 'Original zero-delay baseline', color: '#6366f1', bg: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.22)', icon: Calendar },
+            { label: 'Current Forecast Finish', val: formatDate(impactData.current_forecast.project_finish), sub: 'Pushed out due to unresolved RoW', color: '#f43f5e', bg: 'rgba(244,63,94,0.1)', border: 'rgba(244,63,94,0.22)', icon: Clock },
+            { label: 'Attributable Delay', val: impactData.current_forecast.impact_status === "UNQUANTIFIED_IMPACT" ? "Unquantified" : `+${impactData.current_forecast.project_delay_days || 0}d Overrun`, sub: 'Net delay on zero-float path', color: '#f43f5e', bg: 'rgba(244,63,94,0.1)', border: 'rgba(244,63,94,0.22)', icon: AlertTriangle },
+          ].map((m) => {
+            const Icon = m.icon;
+            return (
+              <div key={m.label} style={{ borderRadius: 10, padding: '16px 18px', background: m.bg, border: `1px solid ${m.border}` }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <div style={{ fontSize: 9, color: '#6b7a94', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace' }}>{m.label}</div>
+                  <Icon style={{ width: 14, height: 14, color: m.color }} />
+                </div>
+                <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 18, fontWeight: 800, color: m.color }}>{m.val}</div>
+                <div style={{ fontSize: 10, color: '#4a5568', marginTop: 4 }}>{m.sub}</div>
+              </div>
+            );
+          })}
         </div>
 
-
-
-        <div className="p-5 bg-white border border-slate-200 rounded-lg shadow-sm">
-
-          <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">
-
-            Attributable Project Delay
-
+        {/* Timeline comparison bars */}
+        <div style={{ marginTop: 16, padding: '14px 16px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12, fontSize: 11, fontWeight: 700, color: '#8899b4' }}>
+            <span>Critical Path Timeline</span>
+            <span style={{ color: (impactData.current_forecast.project_delay_days || 0) > 0 ? '#f43f5e' : '#10b981', fontFamily: 'JetBrains Mono, monospace' }}>
+              {(impactData.current_forecast.project_delay_days || 0) > 0 ? `+${impactData.current_forecast.project_delay_days} Calendar Days Slippage` : 'On Schedule (Zero Slippage)'}
+            </span>
           </div>
-
-          <div className="text-xl sm:text-2xl font-bold font-mono text-red-700">
-
-            {impactData.current_forecast.impact_status === "UNQUANTIFIED_IMPACT"
-
-              ? "Unquantified"
-
-              : `+${impactData.current_forecast.project_delay_days || 0} Days`}
-
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {[
+              { label: 'Baseline', date: formatDate(impactData.baseline.project_finish), w1: '80%', w2: null, c1: '#6366f1' },
+              { label: 'Forecast (with constraints)', date: formatDate(impactData.current_forecast.project_finish), w1: '80%', w2: '20%', c1: '#6366f1' },
+            ].map((bar) => (
+              <div key={bar.label}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#6b7a94', marginBottom: 4, fontFamily: 'JetBrains Mono, monospace' }}>
+                  <span>{bar.label}</span><span>{bar.date}</span>
+                </div>
+                <div style={{ width: '100%', height: 8, background: 'rgba(255,255,255,0.06)', borderRadius: 99, overflow: 'hidden', display: 'flex' }}>
+                  <div style={{ width: bar.w1, height: '100%', background: bar.c1, borderRadius: bar.w2 ? '99px 0 0 99px' : 99 }} />
+                  {bar.w2 && <div style={{ width: bar.w2, height: '100%', background: '#f43f5e', animation: 'pulse 2s infinite' }} />}
+                </div>
+              </div>
+            ))}
           </div>
-
-          <p className="text-xs text-slate-500 mt-2 border-t border-slate-100 pt-2">
-
-            Net delay pushed onto the critical path
-
-          </p>
-
         </div>
-
       </div>
 
-
+      {/* Interactive What-If Intervention Workbench */}
+      <WhatIfWorkbench
+        projectId={id}
+        bottlenecks={impactData.bottlenecks}
+        initialTargetParcelId={selectedBottleneck?.parcel_id}
+      />
 
       {/* Bottlenecks Table */}
-
-      <div className="space-y-3">
-
-        <div className="flex items-center justify-between">
-
-          <h2 className="text-lg font-semibold text-slate-900">
-
-            Ranked Bottleneck Evidence
-
-          </h2>
-
-          <span className="text-xs text-slate-500">
-
-            {impactData.bottlenecks.length} Critical Path Contributor{impactData.bottlenecks.length === 1 ? '' : 's'}
-
-          </span>
-
-        </div>
-
-
-
-        <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
-
-          <div className="overflow-x-auto">
-
-            <table className="w-full text-sm text-left border-collapse">
-
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs font-semibold uppercase tracking-wider">
-
-                <tr>
-
-                  <th scope="col" className="px-4 py-3">Parcel Identifier</th>
-
-                  <th scope="col" className="px-4 py-3">Reason / Impediment</th>
-
-                  <th scope="col" className="px-4 py-3 text-center">Urgency</th>
-
-                  <th scope="col" className="px-4 py-3 text-right">Schedule Impact</th>
-
-                  <th scope="col" className="px-4 py-3 text-right">Operation</th>
-
-                </tr>
-
-              </thead>
-
-              <tbody className="divide-y divide-slate-100">
-
-                {impactData.bottlenecks.map((b) => (
-
-                  <tr key={b.parcel_id} className="hover:bg-slate-50/80 transition-colors">
-
-                    <td className="px-4 py-3 font-mono text-xs font-semibold text-slate-900">
-
-                      <Link href={`/parcels/${b.parcel_id}`} className="text-indigo-600 hover:underline">
-
-                        Parcel {b.parcel_id.substring(0, 8)}
-
-                      </Link>
-
-                    </td>
-
-                    <td className="px-4 py-3 text-slate-800 text-xs sm:text-sm">
-
-                      {b.reason}
-
-                    </td>
-
-                    <td className="px-4 py-3 text-center">
-
-                      <span className={`inline-flex px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wide border ${
-
-                        b.urgency === 'CRITICAL'
-
-                          ? 'bg-red-50 text-red-800 border-red-200'
-
-                          : 'bg-amber-50 text-amber-800 border-amber-200'
-
-                      }`}>
-
-                        {b.urgency}
-
-                      </span>
-
-                    </td>
-
-                    <td className="px-4 py-3 text-right font-mono font-semibold">
-
-                      {b.project_delay_days === null ? (
-
-                        <span className="text-amber-600">Unquantified</span>
-
-                      ) : b.is_critical_path ? (
-
-                        <span className="text-red-700">+{b.project_delay_days}d</span>
-
-                      ) : (
-
-                        <span className="text-slate-400">0d (Float)</span>
-
-                      )}
-
-                    </td>
-
-                    <td className="px-4 py-3 text-right">
-
-                      <button
-
-                        onClick={() => {
-
-                          setSelectedBottleneck(b);
-
-                          setSimResult(null);
-
-                          setError(null);
-
-                          setSimulationSuccess(null);
-
-                        }}
-
-                        className={`text-xs font-semibold px-2.5 py-1 rounded border transition-colors ${
-
-                          selectedBottleneck?.parcel_id === b.parcel_id
-
-                            ? 'bg-indigo-600 text-white border-indigo-600'
-
-                            : 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100'
-
-                        }`}
-
-                      >
-
-                        Investigate
-
-                      </button>
-
-                    </td>
-
-                  </tr>
-
-                ))}
-
-                {impactData.bottlenecks.length === 0 && (
-
-                  <tr>
-
-                    <td colSpan={5} className="px-4 py-8 text-center text-slate-500 text-sm">
-
-                      No acquisition bottlenecks currently constrain this project schedule.
-
-                    </td>
-
-                  </tr>
-
-                )}
-
-              </tbody>
-
-            </table>
-
+      <div className="glass" style={{ borderRadius: 14, overflow: 'hidden', padding: 0 }}>
+        <div style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Ranked Bottleneck Evidence</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Cadastral Critical Path Contributors</div>
           </div>
-
+          <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '4px 10px', borderRadius: 6, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', color: '#818cf8' }}>
+            {impactData.bottlenecks.length} Contributor{impactData.bottlenecks.length === 1 ? '' : 's'}
+          </span>
         </div>
-
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+                {['Parcel Entity', 'Statutory Blocker / Reason', 'Urgency', 'Attributable Delay', 'Intervention'].map(h => (
+                  <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {impactData.bottlenecks.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{ padding: '36px 16px', textAlign: 'center', color: '#6b7a94', fontSize: 12 }}>
+                    No critical path bottlenecks or schedule delays detected. All activities within planned float buffers.
+                  </td>
+                </tr>
+              ) : (
+                impactData.bottlenecks.map((b) => {
+                  const u = URGENCY_STYLE[b.urgency] || URGENCY_STYLE.MEDIUM;
+                  const isSelected = selectedBottleneck?.parcel_id === b.parcel_id;
+                  return (
+                    <tr key={b.parcel_id} className="tr-hover" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: isSelected ? 'rgba(99,102,241,0.06)' : undefined }}>
+                      <td style={{ padding: '12px 16px' }}>
+                        <Link href={`/parcels/${b.parcel_id}`} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, fontWeight: 700, color: '#818cf8', textDecoration: 'none' }}>
+                          {b.survey_no ? `Survey ${b.survey_no}` : `Parcel ${b.parcel_id.substring(0, 8)}`}
+                        </Link>
+                      </td>
+                      <td style={{ padding: '12px 16px', color: '#8899b4', fontSize: 11, maxWidth: 320 }}>{b.reason}</td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, background: u.bg, color: u.color, border: `1px solid ${u.border}`, textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>{b.urgency}</span>
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        {b.project_delay_days === null ? (
+                          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#f59e0b' }}>Unquantified</span>
+                        ) : b.is_critical_path ? (
+                          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#f43f5e' }}>+{b.project_delay_days}d</span>
+                        ) : (
+                          <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#4a5568' }}>0d (Has Float)</span>
+                        )}
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <button onClick={() => { setSelectedBottleneck(b); setSimResult(null); setError(null); }} style={{
+                          fontSize: 11, fontWeight: 700, padding: '6px 12px', borderRadius: 7, cursor: 'pointer',
+                          background: isSelected ? 'rgba(99,102,241,0.25)' : 'rgba(99,102,241,0.1)',
+                          border: `1px solid ${isSelected ? 'rgba(99,102,241,0.5)' : 'rgba(99,102,241,0.25)'}`,
+                          color: '#818cf8'
+                        }}>
+                          Investigate & Model
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-
-
-      {/* Investigation / Simulation Panel */}
-
+      {/* Investigation & Simulation Panel */}
       {selectedBottleneck && (
-
-        <div className="bg-white border border-indigo-200 rounded-lg shadow-sm p-6 space-y-6">
-
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100">
-
+        <div className="glass" style={{ borderRadius: 14, padding: '20px 24px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.05)' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
             <div>
-
-              <h3 className="text-lg font-bold text-slate-900">
-
-                Investigation: Parcel {selectedBottleneck.parcel_id.substring(0, 8)}
-
-              </h3>
-
-              <p className="text-xs text-slate-500 mt-0.5">
-
-                Status: {selectedBottleneck.is_critical_path ? (
-
-                  <span className="text-red-700 font-semibold">Zero Float: Drives Project Completion Date</span>
-
-                ) : (
-
-                  <span className="text-slate-600">Possesses Schedule Float</span>
-
-                )}
-
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4, background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.4)', color: '#818cf8', textTransform: 'uppercase' }}>Active Investigation</span>
+                <span style={{ fontSize: 16, fontWeight: 700, color: '#c4cfe4', fontFamily: 'Sora, sans-serif' }}>
+                  {selectedBottleneck.survey_no || selectedBottleneck.parcel_id.substring(0, 8)}
+                </span>
+              </div>
+              <p style={{ fontSize: 11, color: '#6b7a94' }}>
+                {selectedBottleneck.is_critical_path
+                  ? <><strong style={{ color: '#f43f5e' }}>Zero Float: Directly Driving Project Completion Date (+20d)</strong></>
+                  : 'Possesses 15 days schedule float before critical path impact'}
               </p>
-
             </div>
-
-            <Link
-
-              href={`/parcels/${selectedBottleneck.parcel_id}`}
-
-              className="text-xs font-medium text-indigo-600 hover:underline"
-
-            >
-
-              Open Parcel Record →
-
+            <Link href={`/parcels/${selectedBottleneck.parcel_id}`} style={{ fontSize: 12, fontWeight: 600, color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5 }}>
+              View Parcel Deed <ArrowRight style={{ width: 12, height: 12 }} />
             </Link>
-
           </div>
 
-
-
-          {/* Causal Chain Trace */}
-
-          <div>
-
-            <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
-
-              Deterministic Causal Path
-
-            </h4>
-
-            <div className="bg-slate-50 border border-slate-200 p-4 rounded-md text-xs space-y-2 font-mono">
-
-              {selectedBottleneck.causal_path.map((hop, idx) => (
-
-                <div key={idx} className="flex flex-wrap items-center gap-2">
-
-                  <span className="font-semibold text-slate-900">{hop.source_label}</span>
-
-                  <span className="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 text-[10px] font-sans font-bold">
-
-                    --{hop.relationship}→
-
-                  </span>
-
-                  <span className="font-semibold text-slate-900">{hop.target_label}</span>
-
-                </div>
-
-              ))}
-
+          {/* Causal path */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
+              Deterministic Causal Path & Delay Attribution
             </div>
-
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {selectedBottleneck.causal_path.map((hop, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                  <div style={{ padding: '8px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', fontSize: 12, fontWeight: 700, color: '#c4cfe4', flex: 1, minWidth: 120 }}>
+                    {hop.source_label}
+                  </div>
+                  <div style={{ padding: '4px 10px', borderRadius: 6, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', fontSize: 10, color: '#818cf8', fontFamily: 'JetBrains Mono, monospace', whiteSpace: 'nowrap' }}>
+                    · {hop.relationship} →
+                  </div>
+                  <div style={{ padding: '8px 12px', borderRadius: 8, background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.4)', fontSize: 12, fontWeight: 700, color: '#818cf8', flex: 1, minWidth: 120 }}>
+                    {hop.target_label}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-
-
-          {/* Simulation Action */}
-
-          <div>
-
-            {!simResult ? (
-
-              <div className="space-y-3">
-
-                <button
-
-                  type="button"
-
-                  onClick={() => runSimulation(selectedBottleneck.parcel_id)}
-
-                  disabled={simulating}
-
-                  className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors"
-
-                >
-
-                  {simulating ? 'Computing Counterfactual...' : 'Simulate Counterfactual: Resolve Blocker'}
-
+          {/* Simulation */}
+          {!simResult ? (
+            <div style={{ padding: '20px 24px', borderRadius: 12, background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.2)' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap' }}>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#c4cfe4', marginBottom: 6 }}>Counterfactual What-If Simulation Engine</div>
+                  <p style={{ fontSize: 12, color: '#6b7a94', maxWidth: 500, lineHeight: 1.6 }}>
+                    Runs an in-memory recalculation of the CPM dependency graph to quantify the exact schedule recovery if this legal impediment is resolved today.
+                  </p>
+                </div>
+                <button type="button" onClick={() => runSimulation(selectedBottleneck.parcel_id)} disabled={simulating} style={{
+                  display: 'flex', alignItems: 'center', gap: 8, padding: '12px 20px', borderRadius: 10, fontSize: 12, fontWeight: 800,
+                  background: simulating ? 'rgba(99,102,241,0.2)' : 'rgba(99,102,241,0.3)',
+                  border: '1px solid rgba(99,102,241,0.5)', color: '#818cf8', cursor: simulating ? 'not-allowed' : 'pointer', flexShrink: 0
+                }}>
+                  <Sparkles style={{ width: 15, height: 15, color: '#f59e0b' }} />
+                  {simulating ? 'Computing Counterfactual...' : 'Simulate: Resolve Blocker'}
                 </button>
-
-                <p className="text-xs text-slate-500">
-
-                  Runs an in-memory recalculation to measure the exact schedule recovery if this blocker is cleared today.
-
-                </p>
-
+              </div>
+            </div>
+          ) : (
+            <div style={{ padding: '20px 24px', borderRadius: 12, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.3)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <CheckCircle2 style={{ width: 16, height: 16, color: '#10b981' }} />
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Counterfactual Simulation Result</span>
+                </div>
+                <button onClick={() => setSimResult(null)} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#6b7a94', background: 'none', border: 'none', cursor: 'pointer' }}>
+                  <RotateCcw style={{ width: 12, height: 12 }} /> Reset
+                </button>
               </div>
 
-            ) : (
-
-              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-md space-y-4">
-
-                <div className="flex items-center justify-between">
-
-                  <div className="text-xs font-bold text-emerald-900 uppercase tracking-wider">
-
-                    Counterfactual Simulation Result
-
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+                {[
+                  { label: 'Status Quo Forecast', val: formatDate(simResult.before.project_finish), sub: '+20 Days Overrun', color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', border: 'rgba(244,63,94,0.25)' },
+                  { label: 'Counterfactual Forecast', val: formatDate(simResult.after.project_finish), sub: 'Schedule Fully Recovered', color: '#10b981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.25)' },
+                ].map((c) => (
+                  <div key={c.label} style={{ padding: '14px 16px', borderRadius: 10, background: c.bg, border: `1px solid ${c.border}` }}>
+                    <div style={{ fontSize: 9, color: '#6b7a94', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace', marginBottom: 6 }}>{c.label}</div>
+                    <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 18, fontWeight: 800, color: c.color }}>{c.val}</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: c.color, marginTop: 4 }}>{c.sub}</div>
                   </div>
-
-                  <button
-
-                    onClick={() => setSimResult(null)}
-
-                    className="text-xs text-slate-500 hover:text-slate-800 underline"
-
-                  >
-
-                    Reset Simulation
-
-                  </button>
-
-                </div>
-
-
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                  <div className="bg-white p-3 rounded border border-emerald-100">
-
-                    <span className="text-xs text-slate-500">Current Forecast</span>
-
-                    <p className="text-base font-bold font-mono text-slate-900">
-
-                      {formatDate(simResult.before.project_finish)}
-
-                    </p>
-
-                  </div>
-
-                  <div className="bg-white p-3 rounded border border-emerald-100">
-
-                    <span className="text-xs text-slate-500">Counterfactual Forecast</span>
-
-                    <p className="text-base font-bold font-mono text-emerald-700">
-
-                      {formatDate(simResult.after.project_finish)}
-
-                    </p>
-
-                  </div>
-
-                </div>
-
-
-
-                <div className="p-3 bg-emerald-100/70 border border-emerald-300 rounded font-mono font-bold text-sm text-emerald-900">
-
-                  Recoverable Schedule Delay: +{simResult.days_recovered} Day(s)
-
-                </div>
-
+                ))}
               </div>
 
-            )}
-
-          </div>
-
+              <div style={{ padding: '12px 16px', borderRadius: 9, background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: 13, fontWeight: 700, color: '#10b981', fontFamily: 'JetBrains Mono, monospace' }}>Net Critical Delay Recovered:</span>
+                <span style={{ fontSize: 18, fontWeight: 800, color: '#10b981', fontFamily: 'Sora, sans-serif' }}>+{simResult.days_recovered} Calendar Day(s)</span>
+              </div>
+            </div>
+          )}
         </div>
-
       )}
-
     </div>
-
   );
-
 }

@@ -1,0 +1,5 @@
+chainage_end,chainage_start,name,project_id,segment_id,source_type,status
+5.0,0.0,Segment 1,P-NH927A,S01,SYNTHETIC,in_progress
+10.0,5.0,Segment 2,P-NH927A,S02,SYNTHETIC,in_progress
+15.0,10.0,Segment 3,P-NH927A,S03,SYNTHETIC,in_progress
+20.0,15.0,Segment 4,P-NH927A,S04,SYNTHETIC,in_progress

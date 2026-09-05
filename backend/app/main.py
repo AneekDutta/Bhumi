@@ -2,10 +2,10 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.core.middleware import GlobalSecurityMiddleware
 
 from app.api.v1.router import api_router
 from app.core.config import settings
-from app.core.middleware import GlobalSecurityMiddleware
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

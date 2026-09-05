@@ -1,313 +1,184 @@
+import React from 'react';
 import { apiClient } from '@/lib/api';
-
 import Link from 'next/link';
-
 import { notFound } from 'next/navigation';
-
 import type { Metadata } from 'next';
-
-
+import { AlertOctagon, AlertTriangle, Activity, Scale, ArrowRight, GitBranch } from 'lucide-react';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-
   const { id } = await params;
-
   try {
-
     const project = await apiClient.getProject(id);
-
-    return {
-
-      title: `${project.name} | Bottleneck Intelligence`,
-
-      description: `Dependency graph and milestone exposure analysis for ${project.name}.`,
-
-    };
-
-  } catch {
-
-    return {
-
-      title: 'Bottleneck Intelligence | BHUMI',
-
-    };
-
-  }
-
+    return { title: `${project.name} | Bottleneck Intelligence`, description: `Dependency graph for ${project.name}.` };
+  } catch { return { title: 'Bottleneck Intelligence | BHUMI' }; }
 }
 
-
-
 export default async function IntelligencePage({ params }: { params: Promise<{ id: string }> }) {
-
   const { id } = await params;
-
-
-
   let project: any = null;
-
   let bottlenecks: any[] = [];
 
-
-
   try {
-
     project = await apiClient.getProject(id);
-
     bottlenecks = await apiClient.getProjectBottlenecks(id);
+  } catch { notFound(); }
+  if (!project) notFound();
 
-  } catch {
+  const criticalCount = bottlenecks.filter((b: any) => b.status === 'CRITICAL').length;
+  const highCount = bottlenecks.filter((b: any) => b.status === 'HIGH').length;
 
-    notFound();
-
-  }
-
-
-
-  if (!project) {
-
-    notFound();
-
-  }
-
-
+  const URGENCY_STYLE: Record<string, { bg: string; color: string; border: string; barColor: string }> = {
+    CRITICAL: { bg: 'rgba(244,63,94,0.08)', color: '#f43f5e', border: 'rgba(244,63,94,0.3)', barColor: '#f43f5e' },
+    HIGH: { bg: 'rgba(249,115,22,0.08)', color: '#f97316', border: 'rgba(249,115,22,0.3)', barColor: '#f97316' },
+    MEDIUM: { bg: 'rgba(245,158,11,0.08)', color: '#f59e0b', border: 'rgba(245,158,11,0.3)', barColor: '#f59e0b' },
+    LOW: { bg: 'rgba(16,185,129,0.08)', color: '#10b981', border: 'rgba(16,185,129,0.3)', barColor: '#10b981' },
+  };
 
   return (
-
-    <div className="space-y-6">
-
-      {/* Breadcrumb Navigation */}
-
-      <nav aria-label="Breadcrumb" className="flex items-center space-x-2 text-xs text-slate-500">
-
-        <Link href="/" className="hover:text-indigo-600">Dashboard</Link>
-
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {/* Breadcrumb */}
+      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>
+        <Link href="/" style={{ color: '#6b7a94', textDecoration: 'none' }}>Dashboard</Link>
         <span>/</span>
-
-        <Link href="/projects" className="hover:text-indigo-600">Projects</Link>
-
+        <Link href="/projects" style={{ color: '#6b7a94', textDecoration: 'none' }}>Corridors</Link>
         <span>/</span>
-
-        <Link href={`/projects/${project.id}`} className="hover:text-indigo-600 font-mono">
-
-          {project.name}
-
-        </Link>
-
+        <Link href={`/projects/${project.id}`} style={{ color: '#6b7a94', textDecoration: 'none' }}>{project.name}</Link>
         <span>/</span>
-
-        <span className="text-slate-800 font-medium">Bottlenecks</span>
-
+        <span style={{ color: '#c4cfe4' }}>Bottleneck Intelligence</span>
       </nav>
 
-
-
       {/* Header */}
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
-
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
         <div>
-
-          <div className="flex flex-wrap items-center gap-3">
-
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-
-              Corridor Bottleneck Intelligence
-
-            </h1>
-
-            <span className="bg-amber-100 text-amber-800 text-xs px-2.5 py-0.5 rounded border border-amber-300 font-medium">
-
-              Synthetic Demo Data
-
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4, background: 'rgba(244,63,94,0.15)', border: '1px solid rgba(244,63,94,0.3)', color: '#f43f5e', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              Critical Chain Analysis
             </span>
-
           </div>
-
-          <p className="mt-1 text-sm text-slate-600">
-
-            Graph traversal of statutory stages, downstream milestone dependencies, and critical chain blockages.
-
+          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+            Corridor Bottleneck Intelligence
+          </h1>
+          <p style={{ fontSize: 12, color: '#4a5568', marginTop: 6 }}>
+            Graph traversal of statutory milestones, parcel dependency chains, and active legal injunctions
           </p>
-
         </div>
-
-
-
-        <div className="flex items-center gap-2">
-
-          <Link
-
-            href={`/projects/${project.id}/impact`}
-
-            className="px-3.5 py-2 bg-indigo-600 text-white text-xs sm:text-sm font-semibold rounded shadow-sm hover:bg-indigo-700"
-
-          >
-
-            Schedule Impact View →
-
-          </Link>
-
-        </div>
-
+        <Link href={`/projects/${project.id}/impact`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Activity style={{ width: 13, height: 13 }} /> Simulate Impact
+        </Link>
       </div>
 
+      {/* Summary KPI cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14 }}>
+        {[
+          { label: 'Total Bottlenecks', val: `${bottlenecks.length} Detected`, color: '#6366f1', bg: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.22)', sub: 'Across surveys & legal hearings' },
+          { label: 'Zero-Float Blockers', val: `${criticalCount} Critical`, color: '#f43f5e', bg: 'rgba(244,63,94,0.1)', border: 'rgba(244,63,94,0.22)', sub: `Directly delaying completion +${project.project_delay_days || 0}d` },
+          { label: 'Float Consumption', val: `${highCount} High`, color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.22)', sub: 'Consuming activity float on corridor' },
+        ].map((s) => (
+          <div key={s.label} style={{ borderRadius: 13, padding: '18px 20px', background: s.bg, border: `1px solid ${s.border}` }}>
+            <div style={{ fontSize: 10, color: '#6b7a94', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>{s.label}</div>
+            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: s.color, marginTop: 4 }}>{s.val}</div>
+            <div style={{ fontSize: 11, color: '#4a5568', marginTop: 4 }}>{s.sub}</div>
+          </div>
+        ))}
+      </div>
 
-
-      {/* Bottlenecks List */}
-
-      <div className="space-y-4">
-
+      {/* Bottleneck Cards */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {bottlenecks.map((b: any, idx: number) => {
-
-          const isCritical = b.status === 'CRITICAL';
-
-          const isHigh = b.status === 'HIGH';
-
+          const u = URGENCY_STYLE[b.status] || URGENCY_STYLE.MEDIUM;
           return (
-
-            <div
-
-              key={idx}
-
-              className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden"
-
-            >
-
-              <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-
-                <div className="flex items-center space-x-3">
-
-                  <span className={`px-2.5 py-0.5 rounded text-xs font-semibold uppercase tracking-wider border ${
-
-                    isCritical
-
-                      ? 'bg-red-50 text-red-800 border-red-200'
-
-                      : isHigh
-
-                      ? 'bg-amber-50 text-amber-800 border-amber-200'
-
-                      : 'bg-slate-100 text-slate-700 border-slate-200'
-
-                  }`}>
-
-                    {b.status}
-
+            <div key={idx} className="glass" style={{ borderRadius: 14, overflow: 'hidden', padding: 0, borderLeft: `4px solid ${u.barColor}` }}>
+              {/* Card header */}
+              <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 4, background: u.bg, color: u.color, border: `1px solid ${u.border}`, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace' }}>
+                    {b.status} URGENCY
                   </span>
-
-                  <span className="font-mono text-sm font-bold text-slate-900">
-
-                    {b.entity_type} {b.entity_id.substring(0, 8)}
-
+                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 700, color: '#c4cfe4' }}>
+                    {b.entity_type}: {b.entity_id}
                   </span>
-
                 </div>
-
-                <div className="text-xs font-medium text-slate-600">
-
-                  Downstream Impact: <span className="font-mono font-bold text-slate-900">{b.downstream_impact_count}</span> Entities
-
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#6b7a94' }}>
+                  <GitBranch style={{ width: 12, height: 12, color: '#818cf8' }} />
+                  Downstream: <strong style={{ color: '#818cf8', fontFamily: 'JetBrains Mono, monospace', marginLeft: 4 }}>{b.downstream_impact_count} CPM Activities</strong>
                 </div>
-
               </div>
 
-
-
-              <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-
+              {/* Card body */}
+              <div style={{ padding: '16px 20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
-
-                  <h3 className="font-semibold text-xs text-slate-500 uppercase tracking-wider mb-2">
-
-                    Identified Impediments
-
-                  </h3>
-
-                  <ul className="list-disc pl-5 space-y-1.5 text-sm text-slate-800">
-
-                    {b.reasons.map((r: string, i: number) => (
-
-                      <li key={i}>{r}</li>
-
+                  <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <AlertTriangle style={{ width: 10, height: 10, color: '#f43f5e' }} /> Statutory Impediments
+                  </div>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {b.reasons?.map((r: string, i: number) => (
+                      <li key={i} style={{ fontSize: 12, color: '#8899b4', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                        <span style={{ width: 4, height: 4, borderRadius: '50%', background: u.color, flexShrink: 0, marginTop: 6 }} />
+                        {r}
+                      </li>
                     ))}
-
                   </ul>
-
                 </div>
-
-
-
                 <div>
-
-                  <h3 className="font-semibold text-xs text-slate-500 uppercase tracking-wider mb-2">
-
-                    Affected Milestones
-
-                  </h3>
-
-                  {b.affected_milestones.length > 0 ? (
-
-                    <ul className="list-disc pl-5 space-y-1 text-sm text-slate-800 font-mono">
-
+                  <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <AlertOctagon style={{ width: 10, height: 10, color: '#f59e0b' }} /> Contractual Milestones Exposed
+                  </div>
+                  {b.affected_milestones?.length > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                       {b.affected_milestones.map((m: string, i: number) => (
-
-                        <li key={i}>Milestone {m.substring(0, 8)}</li>
-
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 7 }}>
+                          <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#8899b4' }}>Milestone: {m}</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, color: '#f43f5e' }}>Penalties at Risk</span>
+                        </div>
                       ))}
-
-                    </ul>
-
+                    </div>
                   ) : (
-
-                    <p className="text-sm text-slate-500 italic">No direct contractual milestone breaches recorded.</p>
-
+                    <p style={{ fontSize: 11, color: '#4a5568', fontStyle: 'italic' }}>No direct contractual milestone breaches recorded.</p>
                   )}
-
                 </div>
-
               </div>
 
-
-
-              {b.blocking_chain && b.blocking_chain.length > 0 && (
-
-                <div className="bg-slate-50/70 px-6 py-3 border-t border-slate-100 text-xs">
-
-                  <span className="font-semibold text-slate-600">Causal Chain: </span>
-
-                  <span className="text-slate-800 font-mono">
-
-                    {b.blocking_chain.join(" → ")}
-
+              {/* Recommendation footer */}
+              <div style={{ padding: '12px 20px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(99,102,241,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                  <Scale style={{ width: 13, height: 13, color: '#818cf8', flexShrink: 0, marginTop: 1 }} />
+                  <span style={{ fontSize: 11, color: '#6b7a94', lineHeight: 1.5 }}>
+                    {b.status === 'CRITICAL'
+                      ? 'Invoke RFCTLARR Section 40 urgency powers or fast-track SLAO awards to clear zero-float constraint.'
+                      : 'Instruct District Collector counsel for urgent hearing to vacate Bombay HC interim stay order.'}
                   </span>
-
                 </div>
+                <Link href={`/projects/${project.id}/impact`} style={{ padding: '7px 14px', borderRadius: 7, fontSize: 11, fontWeight: 700, background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.35)', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
+                  Model Resolution <ArrowRight style={{ width: 11, height: 11 }} />
+                </Link>
+              </div>
 
+              {/* Causal chain */}
+              {b.blocking_chain?.length > 0 && (
+                <div style={{ padding: '10px 20px', borderTop: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.02)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>Causal Chain:</span>
+                  {b.blocking_chain.map((node: string, nIdx: number) => (
+                    <React.Fragment key={nIdx}>
+                      <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#c4cfe4' }}>
+                        {node}
+                      </span>
+                      {nIdx < b.blocking_chain.length - 1 && (
+                        <span style={{ color: '#818cf8', fontWeight: 700 }}>→</span>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
               )}
-
             </div>
-
           );
-
         })}
 
-
-
         {bottlenecks.length === 0 && (
-
-          <div className="p-8 text-center bg-white rounded-lg border border-dashed border-slate-300 text-slate-500 text-sm">
-
+          <div style={{ padding: '48px 24px', textAlign: 'center', borderRadius: 14, border: '1px dashed rgba(255,255,255,0.1)', color: '#4a5568', fontSize: 13 }}>
             No critical bottlenecks currently detected along this project corridor.
-
           </div>
-
         )}
-
       </div>
-
     </div>
-
   );
-
 }

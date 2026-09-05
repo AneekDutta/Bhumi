@@ -1,11 +1,8 @@
+import pytest
+from httpx import AsyncClient, ASGITransport
+from app.main import app
 import os
 from unittest.mock import patch
-
-import pytest
-from httpx import ASGITransport, AsyncClient
-
-from app.main import app
-
 
 @pytest.mark.asyncio
 async def test_prod_auth_fails_closed():

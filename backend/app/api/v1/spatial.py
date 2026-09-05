@@ -1,20 +1,19 @@
-import logging
-from typing import Any
+from typing import Dict, Any, List
 from uuid import UUID
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+import logging
 
 from app.api.deps import TrustedIdentity, get_current_user_context
 from app.core.database import get_db
-from app.services.authorization import AuthorizationService
 from app.services.spatial_engine import SpatialEngine
+from app.services.authorization import AuthorizationService
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.get("/{project_id}/clusters", response_model=list[dict[str, Any]])
+@router.get("/{project_id}/clusters", response_model=List[Dict[str, Any]])
 async def get_spatial_clusters(
     project_id: UUID,
     db: AsyncSession = Depends(get_db),
@@ -34,7 +33,7 @@ async def get_spatial_clusters(
         raise HTTPException(status_code=500, detail="Internal spatial engine error")
 
 
-@router.get("/{project_id}/geojson", response_model=dict[str, Any])
+@router.get("/{project_id}/geojson", response_model=Dict[str, Any])
 async def get_spatial_geojson(
     project_id: UUID,
     db: AsyncSession = Depends(get_db),

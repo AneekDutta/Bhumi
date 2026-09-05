@@ -1,0 +1,15 @@
+case_id,family_type,housing_entitlement,livelihood_option,resettlement_allowance,rr_id,rr_status,source_type,subsistence_allowance,transport_allowance
+AC00006,titleholder,387044.87,employment,145135.69,RR00006,pending,SYNTHETIC,3610.79,50000
+AC00072,titleholder,491177.79,one_time,91172.06,RR00072,pending,SYNTHETIC,4974.69,50000
+AC00077,landless_labourer,369131.35,one_time,137684.01,RR00077,pending,SYNTHETIC,5017.02,50000
+AC00092,titleholder,161892.07,employment,177091.23,RR00092,pending,SYNTHETIC,4446.57,50000
+AC00099,tenant,433341.68,one_time,60811.32,RR00099,completed,SYNTHETIC,5418.6,50000
+AC00102,tenant,303980.82,one_time,102406.29,RR00102,pending,SYNTHETIC,5717.77,50000
+AC00129,tenant,206688.28,employment,113674.95,RR00129,pending,SYNTHETIC,3247.83,50000
+AC00132,tenant,246531.39,one_time,135086.7,RR00132,completed,SYNTHETIC,4148.56,50000
+AC00140,tenant,190188.11,employment,127834.67,RR00140,completed,SYNTHETIC,5842.45,50000
+AC00149,landless_labourer,120463.07,employment,104378.57,RR00149,pending,SYNTHETIC,4685.45,50000
+AC00150,titleholder,257561.49,employment,100862.79,RR00150,completed,SYNTHETIC,5384.69,50000
+AC00152,landless_labourer,426299.53,employment,151070.96,RR00152,pending,SYNTHETIC,4105.07,50000
+AC00160,landless_labourer,482125.49,one_time,188601.44,RR00160,completed,SYNTHETIC,3237.09,50000
+AC00181,titleholder,197893.66,one_time,115844.42,RR00181,pending,SYNTHETIC,3132.71,50000

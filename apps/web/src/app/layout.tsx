@@ -1,8 +1,8 @@
 import './globals.css';
 import { ReactNode } from 'react';
 import type { Metadata, Viewport } from 'next';
-import { Header } from '@/components/navigation/Header';
-import { Footer } from '@/components/navigation/Footer';
+import { AppShell } from '@/components/layout/AppShell';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 export const metadata: Metadata = {
   title: {
@@ -23,14 +23,38 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="h-full">
-      <body className="min-h-full bg-slate-50 text-slate-900 flex flex-col font-sans antialiased overflow-x-hidden">
-        <Header />
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          {children}
-        </main>
-        <Footer />
+    <html lang="en" className="h-full dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('bhumi-theme');
+                  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  var isDark = saved === 'dark' || (saved === 'system' && prefersDark) || (!saved);
+                  var root = document.documentElement;
+                  if (isDark) {
+                    root.classList.add('dark');
+                    root.classList.remove('light');
+                    root.style.colorScheme = 'dark';
+                  } else {
+                    root.classList.add('light');
+                    root.classList.remove('dark');
+                    root.style.colorScheme = 'light';
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="h-full bg-slate-50 dark:bg-[#070a14] text-slate-900 dark:text-[#f0f4ff] font-sans antialiased overflow-hidden transition-colors duration-200">
+        <ThemeProvider>
+          <AppShell>{children}</AppShell>
+        </ThemeProvider>
       </body>
     </html>
   );
 }
+
