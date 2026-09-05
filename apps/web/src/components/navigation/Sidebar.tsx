@@ -15,8 +15,7 @@ import {
   Menu, 
   X,
   AlertOctagon,
-  LogOut,
-  Smartphone
+  LogOut
 } from "lucide-react";
 
 import { NATIONAL_PROJECTS } from "@/lib/api";
@@ -34,7 +33,6 @@ export function Sidebar() {
         { id: "dashboard", href: "/", label: "National Dashboard", icon: LayoutDashboard },
         { id: "projects", href: "/projects", label: "Project Portfolio", icon: Briefcase },
         { id: "parcels", href: "/parcels", label: "Land Parcels", icon: Layers },
-        { id: "field", href: "/field", label: "Field Operations", icon: Smartphone },
       ]
     },
     {

@@ -112,3 +112,44 @@ async def test_field_api_endpoints():
         submit_data = res_submit.json()
         assert submit_data["success"] is True
         assert submit_data["has_issue"] is False
+
+
+@pytest.mark.asyncio
+async def test_field_incident_lifecycle():
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+        # 1. List incidents
+        res = await ac.get("/api/v1/sih26016/field/incidents")
+        assert res.status_code == 200
+        incidents = res.json()
+        assert len(incidents) > 0
+        inc = incidents[0]
+        inc_id = inc["verification_id"]
+
+        # 2. Field Officer confirms incident with GPS & observations
+        confirm_payload = {
+            "officer_name": "Ramesh Patel",
+            "observation_notes": "Ground verification complete. Dispute confirmed between co-owners.",
+            "gps_latitude": 24.6495,
+            "gps_longitude": 75.9288,
+            "confirmed_severity": "CRITICAL_STOPPAGE"
+        }
+        res_confirm = await ac.patch(f"/api/v1/sih26016/field/incidents/{inc_id}/confirm", json=confirm_payload)
+        assert res_confirm.status_code == 200
+        confirm_data = res_confirm.json()
+        assert confirm_data["status"] == "confirmed"
+        assert confirm_data["gps_lat"] == 24.6495
+        assert confirm_data["confirming_officer_name"] == "Ramesh Patel"
+
+        # 3. Admin reviews and resolves incident
+        resolve_payload = {
+            "resolution_action": "RESOLVE",
+            "resolution_comment": "Title dispute resolved via Revenue Lok Adalat award agreement.",
+            "admin_name": "CALA Officer Sharma"
+        }
+        res_resolve = await ac.patch(f"/api/v1/sih26016/admin/incidents/{inc_id}/resolve", json=resolve_payload)
+        assert res_resolve.status_code == 200
+        resolve_data = res_resolve.json()
+        assert resolve_data["resolution_status"] == "resolved"
+        assert resolve_data["incident"]["status"] == "resolved"
+        assert resolve_data["incident"]["admin_resolution"]["action"].lower() == "resolved"
+

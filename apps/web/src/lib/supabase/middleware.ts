@@ -42,12 +42,37 @@ export async function updateSession(request: NextRequest) {
 
   // Check for either Supabase user or verified officer session cookie
   const officerSession = request.cookies.get('bhumi_officer_session')?.value;
+  let parsedRole: string | null = null;
+  if (officerSession) {
+    try {
+      const decoded = decodeURIComponent(officerSession);
+      const parsed = JSON.parse(decoded);
+      parsedRole = parsed?.role || null;
+    } catch {
+      try {
+        const parsed = JSON.parse(officerSession);
+        parsedRole = parsed?.role || null;
+      } catch {}
+    }
+  }
+
   const isAuthenticated = !!user || !!officerSession;
 
+  // 1. If unauthenticated and accessing a protected path:
   if (!isAuthenticated && !isPublicPath) {
     const url = request.nextUrl.clone();
-    url.pathname = '/login';
+    url.pathname = pathname.startsWith('/field') ? '/field/login' : '/login';
     return NextResponse.redirect(url);
+  }
+
+  // 2. Strict Role-Based Access Control (RBAC):
+  // Field Officers are strictly restricted to /field/* routes
+  if (parsedRole === 'FIELD_OFFICER') {
+    if (!pathname.startsWith('/field')) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/field/dashboard';
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;

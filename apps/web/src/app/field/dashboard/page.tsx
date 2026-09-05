@@ -20,26 +20,27 @@ import {
   Database
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
-import { getFieldParcels } from "@/lib/api";
+import { getFieldParcels, getFieldIncidents } from "@/lib/api";
 import { offlineStore } from "@/lib/offlineStore";
 
 export default function FieldDashboardPage() {
   const router = useRouter();
   const [officer, setOfficer] = useState<any>(null);
   const [parcels, setParcels] = useState<any[]>([]);
+  const [incidents, setIncidents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [queueCount, setQueueCount] = useState(0);
 
   useEffect(() => {
     const active = offlineStore.getActiveOfficer();
-    setOfficer(active || { id: "OFF-001", name: "Ramesh Patel", designation: "Patwari / Revenue Lekhpal" });
+    setOfficer(active || { id: "OF001", name: "Ramesh Patel", designation: "Patwari / Revenue Lekhpal" });
 
     const q = offlineStore.getAll().filter((i) => !i.synced);
     setQueueCount(q.length);
 
     async function load() {
       try {
-        const offId: string = (active ? (active.officer_id || active.id) : "OFF-001") || "OFF-001";
+        const offId: string = (active ? (active.officer_id || active.id) : "OF001") || "OF001";
         const data = await getFieldParcels(offId);
         if (data && data.length > 0) {
           setParcels(data);
@@ -49,9 +50,16 @@ export default function FieldDashboardPage() {
           if (cached) setParcels(cached);
         }
       } catch {
-        const offId: string = (active ? (active.officer_id || active.id) : "OFF-001") || "OFF-001";
+        const offId: string = (active ? (active.officer_id || active.id) : "OF001") || "OF001";
         const cached = offlineStore.getCachedParcels(offId);
         if (cached) setParcels(cached);
+      }
+
+      try {
+        const incData = await getFieldIncidents();
+        setIncidents(incData || []);
+      } catch {
+        setIncidents([]);
       } finally {
         setLoading(false);
       }
@@ -79,7 +87,7 @@ export default function FieldDashboardPage() {
                 {officer?.name || "Officer Terminal"}
               </h1>
               <p className="text-xs text-slate-300">
-                {officer?.designation || "Field Surveyor"} · {officer?.assigned_villages?.join(", ") || "Rampur / Wagholi"}
+                {officer?.designation || "Field Surveyor"} · {officer?.assigned_villages?.join(", ") || "Ramganj Mandi / Kanhera"}
               </p>
             </div>
 
@@ -123,7 +131,7 @@ export default function FieldDashboardPage() {
 
           <div className="bg-slate-800/90 border border-red-500/30 p-3.5 rounded-2xl shadow-sm space-y-1">
             <span className="text-red-400 block text-[11px]">Flagged Disputes</span>
-            <span className="text-2xl font-bold font-mono text-red-400">{disputedCount}</span>
+            <span className="text-2xl font-bold font-mono text-red-400">{disputedCount || incidents.length}</span>
             <span className="text-[10px] text-slate-400 block">Blocking CPM Path</span>
           </div>
 
@@ -171,6 +179,48 @@ export default function FieldDashboardPage() {
           </div>
         </div>
 
+        {/* Urgent Field Incidents / Bottlenecks */}
+        {incidents.length > 0 && (
+          <div className="space-y-2.5 pt-1">
+            <div className="flex items-center justify-between text-xs font-semibold text-red-400 px-1">
+              <span className="flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4" /> Active Ground Incidents ({incidents.length})
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              {incidents.map((inc) => (
+                <Link
+                  key={inc.verification_id}
+                  href={`/field/parcels/${inc.parcel_id}`}
+                  className="block p-3.5 rounded-xl bg-red-950/20 border border-red-500/30 hover:border-red-500/60 transition-all space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-white text-xs font-display flex items-center gap-1.5">
+                      <span className="font-mono text-red-400">{inc.verification_id}:</span>
+                      <span>{(inc.issue_type || "Incident").replace(/_/g, " ")}</span>
+                    </span>
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 uppercase font-bold">
+                      {inc.status}
+                    </span>
+                  </div>
+
+                  <p className="text-[11px] text-slate-300 line-clamp-2">
+                    {inc.observations || inc.remarks}
+                  </p>
+
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
+                    <span>Survey {inc.survey_number || inc.parcel_id} · {inc.village_name}</span>
+                    <span className="text-emerald-400 flex items-center gap-1 font-semibold">
+                      Inspect & Confirm <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Priority Parcels Nearby */}
         <div className="space-y-2.5 pt-1">
           <div className="flex items-center justify-between text-xs font-semibold text-slate-400 px-1">
@@ -203,7 +253,7 @@ export default function FieldDashboardPage() {
                 </div>
 
                 <div className="flex items-center justify-between text-[11px] text-slate-400">
-                  <span>{p.village_name || "Rampur"} · {p.owner_name || "Landholder"}</span>
+                  <span>{p.village_name || "Ramganj Mandi"} · {p.owner_name || "Landholder"}</span>
                   <span className="text-indigo-400 font-mono">{p.area_acres || 1.2} Acres</span>
                 </div>
               </Link>

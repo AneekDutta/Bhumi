@@ -9,7 +9,9 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 
 from app.schemas.sih26016 import (
+    AdminIncidentResolveRequest,
     CriticalPathResponse,
+    FieldIncidentConfirmRequest,
     FieldOfficerRead,
     FieldSyncBatchRequest,
     FieldSyncBatchResponse,
@@ -173,3 +175,59 @@ def batch_sync_field_verifications(payload: FieldSyncBatchRequest):
     res = sih_service.batch_sync_verifications(payload.officer_id, submissions)
     return res
 
+
+@router.get("/field/incidents", response_model=list[dict[str, Any]])
+def list_field_incidents(
+    officer_id: str | None = Query(None, description="Filter by officer_id"),
+    parcel_id: str | None = Query(None, description="Filter by parcel_id"),
+    status: str | None = Query(None, description="Filter by status: pending, confirmed, resolved, rejected, disputed")
+):
+    """Lists field incidents/verifications for field confirmation or admin review."""
+    return sih_service.list_field_incidents(officer_id=officer_id, parcel_id=parcel_id, status=status)
+
+
+@router.patch("/field/incidents/{incident_id}/confirm", response_model=dict[str, Any])
+def confirm_field_incident(
+    incident_id: str,
+    payload: FieldIncidentConfirmRequest
+):
+    """Field officer confirms/rejects or updates an assigned on-site incident with live GPS and evidence."""
+    try:
+        res = sih_service.confirm_field_incident(incident_id, payload.model_dump())
+        return res
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to confirm incident: {e}")
+
+
+@router.patch("/admin/incidents/{incident_id}/resolve", response_model=dict[str, Any])
+def resolve_field_incident(
+    incident_id: str,
+    payload: AdminIncidentResolveRequest
+):
+    """
+    Administrator reviews and resolves, escalates, or rejects a field-reported incident.
+    If resolved, clears the blocking dependency edge and recalculates CPM schedule float.
+    """
+    try:
+        action_str = (payload.resolution_action or payload.resolution_status).lower()
+        if action_str in ["resolve", "resolved"]:
+            final_action = "resolved"
+        elif action_str in ["escalate", "escalated"]:
+            final_action = "escalated"
+        else:
+            final_action = "rejected"
+
+        res = sih_service.resolve_field_incident(
+            incident_id=incident_id,
+            admin_id=payload.admin_name or payload.admin_id,
+            resolution_status=final_action,
+            comments=payload.admin_comments or payload.resolution_comment or "",
+            clear_cpm_blocker=payload.clear_cpm_blocker
+        )
+        return res
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to resolve incident: {e}")

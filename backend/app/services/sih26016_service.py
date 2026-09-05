@@ -678,5 +678,204 @@ class SIH26016Service:
         }
 
 
+
+    def list_field_incidents(
+        self,
+        officer_id: str | None = None,
+        parcel_id: str | None = None,
+        status: str | None = None
+    ) -> list[dict[str, Any]]:
+        if not self._data_cache:
+            self._load_data()
+
+        verifs = self._data_cache.get("verifications", [])
+        # If cache has no verifications yet, seed a few realistic real-data incidents
+        if not verifs:
+            parcels = self._data_cache.get("parcels", [])
+            p1 = parcels[0]["parcel_id"] if parcels else "P00001"
+            p2 = parcels[1]["parcel_id"] if len(parcels) > 1 else "P00002"
+            verifs = [
+                {
+                    "verification_id": "INC-2026-001",
+                    "parcel_id": p1,
+                    "survey_number": parcels[0].get("survey_number", "101") if parcels else "101",
+                    "village_name": "Kanhera Kalan",
+                    "project_id": "P-NH927A",
+                    "officer_id": "OF001",
+                    "officer_name": "Ramesh Meena",
+                    "verification_type": "field",
+                    "status": "pending",
+                    "has_issue": True,
+                    "issue_type": "ownership_mismatch",
+                    "issue_severity": "HIGH",
+                    "observations": "Title record discrepancy found during cadastral inspection. Legal heirs contest mutation.",
+                    "remarks": "Assigned to Patwari for on-site physical possession confirmation.",
+                    "verified_at": "2026-09-04T10:30:00Z",
+                    "gps_lat": 24.6512,
+                    "gps_lng": 75.9315,
+                    "gps_accuracy": 6.5,
+                    "photos": [],
+                    "documents": [],
+                    "admin_resolution": None,
+                    "source_type": "SYNTHETIC / DEVELOPMENT DATA"
+                },
+                {
+                    "verification_id": "INC-2026-002",
+                    "parcel_id": p2,
+                    "survey_number": parcels[1].get("survey_number", "102") if len(parcels) > 1 else "102",
+                    "village_name": "Kanhera Kalan",
+                    "project_id": "P-NH927A",
+                    "officer_id": "OF002",
+                    "officer_name": "Kamla Jat",
+                    "verification_type": "field",
+                    "status": "confirmed",
+                    "has_issue": True,
+                    "issue_type": "boundary_discrepancy",
+                    "issue_severity": "CRITICAL_STOPPAGE",
+                    "observations": "Boundary pillar P-14 shifted by 12 meters into road ROW alignment.",
+                    "remarks": "Field surveyor confirmed shift. Demarcation team needed.",
+                    "verified_at": "2026-09-05T08:15:00Z",
+                    "gps_lat": 24.6525,
+                    "gps_lng": 75.9328,
+                    "gps_accuracy": 4.2,
+                    "photos": [],
+                    "documents": [],
+                    "admin_resolution": None,
+                    "source_type": "SYNTHETIC / DEVELOPMENT DATA"
+                }
+            ]
+            self._data_cache["verifications"] = verifs
+
+        results = verifs
+        if officer_id:
+            results = [v for v in results if v.get("officer_id") == officer_id]
+        if parcel_id:
+            results = [v for v in results if v.get("parcel_id") == parcel_id]
+        if status:
+            results = [v for v in results if v.get("status") == status]
+        return results
+
+    def confirm_field_incident(self, incident_id: str, confirmation: dict[str, Any]) -> dict[str, Any]:
+        if not self._data_cache:
+            self._load_data()
+
+        verifs = self.list_field_incidents()
+        inc = next((v for v in verifs if v.get("verification_id") == incident_id), None)
+        if not inc:
+            raise ValueError(f"Incident {incident_id} not found")
+
+        old_status = inc.get("status")
+        new_status = confirmation.get("confirmation_status", "confirmed")
+        
+        inc["status"] = new_status
+        inc["confirmed_at"] = datetime.now(timezone.utc).isoformat()
+        inc["confirming_officer_id"] = confirmation.get("officer_id")
+        inc["confirming_officer_name"] = confirmation.get("officer_name") or "Field Officer"
+        lat = confirmation.get("gps_lat") if confirmation.get("gps_lat") is not None else confirmation.get("gps_latitude")
+        lng = confirmation.get("gps_lng") if confirmation.get("gps_lng") is not None else confirmation.get("gps_longitude")
+        if lat is not None:
+            inc["gps_lat"] = lat
+            inc["gps_lng"] = lng
+            inc["gps_accuracy"] = confirmation.get("gps_accuracy") or 4.0
+        obs = confirmation.get("observations") or confirmation.get("observation_notes")
+        if obs:
+            inc["observations"] = obs
+        if confirmation.get("remarks"):
+            inc["remarks"] = confirmation.get("remarks")
+        if confirmation.get("photos"):
+            inc.setdefault("photos", []).extend(confirmation.get("photos"))
+        if confirmation.get("documents"):
+            inc.setdefault("documents", []).extend(confirmation.get("documents"))
+        inc["source_type"] = "USER_ENTERED"
+
+        # Audit log entry
+        log_id = len(self._data_cache.get("audit_logs", [])) + 1
+        self._data_cache.setdefault("audit_logs", []).append({
+            "log_id": log_id,
+            "entity_type": "INCIDENT",
+            "entity_id": incident_id,
+            "action": "FIELD_INCIDENT_CONFIRMED",
+            "actor_id": confirmation.get("officer_id", "FIELD_OFFICER"),
+            "before_value": {"status": old_status},
+            "after_value": {"status": new_status, "observations": inc.get("observations")},
+            "timestamp": inc["confirmed_at"],
+            "source_type": "USER_ENTERED"
+        })
+
+        return inc
+
+    def resolve_field_incident(
+        self,
+        incident_id: str,
+        admin_id: str,
+        resolution_status: str,
+        comments: str,
+        clear_cpm_blocker: bool = True
+    ) -> dict[str, Any]:
+        if not self._data_cache:
+            self._load_data()
+
+        verifs = self.list_field_incidents()
+        inc = next((v for v in verifs if v.get("verification_id") == incident_id), None)
+        if not inc:
+            raise ValueError(f"Incident {incident_id} not found")
+
+        old_status = inc.get("status")
+        now_ts = datetime.now(timezone.utc).isoformat()
+
+        inc["status"] = resolution_status  # resolved | escalated | rejected
+        inc["admin_resolution"] = {
+            "resolved_by": admin_id,
+            "resolved_at": now_ts,
+            "action": resolution_status,
+            "comments": comments
+        }
+        inc["source_type"] = "USER_ENTERED"
+
+        pid = inc.get("parcel_id")
+        parcel = next((p for p in self._data_cache.get("parcels", []) if p["parcel_id"] == pid), None)
+
+        if resolution_status == "resolved" and clear_cpm_blocker:
+            # Clear or unblock dependency edges linked to this verification
+            edges = self._data_cache.get("dependency_edges", [])
+            for e in edges:
+                if e.get("from_node_id") == incident_id:
+                    e["is_blocking"] = False
+                    e["weight_days"] = 0.0
+
+            if parcel:
+                parcel["ownership_conflict"] = False
+                parcel["conflict_type"] = "none"
+
+            # Re-run CPM forward/backward passes
+            self._enrich_and_compute()
+
+        log_id = len(self._data_cache.get("audit_logs", [])) + 1
+        self._data_cache.setdefault("audit_logs", []).append({
+            "log_id": log_id,
+            "entity_type": "INCIDENT",
+            "entity_id": incident_id,
+            "action": f"ADMIN_INCIDENT_{resolution_status.upper()}",
+            "actor_id": admin_id,
+            "before_value": {"status": old_status},
+            "after_value": {
+                "status": resolution_status,
+                "admin_resolution": inc["admin_resolution"]
+            },
+            "timestamp": now_ts,
+            "source_type": "USER_ENTERED"
+        })
+
+        after_cpm = self._cpm_cache or {}
+        return {
+            "incident": inc,
+            "parcel_id": pid,
+            "resolution_status": resolution_status,
+            "cpm_delay_days": int(after_cpm.get("project_delay_days", 0)),
+            "projected_finish_date": after_cpm.get("projected_finish", "2028-11-15"),
+            "audit_log_id": log_id
+        }
+
+
 sih_service = SIH26016Service()
 

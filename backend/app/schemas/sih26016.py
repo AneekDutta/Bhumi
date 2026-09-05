@@ -289,3 +289,29 @@ class FieldSyncBatchResponse(BaseModel):
     failed_count: int = 0
     results: list[FieldVerificationSubmitResponse]
 
+
+class FieldIncidentConfirmRequest(BaseModel):
+    officer_id: str = "OF001"
+    officer_name: str | None = "Field Officer"
+    confirmation_status: Literal["confirmed", "rejected", "updated"] = "confirmed"
+    gps_lat: float | None = None
+    gps_lng: float | None = None
+    gps_latitude: float | None = None
+    gps_longitude: float | None = None
+    gps_accuracy: float | None = None
+    observations: str | None = None
+    observation_notes: str | None = None
+    remarks: str | None = None
+    photos: list[FieldPhotoAttachment] = []
+    documents: list[dict[str, Any]] = []
+    confirmed_severity: str | None = None
+
+
+class AdminIncidentResolveRequest(BaseModel):
+    admin_id: str = "CALA-ADMIN"
+    admin_name: str | None = None
+    resolution_status: str = "resolved"
+    resolution_action: str | None = None
+    admin_comments: str | None = None
+    resolution_comment: str | None = None
+    clear_cpm_blocker: bool = True

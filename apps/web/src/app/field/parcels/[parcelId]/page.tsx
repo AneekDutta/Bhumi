@@ -13,15 +13,14 @@ import {
   ShieldCheck,
   Coins,
   Scale,
-  ExternalLink,
-  Flame,
-  ChevronRight,
-  Layers,
-  Sparkles
+  Sparkles,
+  Send,
+  Camera
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
-import { getFieldParcels } from "@/lib/api";
+import { getFieldParcels, getFieldIncidents, confirmFieldIncident } from "@/lib/api";
 import { CaptureLocation } from "@/components/field/CaptureLocation";
+import { offlineStore } from "@/lib/offlineStore";
 
 export default function ParcelDetailsPage() {
   const params = useParams();
@@ -29,7 +28,12 @@ export default function ParcelDetailsPage() {
   const parcelId = (params?.parcelId as string) || "";
 
   const [parcel, setParcel] = useState<any>(null);
+  const [incidents, setIncidents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
+  const [confirmNotes, setConfirmNotes] = useState<string>("");
+  const [confirmingSubmitting, setConfirmingSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -39,7 +43,6 @@ export default function ParcelDetailsPage() {
         if (match) {
           setParcel(match);
         } else {
-          // Robust fallback matching golden demo data model
           setParcel({
             parcel_id: parcelId,
             project_id: "P-NH927A",
@@ -60,8 +63,8 @@ export default function ParcelDetailsPage() {
             risk_score: 42.0,
             criticality_score: 55.0,
             is_critical_path: false,
-            centroid_lat: 25.321,
-            centroid_lng: 82.987,
+            centroid_lat: 24.6492,
+            centroid_lng: 75.9284,
             verification_status: "pending"
           });
         }
@@ -86,17 +89,51 @@ export default function ParcelDetailsPage() {
           risk_score: 42.0,
           criticality_score: 55.0,
           is_critical_path: false,
-          centroid_lat: 25.321,
-          centroid_lng: 82.987,
+          centroid_lat: 24.6492,
+          centroid_lng: 75.9284,
           verification_status: "pending"
         });
       } finally {
         setLoading(false);
       }
+
+      try {
+        const incs = await getFieldIncidents({ parcel_id: parcelId });
+        setIncidents(incs || []);
+      } catch {
+        setIncidents([]);
+      }
     }
 
     load();
   }, [parcelId]);
+
+  const handleConfirmIncident = async (incidentId: string) => {
+    setConfirmingSubmitting(true);
+    setFeedback(null);
+    try {
+      const officer = offlineStore.getActiveOfficer();
+      await confirmFieldIncident(incidentId, {
+        officer_name: officer?.name || "Field Officer",
+        officer_id: officer?.id || officer?.officer_id || "OF001",
+        confirmation_status: "confirmed",
+        observation_notes: confirmNotes || "Confirmed by officer on-site inspection.",
+        gps_latitude: parcel?.centroid_lat || 24.6492,
+        gps_longitude: parcel?.centroid_lng || 75.9284,
+        gps_accuracy: 4.0
+      });
+
+      setFeedback("Ground incident confirmed with GPS tag and forwarded to CALA dashboard.");
+      setConfirmingId(null);
+      setConfirmNotes("");
+      const incs = await getFieldIncidents({ parcel_id: parcelId });
+      setIncidents(incs || []);
+    } catch {
+      setFeedback("Failed to confirm incident. Please check connection.");
+    } finally {
+      setConfirmingSubmitting(false);
+    }
+  };
 
   if (loading || !parcel) {
     return (
@@ -139,7 +176,7 @@ export default function ParcelDetailsPage() {
                 Survey No. {sNo}
               </h1>
               <p className="text-xs text-slate-400">
-                {parcel.village_name || "Rampur"}, Tehsil {parcel.tehsil || "Sadar"}, {parcel.district || "Varanasi"}
+                {parcel.village_name || "Ramganj Mandi"}, Tehsil {parcel.tehsil || "Sadar"}, {parcel.district || "Kota"}
               </p>
             </div>
 
@@ -170,6 +207,108 @@ export default function ParcelDetailsPage() {
           </div>
         </div>
 
+        {/* Feedback banner */}
+        {feedback && (
+          <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+            <span>{feedback}</span>
+          </div>
+        )}
+
+        {/* Active Ground Incidents on this parcel */}
+        {incidents.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold text-red-400 px-1">
+              <span className="flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4" /> Active Field Incidents & Blockers ({incidents.length})
+              </span>
+            </div>
+
+            {incidents.map((inc) => {
+              const isResolved = inc.status === "resolved";
+              const isConfirmed = inc.status === "confirmed";
+
+              return (
+                <div
+                  key={inc.verification_id}
+                  className={`p-3.5 rounded-xl border text-xs space-y-2.5 ${
+                    isResolved
+                      ? "bg-emerald-950/20 border-emerald-500/30"
+                      : "bg-red-950/25 border-red-500/35"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-white uppercase text-[11px]">
+                      {(inc.issue_type || "Ground Incident").replace(/_/g, " ")}
+                    </span>
+                    <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase ${
+                      isResolved
+                        ? "bg-emerald-500/20 text-emerald-300"
+                        : isConfirmed
+                        ? "bg-amber-500/20 text-amber-300"
+                        : "bg-red-500/20 text-red-300"
+                    }`}>
+                      {inc.status}
+                    </span>
+                  </div>
+
+                  <p className="text-slate-300 text-[11px] leading-relaxed">
+                    {inc.observations || inc.remarks || "Issue logged by field inspection."}
+                  </p>
+
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-white/5">
+                    <span>Officer: {inc.officer_name || "Officer"}</span>
+                    <span className="font-mono text-[9px] text-slate-400">{inc.source_type || "SYNTHETIC / DEVELOPMENT DATA"}</span>
+                  </div>
+
+                  {!isResolved && inc.status === "reported" && (
+                    <div className="pt-2">
+                      {confirmingId !== inc.verification_id ? (
+                        <button
+                          onClick={() => setConfirmingId(inc.verification_id)}
+                          className="w-full py-2 px-3 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                        >
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                          <span>Confirm Incident on Ground</span>
+                        </button>
+                      ) : (
+                        <div className="space-y-2 bg-slate-900/80 p-3 rounded-lg border border-slate-700">
+                          <label className="block text-[11px] text-slate-300 font-medium">
+                            Field Confirmation Remarks & Findings:
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={confirmNotes}
+                            onChange={(e) => setConfirmNotes(e.target.value)}
+                            placeholder="Detail physical inspection findings, witnesses, or alignment shifts..."
+                            className="w-full bg-slate-800 border border-slate-700 rounded-md p-2 text-xs text-white resize-none"
+                          />
+                          <div className="flex gap-2 justify-end">
+                            <button
+                              onClick={() => setConfirmingId(null)}
+                              className="px-2.5 py-1 text-xs text-slate-400 hover:text-white"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              disabled={confirmingSubmitting}
+                              onClick={() => handleConfirmIncident(inc.verification_id)}
+                              className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md text-xs font-bold flex items-center gap-1"
+                            >
+                              <Send className="w-3 h-3" />
+                              {confirmingSubmitting ? "Submitting..." : "Confirm with GPS"}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* 10 Required Data Points Specification */}
         <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3.5 text-xs">
           <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider font-mono">
@@ -189,7 +328,7 @@ export default function ParcelDetailsPage() {
 
             <div>
               <span className="text-[10px] text-slate-400 block">3. Village / Jurisdiction</span>
-              <span className="font-medium text-slate-200">{parcel.village_name || "Rampur"}, {parcel.district || "Varanasi"}</span>
+              <span className="font-medium text-slate-200">{parcel.village_name || "Ramganj Mandi"}, {parcel.district || "Kota"}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-400 block">4. Survey / Khasra No.</span>
@@ -246,8 +385,8 @@ export default function ParcelDetailsPage() {
 
         {/* Embedded Location Component */}
         <CaptureLocation
-          targetLat={parcel.centroid_lat || 25.321}
-          targetLng={parcel.centroid_lng || 82.987}
+          targetLat={parcel.centroid_lat || 24.6492}
+          targetLng={parcel.centroid_lng || 75.9284}
           surveyNo={sNo}
           onLocationCaptured={(pos) => {
             console.log("Captured GPS:", pos);
@@ -270,14 +409,6 @@ export default function ParcelDetailsPage() {
           >
             <AlertTriangle className="w-4 h-4 text-red-400" />
             <span>Flag Ground Issue / Blocker</span>
-          </Link>
-
-          <Link
-            href={`/parcels/${parcelId}`}
-            className="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-slate-400 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-1.5"
-          >
-            <span>View Full Desktop File</span>
-            <ExternalLink className="w-3.5 h-3.5" />
           </Link>
         </div>
 
