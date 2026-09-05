@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { apiClient } from '@/lib/api';
 
 const REPORT_DEFINITIONS: Record<string, { title: string; description: string }> = {
   project_status: {
@@ -42,7 +43,7 @@ export default function ReportsPage() {
     setSuccessMessage('');
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'}/dashboard/reports?report_type=${reportType}`);
+      const res = await apiClient.getDashboardReports(reportType);
       if (!res.ok) {
         throw new Error(`Report generation failed with status ${res.status}`);
       }

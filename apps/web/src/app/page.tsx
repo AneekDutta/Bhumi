@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { apiClient } from '@/lib/api';
 import { MetricCard } from '@/components/dashboard/MetricCard';
 import { PortfolioTable } from '@/components/dashboard/PortfolioTable';
 import { PortfolioMap } from '@/components/dashboard/PortfolioMap';
@@ -12,9 +13,7 @@ export const metadata: Metadata = {
 
 async function getDashboardSummary() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'}/dashboard/summary`, { cache: 'no-store' });
-    if (!res.ok) return null;
-    return res.json();
+    return await apiClient.getDashboardSummary();
   } catch {
     return null;
   }
@@ -22,9 +21,7 @@ async function getDashboardSummary() {
 
 async function getDashboardProjects() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'}/dashboard/projects?size=100`, { cache: 'no-store' });
-    if (!res.ok) return { items: [] };
-    return res.json();
+    return await apiClient.getDashboardProjects(100);
   } catch {
     return { items: [] };
   }

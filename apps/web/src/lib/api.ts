@@ -1,4 +1,12 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
+const getBaseUrl = () => {
+  const envUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1').replace(/\/+$/, '');
+  if (envUrl.endsWith('/api/v1')) {
+    return envUrl;
+  }
+  return `${envUrl}/api/v1`;
+};
+
+export const API_URL = getBaseUrl();
 
 export type SimulationRequest = {
   type: string;
@@ -6,6 +14,19 @@ export type SimulationRequest = {
 };
 
 export const apiClient = {
+  getDashboardSummary: async () => {
+    const res = await fetch(`${API_URL}/dashboard/summary`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    return res.json();
+  },
+  getDashboardProjects: async (size: number = 100) => {
+    const res = await fetch(`${API_URL}/dashboard/projects?size=${size}`, { cache: 'no-store' });
+    if (!res.ok) return { items: [] };
+    return res.json();
+  },
+  getDashboardReports: async (reportType: string) => {
+    return await fetch(`${API_URL}/dashboard/reports?report_type=${reportType}`);
+  },
   getHealth: async () => {
     const res = await fetch(`${API_URL}/health`, { cache: 'no-store' })
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
