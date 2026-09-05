@@ -1,13 +1,22 @@
 const getBaseUrl = () => {
   const configuredUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!configuredUrl) {
-    throw new Error('NEXT_PUBLIC_API_URL is not configured.');
+  if (configuredUrl) {
+    const envUrl = configuredUrl.replace(/\/+$/, '');
+    if (envUrl.endsWith('/api/v1')) {
+      return envUrl;
+    }
+    return `${envUrl}/api/v1`;
   }
-  const envUrl = configuredUrl.replace(/\/+$/, '');
-  if (envUrl.endsWith('/api/v1')) {
-    return envUrl;
+  
+  if (typeof window !== 'undefined') {
+    return '/api/v1';
   }
-  return `${envUrl}/api/v1`;
+  
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}/api/v1`;
+  }
+  
+  throw new Error('NEXT_PUBLIC_API_URL or VERCEL_URL is not configured.');
 };
 
 export const API_URL = getBaseUrl();
