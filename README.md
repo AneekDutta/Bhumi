@@ -1,6 +1,6 @@
 # SIH26016: Land Acquisition Intelligence Platform
 
-Real-Time National Land Acquisition & Management System for End-to-End Digital Monitoring and Decision Support.
+Real-Time National Land Acquisition & Management System for end-to-end Digital Monitoring and Decision Support.
 
 ## Overview
 This platform provides a comprehensive digital workflow for statutory land acquisition with an embedded decision intelligence layer. It tracks legal timelines, project dependencies, and spatial contiguity to predict project execution bottlenecks.
