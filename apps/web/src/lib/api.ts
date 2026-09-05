@@ -973,8 +973,31 @@ export const apiClient = {
     return await supabaseDataService.resolveComplaint(complaintId, resolution);
   },
 
+  
   uploadEvidenceDocument: async (file: File | Blob, fileName: string, parcelId: string) => {
-    return await supabaseDataService.uploadEvidenceDocument(file, fileName, parcelId);
+    const { createClient } = await import("@/lib/supabase/client");
+    const supabase = createClient();
+    const filePath = `evidence/${parcelId}/${Date.now()}_${fileName}`;
+    
+    const { data, error } = await supabase.storage
+      .from('documents')
+      .upload(filePath, file, { cacheControl: '3600', upsert: false });
+      
+    if (error) {
+      console.error("Upload error:", error);
+      throw error;
+    }
+    
+    const { data: { publicUrl } } = supabase.storage.from('documents').getPublicUrl(filePath);
+    
+    return {
+      storage_path: data?.path || filePath,
+      public_url: publicUrl,
+      file_name: fileName,
+      file_size: file.size,
+      mime_type: file.type,
+      uploaded_at: new Date().toISOString()
+    };
   },
 
   createOrUpdateLandownerProfile: async (profile: any) => {
