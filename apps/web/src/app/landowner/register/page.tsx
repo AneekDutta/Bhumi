@@ -13,8 +13,7 @@ import {
   RefreshCw, 
   User, 
   Phone, 
-  MapPin,
-  Sparkles
+  MapPin
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { createOrUpdateLandownerProfile } from "@/lib/api";
@@ -37,7 +36,7 @@ export default function LandownerRegisterPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Direct Landowner Registration (Simple, fast, no OTP)
+  // Direct Landowner Registration
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
@@ -76,7 +75,7 @@ export default function LandownerRegisterPage() {
               role: "LANDOWNER",
               full_name: displayName,
               phone: phone.trim() || null,
-              village: village.trim() || "Chandwas (V03)"
+              village: village.trim() || "Corridor Sector"
             }
           }
         });
@@ -104,7 +103,7 @@ export default function LandownerRegisterPage() {
         name: displayName,
         email: cleanEmail,
         phone: phone.trim() || "+91 98290 00000",
-        contact_village: village.trim() || "Chandwas (V03)"
+        contact_village: village.trim() || "Corridor Sector"
       });
 
       // 3. Set Session Cookies
@@ -131,7 +130,7 @@ export default function LandownerRegisterPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between p-4 selection:bg-amber-500/30">
-      <div className="w-full max-w-md mx-auto space-y-5 pt-4 pb-12">
+      <div className="w-full max-w-md mx-auto space-y-5 pt-6 pb-12">
         
         {/* Header Branding */}
         <div className="text-center space-y-2">
@@ -161,8 +160,8 @@ export default function LandownerRegisterPage() {
           </div>
         )}
 
-        {/* Simple Registration Form */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+        {/* Registration Form */}
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
           <div className="space-y-1">
             <span className="text-[10px] font-mono tracking-widest uppercase text-amber-400 font-bold block">
               Citizen Account
@@ -237,7 +236,7 @@ export default function LandownerRegisterPage() {
                     type="text"
                     value={village}
                     onChange={(e) => setVillage(e.target.value)}
-                    placeholder="Chandwas (V03)"
+                    placeholder="e.g. Kanhera Kalan"
                     className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
                   />
                 </div>
@@ -308,23 +307,6 @@ export default function LandownerRegisterPage() {
               <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-        </div>
-
-        {/* Presentation Demo Account Shortcut */}
-        <div className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 text-center space-y-1.5 text-xs">
-          <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">
-            Evaluation & Testing Mode
-          </span>
-          <p className="text-slate-300">
-            Want to test without registering a new email?
-          </p>
-          <Link
-            href="/landowner/login"
-            className="inline-flex items-center gap-1.5 text-amber-400 hover:text-amber-300 font-semibold pt-0.5"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Use Verified Demo Account (Geeta Meena) →</span>
-          </Link>
         </div>
 
         {/* Cross-Role Links */}

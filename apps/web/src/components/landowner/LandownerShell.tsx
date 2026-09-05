@@ -33,24 +33,18 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
   useEffect(() => {
     // Read session cookie
     const cookies = document.cookie.split(";").map((c) => c.trim());
-    const sessionCookie = cookies.find((c) => c.startsWith("bhumi_officer_session="));
+    const sessionCookie = cookies.find((c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session="));
     if (sessionCookie) {
       try {
         const val = decodeURIComponent(sessionCookie.split("=")[1]);
         const parsed = JSON.parse(val);
-        if (parsed && (parsed.role === "LANDOWNER" || parsed.owner_id)) {
+        if (parsed) {
           setOwner(parsed);
           return;
         }
       } catch {}
     }
-    // Fallback default
-    setOwner({
-      owner_id: "O00004",
-      name: "Geeta Meena",
-      contact_village: "Chandwas (V03)",
-      role: "LANDOWNER"
-    });
+    setOwner(null);
   }, []);
 
   const navItems = [

@@ -23,19 +23,19 @@ export default function LandownerComplaintsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"ALL" | "ACTIVE" | "VERIFIED" | "RESOLVED">("ALL");
   const [search, setSearch] = useState("");
-  const [owner, setOwner] = useState<any>({ owner_id: "O00004", name: "Geeta Meena" });
+  const [owner, setOwner] = useState<any>(null);
 
   useEffect(() => {
     const cookies = document.cookie.split(";").map((c) => c.trim());
-    const sessionCookie = cookies.find((c) => c.startsWith("bhumi_officer_session="));
-    let offId = "O00004";
+    const sessionCookie = cookies.find((c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session="));
+    let offId = "";
     if (sessionCookie) {
       try {
         const val = decodeURIComponent(sessionCookie.split("=")[1]);
         const parsed = JSON.parse(val);
-        if (parsed?.owner_id) {
+        if (parsed?.owner_id || parsed?.user_id) {
           setOwner(parsed);
-          offId = parsed.owner_id;
+          offId = parsed.owner_id || parsed.user_id;
         }
       } catch {}
     }
@@ -56,7 +56,8 @@ export default function LandownerComplaintsPage() {
   }, []);
 
   // Supabase Realtime: updates live when officer verifies or admin resolves
-  useRealtimeComplaints(owner.owner_id, async () => {
+  useRealtimeComplaints(owner?.owner_id || "", async () => {
+    if (!owner?.owner_id) return;
     try {
       const data = await getLandownerComplaints({ owner_id: owner.owner_id });
       setComplaints(data || []);

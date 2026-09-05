@@ -10,23 +10,15 @@ import {
   RefreshCw, 
   Layers, 
   Phone,
-  Monitor,
-  Smartphone
+  Mail
 } from "lucide-react";
 import { LandownerShell } from "@/components/landowner/LandownerShell";
 import { getLandownerParcels } from "@/lib/api";
 
 export default function LandownerProfilePage() {
   const router = useRouter();
-  const [owner, setOwner] = useState<any>({
-    owner_id: "O00004",
-    name: "Geeta Meena",
-    email: "demo.landowner@bhumi.gov.in",
-    contact_village: "Chandwas (V03)",
-    owner_type: "individual",
-    mobile_number: "+91 98290 41234"
-  });
-  const [parcelsCount, setParcelsCount] = useState(3);
+  const [owner, setOwner] = useState<any>(null);
+  const [parcelsCount, setParcelsCount] = useState(0);
 
   useEffect(() => {
     async function fetchAuth() {
@@ -34,21 +26,23 @@ export default function LandownerProfilePage() {
       const supabase = createClient();
       const { data: authData } = await supabase.auth.getUser();
 
-      let activeId = "O00004";
-      let activeName = "Geeta Meena";
-      let activeEmail = "demo.landowner@bhumi.gov.in";
+      let activeId: string | null = null;
+      let activeName = "Citizen Titleholder";
+      let activeEmail = "";
+      let activeVillage = "Corridor Sector";
 
       if (authData?.user) {
         activeId = authData.user.id;
-        activeEmail = authData.user.email || activeEmail;
+        activeEmail = authData.user.email || "";
         activeName = authData.user.user_metadata?.full_name || activeName;
+        activeVillage = authData.user.user_metadata?.village || activeVillage;
 
-        setOwner((prev: any) => ({
-          ...prev,
+        setOwner({
           owner_id: activeId,
           email: activeEmail,
-          name: activeName
-        }));
+          name: activeName,
+          contact_village: activeVillage
+        });
       } else {
         const cookies = document.cookie.split(";").map((c) => c.trim());
         const sessionCookie = cookies.find((c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session="));
@@ -64,11 +58,16 @@ export default function LandownerProfilePage() {
         }
       }
 
-      getLandownerParcels(activeId).then((p) => setParcelsCount(p?.length || 3));
+      if (!activeId) {
+        router.push("/landowner/login");
+        return;
+      }
+
+      getLandownerParcels(activeId).then((p) => setParcelsCount(p?.length || 0));
     }
 
     fetchAuth();
-  }, []);
+  }, [router]);
 
   const handleSignOut = async () => {
     try {
@@ -81,6 +80,17 @@ export default function LandownerProfilePage() {
     router.push("/landowner/login");
   };
 
+  if (!owner) {
+    return (
+      <LandownerShell title="Citizen Profile" showBack>
+        <div className="py-24 text-center text-xs text-slate-400 space-y-2">
+          <RefreshCw className="w-6 h-6 animate-spin mx-auto text-amber-400" />
+          <span>Loading citizen profile...</span>
+        </div>
+      </LandownerShell>
+    );
+  }
+
   return (
     <LandownerShell title="Citizen Profile" showBack>
       <div className="p-4 space-y-4 max-w-lg mx-auto pb-24">
@@ -88,95 +98,51 @@ export default function LandownerProfilePage() {
         {/* Profile Details Card */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-xl flex-shrink-0">
-              {owner.name.slice(0, 1)}
+            <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xl flex-shrink-0">
+              {owner.name?.slice(0, 1) || "U"}
             </div>
             <div>
               <h1 className="font-bold text-white text-base font-display">
                 {owner.name}
               </h1>
-              <p className="text-xs text-emerald-400 font-medium">
-                Verified Titleholder (Affected Person)
-              </p>
-              <p className="text-[11px] text-slate-400 font-mono">
-                ID: {owner.owner_id} · {owner.contact_village}
+              <p className="text-xs text-amber-400 font-medium">
+                Registered Citizen Titleholder
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-slate-800">
-            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
-              <span className="text-slate-400 block text-[10px]">Titleholder Type</span>
-              <span className="font-semibold text-white capitalize">{owner.owner_type || "Individual"}</span>
+          <div className="space-y-2 text-xs border-t border-slate-800 pt-3">
+            <div className="flex items-center justify-between py-1">
+              <span className="text-slate-400 flex items-center gap-2">
+                <Mail className="w-3.5 h-3.5 text-slate-500" /> Email
+              </span>
+              <span className="font-mono text-white">{owner.email || "Not set"}</span>
             </div>
-            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
-              <span className="text-slate-400 block text-[10px]">Corridor Parcels</span>
-              <span className="font-semibold text-white font-mono">{parcelsCount} Registered</span>
+
+            <div className="flex items-center justify-between py-1">
+              <span className="text-slate-400 flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-slate-500" /> Village
+              </span>
+              <span className="text-white">{owner.contact_village || owner.village || "Corridor Sector"}</span>
+            </div>
+
+            <div className="flex items-center justify-between py-1">
+              <span className="text-slate-400 flex items-center gap-2">
+                <Layers className="w-3.5 h-3.5 text-slate-500" /> Registered Parcels
+              </span>
+              <span className="font-mono text-amber-400 font-bold">{parcelsCount} Parcels</span>
             </div>
           </div>
 
-          <div className="pt-1 flex items-center justify-between text-xs text-slate-400">
-            <span>Statutory Clearance</span>
-            <span className="text-emerald-400 font-mono font-semibold">RFCTLARR 2013 Verified</span>
-          </div>
-        </div>
-
-        {/* Role Switching & Terminal Navigation */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
-          <h2 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
-            Platform Roles & Mode Switcher
-          </h2>
-
-          <div className="space-y-2">
+          <div className="pt-2 border-t border-slate-800">
             <button
-              type="button"
-              onClick={() => {
-                const sessionData = {
-                  officer_id: "OFF-001",
-                  name: "Ramesh Patel",
-                  designation: "Patwari / Revenue Lekhpal",
-                  assigned_villages: ["Ramganj Mandi", "Kanhera Kalan"],
-                  role: "FIELD_OFFICER"
-                };
-                document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(sessionData))}; path=/; max-age=604800; SameSite=Lax`;
-                window.location.href = "/field/dashboard";
-              }}
-              className="w-full py-2.5 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-300 hover:text-emerald-400 border border-slate-800 font-medium text-xs transition-colors flex items-center justify-between cursor-pointer"
+              onClick={handleSignOut}
+              className="w-full py-2.5 px-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
             >
-              <div className="flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-emerald-400" />
-                <span>Switch to Field Operations Console</span>
-              </div>
-              <span className="text-[10px] font-mono text-slate-500">→</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                document.cookie = "bhumi_officer_session=officer%40bhumi.gov.in; path=/; max-age=86400; SameSite=Lax";
-                window.location.href = "/";
-              }}
-              className="w-full py-2.5 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-300 hover:text-indigo-400 border border-slate-800 font-medium text-xs transition-colors flex items-center justify-between cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <Monitor className="w-4 h-4 text-indigo-400" />
-                <span>Switch to Desktop Admin Command Console</span>
-              </div>
-              <span className="text-[10px] font-mono text-slate-500">→</span>
+              <LogOut className="w-4 h-4" />
+              <span>Sign Out of Citizen Portal</span>
             </button>
           </div>
-        </div>
-
-        {/* Sign Out */}
-        <div className="pt-2">
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className="w-full py-3 px-4 rounded-xl bg-red-950/40 hover:bg-red-950/60 text-red-300 border border-red-500/30 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Sign Out of Citizen Portal</span>
-          </button>
         </div>
 
       </div>

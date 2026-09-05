@@ -66,21 +66,16 @@ export default function NewComplaintPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Landowner Session Identity
-  const [currentUser, setCurrentUser] = useState<any>({
-    user_id: "O00004",
-    name: "Geeta Meena",
-    email: "demo.landowner@bhumi.gov.in",
-    village: "Chandwas (V03)"
-  });
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   // Load authenticated session & parcels
   useEffect(() => {
     async function initSession() {
       // 1. Check Supabase Auth user
       const { data: authData } = await supabase.auth.getUser();
-      let activeUserId = "O00004";
-      let activeName = "Geeta Meena";
-      let activeEmail = "demo.landowner@bhumi.gov.in";
+      let activeUserId = "";
+      let activeName = "Citizen Landowner";
+      let activeEmail = "";
 
       if (authData?.user) {
         activeUserId = authData.user.id;
@@ -102,15 +97,20 @@ export default function NewComplaintPage() {
       }
 
       setCurrentUser({
-        user_id: activeUserId,
+        user_id: activeUserId || "citizen",
         name: activeName,
         email: activeEmail,
-        village: "Chandwas (V03)"
+        village: "Corridor Sector"
       });
 
       // 2. Load authorized parcels from Supabase
       try {
-        const pData = await getLandownerParcels(activeUserId);
+        let pData = await getLandownerParcels(activeUserId);
+        if (!pData || pData.length === 0) {
+          // If citizen has no pre-assigned parcels, fetch all corridor parcels so they can file against any affected project parcel
+          const { getParcels } = await import("@/lib/api");
+          pData = await getParcels();
+        }
         setParcels(pData || []);
         if (!selectedParcel && pData && pData.length > 0) {
           setSelectedParcel(pData[0].parcel_id || pData[0].id);
