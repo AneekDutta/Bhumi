@@ -89,22 +89,6 @@ export default function MarkBoundaryPage() {
       if (authData?.user) {
         activeOwnerId = authData.user.id;
         activeName = authData.user.user_metadata?.full_name || activeName;
-      } else {
-        const cookies = document.cookie.split(";").map((c) => c.trim());
-        const sessionCookie = cookies.find(
-          (c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session=")
-        );
-        if (sessionCookie) {
-          try {
-            const val = decodeURIComponent(sessionCookie.split("=")[1]);
-            const parsed = JSON.parse(val);
-            if (parsed?.user_id || parsed?.owner_id) {
-              activeOwnerId = parsed.user_id || parsed.owner_id;
-              activeName = parsed.name || activeName;
-              activeVillage = parsed.contact_village || parsed.village || activeVillage;
-            }
-          } catch {}
-        }
       }
 
       if (!activeOwnerId) {

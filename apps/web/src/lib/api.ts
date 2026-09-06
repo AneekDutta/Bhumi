@@ -1,5 +1,6 @@
+import { supabaseDataService } from "@/lib/supabase/supabaseService";
 const getBaseUrl = () => {
-  const configuredUrl = process.env.NEXT_PUBLIC_API_URL;
+  const configuredUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
   if (configuredUrl) {
     const envUrl = configuredUrl.replace(/\/+$/, '');
     if (envUrl.endsWith('/api/v1')) {
@@ -16,7 +17,13 @@ const getBaseUrl = () => {
     return `https://${process.env.VERCEL_URL}/api/v1`;
   }
   
-  throw new Error('NEXT_PUBLIC_API_URL or VERCEL_URL is not configured.');
+  // Local development fallback
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:8000/api/v1';
+  }
+
+  // Fallback for build time module evaluation
+  return 'http://localhost:8000/api/v1';
 };
 
 export const API_URL = getBaseUrl();
@@ -1070,7 +1077,6 @@ export const apiClient = {
 export const getFieldOfficers = () => apiClient.getFieldOfficers();
 export const getParcels = () => apiClient.getParcels();
 export const getFieldParcels = (officerId?: string, villageId?: string) => apiClient.getFieldParcels(officerId, villageId);
-export const getParcels = (officerId?: string, villageId?: string) => apiClient.getFieldParcels(officerId, villageId);
 export const submitFieldVerification = (payload: any) => apiClient.submitFieldVerification(payload);
 export const syncFieldBatch = (officerId: string, submissions: any[]) => apiClient.syncFieldBatch(officerId, submissions);
 export const getFieldIncidents = (filters?: { parcel_id?: string; project_id?: string; status?: string }) => apiClient.getFieldIncidents(filters);
