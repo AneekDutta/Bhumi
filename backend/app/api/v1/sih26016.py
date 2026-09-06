@@ -6,8 +6,10 @@ Preserves source_type provenance on every response.
 """
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.database import get_db
 from app.schemas.sih26016 import (
     AdminIncidentResolveRequest,
     CriticalPathResponse,
@@ -26,14 +28,16 @@ router = APIRouter()
 
 
 @router.get("/projects", response_model=list[dict[str, Any]])
-def list_projects():
+async def list_projects(db: AsyncSession = Depends(get_db)):
     """List all digital twin projects with CPM schedules and provenance."""
+    await sih_service.sync_with_db(db)
     return sih_service.get_projects()
 
 
 @router.get("/projects/{project_id}", response_model=dict[str, Any])
-def get_project(project_id: str):
+async def get_project(project_id: str, db: AsyncSession = Depends(get_db)):
     """Retrieve detailed project corridor specifications."""
+    await sih_service.sync_with_db(db)
     proj = sih_service.get_project_by_id(project_id)
     if not proj:
         raise HTTPException(status_code=404, detail="Project not found")
@@ -41,12 +45,14 @@ def get_project(project_id: str):
 
 
 @router.get("/projects/{project_id}/parcels", response_model=list[dict[str, Any]])
-def list_parcels(
+async def list_parcels(
     project_id: str,
     status: str | None = Query(None, description="Filter by acquisition_status"),
-    critical_only: bool = Query(False, description="Filter only critical-chain parcels")
+    critical_only: bool = Query(False, description="Filter only critical-chain parcels"),
+    db: AsyncSession = Depends(get_db)
 ):
     """List parcels for the specified corridor."""
+    await sih_service.sync_with_db(db)
     parcels = sih_service.get_parcels(project_id)
     if status:
         parcels = [p for p in parcels if p.get("acquisition_status") == status]
@@ -57,22 +63,24 @@ def list_parcels(
 
 @router.get("/projects/{project_id}/parcels/geojson")
 @router.get("/projects/{project_id}/geojson")
-def get_parcels_geojson(project_id: str):
+async def get_parcels_geojson(project_id: str, db: AsyncSession = Depends(get_db)):
     """
     Returns GeoJSON FeatureCollection of all cadastral parcels.
     Properties contain styling variables for Normal, Risk, and Critical Path modes.
     """
+    await sih_service.sync_with_db(db)
     return sih_service.get_parcels_geojson(project_id)
 
 
 @router.get("/parcels/{parcel_id}", response_model=dict[str, Any])
-def get_parcel_detail(parcel_id: str):
+async def get_parcel_detail(parcel_id: str, db: AsyncSession = Depends(get_db)):
     """
     Returns Section 13 full parcel dossier:
     owner, village, area, acquisition status, compensation, R&R, legal disputes,
     documents, verifications, dependencies, criticality score, risk score, and
     MODEL_DERIVED recommended action.
     """
+    await sih_service.sync_with_db(db)
     detail = sih_service.get_parcel_detail(parcel_id)
     if not detail:
         raise HTTPException(status_code=404, detail=f"Parcel {parcel_id} not found")
@@ -80,20 +88,26 @@ def get_parcel_detail(parcel_id: str):
 
 
 @router.get("/projects/{project_id}/critical-path", response_model=CriticalPathResponse)
-def get_critical_path(project_id: str):
+async def get_critical_path(project_id: str, db: AsyncSession = Depends(get_db)):
     """
     Returns CPM Critical Path Method schedule report, zero-float bottlenecks,
     and causal blocking chains.
     """
+    await sih_service.sync_with_db(db)
     return sih_service.get_critical_path_report(project_id)
 
 
 @router.post("/projects/{project_id}/simulate", response_model=SimulationResponse)
-def simulate_intervention(project_id: str, req: SimulationRequest):
+async def simulate_intervention(
+    project_id: str,
+    req: SimulationRequest,
+    db: AsyncSession = Depends(get_db)
+):
     """
     Executes Section 12 What-If simulation by mutating the in-memory dependency graph
-    and computing the CPM delay reduction diff.
+    and computing the CPM delay reduction diff without mutating production database.
     """
+    await sih_service.sync_with_db(db)
     res = sih_service.simulate(
         project_id=project_id,
         intervention_type=req.intervention_type,
@@ -104,8 +118,9 @@ def simulate_intervention(project_id: str, req: SimulationRequest):
 
 
 @router.get("/projects/{project_id}/summary")
-def get_corridor_summary(project_id: str):
+async def get_corridor_summary(project_id: str, db: AsyncSession = Depends(get_db)):
     """Aggregated command center KPI summary for the SIH26016 corridor."""
+    await sih_service.sync_with_db(db)
     proj = sih_service.get_project_by_id(project_id)
     parcels = sih_service.get_parcels(project_id)
     cpm = sih_service.get_critical_path_report(project_id)

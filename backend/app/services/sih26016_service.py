@@ -145,6 +145,102 @@ class SIH26016Service:
 
         self._data_cache["parcels"] = enriched_parcels
 
+    async def sync_with_db(self, db: Any) -> None:
+        """
+        Synchronizes the digital twin with the authoritative PostgreSQL state:
+        1. Reads all persistent dependency_edges from PostgreSQL.
+        2. Synchronizes active complaints from documents table.
+        3. Updates parcel conflicts and recomputes the derived NetworkX CPM graph.
+        """
+        if db is None or not self._data_cache:
+            return
+
+        from sqlalchemy import text
+        try:
+            # 1. Fetch live edges from PostgreSQL
+            res = await db.execute(text("""
+                SELECT edge_id, from_node_type, from_node_id, to_node_type, to_node_id,
+                       edge_type, is_blocking, weight_days, source_type
+                FROM dependency_edges
+            """))
+            rows = res.mappings().all()
+            if rows:
+                db_edges = []
+                for r in rows:
+                    d = dict(r)
+                    if d.get("weight_days") is not None:
+                        d["weight_days"] = float(d["weight_days"])
+                    db_edges.append(d)
+                self._data_cache["dependency_edges"] = db_edges
+
+            # 2. Fetch active citizen complaints from documents table
+            doc_res = await db.execute(text("""
+                SELECT id, title, description, status, parcel_id
+                FROM documents
+                WHERE document_type = 'landowner_complaint'
+            """))
+            doc_rows = doc_res.mappings().all()
+
+            from app.services.complaint_cpm_bridge import normalize_parcel_id
+
+            active_complaints = {}
+            for row in doc_rows:
+                st = (row.get("status") or "").upper()
+                if st in ["RESOLVED", "REJECTED"]:
+                    continue
+                desc = row.get("description")
+                if isinstance(desc, str):
+                    try:
+                        desc = json.loads(desc)
+                    except Exception:
+                        desc = {}
+                elif not isinstance(desc, dict):
+                    desc = {}
+
+                raw_pid = desc.get("parcel_id") or row.get("parcel_id")
+                norm_pid = normalize_parcel_id(raw_pid)
+                if norm_pid:
+                    ctype = desc.get("complaint_type") or row.get("title") or "grievance"
+                    active_complaints[norm_pid] = ctype
+
+            # Check for any active blocking edges in DB for each parcel
+            blocked_parcels = set()
+            for e in self._data_cache.get("dependency_edges", []):
+                if e.get("is_blocking") and e.get("to_node_type") == "parcel":
+                    blocked_parcels.add(e.get("to_node_id"))
+                if e.get("is_blocking") and e.get("from_node_type") == "parcel" and e.get("to_node_type") == "project_segment":
+                    blocked_parcels.add(e.get("from_node_id"))
+
+            baseline_conflicts = {
+                'P00014', 'P00018', 'P00020', 'P00021', 'P00026', 'P00028',
+                'P00036', 'P00038', 'P00039', 'P00040', 'P00041', 'P00042',
+                'P00052', 'P00054', 'P00055', 'P00058', 'P00061', 'P00066',
+                'P00067', 'P00081', 'P00087', 'P00093', 'P00094', 'P00097',
+                'P00100', 'P00104', 'P00105', 'P00116', 'P00118', 'P00122',
+                'P00124', 'P00126', 'P00130', 'P00140', 'P00141', 'P00142',
+                'P00144', 'P00150', 'P00154', 'P00157', 'P00162', 'P00167',
+                'P00170'
+            }
+
+            for p in self._data_cache.get("parcels", []):
+                pid = p["parcel_id"]
+                if pid in blocked_parcels or pid in active_complaints:
+                    p["ownership_conflict"] = True
+                    if pid in active_complaints:
+                        p["conflict_type"] = active_complaints[pid]
+                    p["source_type"] = "USER_ENTERED"
+                else:
+                    if pid not in baseline_conflicts:
+                        p["ownership_conflict"] = False
+                        p["conflict_type"] = "none"
+                        p["source_type"] = "SYNTHETIC"
+
+            # 3. Re-enrich and recompute CPM schedules and critical path status
+            self._enrich_and_compute()
+
+        except Exception as e:
+            print(f"[SIH26016Service] Warning in sync_with_db: {e}")
+
     def get_projects(self) -> list[dict[str, Any]]:
         if not self._data_cache:
             self._load_data()

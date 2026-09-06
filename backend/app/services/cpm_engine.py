@@ -92,7 +92,7 @@ class CPMEngine:
         for node in reversed(topo_order):
             succs = list(G.successors(node))
             if not succs:
-                lf[node] = total_duration
+                lf[node] = ef[node]
             else:
                 lf[node] = min(ls[s] - G[node][s].get("weight", 0.0) for s in succs)
             ls[node] = lf[node]

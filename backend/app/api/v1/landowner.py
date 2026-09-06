@@ -11,6 +11,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.deps import TrustedIdentity, get_current_user_context
 from app.core.database import get_db
 from app.models.domain import AuditLog, Document, LandownerProfile, Owner, Parcel
+from app.services.complaint_cpm_bridge import (
+    activate_complaint_blocker,
+    classify_complaint,
+    deactivate_complaint_blocker,
+)
 
 logger = logging.getLogger("landowner_api")
 
@@ -166,8 +171,8 @@ async def submit_complaint(
         
         await db.execute(
             text("""
-            INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, state_after)
-            VALUES (:id, :actor_id, :actor_role, 'COMPLAINT_SUBMITTED', 'COMPLAINT', :entity_id, :state)
+            INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, state_after, created_at, updated_at)
+            VALUES (:id, :actor_id, :actor_role, 'COMPLAINT_SUBMITTED', 'COMPLAINT', :entity_id, :state, now(), now())
             """),
             {
                 "id": uuid.uuid4(),
@@ -178,6 +183,20 @@ async def submit_complaint(
             }
         )
         await db.commit()
+
+        # Check if complaint is impact-bearing and should immediately activate CPM blocker
+        classification = classify_complaint(payload.complaint_type, payload.priority or "NORMAL")
+        if classification.get("auto_activate"):
+            await activate_complaint_blocker(
+                db=db,
+                complaint_id=complaint_id,
+                raw_parcel_id=payload.parcel_id,
+                complaint_type=payload.complaint_type,
+                priority=payload.priority or "NORMAL",
+                notes=payload.description,
+                actor_id=str(user.user_id),
+                actor_role=user.role.value if hasattr(user.role, 'value') else str(user.role)
+            )
     except Exception as e:
         logger.warning(f"Failed to persist complaint in DB: {e}")
         
@@ -213,8 +232,8 @@ async def assign_complaint(
     
     await db.execute(
         text("""
-        INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, state_after)
-        VALUES (:id, :actor_id, :actor_role, 'COMPLAINT_ASSIGNED', 'COMPLAINT', :entity_id, :state)
+        INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, state_after, created_at, updated_at)
+        VALUES (:id, :actor_id, :actor_role, 'COMPLAINT_ASSIGNED', 'COMPLAINT', :entity_id, :state, now(), now())
         """),
         {
             "id": uuid.uuid4(),
@@ -257,8 +276,8 @@ async def verify_complaint(
     
     await db.execute(
         text("""
-        INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, state_after)
-        VALUES (:id, :actor_id, :actor_role, 'COMPLAINT_VERIFIED', 'COMPLAINT', :entity_id, :state)
+        INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, state_after, created_at, updated_at)
+        VALUES (:id, :actor_id, :actor_role, 'COMPLAINT_VERIFIED', 'COMPLAINT', :entity_id, :state, now(), now())
         """),
         {
             "id": uuid.uuid4(),
@@ -269,6 +288,23 @@ async def verify_complaint(
         }
     )
     await db.commit()
+
+    if payload.is_valid:
+        target_pid = desc.get("parcel_id") or (str(doc["parcel_id"]) if doc.get("parcel_id") else None)
+        ctype = desc.get("complaint_type") or doc.get("title") or "grievance"
+        prio = desc.get("priority") or "HIGH"
+        if target_pid:
+            await activate_complaint_blocker(
+                db=db,
+                complaint_id=complaint_id,
+                raw_parcel_id=target_pid,
+                complaint_type=ctype,
+                priority=prio,
+                notes=payload.notes,
+                actor_id=str(user.user_id),
+                actor_role=user.role.value if hasattr(user.role, 'value') else str(user.role)
+            )
+
     return {"success": True}
 
 class ResolvePayload(BaseModel):
@@ -298,8 +334,8 @@ async def resolve_complaint(
     
     await db.execute(
         text("""
-        INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, state_after)
-        VALUES (:id, :actor_id, :actor_role, 'COMPLAINT_RESOLVED', 'COMPLAINT', :entity_id, :state)
+        INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, state_after, created_at, updated_at)
+        VALUES (:id, :actor_id, :actor_role, 'COMPLAINT_RESOLVED', 'COMPLAINT', :entity_id, :state, now(), now())
         """),
         {
             "id": uuid.uuid4(),
@@ -310,6 +346,17 @@ async def resolve_complaint(
         }
     )
     await db.commit()
+
+    target_pid = desc.get("parcel_id") or (str(doc["parcel_id"]) if doc.get("parcel_id") else None)
+    await deactivate_complaint_blocker(
+        db=db,
+        complaint_id=complaint_id,
+        raw_parcel_id=target_pid,
+        notes=payload.resolution_notes,
+        actor_id=str(user.user_id),
+        actor_role=user.role.value if hasattr(user.role, 'value') else str(user.role)
+    )
+
     return {"success": True}
 
 @router.get("/parcels")
