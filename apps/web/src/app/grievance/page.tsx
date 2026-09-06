@@ -118,8 +118,8 @@ const SAMPLE_GRIEVANCES: Record<string, GrievanceCase> = {
 export default function GrievanceTrackerPage() {
   const { t } = useI18n();
 
-  const [searchToken, setSearchToken] = useState("GRV-2026-0927");
-  const [activeGrievance, setActiveGrievance] = useState<GrievanceCase | null>(SAMPLE_GRIEVANCES["GRV-2026-0927"]);
+  const [searchToken, setSearchToken] = useState("");
+  const [activeGrievance, setActiveGrievance] = useState<GrievanceCase | null>(null);
   const [grievanceNotFound, setGrievanceNotFound] = useState(false);
 
   const handleTrack = (tokenToFind?: string) => {
@@ -254,6 +254,35 @@ export default function GrievanceTrackerPage() {
             </button>
           </div>
         </div>
+
+        {/* Empty State / Initial Instructions */}
+        {!activeGrievance && !grievanceNotFound && (
+          <div className="bg-white dark:bg-[#0A1220] border border-[#CBD5E1] dark:border-slate-800 rounded-none p-8 text-center space-y-3">
+            <div className="w-12 h-12 rounded-none bg-[#EBF3FA] dark:bg-white/5 border border-[#0B5FA5]/30 mx-auto flex items-center justify-center text-[#0B5FA5] dark:text-sky-400">
+              <Search className="w-6 h-6" />
+            </div>
+            <h3 className="text-sm font-bold text-[#14213D] dark:text-white uppercase tracking-wider">
+              Enter Grievance Token to Track Status
+            </h3>
+            <p className="text-xs text-[#64748B] dark:text-slate-400 max-w-lg mx-auto leading-relaxed">
+              Please enter your 12-character statutory grievance token in the search box above (e.g., <span className="font-mono font-semibold text-[#0B5FA5] dark:text-sky-300">GRV-2026-0927</span>) or select one of the sample tokens to view case adjudication milestones, field verification reports, and DBT disbursal records.
+            </p>
+            <div className="pt-2 flex flex-wrap items-center justify-center gap-4 text-[11px] text-[#555555] dark:text-slate-400">
+              <span className="flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#1E7E34]" />
+                Section 3C Hearing Records
+              </span>
+              <span className="flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#1E7E34]" />
+                Joint Measurement Survey (DGPS)
+              </span>
+              <span className="flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#1E7E34]" />
+                PFMS Disbursal Authentication
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Grievance Result Card */}
         {activeGrievance && (

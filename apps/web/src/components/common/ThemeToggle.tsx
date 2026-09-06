@@ -38,14 +38,14 @@ export function ThemeToggle({
   if (variant === 'pill') {
     return (
       <div
-        className={`inline-flex items-center p-0.5 rounded-[4px] bg-[#F4F6F8] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 text-xs shadow-xs ${className}`}
+        className={`inline-flex w-full items-center p-0.5 rounded-[4px] bg-[#F4F6F8] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 text-xs shadow-xs ${className}`}
         role="group"
         aria-label="Theme selection"
       >
         <button
           type="button"
           onClick={() => setTheme('light')}
-          className={`flex items-center gap-1.5 px-2 py-1 rounded-[3px] font-medium transition-all ${
+          className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1 rounded-[3px] text-xs font-medium transition-all ${
             theme === 'light'
               ? 'bg-white text-[#B36B00] shadow-xs font-bold border border-[#FFE082]'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -53,14 +53,14 @@ export function ThemeToggle({
           title="Switch to Light Mode"
           aria-pressed={theme === 'light'}
         >
-          <Sun className="w-3.5 h-3.5" />
+          <Sun className="w-3.5 h-3.5 flex-shrink-0" />
           <span>Light</span>
         </button>
 
         <button
           type="button"
           onClick={() => setTheme('dark')}
-          className={`flex items-center gap-1.5 px-2 py-1 rounded-[3px] font-medium transition-all ${
+          className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1 rounded-[3px] text-xs font-medium transition-all ${
             theme === 'dark'
               ? 'bg-[#0B2E59] text-white shadow-xs font-bold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -68,14 +68,14 @@ export function ThemeToggle({
           title="Switch to Dark Mode"
           aria-pressed={theme === 'dark'}
         >
-          <Moon className="w-3.5 h-3.5" />
+          <Moon className="w-3.5 h-3.5 flex-shrink-0" />
           <span>Dark</span>
         </button>
 
         <button
           type="button"
           onClick={() => setTheme('system')}
-          className={`flex items-center gap-1.5 px-2 py-1 rounded-[3px] font-medium transition-all ${
+          className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1 rounded-[3px] text-xs font-medium transition-all ${
             theme === 'system'
               ? 'bg-white dark:bg-[#0D121F] text-[#0B2E59] dark:text-white shadow-xs font-bold border border-[#DCE2E8] dark:border-white/10'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -83,8 +83,8 @@ export function ThemeToggle({
           title="Use System Theme"
           aria-pressed={theme === 'system'}
         >
-          <Monitor className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Auto</span>
+          <Monitor className="w-3.5 h-3.5 flex-shrink-0" />
+          <span>Auto</span>
         </button>
       </div>
     );

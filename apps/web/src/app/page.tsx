@@ -10,16 +10,12 @@ import {
   Navigation, 
   Layers, 
   RefreshCw, 
-  ChevronRight,
-  Calculator,
-  Award,
-  Lock,
-  Landmark,
-  FileSpreadsheet,
-  CheckCircle2
+  Award, 
+  Lock, 
+  Landmark, 
+  CheckCircle2 
 } from "lucide-react";
 import { PublicShell } from "@/components/layout/PublicShell";
-import { PortfolioMap } from "@/components/dashboard/PortfolioMap";
 import { PortfolioTable } from "@/components/dashboard/PortfolioTable";
 import { useI18n } from "@/lib/i18n/I18nContext";
 import { createClient } from "@/lib/supabase/client";
@@ -169,16 +165,91 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Interactive Corridor GIS Map */}
-            <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-2">
-              <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-2">
-                <div className="font-bold text-xs uppercase tracking-wide text-[#14213D] dark:text-white flex items-center gap-2">
-                  <Navigation className="w-4 h-4 text-[#0B5FA5]" />
-                  <span>Interactive GIS Corridor Map &amp; Cadastral Alignments</span>
+            {/* National Linear Corridor Overview & GIS Gateway */}
+            <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-5 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#DCE2E8] dark:border-white/10 pb-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-none bg-[#0B2E59] text-white uppercase tracking-wider">
+                      ACTIVE LINEAR CORRIDOR
+                    </span>
+                    <span className="text-xs font-mono text-[#0B5FA5] dark:text-sky-400 font-bold">
+                      MoRTH / NHAI PID-2024-927A
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-bold text-[#14213D] dark:text-white mt-1">
+                    NH-927A Kota–Jhalawar Bypass 4-Lane Widening Corridor
+                  </h3>
                 </div>
-                <span className="text-[11px] text-[#5A6A80] dark:text-slate-400 font-mono">Standard Carto Light Basemap</span>
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold bg-[#EBF7EE] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border border-[#BEE3C8] dark:border-emerald-800">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Sec 3D Declared &bull; 3E Active</span>
+                  </span>
+                </div>
               </div>
-              <PortfolioMap projects={MOCK_GOVERNMENT_PROJECTS} />
+
+              {/* Corridor Milestone Track */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
+                    Package 1 &bull; Kota Bypass
+                  </div>
+                  <div className="text-xs font-bold text-[#14213D] dark:text-white mt-0.5">
+                    Km 0.000 to Km 16.200 (Kansua)
+                  </div>
+                  <div className="text-[11px] text-[#1E7E34] dark:text-emerald-400 font-medium mt-1">
+                    94% Possession Completed &bull; RoW Clear
+                  </div>
+                </div>
+
+                <div className="p-3 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
+                    Package 2 &bull; Mandana Section
+                  </div>
+                  <div className="text-xs font-bold text-[#14213D] dark:text-white mt-0.5">
+                    Km 16.200 to Km 32.800 (Mandana)
+                  </div>
+                  <div className="text-[11px] text-[#B36B00] dark:text-amber-400 font-medium mt-1">
+                    Sec 3G CALA Award Valuation Underway
+                  </div>
+                </div>
+
+                <div className="p-3 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
+                    Package 3 &bull; Suket Terminal
+                  </div>
+                  <div className="text-xs font-bold text-[#14213D] dark:text-white mt-0.5">
+                    Km 32.800 to Km 48.500 (Suket)
+                  </div>
+                  <div className="text-[11px] text-[#0B5FA5] dark:text-sky-400 font-medium mt-1">
+                    Objections Adjudicated &bull; DBT Scheduled
+                  </div>
+                </div>
+              </div>
+
+              {/* Spatial GIS Callout for Authenticated Officers */}
+              <div className="p-3.5 bg-[#EBF3FA] dark:bg-white/5 border border-[#0B5FA5]/30 dark:border-sky-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="flex items-start gap-2.5">
+                  <Navigation className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <div className="text-xs font-bold text-[#0B2E59] dark:text-white">
+                      Full Cadastral GIS &amp; Spatial Alignment Digital Twin
+                    </div>
+                    <div className="text-[11px] text-[#555555] dark:text-slate-400">
+                      Access high-precision DGPS boundary polygons, satellite overlays, RoW buffer analysis, and encroachment tracking inside the Officer Console.
+                    </div>
+                  </div>
+                </div>
+
+                <Link
+                  href="/projects/gis"
+                  className="px-3.5 py-1.5 bg-[#0B2E59] hover:bg-[#071A32] text-white text-xs font-bold rounded-none flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition-colors"
+                >
+                  <span>Open GIS Viewer</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </div>
 
             {/* Government Data Table */}
@@ -308,58 +379,6 @@ export default function LandingPage() {
                   className="text-[#0B5FA5] dark:text-sky-400 hover:underline font-semibold block"
                 >
                   &rarr; Switch to Citizen/Landowner Portal
-                </Link>
-              </div>
-            </div>
-
-            {/* Quick Public Services Box (Linking to Dedicated Pages) */}
-            <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-2.5">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-[#14213D] dark:text-slate-300 border-b border-[#DCE2E8] dark:border-white/10 pb-1.5">
-                Citizen Public Services
-              </div>
-              <div className="space-y-1.5 text-xs">
-                <Link
-                  href="/highway-register"
-                  className="p-2 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800 hover:border-[#0B5FA5] text-[#0B2E59] dark:text-sky-300 font-semibold flex items-center justify-between rounded-none transition-colors"
-                >
-                  <span className="flex items-center gap-1.5">
-                    <FileSpreadsheet className="w-3.5 h-3.5 text-[#0B5FA5]" />
-                    <span>Highway Land Register (181 Parcels)</span>
-                  </span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-                </Link>
-
-                <Link
-                  href="/gazette"
-                  className="p-2 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800 hover:border-[#0B5FA5] text-[#0B2E59] dark:text-sky-300 font-semibold flex items-center justify-between rounded-none transition-colors"
-                >
-                  <span className="flex items-center gap-1.5">
-                    <Search className="w-3.5 h-3.5 text-[#0B5FA5]" />
-                    <span>Search Statutory Gazettes</span>
-                  </span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-                </Link>
-
-                <Link
-                  href="/grievance"
-                  className="p-2 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800 hover:border-[#0B5FA5] text-[#14213D] dark:text-white font-semibold flex items-center justify-between rounded-none transition-colors"
-                >
-                  <span className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-[#0B5FA5]" />
-                    <span>Track Grievance &amp; Claims</span>
-                  </span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-                </Link>
-
-                <Link
-                  href="/calculator"
-                  className="p-2 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800 hover:border-[#1E7E34] text-[#1E7E34] dark:text-emerald-400 font-semibold flex items-center justify-between rounded-none transition-colors"
-                >
-                  <span className="flex items-center gap-1.5">
-                    <Calculator className="w-3.5 h-3.5 text-[#1E7E34]" />
-                    <span>Compensation Estimator</span>
-                  </span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                 </Link>
               </div>
             </div>

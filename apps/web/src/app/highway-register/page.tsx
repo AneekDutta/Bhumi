@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
 import { PublicShell } from "@/components/layout/PublicShell";
-import { REAL_PARCELS, REAL_PROJECTS } from "@/lib/realData";
+import { REAL_PROJECTS } from "@/lib/realData";
+import { getAllRegisteredParcels } from "@/lib/api";
 import { useI18n } from "@/lib/i18n/I18nContext";
 import { Search, FileSpreadsheet, MapPin, CheckCircle2, Clock, AlertCircle } from "lucide-react";
 
@@ -10,20 +12,49 @@ export default function HighwayRegisterPage() {
   const { t } = useI18n();
   const project = REAL_PROJECTS[0];
 
+  const [rawParcels, setRawParcels] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [villageFilter, setVillageFilter] = useState("ALL");
   const [stageFilter, setStageFilter] = useState("ALL");
 
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await getAllRegisteredParcels();
+        setRawParcels(data || []);
+      } catch {
+        setRawParcels([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  const normalizedParcels = useMemo(() => {
+    return rawParcels.map((p: any) => ({
+      id: p.parcel_id || p.id,
+      survey_no: p.survey_number || p.survey_no || p.khasra_no || `Survey #${(p.parcel_id || p.id || "").slice(-4)}`,
+      village_name: p.village_name || p.contact_village || "Corridor Sector",
+      area_hectares: Number(p.area_hectares || (p.calculated_area_acres ? p.calculated_area_acres * 0.404686 : (p.calculated_area_sqm ? p.calculated_area_sqm / 10000 : 0))) || 0,
+      classification: p.classification || p.land_type || "Agricultural",
+      owner_name: p.owner_legal_name || p.owner_name || "Record Awaiting Field Sync",
+      status: p.registration_status || p.status || "REGISTERED",
+      current_stage: p.current_stage || (p.status === "POSSESSION" ? "possessed" : p.status === "RESOLVED" ? "compensation_pending" : "notified")
+    }));
+  }, [rawParcels]);
+
   const villages = useMemo(() => {
     const set = new Set<string>();
-    REAL_PARCELS.forEach(p => {
+    normalizedParcels.forEach((p: any) => {
       if (p.village_name) set.add(p.village_name);
     });
     return Array.from(set).sort();
-  }, []);
+  }, [normalizedParcels]);
 
   const filteredParcels = useMemo(() => {
-    return REAL_PARCELS.filter(p => {
+    return normalizedParcels.filter((p: any) => {
       if (villageFilter !== "ALL" && p.village_name !== villageFilter) return false;
       if (stageFilter !== "ALL") {
         if (stageFilter === "POSSESSED" && p.current_stage !== "possessed") return false;
@@ -39,17 +70,17 @@ export default function HighwayRegisterPage() {
       }
       return true;
     });
-  }, [villageFilter, stageFilter, searchQuery]);
+  }, [normalizedParcels, villageFilter, stageFilter, searchQuery]);
 
   const totalAreaHa = useMemo(() => {
-    return REAL_PARCELS.reduce((acc, p) => acc + (p.area_hectares || 0), 0);
-  }, []);
+    return normalizedParcels.reduce((acc: number, p: any) => acc + (p.area_hectares || 0), 0);
+  }, [normalizedParcels]);
 
   const possessedCount = useMemo(() => {
-    return REAL_PARCELS.filter(p => p.current_stage === "possessed").length;
-  }, []);
+    return normalizedParcels.filter((p: any) => p.current_stage === "possessed").length;
+  }, [normalizedParcels]);
 
-  const pendingCount = REAL_PARCELS.length - possessedCount;
+  const pendingCount = normalizedParcels.length - possessedCount;
 
   return (
     <PublicShell>
@@ -77,7 +108,7 @@ export default function HighwayRegisterPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-white dark:bg-[#0B1220]">
           <div className="py-3 px-4">
             <div className="text-2xl font-bold text-[#14213D] dark:text-white tracking-tight">
-              {REAL_PARCELS.length}
+              {normalizedParcels.length}
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
               Cadastral Parcels
@@ -132,7 +163,7 @@ export default function HighwayRegisterPage() {
               <span>Search and Filter Land Acquisition Records</span>
             </div>
             <div className="text-xs font-mono text-[#0B5FA5] dark:text-sky-400">
-              Showing {filteredParcels.length} of {REAL_PARCELS.length} Parcels
+              Showing {filteredParcels.length} of {normalizedParcels.length} Parcels
             </div>
           </div>
 
@@ -266,8 +297,17 @@ export default function HighwayRegisterPage() {
               })}
               {filteredParcels.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="text-center py-8 text-slate-500 text-xs">
-                    No cadastral parcels match the selected village and filter parameters.
+                  <td colSpan={8} className="text-center py-12 text-slate-500 text-xs space-y-2">
+                    <p className="font-semibold text-[#14213D] dark:text-slate-300">
+                      {normalizedParcels.length === 0 
+                        ? "No cadastral parcels currently registered in the database." 
+                        : "No cadastral parcels match the selected village and filter parameters."}
+                    </p>
+                    {normalizedParcels.length === 0 && (
+                      <p className="text-[11px] text-[#64748B] dark:text-slate-400 max-w-md mx-auto">
+                        Awaiting Land Schedule ingestion, Form 3A Gazette publication, or Citizen parcel registration. Real data uploaded will automatically display here and across Statutory Timelines.
+                      </p>
+                    )}
                   </td>
                 </tr>
               )}

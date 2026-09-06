@@ -139,11 +139,13 @@ export function Sidebar() {
       {/* Footer Controls: Theme Toggle & User Profile */}
       <div className="p-3 border-t border-[#DCE2E8] dark:border-white/[0.06] bg-[#F8FAFC] dark:bg-black/20 space-y-2.5">
         {/* Theme Switcher Pill */}
-        <div className="flex items-center justify-between px-2 py-1 rounded-[4px] bg-white dark:bg-slate-900/60 border border-[#DCE2E8] dark:border-white/[0.05]">
-          <span className="text-[11px] font-semibold text-[#64748B] dark:text-slate-400">
-            Appearance
-          </span>
-          <ThemeToggle variant="pill" />
+        <div className="p-2 rounded-[4px] bg-white dark:bg-slate-900/60 border border-[#DCE2E8] dark:border-white/[0.05] space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
+              Appearance
+            </span>
+          </div>
+          <ThemeToggle variant="pill" className="w-full" />
         </div>
 
         {/* Officer Profile & Sign Out */}
