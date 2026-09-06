@@ -34,7 +34,7 @@ export default function LandownerProfilePage() {
       if (authData?.user) {
         activeId = authData.user.id;
         activeEmail = authData.user.email || "";
-        activeName = authData.user.user_metadata?.full_name || activeName;
+        activeName = authData.user.user_metadata?.full_name || activeEmail.split("@")[0] || activeName;
         activeVillage = authData.user.user_metadata?.village || activeVillage;
 
         setOwner({
@@ -43,6 +43,26 @@ export default function LandownerProfilePage() {
           name: activeName,
           contact_village: activeVillage
         });
+      } else {
+        // Fallback: Check bhumi_landowner_session cookie
+        const match = typeof document !== "undefined" ? document.cookie.match(/bhumi_landowner_session=([^;]+)/) : null;
+        if (match) {
+          try {
+            const parsed = JSON.parse(decodeURIComponent(match[1]));
+            if (parsed.user_id || parsed.owner_id) {
+              activeId = parsed.user_id || parsed.owner_id;
+              activeEmail = parsed.email || "";
+              activeName = parsed.name || activeEmail.split("@")[0] || activeName;
+              activeVillage = parsed.village || parsed.contact_village || activeVillage;
+              setOwner({
+                owner_id: activeId,
+                email: activeEmail,
+                name: activeName,
+                contact_village: activeVillage
+              });
+            }
+          } catch {}
+        }
       }
 
       if (!activeId) {
@@ -62,6 +82,8 @@ export default function LandownerProfilePage() {
       const supabase = createClient();
       await supabase.auth.signOut();
     } catch {}
+    // Clear session cookies cleanly
+    document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     router.push("/landowner/login");
   };
 

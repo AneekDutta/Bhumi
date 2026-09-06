@@ -79,11 +79,11 @@ export default function LandownerLoginPage() {
             email: cleanEmail,
             role: "LANDOWNER"
           };
+          document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
 
           setSuccessMsg("Authentication verified! Entering Landowner Portal...");
           setTimeout(() => {
-            router.push("/landowner/home");
-            router.refresh();
+            window.location.href = "/landowner/home";
           }, 600);
           return;
         }
@@ -113,10 +113,17 @@ export default function LandownerLoginPage() {
         console.warn("Could not sync profile to backend immediately:", profileErr);
       }
 
+      const sessionPayload = {
+        user_id: userId,
+        name: userName,
+        email: cleanEmail,
+        role: "LANDOWNER"
+      };
+      document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+
       setSuccessMsg("Login successful! Loading Landowner Portal...");
       setTimeout(() => {
-        router.push("/landowner/home");
-        router.refresh();
+        window.location.href = "/landowner/home";
       }, 600);
 
     } catch (err: any) {

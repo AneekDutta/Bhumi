@@ -47,15 +47,30 @@ export async function updateSession(request: NextRequest) {
   const officerSession = request.cookies.get('bhumi_officer_session')?.value;
   const landownerSession = request.cookies.get('bhumi_landowner_session')?.value;
   let parsedRole: string | null = user?.user_metadata?.role || null;
-  const activeSession = officerSession || landownerSession;
-  if (!parsedRole && activeSession) {
+
+  if (!parsedRole && landownerSession) {
     try {
-      const decoded = decodeURIComponent(activeSession);
+      const decoded = decodeURIComponent(landownerSession);
+      const parsed = JSON.parse(decoded);
+      parsedRole = parsed?.role || 'LANDOWNER';
+    } catch {
+      try {
+        const parsed = JSON.parse(landownerSession);
+        parsedRole = parsed?.role || 'LANDOWNER';
+      } catch {
+        parsedRole = 'LANDOWNER';
+      }
+    }
+  }
+
+  if (!parsedRole && officerSession) {
+    try {
+      const decoded = decodeURIComponent(officerSession);
       const parsed = JSON.parse(decoded);
       parsedRole = parsed?.role || null;
     } catch {
       try {
-        const parsed = JSON.parse(activeSession);
+        const parsed = JSON.parse(officerSession);
         parsedRole = parsed?.role || null;
       } catch {}
     }
@@ -87,7 +102,7 @@ export async function updateSession(request: NextRequest) {
       contact_village: 'Chandwas (V03)',
       role: 'LANDOWNER'
     };
-    response.cookies.set('bhumi_officer_session', encodeURIComponent(JSON.stringify(sessionData)), {
+    response.cookies.set('bhumi_landowner_session', encodeURIComponent(JSON.stringify(sessionData)), {
       path: '/',
       maxAge: 86400 * 7,
       sameSite: 'lax',

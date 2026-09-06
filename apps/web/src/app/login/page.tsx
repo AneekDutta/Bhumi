@@ -171,11 +171,17 @@ function LoginPageContent() {
       }
 
       if (data.session) {
+        const role = data.user?.user_metadata?.role;
         setSuccessMsg("Security clearance accepted. Loading operational twin...");
         setTimeout(() => {
-          const next = searchParams.get("next") || "/";
-          router.push(next);
-          router.refresh();
+          if (role === "LANDOWNER") {
+            window.location.href = "/landowner/home";
+          } else if (role === "FIELD_OFFICER") {
+            window.location.href = "/field/dashboard";
+          } else {
+            const next = searchParams.get("next") || "/";
+            window.location.href = next;
+          }
         }, 500);
       }
     } catch {

@@ -42,7 +42,8 @@ export default function LandownerHomePage() {
 
       if (authData?.user) {
         activeOwnerId = authData.user.id;
-        activeOwnerName = authData.user.user_metadata?.full_name || activeOwnerName;
+        activeOwnerName = authData.user.user_metadata?.full_name || authData.user.email?.split("@")[0] || activeOwnerName;
+        activeVillage = authData.user.user_metadata?.village || activeVillage;
         setOwner({
           owner_id: activeOwnerId,
           name: activeOwnerName,
@@ -50,6 +51,27 @@ export default function LandownerHomePage() {
           email: authData.user.email
         });
       } else {
+        // Fallback: Check bhumi_landowner_session cookie
+        const match = typeof document !== "undefined" ? document.cookie.match(/bhumi_landowner_session=([^;]+)/) : null;
+        if (match) {
+          try {
+            const parsed = JSON.parse(decodeURIComponent(match[1]));
+            if (parsed.user_id || parsed.owner_id) {
+              activeOwnerId = parsed.user_id || parsed.owner_id;
+              activeOwnerName = parsed.name || activeOwnerName;
+              activeVillage = parsed.village || parsed.contact_village || activeVillage;
+              setOwner({
+                owner_id: activeOwnerId,
+                name: activeOwnerName,
+                contact_village: activeVillage,
+                email: parsed.email
+              });
+            }
+          } catch {}
+        }
+      }
+
+      if (!activeOwnerId) {
         router.push("/landowner/login");
         return;
       }

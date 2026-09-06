@@ -35,6 +35,21 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
             name: data.user.user_metadata?.full_name || data.user.email?.split('@')[0],
             email: data.user.email
           });
+        } else {
+          // Check bhumi_landowner_session cookie
+          const match = typeof document !== "undefined" ? document.cookie.match(/bhumi_landowner_session=([^;]+)/) : null;
+          if (match) {
+            try {
+              const parsed = JSON.parse(decodeURIComponent(match[1]));
+              if (parsed.user_id || parsed.owner_id) {
+                setOwner({
+                  user_id: parsed.user_id || parsed.owner_id,
+                  name: parsed.name || parsed.email?.split('@')[0],
+                  email: parsed.email
+                });
+              }
+            } catch {}
+          }
         }
       });
     });

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
@@ -10,6 +10,29 @@ import Link from "next/link";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    import("@/lib/supabase/client").then(({ createClient }) => {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data }) => {
+        if (data?.user?.email) {
+          setUserEmail(data.user.email);
+        } else {
+          // Check if officer session cookie exists
+          const match = typeof document !== "undefined" ? document.cookie.match(/bhumi_officer_session=([^;]+)/) : null;
+          if (match) {
+            try {
+              const parsed = JSON.parse(decodeURIComponent(match[1]));
+              if (parsed.email) setUserEmail(parsed.email);
+              else if (parsed.officer_id) setUserEmail(`${parsed.officer_id.toLowerCase()}@bhumi.gov.in`);
+            } catch {}
+          }
+        }
+      });
+    });
+  }, []);
+
   const isAuthPage =
     pathname === "/login" ||
     pathname.startsWith("/login/") ||
@@ -152,8 +175,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               <div className="hidden sm:flex flex-col text-left">
                 <div className="text-xs font-medium text-white flex items-center gap-1">
                   <span>Welcome, </span>
-                  <span className="font-bold">Sh. Rajesh Kumar</span>
-                  <ChevronDown className="w-3 h-3 text-slate-300 ml-0.5" />
+                  <span className="font-bold truncate max-w-[200px]" title={userEmail || "officer@bhumi.gov.in"}>
+                    {userEmail || "officer@bhumi.gov.in"}
+                  </span>
+                  <ChevronDown className="w-3 h-3 text-slate-300 ml-0.5 flex-shrink-0" />
                 </div>
                 <div className="text-[10px] text-slate-300 font-sans tracking-tight">
                   CALA Varanasi | Role: Competent Authority
