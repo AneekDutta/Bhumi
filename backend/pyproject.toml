@@ -7,3 +7,30 @@ pythonpath = ["."]
 testpaths = ["tests"]
 asyncio_mode = "auto"
 
+
+[project]
+name = "bhumi-backend"
+version = "0.1.0"
+description = "Bhumi API Service"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.128.8",
+    "uvicorn",
+    "pydantic",
+    "pydantic-settings",
+    "sqlalchemy",
+    "alembic",
+    "geoalchemy2",
+    "psycopg2-binary",
+    "asyncpg",
+    "shapely",
+    "pytest",
+    "pytest-asyncio",
+    "ruff",
+    "httpx",
+    "python-dateutil",
+    "greenlet>=3.1.0",
+    "PyJWT[crypto]>=2.10,<3",
+    "python-multipart==0.0.31",
+    "networkx"
+]
