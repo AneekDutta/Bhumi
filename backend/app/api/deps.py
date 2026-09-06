@@ -103,8 +103,22 @@ async def get_current_user_context(
         user = result.scalars().first()
 
         if not user:
-            logger.warning({"event": "AUTH_FAILURE", "reason": "Subject has no BHUMI user mapping"})
-            raise HTTPException(status_code=403, detail="User not authorized")
+            # Auto-create user mapping for newly registered users via Supabase Auth
+            user_metadata = payload.get("user_metadata", {})
+            assigned_role = user_metadata.get("role", "LANDOWNER")
+            
+            new_user = User(
+                id=user_id,
+                email=payload.get("email", ""),
+                name=user_metadata.get("full_name", "Citizen Titleholder"),
+                role=assigned_role,
+                is_active=True
+            )
+            db.add(new_user)
+            await db.commit()
+            await db.refresh(new_user)
+            user = new_user
+            logger.info({"event": "AUTH_SYNC", "reason": "Auto-created BHUMI user mapping from valid JWT"})
 
         return TrustedIdentity(
             user_id=str(user.id),
