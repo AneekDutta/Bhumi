@@ -143,7 +143,7 @@ export default function LandownerLoginPage() {
               भ
             </div>
             <span className="text-[11px] font-bold tracking-wider uppercase text-[#5A6A80] dark:text-slate-400">
-              Govt. of India · MoRTH
+              CALA · Landowner Portal
             </span>
           </div>
           <ThemeToggle variant="icon" className="!rounded-[4px] border border-[#DCE2E8] dark:border-white/10" />
@@ -275,7 +275,7 @@ export default function LandownerLoginPage() {
       </div>
 
       <div className="text-center text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 py-3 border-t border-[#DCE2E8] dark:border-white/10">
-        BHUMI Land Records Management System · PostGIS & NetworkX Causal Graph · NIC Standard
+        BHUMI Platform · Prototype Deployment (SIH26016) · CALA Directorate
       </div>
     </div>
   );

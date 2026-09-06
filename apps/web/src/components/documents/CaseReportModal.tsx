@@ -105,13 +105,13 @@ export function CaseReportModal({
           {/* Official Letterhead Banner */}
           <div className="p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 text-center space-y-1">
             <div className="text-[11px] uppercase font-bold tracking-widest text-[#0B2E59] dark:text-sky-300 font-mono">
-              Government of India &middot; Ministry of Road Transport &amp; Highways / Railways
+              CENTRAL AUTHORITY FOR LAND ACQUISITION (CALA)
             </div>
             <div className="text-sm font-bold text-[#14213D] dark:text-white font-display">
-              COMPETENT AUTHORITY LAND ACQUISITION (CALA) DIVISION
+              COMPETENT AUTHORITY LAND ACQUISITION DIVISION
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400">
-              National Infrastructure Corridor Acquisition Directorate &middot; GatiShakti Portal
+              National Infrastructure Corridor Acquisition Directorate &middot; BHUMI Platform (SIH26016)
             </div>
           </div>
 

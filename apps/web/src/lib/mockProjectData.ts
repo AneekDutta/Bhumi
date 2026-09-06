@@ -38,7 +38,7 @@ export const MOCK_GOVERNMENT_PROJECTS: GovernmentProject[] = [
     name: "Delhi–Mumbai Expressway (Package 14)",
     code: "NHAI-DME-PKG14",
     sector: "Highways",
-    department: "National Highways Authority of India (NHAI) · MoRTH",
+    department: "National Highways Project Division · CALA",
     state: "Rajasthan / Madhya Pradesh",
     district: "Kota / Mandsaur",
     total_length_km: 244.5,

@@ -25,6 +25,8 @@ import {
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { ExitButton } from "@/components/common/ExitButton";
 
+import { CalaSealLogo } from "@/components/common/CalaSealLogo";
+
 export function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -37,14 +39,14 @@ export function Sidebar() {
       ]
     },
     {
-      group: "Government Projects",
+      group: "Projects & Corridors",
       items: [
         { id: "projects", href: "/projects", label: "Project Portfolio", icon: Briefcase },
         { id: "project-gis", href: "/projects/gis", label: "Project Spatial Map", icon: Navigation }
       ]
     },
     {
-      group: "Landowner & Acquisition",
+      group: "Landowner & Cases",
       items: [
         { id: "landowner-cases", href: "/landowner-cases", label: "Landowner Grievances", icon: FileText },
         { id: "parcels", href: "/parcels", label: "Registered Parcels", icon: Layers },
@@ -53,7 +55,7 @@ export function Sidebar() {
       ]
     },
     {
-      group: "Intelligence",
+      group: "Decision Intelligence",
       items: [
         { id: "what-if", href: "/intelligence/what-if", label: "What-If Simulation", icon: SlidersHorizontal },
         { id: "timeline", href: "/timeline", label: "Statutory Timelines", icon: Clock }
@@ -75,20 +77,18 @@ export function Sidebar() {
   };
 
   const navContent = (
-    <div className="h-full flex flex-col justify-between bg-white dark:bg-[#080E18] border-r border-[#DCE2E8] dark:border-white/[0.07] text-[#333333] dark:text-[#F0F4FF] transition-colors duration-200">
+    <div className="h-full flex flex-col justify-between bg-white dark:bg-[#080E18] text-[#333333] dark:text-[#F0F4FF] transition-colors duration-200">
       <div>
         {/* Brand */}
         <div className="p-4 pb-3 border-b border-[#DCE2E8] dark:border-white/[0.06] flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="w-[34px] h-[34px] rounded-none flex-shrink-0 bg-[#0B2E59] flex items-center justify-center text-white font-devanagari font-bold text-base">
-              भ
-            </div>
+            <CalaSealLogo size={34} className="w-[34px] h-[34px] flex-shrink-0" variant="navy" />
             <div>
               <div className="font-bold text-[#14213D] dark:text-white text-[15px] leading-tight">
                 BHUMI Portal
               </div>
               <div className="text-[10px] text-[#64748B] dark:text-[#94A3B8] font-mono">
-                CALA Directorate · MoRTH
+                CALA Directorate · Land Acquisition
               </div>
             </div>
           </Link>
@@ -106,7 +106,7 @@ export function Sidebar() {
           {navGroups.map((grp) => (
             <div key={grp.group}>
               <div className="px-2 mb-1.5 flex items-center justify-between">
-                <span className="text-[11px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase">
+                <span className="text-[10px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase tracking-wider">
                   {grp.group}
                 </span>
               </div>
@@ -121,7 +121,7 @@ export function Sidebar() {
                       onClick={() => setMobileOpen(false)}
                       className={`flex items-center gap-2.5 px-3 py-2 text-xs rounded-[4px] transition-all ${
                         active
-                          ? "bg-[#E6F0FA] dark:bg-[#0B5FA5]/20 text-[#0B2E59] dark:text-[#38BDF8] font-bold border-l-[3px] border-[#0B5FA5] shadow-sm"
+                          ? "bg-[#E6F0FA] dark:bg-[#0B5FA5]/20 text-[#0B2E59] dark:text-[#38BDF8] font-bold border-l-[3px] border-[#0B5FA5] shadow-xs"
                           : "text-[#333333] dark:text-[#CBD5E1] hover:text-[#0B2E59] hover:bg-[#F1F4F7] dark:hover:bg-white/[0.04] font-medium"
                       }`}
                     >
@@ -149,7 +149,7 @@ export function Sidebar() {
         {/* Officer Profile & Sign Out */}
         <div className="flex items-center justify-between pt-1 gap-2">
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-[4px] flex-shrink-0 bg-[#0B2E59] text-white flex items-center justify-center text-xs font-bold font-mono shadow-sm">
+            <div className="w-8 h-8 rounded-[4px] flex-shrink-0 bg-[#0B2E59] text-white flex items-center justify-center text-xs font-bold font-mono shadow-xs">
               RK
             </div>
             <div className="truncate">
@@ -157,7 +157,7 @@ export function Sidebar() {
                 Sh. Rajesh Kumar
               </div>
               <div className="text-[10px] text-[#64748B] dark:text-slate-400 truncate">
-                CALA Varanasi
+                CALA Varanasi Desk
               </div>
             </div>
           </div>
@@ -178,8 +178,8 @@ export function Sidebar() {
         <Menu className="w-5 h-5" />
       </button>
 
-      {/* Desktop Persistent Sidebar */}
-      <aside className="hidden md:block w-64 h-screen flex-shrink-0 sticky top-0 overflow-hidden z-30">
+      {/* Desktop Persistent Sidebar (Independent Scroll Column) */}
+      <aside className="hidden md:flex flex-col w-64 h-full flex-shrink-0 border-r border-[#DCE2E8] dark:border-white/[0.07] overflow-y-auto no-scrollbar z-20">
         {navContent}
       </aside>
 
@@ -187,7 +187,7 @@ export function Sidebar() {
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex">
           <div 
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
             onClick={() => setMobileOpen(false)}
           />
           <div className="relative w-64 h-full z-10 animate-slide-in">

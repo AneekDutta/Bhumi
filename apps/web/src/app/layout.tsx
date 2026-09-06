@@ -28,6 +28,8 @@ export const viewport: Viewport = {
   themeColor: '#059669',
 };
 
+import { I18nProvider } from '@/lib/i18n/I18nContext';
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="min-h-full light" suppressHydrationWarning>
@@ -58,7 +60,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="min-h-full bg-[#F4F6F8] dark:bg-[#07080F] text-[#14213D] dark:text-[#F0F4FF] font-sans antialiased transition-colors duration-150">
         <ThemeProvider>
-          <AppShell>{children}</AppShell>
+          <I18nProvider>
+            <AppShell>{children}</AppShell>
+          </I18nProvider>
         </ThemeProvider>
       </body>
     </html>

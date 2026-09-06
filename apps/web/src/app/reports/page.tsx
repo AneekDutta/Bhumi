@@ -153,7 +153,7 @@ export default function ReportsPage() {
               National MIS Reports Hub
             </h1>
             <p className="text-xs text-[#555555] dark:text-slate-400 mt-1 max-w-xl">
-              Export official analytical reports, statutory gazette registers, and CPM critical path constraints for MoRTH, NHAI, and Competent Authorities.
+              Export official analytical reports, statutory gazette registers, and CPM critical path constraints for CALA Directorate, Project Divisions, and Competent Authorities.
             </p>
           </div>
           <div className="flex items-center gap-2">

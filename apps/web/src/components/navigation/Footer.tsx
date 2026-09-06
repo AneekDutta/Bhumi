@@ -48,14 +48,14 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom copyright */}
-        <div className="pt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-500 text-[11px]">
+        {/* Bottom copyright & disclaimer */}
+        <div className="pt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400 text-[11px]">
           <div>
-            &copy; {new Date().getFullYear()} BHUMI Operational Platform &bull; Built for National Infrastructure Development
+            BHUMI Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.
           </div>
           <div className="flex items-center space-x-3">
             <span className="flex items-center gap-1 text-slate-400 font-mono">
-              <ShieldCheck className="w-3 h-3 text-emerald-400" /> CALA Operations Platform v2.4.0
+              <ShieldCheck className="w-3 h-3 text-emerald-400" /> CALA Operations Platform · RFCTLARR Act 2013
             </span>
           </div>
         </div>

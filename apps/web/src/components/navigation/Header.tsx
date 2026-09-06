@@ -12,6 +12,7 @@ import {
   X, 
   Search
 } from 'lucide-react';
+import { CalaSealLogo } from '@/components/common/CalaSealLogo';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -53,26 +54,18 @@ export function Header() {
               href="/" 
               className="flex items-center space-x-3 group focus:outline-none focus:ring-1 focus:ring-white/40 rounded-[4px] p-1 transition-all"
             >
-              {/* Ashoka/Chakra inspired emblem SVG badge */}
-              <div className="relative w-8 h-8 rounded-[3px] bg-white/10 border border-white/20 flex items-center justify-center group-hover:scale-105 transition-transform">
-                <svg className="w-5 h-5 text-gov-saffron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
-                  <circle cx="12" cy="12" r="3" fill="currentColor" />
-                  <path d="M12 3v6M12 15v6M3 12h6M15 12h6" strokeLinecap="round" />
-                  <path d="m5.6 5.6 4.3 4.3M14.1 14.1l4.3 4.3M18.4 5.6l-4.3 4.3M9.9 14.1l-4.3 4.3" strokeLinecap="round" />
-                </svg>
-              </div>
+              <CalaSealLogo size={32} className="w-8 h-8 flex-shrink-0" variant="light" />
 
               <div className="flex flex-col leading-tight">
                 <span className="font-devanagari font-semibold text-base text-white group-hover:text-white/90 transition-colors">
-                  भूमि
+                  भूमि — CALA
                 </span>
                 <div className="flex items-baseline space-x-1.5">
                   <span className="font-extrabold text-lg tracking-tight text-white group-hover:text-white/90 transition-colors">
                     BHUMI
                   </span>
-                  <span className="text-[10px] text-white/60 tracking-wider uppercase font-medium">
-                    Land Acquisition Intelligence
+                  <span className="text-[10px] text-white/70 tracking-wider uppercase font-medium">
+                    Land Acquisition &amp; Management
                   </span>
                 </div>
               </div>

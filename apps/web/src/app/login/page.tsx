@@ -26,6 +26,9 @@ import {
   Landmark
 } from "lucide-react";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
+import { CalaSealLogo } from "@/components/common/CalaSealLogo";
+import { DigitalCorridorMark } from "@/components/common/DigitalCorridorMark";
+import { useI18n } from "@/lib/i18n/I18nContext";
 
 type AuthMode = "LOGIN" | "FORGOT_PASSWORD" | "UPDATE_PASSWORD";
 
@@ -33,6 +36,7 @@ function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
+  const { language, setLanguage, textSize, setTextSize } = useI18n();
 
   // Authentication State
   const [mode, setMode] = useState<AuthMode>("LOGIN");
@@ -259,23 +263,53 @@ function LoginPageContent() {
               <span>Emergency Helpline: <strong>7595093196</strong> / <strong>6202346942</strong></span>
             </span>
             <span className="text-white/30 hidden md:inline">|</span>
-            <span className="text-slate-300 hidden md:inline">helpdesk-bhumi@gov.in</span>
+            <span className="text-slate-300 hidden md:inline">support@bhumi.internal</span>
             <span className="text-white/30 hidden lg:inline">|</span>
-            <span className="text-slate-300 hidden lg:inline">भारत सरकार | Government of India</span>
+            <span className="text-slate-300 hidden lg:inline">CALA Directorate · Smart India Hackathon Prototype (SIH26016)</span>
           </div>
 
           {/* Right: Language Switcher, Accessibility Font Size, Theme */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1 text-slate-300">
-              <span className="text-white font-bold cursor-pointer hover:underline">English</span>
+              <button
+                type="button"
+                onClick={() => setLanguage("en")}
+                className={`cursor-pointer hover:underline ${language === "en" ? "text-white font-bold" : "text-slate-300"}`}
+              >
+                English
+              </button>
               <span className="text-white/40">|</span>
-              <span className="text-slate-300 font-devanagari cursor-pointer hover:underline">हिन्दी</span>
+              <button
+                type="button"
+                onClick={() => setLanguage("hi")}
+                className={`font-devanagari cursor-pointer hover:underline ${language === "hi" ? "text-white font-bold" : "text-slate-300"}`}
+              >
+                हिन्दी
+              </button>
             </div>
             <span className="text-white/30">|</span>
             <div className="flex items-center gap-1 font-mono text-[10px]">
-              <span className="px-1 py-0.5 rounded-none bg-white/10 hover:bg-white/20 cursor-pointer font-bold">A-</span>
-              <span className="px-1 py-0.5 rounded-none bg-white/15 hover:bg-white/20 cursor-pointer font-bold">A</span>
-              <span className="px-1 py-0.5 rounded-none bg-white/10 hover:bg-white/20 cursor-pointer font-bold">A+</span>
+              <button
+                type="button"
+                onClick={() => setTextSize("sm")}
+                className={`px-1 py-0.5 rounded-none cursor-pointer font-bold ${textSize === "sm" ? "bg-white/30 text-white" : "bg-white/10 hover:bg-white/20 text-slate-200"}`}
+              >
+                A-
+              </button>
+              <button
+                type="button"
+                onClick={() => setTextSize("base")}
+                className={`px-1 py-0.5 rounded-none cursor-pointer font-bold ${textSize === "base" ? "bg-white/30 text-white" : "bg-white/10 hover:bg-white/20 text-slate-200"}`}
+              >
+                A
+              </button>
+              <button
+                type="button"
+                onClick={() => setTextSize("lg")}
+                className={`px-1 py-0.5 rounded-none cursor-pointer font-bold ${textSize === "lg" ? "bg-white/30 text-white" : "bg-white/10 hover:bg-white/20 text-slate-200"}`}
+              >
+                A+
+              </button>
             </div>
             <span className="text-white/30">|</span>
             <ThemeToggle variant="icon" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20 !rounded-none" />
@@ -285,60 +319,40 @@ function LoginPageContent() {
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. MAIN MINISTRY BRANDING HEADER                                          */}
+      {/* 2. MAIN CALA BRANDING HEADER                                              */}
       {/* ========================================================================= */}
-      <header className="bg-[#0B2E59] text-white px-4 py-3.5 sm:px-8 border-b border-[#0A2647] flex-shrink-0">
+      <header className="bg-[#0B2E59] text-white px-4 py-3 sm:px-8 border-b border-[#0A2647] flex-shrink-0">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
           
-          {/* Left: State Lion Capital Emblem + Bilingual Ministry Name */}
-          <Link href="/" className="flex items-center gap-4 group">
-            <div className="w-12 h-14 flex-shrink-0 flex items-center justify-center">
-              <svg viewBox="0 0 64 72" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
-                <rect x="12" y="64" width="40" height="4" rx="0" fill="#f8fafc" />
-                <rect x="8" y="60" width="48" height="3" rx="0" fill="#e2e8f0" />
-                <circle cx="32" cy="53" r="5.5" stroke="#f8fafc" strokeWidth="1.5" fill="none" />
-                <circle cx="32" cy="53" r="1.5" fill="#f8fafc" />
-                <line x1="32" y1="47.5" x2="32" y2="58.5" stroke="#f8fafc" strokeWidth="0.8" />
-                <line x1="26.5" y1="53" x2="37.5" y2="53" stroke="#f8fafc" strokeWidth="0.8" />
-                <line x1="28" y1="49" x2="36" y2="57" stroke="#f8fafc" strokeWidth="0.8" />
-                <line x1="36" y1="49" x2="28" y2="57" stroke="#f8fafc" strokeWidth="0.8" />
-                <rect x="14" y="52" width="6" height="3" fill="#cbd5e1" />
-                <rect x="44" y="52" width="6" height="3" fill="#cbd5e1" />
-                <rect x="10" y="46" width="44" height="4" fill="#f1f5f9" />
-                <path d="M26 46 C26 38 27 28 32 20 C37 28 38 38 38 46 Z" fill="#f8fafc" />
-                <path d="M28 20 C28 14 30 8 32 8 C34 8 36 14 36 20 Z" fill="#ffffff" />
-                <circle cx="32" cy="14" r="2.5" fill="#0b2e59" opacity="0.2" />
-                <path d="M16 46 C16 38 20 32 25 24 C23 20 21 15 23 11 C25 9 27 12 28 16 C25 24 26 34 26 46 Z" fill="#e2e8f0" />
-                <path d="M48 46 C48 38 44 32 39 24 C41 20 43 15 41 11 C39 9 37 12 36 16 C39 24 38 34 38 46 Z" fill="#e2e8f0" />
-                <circle cx="32" cy="5" r="1.5" fill="#f8fafc" />
-              </svg>
+          {/* Left: CALA Seal + Bilingual Title */}
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-11 h-11 flex-shrink-0 flex items-center justify-center">
+              <CalaSealLogo size={44} />
             </div>
 
             <div className="flex flex-col">
-              <span className="font-devanagari font-bold text-sm sm:text-base text-white/95 leading-tight">
-                सड़क परिवहन और राजमार्ग मंत्रालय
+              <span className="font-devanagari font-bold text-xs sm:text-sm text-amber-300 leading-tight">
+                केन्द्रीय भूमि अधिग्रहण प्राधिकरण
               </span>
-              <span className="font-bold text-sm sm:text-base text-white leading-tight">
-                Ministry of Road Transport and Highways
+              <span className="font-bold text-sm sm:text-base text-white leading-tight tracking-wide">
+                Central Authority for Land Acquisition (CALA)
               </span>
-              <span className="text-xs text-amber-300 font-semibold tracking-wide mt-0.5">
-                भूमि अधिग्रहण प्रबंधन प्रणाली - BHUMI · National Land Acquisition Portal
+              <span className="text-[11px] text-slate-200 font-normal">
+                BHUMI — Land Acquisition Management System · भूमि अधिग्रहण प्रबंधन पोर्टल
               </span>
             </div>
           </Link>
 
-          {/* Right: Institutional Badges */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* Right: Institutional Insignia */}
+          <div className="hidden md:flex items-center gap-3">
+            <DigitalCorridorMark className="h-10 text-white/90" />
             <div className="text-right">
-              <div className="text-[10px] uppercase font-mono tracking-widest text-slate-300">
-                GOVERNMENT OF INDIA
+              <div className="text-[10px] uppercase font-mono tracking-wider text-amber-300 font-bold">
+                SIH26016 PROTOTYPE
               </div>
-              <div className="text-xs font-bold text-white tracking-wide">
-                PM GatiShakti National Master Plan
+              <div className="text-[11px] text-slate-300">
+                Statutory NH Corridor Portal
               </div>
-            </div>
-            <div className="w-10 h-10 rounded-none bg-white/10 border border-white/20 flex items-center justify-center text-amber-300 font-bold font-devanagari text-lg">
-              भ
             </div>
           </div>
 
@@ -346,13 +360,9 @@ function LoginPageContent() {
       </header>
 
       {/* ========================================================================= */}
-      {/* 3. NATIONAL TRICOLOR RIBBON (3px)                                         */}
+      {/* 3. GOVERNMENT BLUE RULE (2px)                                             */}
       {/* ========================================================================= */}
-      <div className="flex h-[3px] w-full flex-shrink-0">
-        <div className="flex-1 bg-[#FF9933]" />
-        <div className="flex-1 bg-white" />
-        <div className="flex-1 bg-[#128807]" />
-      </div>
+      <div className="h-[2px] w-full bg-[#0B5FA5] flex-shrink-0" />
 
       {/* ========================================================================= */}
       {/* 4. HORIZONTAL NAVY NAVIGATION BAR (All Valid Public Routes)               */}
@@ -507,10 +517,10 @@ function LoginPageContent() {
           <div className="p-3.5 bg-[#FFFBEB] dark:bg-amber-950/30 border border-[#FDE68A] dark:border-amber-800 rounded-none text-xs space-y-1.5">
             <div className="font-bold text-[#92400E] dark:text-amber-300 flex items-center gap-1.5 text-xs">
               <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
-              <span>Official Access Advisory for Government Officers</span>
+              <span>Official Access Advisory for CALA Officers</span>
             </div>
             <p className="text-[11px] text-[#78350F] dark:text-amber-200/90 leading-relaxed">
-              Login is restricted to designated Competent Authorities for Land Acquisition (CALA), Special Land Acquisition Officers (SLAO), NHAI Regional Project Directors, and authorized Ministry evaluators. Keep credentials confidential and report any anomaly immediately to the National Cyber Security Cell.
+              Login is restricted to designated Competent Authorities for Land Acquisition (CALA), Special Land Acquisition Officers (SLAO), and authorized Project Directors. Keep credentials confidential and report any anomaly immediately to the District IT Desk.
             </p>
           </div>
 
@@ -530,12 +540,12 @@ function LoginPageContent() {
                   Officer Login / अधिकारी लॉगिन
                 </h3>
                 <span className="text-[10px] text-amber-300 font-mono">
-                  MoRTH / CALA / NHAI Authorized Officers
+                  CALA Directorate / Authorized Project Officers
                 </span>
               </div>
               <div className="flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-none bg-white/10 text-slate-200 border border-white/20">
                 <Lock className="w-3 h-3 text-emerald-400" />
-                <span>NIC SECURED · GIGW COMPLIANT</span>
+                <span>CALA SECURED · STATUTORY PROTOCOL</span>
               </div>
             </div>
 
@@ -783,10 +793,10 @@ function LoginPageContent() {
           <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-3 rounded-none text-xs text-[#64748B] dark:text-slate-400 space-y-1 transition-colors">
             <div className="font-bold text-[#14213D] dark:text-white flex items-center gap-1 text-[11px]">
               <Shield className="w-3.5 h-3.5 text-[#0B5FA5] dark:text-sky-400" />
-              <span>Official Government Portal Notice</span>
+              <span>CALA Access Protocol Notice</span>
             </div>
             <p className="text-[11px] leading-relaxed">
-              This system is strictly for authorized personnel of the Ministry of Road Transport &amp; Highways and Competent Authorities for Land Acquisition (CALA). Unauthorized access attempts are logged and prosecutable under the IT Act 2000.
+              This system is strictly for authorized personnel of the Competent Authority for Land Acquisition (CALA) and designated project directors. Unauthorized access attempts are logged and subject to administrative sanctions.
             </p>
           </div>
 
@@ -795,18 +805,18 @@ function LoginPageContent() {
       </main>
 
       {/* ========================================================================= */}
-      {/* 6. OFFICIAL NIC GOVERNMENT FOOTER                                         */}
+      {/* 6. OFFICIAL CALA PROTOTYPE FOOTER                                         */}
       {/* ========================================================================= */}
       <footer className="bg-[#0A2647] text-white py-4 px-4 text-center text-xs border-t border-[#071A32] flex-shrink-0 space-y-1">
         <div className="max-w-[1440px] mx-auto space-y-1">
           <p className="font-medium text-slate-200">
-            Designed, Developed and Hosted by National Informatics Centre (NIC), Ministry of Electronics &amp; Information Technology, Government of India
+            Designed and Developed for CALA — Central Authority for Land Acquisition
           </p>
           <p className="text-[11px] text-slate-400">
-            Content Owned and Maintained by Ministry of Road Transport &amp; Highways, Government of India
+            BHUMI Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.
           </p>
           <p className="text-[10px] text-slate-400 font-mono pt-1">
-            BHUMI Portal Version 3.4.1 · ISO 27001 Certified · Compliance with Guidelines for Indian Government Websites (GIGW)
+            Emergency Helpline: 7595093196 / 6202346942 · Technical Support: support@bhumi.internal
           </p>
         </div>
       </footer>
@@ -819,7 +829,7 @@ export default function LoginPage() {
   return (
     <React.Suspense fallback={
       <div className="w-full h-screen bg-[#F4F6F8] flex items-center justify-center text-slate-600 font-mono text-xs">
-        Loading Government of India Portal...
+        Loading BHUMI Portal...
       </div>
     }>
       <LoginPageContent />

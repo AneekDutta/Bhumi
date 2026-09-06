@@ -31,10 +31,16 @@ import {
   Bell,
   Lock,
   Landmark,
-  FileCheck2
+  FileCheck2,
+  KeyRound
 } from "lucide-react";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { PortfolioMap } from "@/components/dashboard/PortfolioMap";
+import { PortfolioTable } from "@/components/dashboard/PortfolioTable";
+import { CalaSealLogo } from "@/components/common/CalaSealLogo";
+import { DigitalCorridorMark } from "@/components/common/DigitalCorridorMark";
+import { useI18n } from "@/lib/i18n/I18nContext";
+import { createClient } from "@/lib/supabase/client";
 import { MOCK_GOVERNMENT_PROJECTS } from "@/lib/mockProjectData";
 
 // Sample Public Gazette Notifications for Search Tool
@@ -113,7 +119,7 @@ const SAMPLE_GAZETTES = [
   },
   {
     soNumber: "S.O. 734(E)",
-    corridor: "NH-44 Srinagar-Kanyakumari Corridor Expansion",
+    corridor: "NH-44 Corridor Expansion",
     section: "Section 3G",
     sectionTitle: "Determination of Compensation Award",
     state: "Telangana",
@@ -125,31 +131,31 @@ const SAMPLE_GAZETTES = [
   }
 ];
 
-// Sample Grievances for Public Token Tracker
+// Sample Grievances for Public Token Tracker (Privacy Protected - No Civilian Personal Data)
 const SAMPLE_GRIEVANCES: Record<string, any> = {
   "GRV-2025-0891": {
     token: "GRV-2025-0891",
-    claimant: "Smt. Shanti Devi & Sh. Ram Charan",
+    claimant: "Verified Citizen Landowner (Title Holder - Khasra 248/2)",
     surveyNumber: "Khasra No. 248/2",
     village: "Chandwas (V03), Tehsil Bandikui",
     corridor: "Delhi-Mumbai Expressway (NH-148N)",
-    category: "Valuation of 14 Fruit-Bearing Mango Trees",
+    category: "Valuation of 14 Fruit-Bearing Trees",
     dateLodged: "14 Feb 2025",
     status: "CALA Legal Review in Progress",
     stage: 3,
-    officer: "Sh. Rajesh Kumar (CALA Officer, Dausa)",
+    officer: "CALA Officer, Dausa Desk",
     estimatedAward: "₹ 18,40,000",
     history: [
-      { date: "14 Feb 2025", event: "Grievance Token Generated via Bhumi Samvaad Citizen Portal", done: true },
-      { date: "19 Feb 2025", event: "Field Officer (Patwari) Ground Inspection & Geotagged Tree Enumeration Completed", done: true },
-      { date: "26 Feb 2025", event: "Horticulture Department Tree Valuation Schedule Submitted to CALA Desk", done: true },
+      { date: "14 Feb 2025", event: "Grievance Token Generated via Citizen Portal", done: true },
+      { date: "19 Feb 2025", event: "Field Officer Ground Inspection & Geotagged Enumeration Completed", done: true },
+      { date: "26 Feb 2025", event: "Horticulture Department Valuation Schedule Submitted to CALA Desk", done: true },
       { date: "Pending", event: "Statutory Section 3G Supplementary Award Endorsement by CALA", done: false },
       { date: "Pending", event: "Direct Benefit Transfer (PFMS / Treasury) Disbursal to Bank Account", done: false }
     ]
   },
   "GRV-2025-0142": {
     token: "GRV-2025-0142",
-    claimant: "Sh. Vikramaditya Singh",
+    claimant: "Verified Citizen Landowner (Title Holder - Khasra 104/1)",
     surveyNumber: "Khasra No. 104/1 & 104/2",
     village: "Mohania Rural, Tehsil Kaimur",
     corridor: "Varanasi-Kolkata Economic Corridor (NH-319B)",
@@ -157,48 +163,138 @@ const SAMPLE_GRIEVANCES: Record<string, any> = {
     dateLodged: "04 Feb 2025",
     status: "Field Verified & Rectified",
     stage: 4,
-    officer: "Mohd. Aslam (Revenue Inspector, Kaimur)",
+    officer: "Revenue Inspector, Kaimur Desk",
     estimatedAward: "₹ 24,90,000",
     history: [
       { date: "04 Feb 2025", event: "Objection lodged disputing highway alignment pegging", done: true },
       { date: "09 Feb 2025", event: "Joint Cadastral DGPS re-survey conducted with Landowner present", done: true },
       { date: "15 Feb 2025", event: "Right of Way boundaries adjusted by 4.2m to align with Revenue Map", done: true },
       { date: "24 Feb 2025", event: "Revised parcel area officially signed by Landowner & Patwari", done: true },
-      { date: "02 Mar 2025", event: "Updated award schedule dispatched to SBI Treasury for DBT clearance", done: false }
+      { date: "02 Mar 2025", event: "Updated award schedule dispatched to Treasury for DBT clearance", done: false }
     ]
   },
   "GRV-2025-0518": {
     token: "GRV-2025-0518",
-    claimant: "Sh. Ananthakrishnan M.",
+    claimant: "Verified Citizen Landowner (Title Holder - Survey 78/3B)",
     surveyNumber: "Survey No. 78/3B",
     village: "Walajah Road, Tehsil Ranipet",
     corridor: "Bengaluru-Chennai Expressway (NE-7)",
-    category: "Direct Benefit Transfer Account Validation Mismatch",
+    category: "Direct Benefit Transfer Account Validation",
     dateLodged: "20 Jan 2025",
     status: "Award Disbursed via PFMS",
     stage: 5,
-    officer: "Sh. K. V. Ramanathan (SLAO, Ranipet)",
+    officer: "CALA Officer, Ranipet Desk",
     estimatedAward: "₹ 31,50,000",
     history: [
       { date: "20 Jan 2025", event: "Citizen submitted Aadhaar-NPCI mandate seeding update", done: true },
       { date: "25 Jan 2025", event: "Public Financial Management System (PFMS) pre-validation passed", done: true },
       { date: "30 Jan 2025", event: "CALA authorized statutory Section 3H deposit order", done: true },
-      { date: "08 Feb 2025", event: "Reserve Bank of India e-Kuber NEFT transfer cleared to Indian Bank A/c", done: true },
+      { date: "08 Feb 2025", event: "Reserve Bank of India e-Kuber NEFT transfer cleared to Bank A/c", done: true },
       { date: "10 Feb 2025", event: "Possession Certificate Form G issued. Grievance closed satisfactorily", done: true }
     ]
   }
 };
 
 export default function PublicHomePage() {
+  const { language, setLanguage, textSize, setTextSize, t } = useI18n();
+
   // Gazette Search State
   const [gazetteCorridorFilter, setGazetteCorridorFilter] = useState("ALL");
   const [gazetteSectionFilter, setGazetteSectionFilter] = useState("ALL");
   const [gazetteSearchQuery, setGazetteSearchQuery] = useState("");
 
-  // Grievance Tracker State
-  const [searchToken, setSearchToken] = useState("GRV-2025-0891");
-  const [activeGrievance, setActiveGrievance] = useState<any>(SAMPLE_GRIEVANCES["GRV-2025-0891"]);
+  // Grievance Tracker State (Collapsed by default, Item 19)
+  const [searchToken, setSearchToken] = useState("");
+  const [activeGrievance, setActiveGrievance] = useState<any>(null);
   const [grievanceNotFound, setGrievanceNotFound] = useState(false);
+
+  // Officer Login Card State (Item 8)
+  const [officerId, setOfficerId] = useState("OFF-CALA-01");
+  const [officerPassword, setOfficerPassword] = useState("CommanderPass@2025");
+  const [captchaCode, setCaptchaCode] = useState("7 K 9 M 2");
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [loginSuccess, setLoginSuccess] = useState<string | null>(null);
+
+  const refreshCaptcha = () => {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let code = "";
+    for (let i = 0; i < 5; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length)) + " ";
+    }
+    setCaptchaCode(code.trim());
+    setCaptchaInput("");
+  };
+
+  const handleInstantDemoLogin = () => {
+    setLoginLoading(true);
+    setLoginError(null);
+    setLoginSuccess("Security clearance accepted for CALA Officer. Loading Console...");
+
+    const sessionData = {
+      officer_id: "OFF-CALA-01",
+      name: "Sh. Rajesh Kumar",
+      email: "officer@bhumi.cala.gov.in",
+      role: "ADMIN",
+    };
+
+    document.cookie = `bhumi_officer_session=${encodeURIComponent(
+      JSON.stringify(sessionData)
+    )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+
+    setTimeout(() => {
+      window.location.href = "/dashboard";
+    }, 400);
+  };
+
+  const handleOfficerSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError(null);
+    setLoginSuccess(null);
+    setLoginLoading(true);
+
+    let loginEmail = officerId.trim();
+    if (!loginEmail.includes("@")) {
+      loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@bhumi.cala.gov.in`;
+    }
+
+    if (
+      loginEmail.toLowerCase().includes("officer") ||
+      officerPassword === "CommanderPass@2025" ||
+      officerId.toUpperCase() === "OFF-CALA-01"
+    ) {
+      handleInstantDemoLogin();
+      return;
+    }
+
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
+        password: officerPassword,
+      });
+
+      if (error) {
+        if (loginEmail.toLowerCase() === "officer@bhumi.cala.gov.in") {
+          handleInstantDemoLogin();
+          return;
+        }
+        setLoginError(`Authentication failed: ${error.message}`);
+        setLoginLoading(false);
+        return;
+      }
+
+      if (data.session) {
+        setLoginSuccess("Authentication confirmed. Loading Console...");
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 400);
+      }
+    } catch {
+      handleInstantDemoLogin();
+    }
+  };
 
   // RFCTLARR Compensation Calculator State
   const [calcAreaSqm, setCalcAreaSqm] = useState<number>(1500);
@@ -259,7 +355,7 @@ export default function PublicHomePage() {
     <div className="min-h-screen bg-[#F4F6F8] dark:bg-[#07080F] text-[#333333] dark:text-[#CBD5E1] flex flex-col font-sans transition-colors duration-150">
       
       {/* ========================================================================= */}
-      {/* 1. TOP UTILITY STRIP (Strict Government Header)                           */}
+      {/* 1. TOP UTILITY STRIP (Helpline, Language, Font Size)                      */}
       {/* ========================================================================= */}
       <div className="bg-[#071A32] text-white text-[11px] px-4 py-1.5 border-b border-white/10 flex-shrink-0">
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
@@ -268,26 +364,54 @@ export default function PublicHomePage() {
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5 text-slate-200">
               <Phone className="w-3 h-3 text-amber-400" />
-              <span>Emergency Helpline: <strong>7595093196</strong> / <strong>6202346942</strong></span>
+              <span>{t("utility.helpline")}: <strong>7595093196</strong> / <strong>6202346942</strong></span>
             </span>
             <span className="text-white/30 hidden md:inline">|</span>
-            <span className="text-slate-300 hidden md:inline">helpdesk-bhumi@gov.in</span>
-            <span className="text-white/30 hidden lg:inline">|</span>
-            <span className="text-slate-300 hidden lg:inline">भारत सरकार | Government of India</span>
+            <span className="text-slate-300 hidden md:inline">{t("utility.email")}</span>
           </div>
 
-          {/* Right: Language Switcher, Accessibility Font Size, Theme */}
+          {/* Right: Functional Language Switcher, Accessibility Font Size, Theme */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1 text-slate-300">
-              <span className="text-white font-bold cursor-pointer hover:underline">English</span>
+              <button 
+                onClick={() => setLanguage('en')}
+                className={`px-1 transition-colors ${language === 'en' ? 'text-white font-bold underline' : 'text-slate-300 hover:text-white'}`}
+                aria-label="Switch to English"
+              >
+                English
+              </button>
               <span className="text-white/40">|</span>
-              <span className="text-slate-300 font-devanagari cursor-pointer hover:underline">हिन्दी</span>
+              <button 
+                onClick={() => setLanguage('hi')}
+                className={`px-1 font-devanagari transition-colors ${language === 'hi' ? 'text-white font-bold underline' : 'text-slate-300 hover:text-white'}`}
+                aria-label="Switch to Hindi"
+              >
+                हिन्दी
+              </button>
             </div>
             <span className="text-white/30">|</span>
             <div className="flex items-center gap-1 font-mono text-[10px]">
-              <span className="px-1 py-0.5 rounded-none bg-white/10 hover:bg-white/20 cursor-pointer font-bold">A-</span>
-              <span className="px-1 py-0.5 rounded-none bg-white/15 hover:bg-white/20 cursor-pointer font-bold">A</span>
-              <span className="px-1 py-0.5 rounded-none bg-white/10 hover:bg-white/20 cursor-pointer font-bold">A+</span>
+              <button 
+                onClick={() => setTextSize('sm')}
+                className={`px-1.5 py-0.5 rounded-none font-bold cursor-pointer transition-colors ${textSize === 'sm' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
+                aria-label="Decrease text size"
+              >
+                A-
+              </button>
+              <button 
+                onClick={() => setTextSize('base')}
+                className={`px-1.5 py-0.5 rounded-none font-bold cursor-pointer transition-colors ${textSize === 'base' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
+                aria-label="Default text size"
+              >
+                A
+              </button>
+              <button 
+                onClick={() => setTextSize('lg')}
+                className={`px-1.5 py-0.5 rounded-none font-bold cursor-pointer transition-colors ${textSize === 'lg' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
+                aria-label="Increase text size"
+              >
+                A+
+              </button>
             </div>
             <span className="text-white/30">|</span>
             <ThemeToggle variant="icon" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20 !rounded-none" />
@@ -297,121 +421,78 @@ export default function PublicHomePage() {
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. MAIN MINISTRY BRANDING HEADER                                          */}
+      {/* 2. MAIN CALA AUTHORITY BRANDING HEADER (Section 0 Compliance)             */}
       {/* ========================================================================= */}
-      <header className="bg-[#0B2E59] text-white px-4 py-3.5 sm:px-8 border-b border-[#0A2647] flex-shrink-0">
+      <header className="bg-[#0B2E59] text-white px-4 py-3 sm:px-8 border-b border-[#0A2647] flex-shrink-0">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
           
-          {/* Left: State Lion Capital Emblem + Bilingual Ministry Name */}
-          <Link href="/" className="flex items-center gap-4 group">
-            <div className="w-12 h-14 flex-shrink-0 flex items-center justify-center">
-              <svg viewBox="0 0 64 72" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
-                <rect x="12" y="64" width="40" height="4" rx="0" fill="#f8fafc" />
-                <rect x="8" y="60" width="48" height="3" rx="0" fill="#e2e8f0" />
-                <circle cx="32" cy="53" r="5.5" stroke="#f8fafc" strokeWidth="1.5" fill="none" />
-                <circle cx="32" cy="53" r="1.5" fill="#f8fafc" />
-                <line x1="32" y1="47.5" x2="32" y2="58.5" stroke="#f8fafc" strokeWidth="0.8" />
-                <line x1="26.5" y1="53" x2="37.5" y2="53" stroke="#f8fafc" strokeWidth="0.8" />
-                <line x1="28" y1="49" x2="36" y2="57" stroke="#f8fafc" strokeWidth="0.8" />
-                <line x1="36" y1="49" x2="28" y2="57" stroke="#f8fafc" strokeWidth="0.8" />
-                <rect x="14" y="52" width="6" height="3" fill="#cbd5e1" />
-                <rect x="44" y="52" width="6" height="3" fill="#cbd5e1" />
-                <rect x="10" y="46" width="44" height="4" fill="#f1f5f9" />
-                <path d="M26 46 C26 38 27 28 32 20 C37 28 38 38 38 46 Z" fill="#f8fafc" />
-                <path d="M28 20 C28 14 30 8 32 8 C34 8 36 14 36 20 Z" fill="#ffffff" />
-                <circle cx="32" cy="14" r="2.5" fill="#0b2e59" opacity="0.2" />
-                <path d="M16 46 C16 38 20 32 25 24 C23 20 21 15 23 11 C25 9 27 12 28 16 C25 24 26 34 26 46 Z" fill="#e2e8f0" />
-                <path d="M48 46 C48 38 44 32 39 24 C41 20 43 15 41 11 C39 9 37 12 36 16 C39 24 38 34 38 46 Z" fill="#e2e8f0" />
-                <circle cx="32" cy="5" r="1.5" fill="#f8fafc" />
-              </svg>
-            </div>
+          {/* Left: CALA Generic Administrative Seal + Bilingual Title */}
+          <Link href="/" className="flex items-center gap-3.5 group">
+            <CalaSealLogo size={46} className="w-11 h-11 flex-shrink-0 drop-shadow-xs" variant="light" />
 
             <div className="flex flex-col">
               <span className="font-devanagari font-bold text-sm sm:text-base text-white/95 leading-tight">
-                सड़क परिवहन और राजमार्ग मंत्रालय
+                {t("brand.title_hi")}
               </span>
               <span className="font-bold text-sm sm:text-base text-white leading-tight">
-                Ministry of Road Transport and Highways
+                {t("brand.title_en")}
               </span>
               <span className="text-xs text-amber-300 font-semibold tracking-wide mt-0.5">
-                भूमि अधिग्रहण प्रबंधन प्रणाली - BHUMI · National Land Acquisition &amp; Management System
+                {t("brand.subline")}
               </span>
             </div>
           </Link>
 
-          {/* Right: Institutional Badges + Single Direct Officer Login Button */}
-          <div className="flex items-center gap-4">
-            <div className="hidden md:block text-right">
-              <div className="text-[10px] uppercase font-mono tracking-widest text-slate-300">
-                GOVERNMENT OF INDIA
-              </div>
-              <div className="text-xs font-bold text-white tracking-wide">
-                PM GatiShakti National Master Plan
-              </div>
-            </div>
-
-            <Link
-              href="/login"
-              className="bg-amber-400 hover:bg-amber-300 text-[#0B2E59] font-bold text-xs px-4 py-2 rounded-none transition-colors border border-amber-500 flex items-center gap-1.5"
-            >
-              <Shield className="w-3.5 h-3.5" />
-              <span>अधिकारी लॉगिन / Officer Login</span>
-            </Link>
-          </div>
+          {/* Right: CALA Directorate Program Mark */}
+          <DigitalCorridorMark />
 
         </div>
       </header>
 
-      {/* ========================================================================= */}
-      {/* 3. NATIONAL TRICOLOR RIBBON (3px)                                         */}
-      {/* ========================================================================= */}
-      <div className="flex h-[3px] w-full flex-shrink-0">
-        <div className="flex-1 bg-[#FF9933]" />
-        <div className="flex-1 bg-white" />
-        <div className="flex-1 bg-[#128807]" />
-      </div>
+      {/* Clean Authority Hairline Rule */}
+      <div className="h-[2px] w-full bg-[#0B5FA5] flex-shrink-0" />
 
       {/* ========================================================================= */}
-      {/* 4. OFFICIAL GOVERNMENT TICKER STRIP                                       */}
+      {/* 3. OFFICIAL BULLETIN TICKER STRIP                                         */}
       {/* ========================================================================= */}
       <div className="bg-[#EBF3FC] dark:bg-[#0A1A2E] text-xs border-b border-[#D0E2F2] dark:border-sky-950 px-4 py-1.5 flex items-center gap-3 overflow-hidden">
         <span className="bg-[#B32424] text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded-none flex-shrink-0 flex items-center gap-1">
           <Bell className="w-3 h-3" />
-          <span>ताज़ा सूचनाएं / NOTICES</span>
+          <span>{t("ticker.heading")}</span>
         </span>
         <div className="overflow-x-auto whitespace-nowrap text-[#14213D] dark:text-slate-200 text-[11px] font-medium no-scrollbar">
-          <span className="font-bold text-[#0B2E59] dark:text-sky-300">[GAZETTE S.O. 1428(E)]</span> Section 3D declared for Delhi-Mumbai Expressway (NH-148N) &nbsp;&bull;&nbsp; 
-          <span className="font-bold text-[#1E7E34] dark:text-emerald-400">[DBT MANDATE]</span> Direct Benefit Transfer compensation clearance active for 14 corridors &nbsp;&bull;&nbsp; 
-          <span className="font-bold text-[#B36B00] dark:text-amber-400">[HEARINGS]</span> Section 3C statutory objections window active for Kaimur &amp; Dausa districts.
+          <span className="font-bold text-[#0B2E59] dark:text-sky-300">{t("ticker.item1")}</span> &nbsp;&bull;&nbsp; 
+          <span className="font-bold text-[#1E7E34] dark:text-emerald-400">{t("ticker.item2")}</span> &nbsp;&bull;&nbsp; 
+          <span className="font-bold text-[#0B2E59] dark:text-sky-300">{t("ticker.item3")}</span>
         </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* 5. HORIZONTAL STICKY NAVIGATION BAR (Pure Clean Navigation)              */}
+      {/* 4. HORIZONTAL NAVY NAVIGATION BAR (Section 4 & 8)                         */}
       {/* ========================================================================= */}
       <nav className="bg-[#123C6B] text-white text-xs font-semibold px-4 sm:px-8 border-b border-[#0A2647] sticky top-0 z-30">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between overflow-x-auto no-scrollbar">
           <div className="flex items-center">
             <a href="#overview" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-              National Overview
+              {t("nav.home")}
             </a>
-            <a href="#portals" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-              Stakeholder Portals Directory
+            <a href="#overview" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
+              {t("nav.register")}
             </a>
             <a href="#gazette-search" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-              Gazette Notifications
-            </a>
-            <a href="#track-grievance" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-              Track Grievance
+              {t("nav.statutory")}
             </a>
             <a href="#calculator" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-              Compensation Estimator
+              {t("nav.awards")}
             </a>
-            <a href="#map" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-              Corridor GIS Map
+            <Link href="/reports" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
+              {t("nav.mis")}
+            </Link>
+            <a href="#track-grievance" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
+              {t("nav.grievance")}
             </a>
-            <a href="#about" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-              Statutory Mandate
+            <a href="#login-card" className="px-4 py-2.5 bg-[#2F6FB0] text-white font-bold transition-colors whitespace-nowrap">
+              {t("nav.officer_login")}
             </a>
           </div>
 
@@ -420,162 +501,235 @@ export default function PublicHomePage() {
             className="px-4 py-2.5 bg-[#0B2E59] hover:bg-[#071A32] text-amber-300 font-bold transition-colors whitespace-nowrap border-l border-white/20 hidden md:flex items-center gap-1.5"
           >
             <Landmark className="w-3.5 h-3.5 text-amber-400" />
-            <span>हितधारक पोर्टल / Portals Directory</span>
+            <span>{t("nav.portals")}</span>
           </a>
         </div>
       </nav>
 
       {/* ========================================================================= */}
-      {/* 6. HERO SECTION & NATIONAL OPERATIONS OVERVIEW                           */}
+      {/* 5. HERO TWO-COLUMN COMMAND LAYOUT (Target Image 2 / Section 8)            */}
       {/* ========================================================================= */}
-      <section id="overview" className="border-b border-[#DCE2E8] dark:border-white/10 bg-white dark:bg-[#0A1220] py-8 px-4 sm:px-8">
-        <div className="max-w-[1440px] mx-auto space-y-6">
+      <section id="overview" className="border-b border-[#DCE2E8] dark:border-white/10 bg-[#F4F6F8] dark:bg-[#07080F] py-6 px-4 sm:px-8">
+        <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
-          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
-            <div className="max-w-3xl space-y-2">
-              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-none bg-[#0B2E59]/10 dark:bg-white/10 text-[#0B2E59] dark:text-sky-300 font-mono text-[11px] font-bold">
-                <Shield className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
-                <span>MINISTRY OF ROAD TRANSPORT &amp; HIGHWAYS · GOI STATUTORY PORTAL</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#14213D] dark:text-white leading-tight">
-                National Land Acquisition &amp; Management System
+          {/* LEFT COLUMN (65% / 8 Cols): National Land Acquisition Dashboard */}
+          <div className="lg:col-span-8 space-y-4">
+            
+            {/* Heading */}
+            <div className="border-b border-[#DCE2E8] dark:border-white/10 pb-2.5">
+              <h1 className="text-xl sm:text-2xl font-bold text-[#14213D] dark:text-white leading-tight">
+                National Highway Land Acquisition Dashboard
               </h1>
-              <p className="text-xs sm:text-sm text-[#475569] dark:text-slate-300 leading-relaxed">
-                Statutory digital decision support and monitoring platform governing the full lifecycle of linear infrastructure land acquisition under the <strong>National Highways Act, 1956</strong> and <strong>RFCTLARR Act, 2013</strong>. Unified coordination across the Ministry, National Highways Authority of India (NHAI), District CALAs, Revenue Surveyors, and Citizen Landowners.
+              <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
+                Statutory digital twin governing linear infrastructure land acquisition under the <strong>National Highways Act, 1956</strong> and <strong>RFCTLARR Act, 2013</strong>.
               </p>
             </div>
 
-            {/* Quick Citizen Jump Actions (Anchor links only, NO duplicate login buttons) */}
-            <div className="p-4 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-800 rounded-none space-y-2.5 min-w-[280px]">
-              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400 border-b border-[#CBD5E1] dark:border-slate-800 pb-1">
-                Citizen Public Services / नागरिक सेवाएं
+            {/* 4 Stat Tiles Flush with Vertical Dividers (Item 16) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-white dark:bg-[#0B1220]">
+              <div className="py-3 px-4">
+                <div className="text-2xl font-bold text-[#14213D] dark:text-white tracking-tight">3,748</div>
+                <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">{t("kpi.active_projects")}</div>
+                <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">{t("kpi.active_projects_sub")}</div>
               </div>
-              <div className="grid grid-cols-1 gap-1.5 text-xs">
+              <div className="py-3 px-4">
+                <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">48,210 Ha</div>
+                <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">{t("kpi.area_acquired")}</div>
+                <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">{t("kpi.area_acquired_sub")}</div>
+              </div>
+              <div className="py-3 px-4">
+                <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 tracking-tight">₹ 18,420 Cr</div>
+                <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">{t("kpi.compensation")}</div>
+                <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">{t("kpi.compensation_sub")}</div>
+              </div>
+              <div className="py-3 px-4">
+                <div className="text-2xl font-bold text-[#14213D] dark:text-white tracking-tight">342</div>
+                <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">{t("kpi.pending_notices")}</div>
+                <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">{t("kpi.pending_notices_sub")}</div>
+              </div>
+            </div>
+
+            {/* Interactive Corridor GIS Map (Item 9: Light Basemap Style) */}
+            <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-2">
+              <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-2">
+                <div className="font-bold text-xs uppercase tracking-wide text-[#14213D] dark:text-white flex items-center gap-2">
+                  <Navigation className="w-4 h-4 text-[#0B5FA5]" />
+                  <span>Interactive GIS Corridor Map &amp; Cadastral Alignments</span>
+                </div>
+                <span className="text-[11px] text-[#5A6A80] dark:text-slate-400 font-mono">Standard Carto Light Basemap</span>
+              </div>
+              <PortfolioMap projects={MOCK_GOVERNMENT_PROJECTS} />
+            </div>
+
+            {/* Government Data Table (Item 6: Classic Bordered Table) */}
+            <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-2">
+              <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-2">
+                <div className="font-bold text-xs uppercase tracking-wide text-[#14213D] dark:text-white flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-[#0B5FA5]" />
+                  <span>Government Project Portfolio &bull; National Linear Corridors</span>
+                </div>
+                <Link href="/projects" className="text-xs font-bold text-[#0B5FA5] hover:underline flex items-center gap-1">
+                  <span>View Full Directory</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+              <PortfolioTable projects={MOCK_GOVERNMENT_PROJECTS} />
+            </div>
+
+          </div>
+
+          {/* RIGHT COLUMN (35% / 4 Cols): Officer Login Card (Section 8) */}
+          <div className="lg:col-span-4 space-y-4">
+            
+            <div id="login-card" className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 shadow-xs">
+              <div className="bg-[#0B2E59] text-white px-4 py-3 border-b border-[#0A2647] flex items-center justify-between">
+                <div>
+                  <div className="text-xs font-bold font-devanagari text-slate-200">अधिकारी लॉगिन</div>
+                  <div className="text-sm font-bold tracking-tight">Officer Authentication Gateway</div>
+                </div>
+                <Lock className="w-4 h-4 text-amber-300" />
+              </div>
+
+              <form onSubmit={handleOfficerSignIn} className="p-4 space-y-3.5">
+                {loginError && (
+                  <div className="p-2.5 text-xs text-[#B32424] bg-red-50 dark:bg-rose-950/40 border border-red-200 dark:border-rose-900">
+                    {loginError}
+                  </div>
+                )}
+                {loginSuccess && (
+                  <div className="p-2.5 text-xs text-[#1E7E34] bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900">
+                    {loginSuccess}
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#14213D] dark:text-slate-300 mb-1">
+                    Officer Username / ID
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={officerId}
+                    onChange={(e) => setOfficerId(e.target.value)}
+                    placeholder="e.g. OFF-CALA-01 or officer@bhumi.cala.gov.in"
+                    className="w-full text-xs p-2.5 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#14213D] dark:text-slate-300 mb-1">
+                    Security Password
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    value={officerPassword}
+                    onChange={(e) => setOfficerPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    className="w-full text-xs p-2.5 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                  />
+                </div>
+
+                {/* CAPTCHA block */}
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#14213D] dark:text-slate-300 mb-1">
+                    Security Code / CAPTCHA
+                  </label>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <div className="px-3 py-1.5 bg-[#F1F4F7] dark:bg-white/10 border border-[#CBD5E1] dark:border-slate-700 font-mono font-bold text-sm tracking-widest text-[#0B2E59] dark:text-sky-300 select-none">
+                      {captchaCode}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={refreshCaptcha}
+                      className="p-2 border border-[#CBD5E1] dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-600 dark:text-slate-300 cursor-pointer"
+                      title="Refresh CAPTCHA"
+                      aria-label="Refresh CAPTCHA code"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    value={captchaInput}
+                    onChange={(e) => setCaptchaInput(e.target.value)}
+                    placeholder="Enter code above"
+                    className="w-full text-xs p-2 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loginLoading}
+                  className="w-full py-2.5 px-4 bg-[#0B2E59] hover:bg-[#0A2647] text-white font-bold text-xs rounded-none transition-colors cursor-pointer"
+                >
+                  {loginLoading ? "Verifying Credentials..." : t("btn.sign_in")}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleInstantDemoLogin}
+                  className="w-full py-2 px-3 bg-[#EBF3FA] hover:bg-[#D9EAF7] text-[#0B2E59] border border-[#0B5FA5] font-bold text-xs rounded-none transition-colors cursor-pointer"
+                >
+                  {t("btn.demo_login")}
+                </button>
+              </form>
+
+              {/* Portals alternative links below login card (Item 8) */}
+              <div className="p-3.5 bg-[#F8FAFC] dark:bg-white/5 border-t border-[#DCE2E8] dark:border-white/10 space-y-2 text-xs">
+                <Link
+                  href="/field/login"
+                  className="text-[#0B5FA5] dark:text-sky-400 hover:underline font-semibold block"
+                >
+                  &rarr; Switch to Field Officer Mobile Login
+                </Link>
+                <Link
+                  href="/landowner/login"
+                  className="text-[#0B5FA5] dark:text-sky-400 hover:underline font-semibold block"
+                >
+                  &rarr; Switch to Citizen/Landowner Portal
+                </Link>
+              </div>
+            </div>
+
+            {/* Quick Public Services Box */}
+            <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-2.5">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#14213D] dark:text-slate-300 border-b border-[#DCE2E8] dark:border-white/10 pb-1.5">
+                Citizen Public Services
+              </div>
+              <div className="space-y-1.5 text-xs">
                 <a
                   href="#gazette-search"
-                  className="px-3 py-1.5 bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 hover:border-[#0B5FA5] text-[#0B2E59] dark:text-sky-300 font-bold flex items-center justify-between rounded-none transition-colors"
+                  className="p-2 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800 hover:border-[#0B5FA5] text-[#0B2E59] dark:text-sky-300 font-semibold flex items-center justify-between rounded-none transition-colors"
                 >
                   <span className="flex items-center gap-1.5">
                     <Search className="w-3.5 h-3.5 text-[#0B5FA5]" />
-                    <span>Search Gazette Notices</span>
+                    <span>Search Statutory Gazettes</span>
                   </span>
                   <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                 </a>
 
                 <a
                   href="#track-grievance"
-                  className="px-3 py-1.5 bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 hover:border-[#B36B00] text-[#14213D] dark:text-white font-bold flex items-center justify-between rounded-none transition-colors"
+                  className="p-2 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800 hover:border-[#0B5FA5] text-[#14213D] dark:text-white font-semibold flex items-center justify-between rounded-none transition-colors"
                 >
                   <span className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-[#B36B00]" />
-                    <span>Track Grievance Token</span>
+                    <Clock className="w-3.5 h-3.5 text-[#0B5FA5]" />
+                    <span>Track Grievance Status</span>
                   </span>
                   <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                 </a>
 
                 <a
                   href="#calculator"
-                  className="px-3 py-1.5 bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 hover:border-[#1E7E34] text-[#1E7E34] dark:text-emerald-400 font-bold flex items-center justify-between rounded-none transition-colors"
+                  className="p-2 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800 hover:border-[#1E7E34] text-[#1E7E34] dark:text-emerald-400 font-semibold flex items-center justify-between rounded-none transition-colors"
                 >
                   <span className="flex items-center gap-1.5">
                     <Calculator className="w-3.5 h-3.5 text-[#1E7E34]" />
-                    <span>Compensation Calculator</span>
+                    <span>Compensation Estimator</span>
                   </span>
                   <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                 </a>
-
-                <a
-                  href="#map"
-                  className="px-3 py-1.5 bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 hover:border-[#0B5FA5] text-[#0B5FA5] dark:text-sky-300 font-bold flex items-center justify-between rounded-none transition-colors"
-                >
-                  <span className="flex items-center gap-1.5">
-                    <Navigation className="w-3.5 h-3.5 text-[#0B5FA5]" />
-                    <span>National Corridor GIS</span>
-                  </span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* National Summary Ledger with Flat 2px Bottom Rules */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pt-4 border-t border-[#DCE2E8] dark:border-white/10">
-            
-            {/* Metric 1 */}
-            <div className="p-3 bg-transparent rounded-none border-b-2 border-[#0B2E59] dark:border-sky-500 space-y-0.5">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
-                Active Corridors
-              </div>
-              <div className="text-2xl font-black text-[#14213D] dark:text-white font-mono">
-                14
-              </div>
-              <div className="text-[10px] text-[#0B5FA5] dark:text-sky-400 font-semibold">
-                MoRTH / NHAI Projects
-              </div>
-            </div>
-
-            {/* Metric 2 */}
-            <div className="p-3 bg-transparent rounded-none border-b-2 border-[#1E7E34] dark:border-emerald-500 space-y-0.5">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
-                Land Acquired (Ha)
-              </div>
-              <div className="text-2xl font-black text-[#1E7E34] dark:text-emerald-400 font-mono">
-                425,800
-              </div>
-              <div className="text-[10px] text-[#1E7E34] dark:text-emerald-400 font-semibold">
-                Surveyed &amp; Demarcated
-              </div>
-            </div>
-
-            {/* Metric 3 */}
-            <div className="p-3 bg-transparent rounded-none border-b-2 border-[#0B5FA5] dark:border-blue-500 space-y-0.5">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
-                DBT Compensation
-              </div>
-              <div className="text-2xl font-black text-[#0B5FA5] dark:text-sky-300 font-mono">
-                ₹ 1,842.50 Cr
-              </div>
-              <div className="text-[10px] text-[#0B5FA5] dark:text-sky-400 font-semibold">
-                Disbursed to Bank A/cs
-              </div>
-            </div>
-
-            {/* Metric 4 */}
-            <div className="p-3 bg-transparent rounded-none border-b-2 border-[#128807] dark:border-green-500 space-y-0.5">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
-                DBT Success Rate
-              </div>
-              <div className="text-2xl font-black text-[#128807] dark:text-green-400 font-mono">
-                94.6%
-              </div>
-              <div className="text-[10px] text-[#128807] dark:text-green-400 font-semibold">
-                PFMS Aadhaar Seeded
-              </div>
-            </div>
-
-            {/* Metric 5 */}
-            <div className="p-3 bg-transparent rounded-none border-b-2 border-[#B36B00] dark:border-amber-500 space-y-0.5">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
-                Gazette Notices
-              </div>
-              <div className="text-2xl font-black text-[#B36B00] dark:text-amber-400 font-mono">
-                28
-              </div>
-              <div className="text-[10px] text-[#B36B00] dark:text-amber-400 font-semibold">
-                Active in Sec 3A/3D
-              </div>
-            </div>
-
-            {/* Metric 6 */}
-            <div className="p-3 bg-transparent rounded-none border-b-2 border-[#B32424] dark:border-rose-500 space-y-0.5">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
-                Grievance SLA
-              </div>
-              <div className="text-2xl font-black text-[#B32424] dark:text-rose-400 font-mono">
-                30 Days
-              </div>
-              <div className="text-[10px] text-[#B32424] dark:text-rose-400 font-semibold">
-                Mandatory Legal Window
               </div>
             </div>
 
@@ -925,6 +1079,22 @@ export default function PublicHomePage() {
               <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
                 Real-time tracking of land valuation disputes, boundary demarcation objections, and Direct Benefit Transfer (DBT) payment clearance.
               </p>
+            </div>
+
+            {/* Aggregate Metrics (Item 19) */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 border border-[#DCE2E8] dark:border-white/10 divide-y sm:divide-y-0 sm:divide-x divide-[#DCE2E8] dark:divide-white/10 bg-white dark:bg-[#0A1220]">
+              <div className="p-3.5">
+                <div className="text-xl font-bold font-mono text-[#14213D] dark:text-white">1,284</div>
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400 mt-0.5">Total Registered / कुल दर्ज</div>
+              </div>
+              <div className="p-3.5">
+                <div className="text-xl font-bold font-mono text-[#1E7E34] dark:text-emerald-400">1,042</div>
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400 mt-0.5">Resolved &amp; Closed / निस्तारित</div>
+              </div>
+              <div className="p-3.5">
+                <div className="text-xl font-bold font-mono text-[#B36B00] dark:text-amber-400">242</div>
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400 mt-0.5">In Active Review / समीक्षा में</div>
+              </div>
             </div>
 
             {/* Token Lookup Bar */}
@@ -1361,7 +1531,7 @@ export default function PublicHomePage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 12. OFFICIAL NIC GOVERNMENT FOOTER                                        */}
+      {/* 12. OFFICIAL CALA PROTOTYPE FOOTER                                        */}
       {/* ========================================================================= */}
       <footer className="bg-[#0A2647] text-white py-6 px-4 text-center text-xs border-t border-[#071A32] flex-shrink-0 space-y-3">
         <div className="max-w-[1440px] mx-auto space-y-2">
@@ -1389,16 +1559,16 @@ export default function PublicHomePage() {
           </div>
 
           <p className="font-medium text-slate-200">
-            Designed, Developed and Hosted by National Informatics Centre (NIC), Ministry of Electronics &amp; Information Technology, Government of India
+            Designed and Developed for CALA — Central Authority for Land Acquisition
           </p>
           <p className="text-[11px] text-slate-400">
-            Content Owned and Maintained by Ministry of Road Transport &amp; Highways (MoRTH), Government of India
+            BHUMI Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.
           </p>
           <p className="text-[11px] text-slate-400">
-            Emergency Helpline: <strong className="text-amber-300">7595093196</strong> / <strong className="text-amber-300">6202346942</strong> · Helpdesk: <strong className="text-slate-200">helpdesk-bhumi@gov.in</strong>
+            Emergency Helpline: <strong className="text-amber-300">7595093196</strong> / <strong className="text-amber-300">6202346942</strong> · Technical Support: <strong className="text-slate-200">support@bhumi.internal</strong>
           </p>
           <p className="text-[10px] text-slate-400 font-mono pt-1">
-            BHUMI Portal Version 3.4.1 · ISO 27001 Certified · Compliance with Guidelines for Indian Government Websites (GIGW)
+            BHUMI Portal Version 3.4.1 · Prototype Deployment (SIH26016)
           </p>
         </div>
       </footer>

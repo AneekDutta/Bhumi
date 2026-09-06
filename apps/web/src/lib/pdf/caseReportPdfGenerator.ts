@@ -78,7 +78,7 @@ export interface LandownerNoticeData {
 }
 
 /**
- * Generates an official, multi-page Government of India / CALA Case Report PDF
+ * Generates an official, multi-page CALA Case Report PDF
  */
 export function generateCaseReportPdf(data: CaseReportData): void {
   const doc = new jsPDF({
@@ -105,7 +105,7 @@ export function generateCaseReportPdf(data: CaseReportData): void {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     doc.setTextColor(100, 116, 139);
-    doc.text("GOVERNMENT OF INDIA · COMPETENT AUTHORITY LAND ACQUISITION (CALA)", margin, 10);
+    doc.text("CENTRAL AUTHORITY FOR LAND ACQUISITION (CALA) · STATUTORY RECORD", margin, 10);
     doc.text(`CASE REF: ${data.complaintId}`, pageWidth - margin, 10, { align: "right" });
     doc.setDrawColor(203, 213, 225);
     doc.setLineWidth(0.3);
@@ -127,7 +127,7 @@ export function generateCaseReportPdf(data: CaseReportData): void {
   doc.setFontSize(8);
   doc.setTextColor(203, 213, 225);
   doc.text("Right to Fair Compensation and Transparency in Land Acquisition, Rehabilitation and Resettlement Act, 2013", margin + 6, y + 14);
-  doc.text("BHUMI National Decision Intelligence Engine · Directorate of Land Acquisition & GatiShakti Portal", margin + 6, y + 19);
+  doc.text("BHUMI Decision Intelligence Engine · Directorate of Land Acquisition · SIH26016 Prototype", margin + 6, y + 19);
 
   y += 30;
 
@@ -447,10 +447,10 @@ export function generateLandownerNoticePdf(data: LandownerNoticeData): void {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.setTextColor(15, 23, 42);
-  doc.text("GOVERNMENT OF INDIA", pageWidth / 2, y, { align: "center" });
+  doc.text("CENTRAL AUTHORITY FOR LAND ACQUISITION (CALA)", pageWidth / 2, y, { align: "center" });
   y += 5;
   doc.setFontSize(10);
-  doc.text("OFFICE OF THE COMPETENT AUTHORITY LAND ACQUISITION (CALA)", pageWidth / 2, y, { align: "center" });
+  doc.text("OFFICE OF THE COMPETENT AUTHORITY LAND ACQUISITION DIVISION", pageWidth / 2, y, { align: "center" });
   y += 5;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
@@ -576,9 +576,9 @@ export function generateLandownerNoticePdf(data: LandownerNoticeData): void {
   doc.setFontSize(8);
   doc.text(data.authorityName || "Competent Authority Land Acquisition (CALA)", pageWidth - margin - 60, y);
   y += 4;
-  doc.text("Revenue Division / GatiShakti Authority", pageWidth - margin - 60, y);
+  doc.text("Land Acquisition & Revenue Directorate", pageWidth - margin - 60, y);
   y += 4;
-  doc.text("Government of India", pageWidth - margin - 60, y);
+  doc.text("CALA Central Authority", pageWidth - margin - 60, y);
 
   // Footer
   doc.setFont("helvetica", "normal");

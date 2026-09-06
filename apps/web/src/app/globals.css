@@ -4,9 +4,13 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   BHUMI NATIONAL PORTAL — CLASSIC INDIAN GOVERNMENT e-PORTAL (NIC / MoRTH)
+   BHUMI PLATFORM — CENTRAL AUTHORITY FOR LAND ACQUISITION (CALA)
    ========================================================================== */
 @layer base {
+  html.text-size-sm { font-size: 14px; }
+  html.text-size-base { font-size: 16px; }
+  html.text-size-lg { font-size: 18px; }
+
   :root {
     --bg:              #F4F6F8;
     --bg-mesh:         none;

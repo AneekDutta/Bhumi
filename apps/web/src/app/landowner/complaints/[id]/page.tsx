@@ -285,7 +285,7 @@ export default function LandownerComplaintDetailPage() {
                 </div>
                 <div>
                   <span className="text-[10px] font-mono uppercase text-[#1E7E34] dark:text-emerald-300 font-bold block">
-                    Government of India &bull; CALA
+                    CALA Directorate &bull; Land Acquisition Division
                   </span>
                   <h2 className="text-xs font-bold text-[#14213D] dark:text-white">
                     Official Statutory Resolution Notice

@@ -67,60 +67,32 @@ export default async function NationalDashboardPage() {
     <div className="space-y-6">
 
       {/* Main Top Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4 border-b border-[#DCE2E8] dark:border-white/10 pb-4">
+      <div className="flex items-center justify-between flex-wrap gap-4 border-b border-[#DCE2E8] dark:border-white/10 pb-3">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/50 text-[#0B5FA5] dark:text-sky-400 border border-[#BDD7EE] dark:border-sky-800">
-              <span className="w-2 h-2 rounded-full bg-[#0B5FA5] dark:bg-sky-400 inline-block" />
-              MoRTH / CALA Command Operations
-            </span>
-            <span className="text-xs text-[#64748B] dark:text-slate-400 font-mono">
-              · Live Statutory Stream
-            </span>
+          <div className="text-xs font-bold text-[#0B5FA5] dark:text-sky-400 uppercase tracking-wider mb-1">
+            CALA Directorate &bull; Land Acquisition Operations
           </div>
-          <h1 className="text-2xl font-extrabold text-[#14213D] dark:text-[#F0F4FF] m-0 leading-tight">
+          <h1 className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] m-0 leading-tight">
             National Land Acquisition Operations
           </h1>
-          <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">
+          <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
             National Infrastructure Corridors and Citizen Landowner Cases under RFCTLARR Act 2013 &amp; NH Act 1956.
           </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Link
-            href="/projects/gis"
-            className="px-3.5 py-2 rounded-[4px] text-xs font-bold bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-[#0B2E59] dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors flex items-center gap-1.5 shadow-sm"
-          >
-            <Navigation className="w-3.5 h-3.5 text-[#0B5FA5] dark:text-sky-400" />
-            <span>Project Spatial Map</span>
-          </Link>
-          <Link
-            href="/landowner-gis"
-            className="px-3.5 py-2 rounded-[4px] text-xs font-bold bg-[#0B2E59] hover:bg-[#123C6B] text-white transition-colors flex items-center gap-1.5 shadow-sm"
-          >
-            <Navigation className="w-3.5 h-3.5 text-amber-300" />
-            <span>Land Parcel Map</span>
-          </Link>
         </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* SECTION A: GOVERNMENT INFRASTRUCTURE PROJECT PORTFOLIO */}
+      {/* INFRASTRUCTURE PROJECT PORTFOLIO */}
       {/* ========================================================================= */}
       <section className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-none p-5 shadow-none space-y-4 transition-colors">
-        {/* Section A Tag & Header */}
-        <div className="flex items-center justify-between flex-wrap gap-3 border-b border-[#DCE2E8] dark:border-white/10 pb-3">
-          <div className="flex items-center gap-2.5">
-            <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-[2px] bg-[#0B2E59] text-white uppercase tracking-wider">
-              SECTION A &bull; NATIONAL INFRASTRUCTURE PROJECTS
-            </span>
-            <h2 className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] m-0">
-              Government Infrastructure Project Portfolio
-            </h2>
-          </div>
+        {/* Section Heading with Thin Rule */}
+        <div className="flex items-center justify-between flex-wrap gap-3 border-b border-[#DCE2E8] dark:border-white/10 pb-2.5">
+          <h2 className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] m-0">
+            Government Infrastructure Project Portfolio
+          </h2>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-[#5A6A80] dark:text-slate-400 font-mono">
-              6 Strategic National Corridors
+            <span className="text-xs text-[#5A6A80] dark:text-slate-400">
+              6 Strategic Corridors Tracked
             </span>
             <Link
               href="/projects"
@@ -133,41 +105,49 @@ export default async function NationalDashboardPage() {
         </div>
 
         <p className="text-xs text-[#5A6A80] dark:text-slate-400 m-0 leading-relaxed">
-          Multi-sector linear corridor footprints representing Highways, Railways, Industrial Corridors, Irrigation, Renewable Energy, and Urban Development. Isolated from citizen-submitted records.
+          Multi-sector linear corridor footprints representing Highways, Railways, Industrial Corridors, and Urban Infrastructure.
         </p>
 
-        {/* Section A Portfolio KPI Strip - Flat Government Form Ledger Style */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B2E59] dark:border-sky-500">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Total Length</div>
-            <div className="text-2xl font-extrabold text-[#14213D] dark:text-[#F0F4FF] mt-1 font-mono tracking-tight">
-              {mockTotalLength.toFixed(1)} <span className="text-xs font-semibold text-[#5A6A80]">km</span>
+        {/* Section A Portfolio KPI Strip - Seamless Layout with Vertical Dividers (Item 16) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-[#FAFCFE] dark:bg-[#070B14]">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
+              {mockTotalLength.toFixed(1)} <span className="text-xs font-medium text-[#5A6A80]">km</span>
             </div>
-            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">Highways &amp; Railways</div>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
+              Total Length
+            </div>
+            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Highways &amp; Railways</div>
           </div>
 
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B5FA5] dark:border-sky-400">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Planned Acquisition</div>
-            <div className="text-2xl font-extrabold text-[#0B5FA5] dark:text-sky-400 mt-1 font-mono tracking-tight">
-              {mockTotalPlannedAcq.toLocaleString()} <span className="text-xs font-semibold text-[#5A6A80]">Ha</span>
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
+              {mockTotalPlannedAcq.toLocaleString()} <span className="text-xs font-medium text-[#5A6A80]">Ha</span>
             </div>
-            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">Projected corridor land</div>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
+              Planned Acquisition
+            </div>
+            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Projected corridor land</div>
           </div>
 
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34] dark:border-emerald-400">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Acquired to Date</div>
-            <div className="text-2xl font-extrabold text-[#1E7E34] dark:text-emerald-400 mt-1 font-mono tracking-tight">
-              {mockTotalAcquired.toLocaleString()} <span className="text-xs font-semibold text-[#5A6A80]">Ha</span>
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 tracking-tight">
+              {mockTotalAcquired.toLocaleString()} <span className="text-xs font-medium text-[#5A6A80]">Ha</span>
             </div>
-            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">{mockAvgProgress}% Portfolio throughput</div>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
+              Acquired to Date
+            </div>
+            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Under Section 3D/3G</div>
           </div>
 
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B36B00] dark:border-amber-400">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Corridor Bottlenecks</div>
-            <div className="text-2xl font-extrabold text-[#B36B00] dark:text-amber-400 mt-1 font-mono tracking-tight">
-              {mockBottlenecks}
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
+              {mockAvgProgress}%
             </div>
-            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">Simulated risk clusters</div>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
+              Portfolio Throughput
+            </div>
+            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Average corridor completion</div>
           </div>
         </div>
 
@@ -219,24 +199,16 @@ export default async function NationalDashboardPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION B: CITIZEN LANDOWNER GRIEVANCES & ACQUISITION DIRECTIVES */}
-      {/* ========================================================================= */}
-      {/* ========================================================================= */}
-      {/* SECTION B: CITIZEN LANDOWNER GRIEVANCES & ACQUISITION DIRECTIVES */}
+      {/* LANDOWNER GRIEVANCES & CADASTRAL ACQUISITION CASES */}
       {/* ========================================================================= */}
       <section className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-none p-5 shadow-none space-y-4 transition-colors">
-        {/* Section B Tag & Header */}
-        <div className="flex items-center justify-between flex-wrap gap-3 border-b border-[#DCE2E8] dark:border-white/10 pb-3">
-          <div className="flex items-center gap-2.5">
-            <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-[2px] bg-[#128807] text-white uppercase tracking-wider">
-              SECTION B &bull; LANDOWNER CASES &amp; DIRECTIVES
-            </span>
-            <h2 className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] m-0">
-              Landowner Grievances &amp; Cadastral Acquisition Cases
-            </h2>
-          </div>
+        {/* Section Heading with Thin Rule */}
+        <div className="flex items-center justify-between flex-wrap gap-3 border-b border-[#DCE2E8] dark:border-white/10 pb-2.5">
+          <h2 className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] m-0">
+            Landowner Grievances &amp; Cadastral Acquisition Cases
+          </h2>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-[#5A6A80] dark:text-slate-400 font-mono">
+            <span className="text-xs text-[#5A6A80] dark:text-slate-400">
               Field Officer: Ramesh Patel (OFF-001)
             </span>
             <Link
@@ -250,89 +222,110 @@ export default async function NationalDashboardPage() {
         </div>
 
         <p className="text-xs text-[#5A6A80] dark:text-slate-400 m-0 leading-relaxed">
-          Sole source of truth for citizen cases. Originates strictly from citizen parcel registrations (4+ GPS coordinates) &rarr; landowner complaints &rarr; Field Officer ground verification &rarr; Admin statutory determination.
+          Source of truth for citizen cases. Originates strictly from citizen parcel registrations (4+ GPS coordinates) &rarr; landowner complaints &rarr; Field Officer ground verification &rarr; Admin statutory determination.
         </p>
 
-        {/* Real KPIs Cards - Flat Government Form Ledger Style */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B2E59] dark:border-sky-500">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Registered Parcels</div>
-            <div className="text-2xl font-extrabold text-[#14213D] dark:text-[#F0F4FF] mt-1 font-mono tracking-tight">
+        {/* Real KPIs Cards - Seamless Layout with Vertical Dividers (Item 16) */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-[#FAFCFE] dark:bg-[#070B14]">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
               {totalParcels}
             </div>
-            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">{stats.area_proposed_acres || 0} Acres Proposed</div>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
+              Registered Parcels
+            </div>
+            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">{stats.area_proposed_acres || 0} Acres Proposed</div>
           </div>
 
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B36B00] dark:border-amber-400">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Pending Inspection</div>
-            <div className="text-2xl font-extrabold text-[#B36B00] dark:text-amber-400 mt-1 font-mono tracking-tight">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
               {pendingVerification}
             </div>
-            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">Ramesh Patel (OFF-001)</div>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
+              Pending Inspection
+            </div>
+            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Assigned to OFF-001</div>
           </div>
 
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34] dark:border-emerald-400">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Verified Cases</div>
-            <div className="text-2xl font-extrabold text-[#1E7E34] dark:text-emerald-400 mt-1 font-mono tracking-tight">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 tracking-tight">
               {verifiedCount}
             </div>
-            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">Passed ground check</div>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
+              Verified Cases
+            </div>
+            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Passed ground check</div>
           </div>
 
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B5FA5] dark:border-sky-400">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Active Orders</div>
-            <div className="text-2xl font-extrabold text-[#0B5FA5] dark:text-sky-400 mt-1 font-mono tracking-tight">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
               {implementationInitiated}
             </div>
-            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">Admin implementation</div>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
+              Active Orders
+            </div>
+            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Under implementation</div>
           </div>
 
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34] dark:border-emerald-400">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Completed Awards</div>
-            <div className="text-2xl font-extrabold text-[#1E7E34] dark:text-emerald-400 mt-1 font-mono tracking-tight">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 tracking-tight">
               {implementationCompleted}
             </div>
-            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">Disbursed awards</div>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
+              Completed Awards
+            </div>
+            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Disbursed awards</div>
           </div>
         </div>
 
-        {/* Statutory Aggregations Strip - Flat Government Pro-Forma Style */}
-        <div className="pt-4 pb-2 border-t border-b border-[#DCE2E8] dark:border-white/10 bg-transparent space-y-3">
+        {/* Statutory Aggregations Strip - Seamless Form Style */}
+        <div className="pt-3 pb-1 border-t border-b border-[#DCE2E8] dark:border-white/10 space-y-2.5">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2">
               <Scale className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400" />
-              <span className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] uppercase tracking-wide font-mono">
-                RFCTLARR 2013 Statutory First Schedule Aggregations
+              <span className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] uppercase tracking-wide">
+                RFCTLARR 2013 Statutory Schedule Aggregations
               </span>
             </div>
-            <span className="text-[11px] text-[#5A6A80] dark:text-slate-400 font-mono">
-              Official Statutory Reconciliation
+            <span className="text-[11px] text-[#5A6A80] dark:text-slate-400">
+              Statutory Reconciliation
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="pb-2.5 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B5FA5] dark:border-sky-400">
-              <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Compensation Assessed</span>
-              <div className="text-lg font-extrabold text-[#0B5FA5] dark:text-sky-400 font-mono mt-0.5 tracking-tight">
+          <div className="grid grid-cols-2 sm:grid-cols-4 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-[#FAFCFE] dark:bg-[#070B14]">
+            <div className="py-2.5 px-4">
+              <div className="text-lg font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
                 ₹{(stats.compensation_assessed_inr || 0).toLocaleString()}
               </div>
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-0.5">
+                Compensation Assessed
+              </div>
             </div>
-            <div className="pb-2.5 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34] dark:border-emerald-400">
-              <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Compensation Paid</span>
-              <div className="text-lg font-extrabold text-[#1E7E34] dark:text-emerald-400 font-mono mt-0.5 tracking-tight">
+
+            <div className="py-2.5 px-4">
+              <div className="text-lg font-bold text-[#1E7E34] dark:text-emerald-400 tracking-tight">
                 ₹{(stats.compensation_paid_inr || 0).toLocaleString()}
               </div>
-            </div>
-            <div className="pb-2.5 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B2E59] dark:border-sky-500">
-              <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Affected Families</span>
-              <div className="text-lg font-extrabold text-[#14213D] dark:text-[#F0F4FF] font-mono mt-0.5 tracking-tight">
-                {stats.affected_families_count || 0}
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-0.5">
+                Compensation Paid
               </div>
             </div>
-            <div className="pb-2.5 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B5FA5] dark:border-sky-400">
-              <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Possession Complete</span>
-              <div className="text-lg font-extrabold text-[#0B5FA5] dark:text-sky-400 font-mono mt-0.5 tracking-tight">
+
+            <div className="py-2.5 px-4">
+              <div className="text-lg font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
+                {stats.affected_families_count || 0}
+              </div>
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-0.5">
+                Affected Families
+              </div>
+            </div>
+
+            <div className="py-2.5 px-4">
+              <div className="text-lg font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
                 {stats.possession_complete_count || 0} / {totalParcels || 0}
+              </div>
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-0.5">
+                Possession Complete
               </div>
             </div>
           </div>
