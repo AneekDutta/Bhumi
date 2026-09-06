@@ -116,9 +116,9 @@ export default function LandownerParcelDetailPage() {
     return (
       <LandownerShell title="Parcel Details">
         <div className="p-4 max-w-lg mx-auto space-y-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-3">
+          <div className="bg-white border border-[#e2e8f0] rounded-2xl p-6 text-center space-y-3">
             <AlertCircle className="w-10 h-10 text-amber-400 mx-auto" />
-            <h2 className="text-base font-bold text-white">Parcel Record Not Found</h2>
+            <h2 className="text-base font-bold text-slate-900">Parcel Record Not Found</h2>
             <p className="text-xs text-slate-400">{error || "No matching registered parcel found."}</p>
             <Link
               href="/landowner/home"
@@ -141,7 +141,7 @@ export default function LandownerParcelDetailPage() {
         <div className="flex items-center justify-between">
           <Link
             href="/landowner/home"
-            className="text-xs text-slate-400 hover:text-white flex items-center gap-1 border border-slate-800 px-3 py-1.5 rounded-xl bg-slate-900"
+            className="text-xs text-slate-400 hover:text-slate-900 flex items-center gap-1 border border-[#e2e8f0] px-3 py-1.5 rounded-xl bg-white"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>My Registered Parcels</span>
@@ -153,7 +153,7 @@ export default function LandownerParcelDetailPage() {
         </div>
 
         {/* 14-Digit Numeric Parcel ID Banner */}
-        <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/20 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
+        <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/20 border border-[#e2e8f0] rounded-2xl p-4 shadow-xl space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">
               OFFICIAL 14-DIGIT PARCEL IDENTIFIER
@@ -161,25 +161,25 @@ export default function LandownerParcelDetailPage() {
             <span className="text-[10px] text-slate-500">Unique Land Record</span>
           </div>
 
-          <div className="font-mono text-2xl sm:text-3xl font-extrabold text-white tracking-wider">
+          <div className="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-wider">
             {parcel.parcel_id || parcelId}
           </div>
 
-          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80 text-xs">
+          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#e2e8f0]/80 text-xs">
             <div>
               <span className="text-slate-500 block text-[10px]">REGISTERED OWNER</span>
-              <span className="text-white font-bold">{parcel.owner_legal_name || parcel.owner_name}</span>
+              <span className="text-slate-900 font-bold">{parcel.owner_legal_name || parcel.owner_name}</span>
             </div>
             <div>
               <span className="text-slate-500 block text-[10px]">VILLAGE / REVENUE MAUZA</span>
-              <span className="text-white">{parcel.village_name || parcel.contact_village || "Corridor Sector"}</span>
+              <span className="text-slate-900">{parcel.village_name || parcel.contact_village || "Corridor Sector"}</span>
             </div>
           </div>
         </div>
 
         {/* Identity Verification Status */}
         {parcel.identity_verification && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 text-xs space-y-1.5">
+          <div className="bg-white border border-[#e2e8f0] rounded-2xl p-3.5 text-xs space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="text-slate-400 flex items-center gap-1.5 font-medium">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -190,7 +190,7 @@ export default function LandownerParcelDetailPage() {
               </span>
             </div>
             <div className="text-slate-300 font-mono text-[11px] pl-5 space-y-0.5">
-              <p>Masked Aadhaar: <span className="text-white">{parcel.identity_verification.masked_aadhaar}</span></p>
+              <p>Masked Aadhaar: <span className="text-slate-900">{parcel.identity_verification.masked_aadhaar}</span></p>
               <p>Reference: <span className="text-slate-400">{parcel.identity_verification.reference_id}</span></p>
               {parcel.identity_verification.disclaimer && (
                 <p className="text-[10px] text-amber-400/80 italic pt-1">{parcel.identity_verification.disclaimer}</p>
@@ -200,9 +200,9 @@ export default function LandownerParcelDetailPage() {
         )}
 
         {/* Interactive Map with Exact Polygon */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
+        <div className="bg-white border border-[#e2e8f0] rounded-2xl p-4 shadow-xl space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-bold text-white flex items-center gap-1.5">
+            <h2 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-amber-400" />
               <span>Exact Demarcated Boundary</span>
             </h2>
@@ -211,7 +211,7 @@ export default function LandownerParcelDetailPage() {
             </span>
           </div>
 
-          <div className="h-64 sm:h-72 w-full rounded-xl overflow-hidden border border-slate-800 relative">
+          <div className="h-64 sm:h-72 w-full rounded-xl overflow-hidden border border-[#e2e8f0] relative">
             <Map
               ref={mapRef}
               initialViewState={{
@@ -259,21 +259,21 @@ export default function LandownerParcelDetailPage() {
 
           {/* Area Metrics */}
           <div className="grid grid-cols-3 gap-2 pt-1 text-center text-xs">
-            <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+            <div className="bg-[#f4f6f9] p-2.5 rounded-xl border border-[#e2e8f0]">
               <span className="text-slate-500 block text-[10px]">Square Meters</span>
               <span className="font-mono font-bold text-amber-400 text-xs">
                 {parcel.area_sqm?.toLocaleString(undefined, { maximumFractionDigits: 1 }) || "0"} m²
               </span>
             </div>
-            <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+            <div className="bg-[#f4f6f9] p-2.5 rounded-xl border border-[#e2e8f0]">
               <span className="text-slate-500 block text-[10px]">Hectares</span>
-              <span className="font-mono font-bold text-white text-xs">
+              <span className="font-mono font-bold text-slate-900 text-xs">
                 {parcel.area_hectares?.toFixed(4) || "0"} Ha
               </span>
             </div>
-            <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+            <div className="bg-[#f4f6f9] p-2.5 rounded-xl border border-[#e2e8f0]">
               <span className="text-slate-500 block text-[10px]">Acres</span>
-              <span className="font-mono font-bold text-white text-xs">
+              <span className="font-mono font-bold text-slate-900 text-xs">
                 {parcel.area_acres?.toFixed(3) || "0"} Ac
               </span>
             </div>
@@ -286,16 +286,16 @@ export default function LandownerParcelDetailPage() {
 
         {/* Coordinates Table */}
         {parcel.coordinates && parcel.coordinates.length > 0 && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-2 text-xs">
-            <h3 className="font-bold text-white text-xs">Authoritative Corner Coordinates</h3>
+          <div className="bg-white border border-[#e2e8f0] rounded-2xl p-4 shadow-xl space-y-2 text-xs">
+            <h3 className="font-bold text-slate-900 text-xs">Authoritative Corner Coordinates</h3>
             <div className="space-y-1 font-mono">
               {parcel.coordinates.map((pt: any, idx: number) => (
                 <div
                   key={idx}
-                  className="p-2 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-between"
+                  className="p-2 bg-[#f4f6f9] border border-[#e2e8f0] rounded-lg flex items-center justify-between"
                 >
                   <span className="font-bold text-amber-400">P{pt.sequence || idx + 1}</span>
-                  <span className="text-white">{pt.lat.toFixed(6)}, {pt.lng.toFixed(6)}</span>
+                  <span className="text-slate-900">{pt.lat.toFixed(6)}, {pt.lng.toFixed(6)}</span>
                   <span className="text-slate-500 text-[10px]">
                     {pt.accuracy ? `±${pt.accuracy}m` : "Exact"}
                   </span>
@@ -306,9 +306,9 @@ export default function LandownerParcelDetailPage() {
         )}
 
         {/* Official Land Documents */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3 text-xs">
+        <div className="bg-white border border-[#e2e8f0] rounded-2xl p-4 shadow-xl space-y-3 text-xs">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-white text-xs flex items-center gap-1.5">
+            <h3 className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
               <FileCheck2 className="w-4 h-4 text-amber-400" />
               <span>Official Documents ({parcel.documents?.length || 0})</span>
             </h3>
@@ -324,18 +324,18 @@ export default function LandownerParcelDetailPage() {
               {parcel.documents.map((doc: any, idx: number) => (
                 <div
                   key={doc.id || idx}
-                  className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between text-xs"
+                  className="p-3 bg-[#f4f6f9] border border-[#e2e8f0] rounded-xl flex items-center justify-between text-xs"
                 >
                   <div className="flex items-center gap-2 overflow-hidden">
                     <FileText className="w-4 h-4 text-amber-400 flex-shrink-0" />
                     <div className="overflow-hidden">
-                      <span className="font-medium text-white block truncate">{doc.file_name}</span>
+                      <span className="font-medium text-slate-900 block truncate">{doc.file_name}</span>
                       <span className="text-[10px] text-slate-400 block">{doc.title}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-300">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-100 text-slate-300">
                       {doc.status || "Submitted"}
                     </span>
                     {doc.public_url && (

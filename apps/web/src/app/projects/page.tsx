@@ -51,17 +51,17 @@ export default function ProjectsPage() {
             fontWeight: 800,
             padding: '2px 8px',
             borderRadius: 4,
-            background: '#6366f1',
+            background: '#0a2c5f',
             color: '#fff',
             textTransform: 'uppercase'
           }}>
             NATIONAL INFRASTRUCTURE PORTFOLIO
           </span>
-          <span style={{ fontSize: 12, color: '#c7d2fe', fontWeight: 600 }}>
+          <span style={{ fontSize: 12, color: '#334155', fontWeight: 600 }}>
             Inter-Ministerial Strategic Infrastructure Alignments &bull; CALA Oversight
           </span>
         </div>
-        <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
+        <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
           Priority Capital Projects
         </span>
       </div>
@@ -73,7 +73,7 @@ export default function ProjectsPage() {
             <span style={{
               fontSize: 10, fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.07em', textTransform: 'uppercase',
               padding: '3px 10px', borderRadius: 5,
-              background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8'
+              background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#0a2c5f'
             }}>
               {projects.length} National Corridors
             </span>
@@ -81,7 +81,7 @@ export default function ProjectsPage() {
               Highways &middot; Railways &middot; Industrial &middot; Energy &middot; Urban
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#0a2c5f', margin: 0 }}>
             Government Infrastructure Project Portfolio
           </h1>
           <p style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
@@ -94,7 +94,7 @@ export default function ProjectsPage() {
           style={{
             padding: '9px 18px',
             borderRadius: 10,
-            background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+            background: 'linear-gradient(135deg, #0a2c5f, #082449)',
             color: '#fff',
             fontSize: 12,
             fontWeight: 700,
@@ -113,23 +113,23 @@ export default function ProjectsPage() {
       {/* Summary KPI Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
         <div style={{ borderRadius: 12, padding: '16px 18px', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Total Length</div>
-          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#818cf8', marginTop: 4 }}>
+          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Total Length</div>
+          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#0a2c5f', marginTop: 4 }}>
             {totalLength.toFixed(1)} <span style={{ fontSize: 13, fontWeight: 500 }}>km</span>
           </div>
           <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Linear corridor alignments</div>
         </div>
 
         <div style={{ borderRadius: 12, padding: '16px 18px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Planned Acquisition</div>
-          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
+          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Planned Acquisition</div>
+          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#0284c7', marginTop: 4 }}>
             {totalPlannedAcq.toLocaleString()} <span style={{ fontSize: 13, fontWeight: 500 }}>Ha</span>
           </div>
           <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Across 6 strategic sectors</div>
         </div>
 
         <div style={{ borderRadius: 12, padding: '16px 18px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Acquired to Date</div>
+          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Acquired to Date</div>
           <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#10b981', marginTop: 4 }}>
             {totalAcquired.toLocaleString()} <span style={{ fontSize: 13, fontWeight: 500 }}>Ha</span>
           </div>
@@ -137,7 +137,7 @@ export default function ProjectsPage() {
         </div>
 
         <div style={{ borderRadius: 12, padding: '16px 18px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Macro Bottlenecks</div>
+          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Macro Bottlenecks</div>
           <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#f59e0b', marginTop: 4 }}>
             {projects.reduce((s, p) => s + p.statistics.unresolved_bottlenecks, 0)}
           </div>
@@ -173,7 +173,7 @@ export default function ProjectsPage() {
                     padding: '3px 8px',
                     borderRadius: 5,
                     background: 'rgba(99,102,241,0.15)',
-                    color: '#818cf8',
+                    color: '#0a2c5f',
                     border: '1px solid rgba(99,102,241,0.3)'
                   }}>
                     {p.sector.toUpperCase()}
@@ -193,7 +193,7 @@ export default function ProjectsPage() {
                 </div>
 
                 {/* Project Title */}
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#e2e8f0', margin: '0 0 6px', lineHeight: 1.3 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0a2c5f', margin: '0 0 6px', lineHeight: 1.3 }}>
                   {p.name}
                 </h3>
                 <div style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace', marginBottom: 12 }}>
@@ -201,32 +201,32 @@ export default function ProjectsPage() {
                 </div>
 
                 {/* Department */}
-                <div style={{ fontSize: 11, color: '#94a3b8', background: 'rgba(0,0,0,0.25)', padding: '6px 10px', borderRadius: 6, marginBottom: 14 }}>
+                <div style={{ fontSize: 11, color: '#64748b', background: '#ffffff', padding: '6px 10px', borderRadius: 6, marginBottom: 14 }}>
                   {p.department}
                 </div>
 
                 {/* Progress Bar */}
                 <div style={{ marginBottom: 12 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 4 }}>
-                    <span style={{ color: '#94a3b8' }}>Acquisition Progress</span>
+                    <span style={{ color: '#64748b' }}>Acquisition Progress</span>
                     <span style={{ color: '#10b981', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
                       {p.acquisition_progress_pct}%
                     </span>
                   </div>
-                  <div style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+                  <div style={{ height: 6, borderRadius: 3, background: '#e2e8f0', overflow: 'hidden' }}>
                     <div style={{ width: `${p.acquisition_progress_pct}%`, height: '100%', background: 'linear-gradient(90deg, #6366f1, #10b981)' }} />
                   </div>
                 </div>
 
                 {/* Key Metrics */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 11 }}>
-                  <div style={{ padding: '6px 8px', borderRadius: 6, background: 'rgba(255,255,255,0.02)' }}>
+                  <div style={{ padding: '6px 8px', borderRadius: 6, background: '#f8fafc' }}>
                     <span style={{ color: '#64748b', display: 'block', fontSize: 10 }}>Planned Area</span>
-                    <span style={{ color: '#e2e8f0', fontWeight: 600, fontFamily: 'JetBrains Mono, monospace' }}>
+                    <span style={{ color: '#0a2c5f', fontWeight: 600, fontFamily: 'JetBrains Mono, monospace' }}>
                       {p.planned_acquisition_ha} Ha
                     </span>
                   </div>
-                  <div style={{ padding: '6px 8px', borderRadius: 6, background: 'rgba(255,255,255,0.02)' }}>
+                  <div style={{ padding: '6px 8px', borderRadius: 6, background: '#f8fafc' }}>
                     <span style={{ color: '#64748b', display: 'block', fontSize: 10 }}>Delay Impact</span>
                     <span style={{ color: isDelayed ? '#f59e0b' : '#10b981', fontWeight: 600, fontFamily: 'JetBrains Mono, monospace' }}>
                       +{p.project_delay_days} Days
@@ -245,7 +245,7 @@ export default function ProjectsPage() {
                   style={{
                     fontSize: 11,
                     fontWeight: 700,
-                    color: '#818cf8',
+                    color: '#0a2c5f',
                     textDecoration: 'none',
                     display: 'flex',
                     alignItems: 'center',

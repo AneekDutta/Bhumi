@@ -276,7 +276,7 @@ export default function FieldComplaintDetailPage() {
               </h1>
             </div>
 
-            <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+            <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-[#0a2c5f]/20 text-amber-200 border border-[#0a2c5f]/40">
               #{parcelId}
             </span>
           </div>
@@ -288,7 +288,7 @@ export default function FieldComplaintDetailPage() {
             </div>
             <div>
               <span className="text-[10px] text-slate-500 uppercase block">14-Digit Parcel ID:</span>
-              <span className="text-indigo-300 font-bold">{parcelId}</span>
+              <span className="text-amber-200 font-bold">{parcelId}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 uppercase block">Sector / Village:</span>
@@ -403,7 +403,7 @@ export default function FieldComplaintDetailPage() {
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-indigo-400" />
+              <FileText className="w-4 h-4 text-amber-300" />
               <h2 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
                 Ownership & Supporting Documents
               </h2>
@@ -436,7 +436,7 @@ export default function FieldComplaintDetailPage() {
                       href={doc.public_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 font-semibold text-[11px] flex items-center gap-1 flex-shrink-0 transition-colors"
+                      className="px-3 py-1.5 rounded-lg bg-[#0a2c5f]/20 hover:bg-[#0a2c5f]/30 text-amber-200 border border-[#0a2c5f]/30 font-semibold text-[11px] flex items-center gap-1 flex-shrink-0 transition-colors"
                     >
                       <span>Inspect</span>
                       <ExternalLink className="w-3 h-3" />
@@ -618,7 +618,7 @@ export default function FieldComplaintDetailPage() {
         {/* SECTION 6: STATUTORY AUDIT TRAIL TIMELINE */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
           <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
-            <Clock className="w-4 h-4 text-indigo-400" />
+            <Clock className="w-4 h-4 text-amber-300" />
             <h2 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
               Statutory Audit Trail &amp; Decision History
             </h2>
@@ -628,7 +628,7 @@ export default function FieldComplaintDetailPage() {
             {auditTrail.length > 0 ? (
               auditTrail.map((log: any, idx: number) => (
                 <div key={log.id || idx} className="relative space-y-0.5">
-                  <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-indigo-500 border-2 border-slate-900" />
+                  <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#0a2c5f] border-2 border-slate-900" />
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-white font-mono text-[11px]">
                       {log.action.replace(/_/g, " ")}
@@ -638,7 +638,7 @@ export default function FieldComplaintDetailPage() {
                     </span>
                   </div>
                   <div className="text-[11px] text-slate-300">
-                    Actor: <span className="text-indigo-300 font-semibold">{log.actor_role}</span> ({log.actor_id})
+                    Actor: <span className="text-amber-200 font-semibold">{log.actor_role}</span> ({log.actor_id})
                   </div>
                   {log.state_after?.status && (
                     <div className="text-[10px] font-mono text-emerald-400">

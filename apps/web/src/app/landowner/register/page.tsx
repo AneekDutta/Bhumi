@@ -127,15 +127,15 @@ export default function LandownerRegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between p-4 selection:bg-amber-500/30">
+    <div className="min-h-screen bg-[#f4f6f9] text-slate-900 flex flex-col justify-between p-4 selection:bg-amber-500/30">
       <div className="w-full max-w-md mx-auto space-y-5 pt-6 pb-12">
         
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 text-white shadow-xl shadow-amber-950/60 mb-1 border border-amber-400/30">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 text-slate-900 shadow-xl shadow-amber-950/60 mb-1 border border-amber-400/30">
             <UserPlus className="w-7 h-7" />
           </div>
-          <h1 className="text-2xl font-black font-display tracking-tight text-white">
+          <h1 className="text-2xl font-black font-display tracking-tight text-slate-900">
             BHUMI Citizen Portal
           </h1>
           <p className="text-xs text-slate-400 max-w-xs mx-auto">
@@ -159,12 +159,12 @@ export default function LandownerRegisterPage() {
         )}
 
         {/* Registration Form */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <div className="bg-white/90 border border-[#e2e8f0] rounded-2xl p-6 shadow-xl space-y-4">
           <div className="space-y-1">
             <span className="text-[10px] font-mono tracking-widest uppercase text-amber-400 font-bold block">
               Citizen Account
             </span>
-            <h2 className="text-base font-bold text-white">
+            <h2 className="text-base font-bold text-slate-900">
               Create Landowner Account
             </h2>
             <p className="text-xs text-slate-400">
@@ -185,7 +185,7 @@ export default function LandownerRegisterPage() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Ramesh Kumar"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#f4f6f9] border border-[#e2e8f0] text-slate-900 placeholder-slate-600 focus:outline-none focus:border-amber-500"
                 />
               </div>
             </div>
@@ -202,7 +202,7 @@ export default function LandownerRegisterPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your.email@example.com"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#f4f6f9] border border-[#e2e8f0] text-slate-900 placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono"
                 />
               </div>
             </div>
@@ -219,7 +219,7 @@ export default function LandownerRegisterPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+91 98290 00000"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#f4f6f9] border border-[#e2e8f0] text-slate-900 placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono"
                   />
                 </div>
               </div>
@@ -235,7 +235,7 @@ export default function LandownerRegisterPage() {
                     value={village}
                     onChange={(e) => setVillage(e.target.value)}
                     placeholder="e.g. Kanhera Kalan"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#f4f6f9] border border-[#e2e8f0] text-slate-900 placeholder-slate-600 focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
@@ -254,7 +254,7 @@ export default function LandownerRegisterPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Min. 6 chars"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#f4f6f9] border border-[#e2e8f0] text-slate-900 placeholder-slate-600 focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
@@ -271,7 +271,7 @@ export default function LandownerRegisterPage() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Repeat password"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#f4f6f9] border border-[#e2e8f0] text-slate-900 placeholder-slate-600 focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
@@ -281,7 +281,7 @@ export default function LandownerRegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/40 disabled:opacity-60 cursor-pointer"
+                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/40 disabled:opacity-60 cursor-pointer"
               >
                 {loading ? (
                   <>
@@ -298,7 +298,7 @@ export default function LandownerRegisterPage() {
             </div>
           </form>
 
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <div className="pt-3 border-t border-[#e2e8f0] flex items-center justify-between text-xs text-slate-400">
             <span>Already registered?</span>
             <Link href="/landowner/login" className="text-amber-400 hover:underline font-semibold flex items-center gap-1">
               <span>Sign In to Landowner Portal</span>

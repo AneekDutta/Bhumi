@@ -125,15 +125,15 @@ export default function LandownerLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between p-4 selection:bg-amber-500/30">
+    <div className="min-h-screen bg-[#f4f6f9] text-slate-900 flex flex-col justify-between p-4 selection:bg-amber-500/30">
       <div className="w-full max-w-md mx-auto space-y-5 pt-8 pb-12">
         
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 text-white shadow-xl shadow-amber-950/60 mb-1 border border-amber-400/30">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 text-slate-900 shadow-xl shadow-amber-950/60 mb-1 border border-amber-400/30">
             <Users className="w-7 h-7" />
           </div>
-          <h1 className="text-2xl font-black font-display tracking-tight text-white">
+          <h1 className="text-2xl font-black font-display tracking-tight text-slate-900">
             BHUMI Landowner Portal
           </h1>
           <p className="text-xs text-slate-400 max-w-xs mx-auto">
@@ -157,12 +157,12 @@ export default function LandownerLoginPage() {
         )}
 
         {/* Login Form */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <div className="bg-white/90 border border-[#e2e8f0] rounded-2xl p-6 shadow-xl space-y-4">
           <div className="space-y-1">
             <span className="text-[10px] font-mono tracking-widest uppercase text-amber-400 font-bold block">
               Citizen Portal Access
             </span>
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold text-slate-900">
               Sign In to Your Account
             </h3>
             <p className="text-xs text-slate-400">
@@ -183,7 +183,7 @@ export default function LandownerLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your.email@example.com"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#f4f6f9] border border-[#e2e8f0] text-slate-900 placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono"
                 />
               </div>
             </div>
@@ -200,7 +200,7 @@ export default function LandownerLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#f4f6f9] border border-[#e2e8f0] text-slate-900 placeholder-slate-600 focus:outline-none focus:border-amber-500"
                 />
               </div>
             </div>
@@ -208,7 +208,7 @@ export default function LandownerLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/40 disabled:opacity-50 cursor-pointer"
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/40 disabled:opacity-50 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -224,7 +224,7 @@ export default function LandownerLoginPage() {
             </button>
           </form>
 
-          <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <div className="pt-4 border-t border-[#e2e8f0] flex items-center justify-between text-xs text-slate-400">
             <span>New titleholder?</span>
             <Link href="/landowner/register" className="text-amber-400 hover:underline font-semibold inline-flex items-center gap-1">
               <UserPlus className="w-3.5 h-3.5" />

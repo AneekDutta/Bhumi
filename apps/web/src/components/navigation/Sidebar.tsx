@@ -3,23 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  Layers, 
-  Clock, 
-  Activity, 
-  MapPin, 
-  FileSpreadsheet, 
-  Cpu, 
-  Menu, 
+import {
+  LayoutDashboard,
+  Briefcase,
+  Layers,
+  Clock,
+  MapPin,
+  FileSpreadsheet,
+  Cpu,
+  Menu,
   X,
-  AlertOctagon,
   ShieldCheck,
   FileText,
   Navigation,
   Sparkles,
-  Database
 } from "lucide-react";
 
 import { ThemeToggle } from "@/components/common/ThemeToggle";
@@ -33,15 +30,15 @@ export function Sidebar() {
     {
       group: "Operations",
       items: [
-        { id: "dashboard", href: "/", label: "National Dashboard", icon: LayoutDashboard }
-      ]
+        { id: "dashboard", href: "/", label: "National Dashboard", icon: LayoutDashboard },
+      ],
     },
     {
       group: "Government Projects",
       items: [
         { id: "projects", href: "/projects", label: "Project Portfolio", icon: Briefcase },
-        { id: "project-gis", href: "/projects/gis", label: "Project Spatial Map", icon: Navigation }
-      ]
+        { id: "project-gis", href: "/projects/gis", label: "Project Spatial Map", icon: Navigation },
+      ],
     },
     {
       group: "Landowner & Acquisition",
@@ -49,65 +46,71 @@ export function Sidebar() {
         { id: "landowner-cases", href: "/landowner-cases", label: "Landowner Grievances", icon: FileText },
         { id: "parcels", href: "/parcels", label: "Registered Parcels", icon: Layers },
         { id: "verification", href: "/verification", label: "Field Verification", icon: ShieldCheck },
-        { id: "landowner-gis", href: "/landowner-gis", label: "Land Parcel Map", icon: MapPin }
-      ]
+        { id: "landowner-gis", href: "/landowner-gis", label: "Land Parcel Map", icon: MapPin },
+      ],
     },
     {
       group: "Intelligence",
       items: [
         { id: "what-if", href: "/intelligence/what-if", label: "What-If Simulation", icon: Sparkles },
-        { id: "timeline", href: "/timeline", label: "Statutory Timelines", icon: Clock }
-      ]
+        { id: "timeline", href: "/timeline", label: "Statutory Timelines", icon: Clock },
+      ],
     },
     {
       group: "Governance & Audit",
       items: [
         { id: "reports", href: "/reports", label: "MIS Reports", icon: FileSpreadsheet },
-        { id: "status", href: "/status", label: "System Status", icon: Cpu }
-      ]
-    }
+        { id: "status", href: "/status", label: "System Status", icon: Cpu },
+      ],
+    },
   ];
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
-    if (href === "/projects") return pathname === "/projects" || (pathname.startsWith("/projects/") && !pathname.includes("/gis") && !pathname.includes("/spatial"));
+    if (href === "/projects")
+      return (
+        pathname === "/projects" ||
+        (pathname.startsWith("/projects/") &&
+          !pathname.includes("/gis") &&
+          !pathname.includes("/spatial"))
+      );
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
   const navContent = (
-    <div className="h-full flex flex-col justify-between bg-white dark:bg-[#05060e]/95 backdrop-blur-xl border-r border-slate-200 dark:border-white/[0.07] text-slate-800 dark:text-[#f0f4ff] transition-colors duration-200">
+    <div className="h-full flex flex-col justify-between bg-white dark:bg-[#05060e]/95 border-r border-[#e2e8f0] dark:border-white/[0.07] text-slate-800 dark:text-[#f0f4ff] transition-colors duration-200">
       <div>
         {/* Brand */}
-        <div className="p-5 pb-4 border-b border-slate-200 dark:border-white/[0.06] flex items-center justify-between">
+        <div className="p-4 pb-3 border-b border-[#e2e8f0] dark:border-white/[0.06] flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-[34px] h-[34px] rounded-[10px] flex-shrink-0 bg-gradient-to-br from-[#7c3aed] to-[#6366f1] flex items-center justify-center shadow-[0_4px_16px_rgba(99,102,241,0.35)] group-hover:scale-105 transition-transform">
-              <span className="font-display font-bold text-white text-base">भ</span>
+            <div className="w-8 h-8 rounded-lg flex-shrink-0 bg-[#0a2c5f] flex items-center justify-center shadow-sm group-hover:bg-[#082449] transition-colors">
+              <span className="font-bold text-white text-sm font-sans">भ</span>
             </div>
             <div>
-              <div className="font-display font-extrabold text-slate-900 dark:text-[#f0f4ff] text-[15px] tracking-tight leading-tight flex items-center gap-2">
+              <div className="font-bold text-slate-900 dark:text-[#f0f4ff] text-[14px] tracking-tight leading-tight flex items-center gap-2">
                 BHUMI
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               </div>
-              <div className="text-[10px] text-slate-500 dark:text-[#4a5568] font-mono tracking-wider">
+              <div className="text-[9px] text-slate-400 dark:text-[#4a5568] font-mono tracking-wider uppercase">
                 SIH26016 · CALA Administration
               </div>
             </div>
           </Link>
-          <button 
+          <button
             onClick={() => setMobileOpen(false)}
-            className="md:hidden text-slate-400 hover:text-slate-800 dark:hover:text-white"
-            aria-label="Close navigation menu"
+            className="md:hidden text-slate-400 hover:text-slate-700 dark:hover:text-white"
+            aria-label="Close navigation"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Navigation items */}
-        <nav className="p-3 space-y-4 overflow-y-auto no-scrollbar max-h-[calc(100vh-210px)]">
+        {/* Navigation */}
+        <nav className="p-3 space-y-4 overflow-y-auto no-scrollbar max-h-[calc(100vh-200px)]">
           {navGroups.map((grp) => (
             <div key={grp.group}>
-              <div className="px-2 mb-1.5 flex items-center justify-between">
-                <span className="text-[10px] font-semibold tracking-wider text-slate-400 dark:text-[#5a6680] uppercase font-mono">
+              <div className="px-2 mb-1.5">
+                <span className="text-[10px] font-bold tracking-wider text-slate-400 dark:text-[#5a6680] uppercase font-mono">
                   {grp.group}
                 </span>
               </div>
@@ -122,11 +125,15 @@ export function Sidebar() {
                       onClick={() => setMobileOpen(false)}
                       className={`flex items-center gap-2.5 px-3 py-2 text-xs font-medium rounded-lg transition-all ${
                         active
-                          ? "bg-indigo-50 dark:bg-gradient-to-r dark:from-indigo-500/20 dark:to-indigo-500/5 text-indigo-700 dark:text-indigo-300 border-l-2 border-indigo-600 dark:border-indigo-500 font-semibold shadow-sm"
-                          : "text-slate-600 dark:text-[#8892a4] hover:text-slate-900 dark:hover:text-[#f0f4ff] hover:bg-slate-100 dark:hover:bg-white/[0.035] border-l-2 border-transparent"
+                          ? "bg-[#0a2c5f] text-white font-semibold shadow-sm"
+                          : "text-slate-600 dark:text-[#8892a4] hover:text-slate-900 dark:hover:text-[#f0f4ff] hover:bg-slate-100 dark:hover:bg-white/[0.035]"
                       }`}
                     >
-                      <Icon className={`w-4 h-4 flex-shrink-0 ${active ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400 dark:text-[#5a6680]"}`} />
+                      <Icon
+                        className={`w-4 h-4 flex-shrink-0 ${
+                          active ? "text-white" : "text-slate-400 dark:text-[#5a6680]"
+                        }`}
+                      />
                       <span>{item.label}</span>
                     </Link>
                   );
@@ -137,27 +144,22 @@ export function Sidebar() {
         </nav>
       </div>
 
-      {/* Footer Controls: Theme Toggle & User Profile */}
-      <div className="p-3 border-t border-slate-200 dark:border-white/[0.06] bg-slate-50/70 dark:bg-black/20 space-y-2.5">
-        {/* Theme Switcher Pill */}
-        <div className="flex items-center justify-between px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200/80 dark:border-white/[0.05]">
-          <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-            Theme
-          </span>
+      {/* Footer: Theme Toggle + User Profile */}
+      <div className="p-3 border-t border-[#e2e8f0] dark:border-white/[0.06] bg-slate-50 dark:bg-black/20 space-y-2.5">
+        <div className="flex items-center justify-between px-2 py-1 rounded-lg bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/[0.05]">
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Theme</span>
           <ThemeToggle variant="pill" />
         </div>
-
-        {/* Officer Profile & Sign Out */}
         <div className="flex items-center justify-between pt-1 gap-2">
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-lg flex-shrink-0 bg-gradient-to-br from-indigo-100 to-indigo-200 dark:from-[#1e3a5f] dark:to-[#153247] border border-indigo-300 dark:border-[#38bdf8]/30 flex items-center justify-center text-xs font-bold text-indigo-700 dark:text-[#38bdf8] font-mono shadow-sm">
-              BH
+            <div className="w-7 h-7 rounded-lg flex-shrink-0 bg-[#0a2c5f] flex items-center justify-center text-[10px] font-bold text-white font-mono">
+              RK
             </div>
             <div className="truncate">
-              <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
+              <div className="text-[11px] font-semibold text-slate-700 dark:text-slate-200 truncate">
                 CALA Directorate
               </div>
-              <div className="text-[10px] text-slate-400 font-mono truncate">
+              <div className="text-[9px] text-slate-400 font-mono truncate">
                 Land Acquisition Authority
               </div>
             </div>
@@ -170,16 +172,16 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile Menu Trigger button */}
+      {/* Mobile Trigger */}
       <button
         onClick={() => setMobileOpen(true)}
         className="md:hidden fixed top-3 left-3 z-40 p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-md"
-        aria-label="Open navigation menu"
+        aria-label="Open navigation"
       >
         <Menu className="w-5 h-5" />
       </button>
 
-      {/* Desktop Persistent Sidebar */}
+      {/* Desktop Sidebar */}
       <aside className="hidden md:block w-64 h-screen flex-shrink-0 sticky top-0 overflow-hidden z-30">
         {navContent}
       </aside>
@@ -187,13 +189,11 @@ export function Sidebar() {
       {/* Mobile Drawer */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex">
-          <div 
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm"
+          <div
+            className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="relative w-64 h-full z-10 animate-slide-in">
-            {navContent}
-          </div>
+          <div className="relative w-64 h-full z-10">{navContent}</div>
         </div>
       )}
     </>

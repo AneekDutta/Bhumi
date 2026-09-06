@@ -115,7 +115,7 @@ export default function LandownerCasesPage() {
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
+          <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
             Designated Field Officer: Ramesh Patel (OFF-001)
           </span>
           <button
@@ -153,7 +153,7 @@ export default function LandownerCasesPage() {
               Statutory Resolution &bull; RFCTLARR 2013 First Schedule
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#0a2c5f', margin: 0 }}>
             Landowner Grievances &amp; Acquisition Resolution
           </h1>
           <p style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
@@ -206,7 +206,7 @@ export default function LandownerCasesPage() {
       {/* Real Statistics Metrics */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
         <div style={{ borderRadius: 12, padding: '16px 18px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Verified Cases</div>
+          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Verified Cases</div>
           <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#10b981', marginTop: 4 }}>
             {verifiedComplaints.length}
           </div>
@@ -214,7 +214,7 @@ export default function LandownerCasesPage() {
         </div>
 
         <div style={{ borderRadius: 12, padding: '16px 18px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Pending Directives</div>
+          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Pending Directives</div>
           <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#f59e0b', marginTop: 4 }}>
             {pendingInitiation}
           </div>
@@ -222,24 +222,24 @@ export default function LandownerCasesPage() {
         </div>
 
         <div style={{ borderRadius: 12, padding: '16px 18px', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Active Orders</div>
-          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#818cf8', marginTop: 4 }}>
+          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Active Orders</div>
+          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#0a2c5f', marginTop: 4 }}>
             {inProgress}
           </div>
           <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Implementation in progress</div>
         </div>
 
         <div style={{ borderRadius: 12, padding: '16px 18px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Completed Awards</div>
-          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
+          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Completed Awards</div>
+          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#0284c7', marginTop: 4 }}>
             {completed}
           </div>
           <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Statutory awards disbursed</div>
         </div>
 
-        <div style={{ borderRadius: 12, padding: '16px 18px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Disputed Area</div>
-          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#e2e8f0', marginTop: 4 }}>
+        <div style={{ borderRadius: 12, padding: '16px 18px', background: 'rgba(10,44,95,0.04)', border: '1px solid #e2e8f0' }}>
+          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Disputed Area</div>
+          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#0a2c5f', marginTop: 4 }}>
             {totalAcres.toFixed(2)} <span style={{ fontSize: 13, fontWeight: 500 }}>Acres</span>
           </div>
           <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Cadastral geometry</div>
@@ -254,12 +254,12 @@ export default function LandownerCasesPage() {
 
       {/* Spatial Real Cadastral Polygon Map */}
       <div className="glass" style={{ borderRadius: 16, overflow: 'hidden', padding: 0 }}>
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#64748b', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
               Cadastral Spatial Map &bull; Ground Demarcated Boundaries
             </div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', marginTop: 2 }}>
               Ground-Demarcated Polygon Geometry
             </div>
           </div>

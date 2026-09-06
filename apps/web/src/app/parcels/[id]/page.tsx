@@ -79,14 +79,14 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* Breadcrumb */}
-      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>
-        <Link href="/" style={{ color: '#6b7a94', textDecoration: 'none' }}>Dashboard</Link>
+      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
+        <Link href="/" style={{ color: '#94a3b8', textDecoration: 'none' }}>Dashboard</Link>
         <span>/</span>
-        <Link href="/projects" style={{ color: '#6b7a94', textDecoration: 'none' }}>Corridors</Link>
+        <Link href="/projects" style={{ color: '#94a3b8', textDecoration: 'none' }}>Corridors</Link>
         <span>/</span>
-        <Link href={`/projects/${activeParcel.project_id || 'P-NH927A'}`} style={{ color: '#6b7a94', textDecoration: 'none' }}>Corridor</Link>
+        <Link href={`/projects/${activeParcel.project_id || 'P-NH927A'}`} style={{ color: '#94a3b8', textDecoration: 'none' }}>Corridor</Link>
         <span>/</span>
-        <span style={{ color: '#c4cfe4' }}>Survey No. {activeParcel.survey_no || activeParcel.survey_number}</span>
+        <span style={{ color: '#1e293b' }}>Survey No. {activeParcel.survey_no || activeParcel.survey_number}</span>
       </nav>
 
       {/* Provenance Matrix Banner */}
@@ -112,7 +112,7 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
             </div>
             <ProvenanceBadge sourceType="MODEL_DERIVED" size="xs" />
           </div>
-          <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#f8fafc', lineHeight: 1.5 }}>
+          <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#0a2c5f', lineHeight: 1.5 }}>
             {activeParcel.recommended_action}
           </p>
         </div>
@@ -143,7 +143,7 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
               <Link href={`/projects/${parcel.project_id || activeParcel.project_id || 'P-NH927A'}/spatial`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <MapPin style={{ width: 13, height: 13 }} /> GIS View
               </Link>
-              <Link href={`/projects/${parcel.project_id || activeParcel.project_id || 'P-NH927A'}/impact`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Link href={`/projects/${parcel.project_id || activeParcel.project_id || 'P-NH927A'}/impact`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#0a2c5f', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Scale style={{ width: 13, height: 13 }} /> CPM Path
               </Link>
             </div>
@@ -161,12 +161,12 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
             <div style={{ fontSize: 13, fontWeight: 700, color: '#f43f5e', marginBottom: 4 }}>
               CRITICAL STATUTORY LAPSE: RFCTLARR Act 2013 Section 19(7)
             </div>
-            <p style={{ fontSize: 12, color: '#8899b4', margin: 0, lineHeight: 1.6 }}>
+            <p style={{ fontSize: 12, color: '#475569', margin: 0, lineHeight: 1.6 }}>
               Section 19(1) declaration was not published within 12 months of the Preliminary Notification under Section 11(1).
               Under Section 19(7), the entire acquisition proceeding has <strong style={{ color: '#f43f5e' }}>lapsed by operation of law</strong>,
               introducing a <strong style={{ color: '#f43f5e' }}>+{deadlineInfo?.recovery_days || 20}-day zero-float delay</strong> to Corridor Commissioning.
             </p>
-            <div style={{ display: 'flex', gap: 16, marginTop: 10, fontSize: 11, color: '#6b7a94' }}>
+            <div style={{ display: 'flex', gap: 16, marginTop: 10, fontSize: 11, color: '#94a3b8' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                 <Calendar style={{ width: 12, height: 12 }} />
                 Deadline: <strong style={{ fontFamily: 'JetBrains Mono, monospace', color: '#f43f5e', marginLeft: 4 }}>
@@ -187,7 +187,7 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
         <div style={{ borderRadius: 12, padding: '12px 18px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <CheckCircle2 style={{ width: 15, height: 15, color: '#10b981', flexShrink: 0 }} />
-            <span style={{ fontSize: 12, color: '#8899b4' }}>
+            <span style={{ fontSize: 12, color: '#475569' }}>
               Statutory timeline compliant · Section 19(7) declaration window open with
               <strong style={{ fontFamily: 'JetBrains Mono, monospace', color: '#10b981', marginLeft: 4 }}>{daysRemaining} days</strong> remaining.
             </span>
@@ -200,10 +200,10 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
       <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>RFCTLARR 2013 Lifecycle</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Statutory Stage Progression</div>
+            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', letterSpacing: '0.07em', textTransform: 'uppercase' }}>RFCTLARR 2013 Lifecycle</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', marginTop: 2 }}>Statutory Stage Progression</div>
           </div>
-          <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', padding: '4px 10px', borderRadius: 6, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', color: '#818cf8' }}>
+          <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', padding: '4px 10px', borderRadius: 6, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', color: '#0a2c5f' }}>
             Stage {currentStageIndex + 1} of 7
           </span>
         </div>
@@ -248,7 +248,7 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16, alignItems: 'start' }}>
         {/* Cadastral Details */}
         <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-          <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Cadastral Land Record Profile</div>
+          <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Cadastral Land Record Profile</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             {[
               { label: 'Survey & Subdivision No.', val: parcel.survey_no, mono: true },
@@ -258,48 +258,48 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
               { label: 'Cadastral Location', val: parcel.village_name || 'Alignment Corridor', sub: 'Corridor Alignment Record', mono: true },
               { label: 'Statutory Valuation (Est.)', val: `₹${estimatedValuation} Cr`, sub: 'Market Factor 2.0 + 100% Solatium', color: '#10b981' },
             ].map((item) => (
-              <div key={item.label} style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 9, border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>{item.label}</div>
+              <div key={item.label} style={{ padding: '12px 14px', background: 'rgba(10,44,95,0.04)', borderRadius: 9, border: '1px solid #e2e8f0' }}>
+                <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>{item.label}</div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: item.color || '#c4cfe4', fontFamily: item.mono ? 'JetBrains Mono, monospace' : undefined }}>{item.val}</div>
-                {item.sub && <div style={{ fontSize: 10, color: '#4a5568', marginTop: 2 }}>{item.sub}</div>}
+                {item.sub && <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>{item.sub}</div>}
               </div>
             ))}
           </div>
 
           <div style={{ marginTop: 14, padding: '12px 14px', background: 'rgba(99,102,241,0.07)', borderRadius: 9, border: '1px solid rgba(99,102,241,0.18)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, color: '#818cf8', marginBottom: 4 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, color: '#0a2c5f', marginBottom: 4 }}>
               <Building2 style={{ width: 13, height: 13 }} /> CALA Jurisdiction
             </div>
-            <p style={{ fontSize: 11, color: '#6b7a94', margin: 0 }}>
+            <p style={{ fontSize: 11, color: '#94a3b8', margin: 0 }}>
               Special Land Acquisition Officer (SLAO) / Competent Authority Land Acquisition Office ·
-              <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#8899b4', marginLeft: 4 }}>CALA-{parcel.project_id.substring(0, 8).toUpperCase()}-RECORD</span>
+              <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#475569', marginLeft: 4 }}>CALA-{parcel.project_id.substring(0, 8).toUpperCase()}-RECORD</span>
             </p>
           </div>
         </div>
 
         {/* Statutory Clock */}
         <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-          <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Statutory Clock & Authority</div>
+          <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Statutory Clock & Authority</div>
 
           {deadlineInfo ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <div style={{ padding: '14px', borderRadius: 10, background: isLapsed ? 'rgba(244,63,94,0.1)' : 'rgba(16,185,129,0.08)', border: `1px solid ${isLapsed ? 'rgba(244,63,94,0.3)' : 'rgba(16,185,129,0.25)'}` }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#6b7a94', marginBottom: 8 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#94a3b8', marginBottom: 8 }}>
                   <span>RFCTLARR Limitation Rule</span>
                   <span style={{ padding: '2px 7px', borderRadius: 3, background: isLapsed ? '#f43f5e' : '#10b981', color: '#fff' }}>{deadlineInfo.status}</span>
                 </div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#c4cfe4', marginBottom: 10 }}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#1e293b', marginBottom: 10 }}>
                   {deadlineInfo.rule || 'Sec 19(7) 12-Month Declaration Rule'}
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                   <div>
-                    <div style={{ fontSize: 9, color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace' }}>Statutory Expiry</div>
-                    <div style={{ fontSize: 13, fontWeight: 700, fontFamily: 'JetBrains Mono, monospace', color: '#c4cfe4' }}>
+                    <div style={{ fontSize: 9, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace' }}>Statutory Expiry</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, fontFamily: 'JetBrains Mono, monospace', color: '#1e293b' }}>
                       {deadlineInfo.deadline ? new Date(deadlineInfo.deadline).toLocaleDateString() : 'Awaiting Gazette Date'}
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 9, color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace' }}>Day Count</div>
+                    <div style={{ fontSize: 9, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace' }}>Day Count</div>
                     <div style={{ fontSize: 20, fontWeight: 800, fontFamily: 'Sora, sans-serif', color: isLapsed ? '#f43f5e' : '#10b981' }}>
                       {daysRemaining}d
                     </div>
@@ -307,28 +307,28 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
                 </div>
               </div>
 
-              <div style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 9, border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ padding: '12px 14px', background: 'rgba(10,44,95,0.04)', borderRadius: 9, border: '1px solid #e2e8f0' }}>
                 {[
                   { label: 'CPM Downstream Impact', val: parcel.blocker ? `+${parcel.blocker.assumed_resolution_days} Days Delay` : (isLapsed ? '+20 Days Delay' : '0 Days Delay'), color: isLapsed || parcel.blocker ? '#f43f5e' : '#10b981' },
-                  { label: 'Blocked Activity', val: parcel.blocker ? parcel.blocker.type : (isLapsed ? 'Site Possession' : 'None'), color: '#c4cfe4' },
+                  { label: 'Blocked Activity', val: parcel.blocker ? parcel.blocker.type : (isLapsed ? 'Site Possession' : 'None'), color: '#1e293b' },
                   { label: 'Critical Float', val: isLapsed ? '0 Days (Critical Path)' : 'Within Float Thresholds', color: isLapsed ? '#f43f5e' : '#10b981' },
                 ].map((r) => (
-                  <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <span style={{ fontSize: 11, color: '#6b7a94' }}>{r.label}</span>
+                  <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0', borderBottom: '1px solid #f1f5f9' }}>
+                    <span style={{ fontSize: 11, color: '#94a3b8' }}>{r.label}</span>
                     <span style={{ fontSize: 11, fontWeight: 700, color: r.color, fontFamily: 'JetBrains Mono, monospace' }}>{r.val}</span>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <p style={{ fontSize: 12, color: '#4a5568' }}>No limitation clock data available.</p>
+            <p style={{ fontSize: 12, color: '#94a3b8' }}>No limitation clock data available.</p>
           )}
 
           <Link href={`/projects/${parcel.project_id}/impact`} style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
             marginTop: 14, padding: '10px', borderRadius: 9, fontSize: 12, fontWeight: 700,
             background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)',
-            color: '#818cf8', textDecoration: 'none'
+            color: '#0a2c5f', textDecoration: 'none'
           }}>
             Simulate Remediation <ArrowRight style={{ width: 13, height: 13 }} />
           </Link>
@@ -340,10 +340,10 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
         <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <div>
-              <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
                 RFCTLARR Act 2013 Statutory Math
               </div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Coins style={{ width: 16, height: 16, color: '#fbbf24' }} /> Sections 26–30 Award Determination
               </div>
             </div>
@@ -351,28 +351,28 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
-            <div style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 9, border: '1px solid rgba(255,255,255,0.06)' }}>
-              <div style={{ fontSize: 9, color: '#6b7a94', fontFamily: 'JetBrains Mono, monospace' }}>BASE MARKET VALUE (SEC 26)</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: '#c4cfe4', marginTop: 4, fontFamily: 'JetBrains Mono, monospace' }}>
+            <div style={{ padding: '12px 14px', background: 'rgba(10,44,95,0.04)', borderRadius: 9, border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: 9, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>BASE MARKET VALUE (SEC 26)</div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: '#1e293b', marginTop: 4, fontFamily: 'JetBrains Mono, monospace' }}>
                 ₹{(activeParcel.compensation.market_value_base || 0).toLocaleString()}
               </div>
-              <div style={{ fontSize: 10, color: '#4a5568', marginTop: 2 }}>Circle rate x 1.5x rural factor</div>
+              <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>Circle rate x 1.5x rural factor</div>
             </div>
 
-            <div style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 9, border: '1px solid rgba(255,255,255,0.06)' }}>
-              <div style={{ fontSize: 9, color: '#6b7a94', fontFamily: 'JetBrains Mono, monospace' }}>100% SOLATIUM (SEC 30(1))</div>
+            <div style={{ padding: '12px 14px', background: 'rgba(10,44,95,0.04)', borderRadius: 9, border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: 9, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>100% SOLATIUM (SEC 30(1))</div>
               <div style={{ fontSize: 16, fontWeight: 800, color: '#fbbf24', marginTop: 4, fontFamily: 'JetBrains Mono, monospace' }}>
                 ₹{(activeParcel.compensation.solatium_amount || 0).toLocaleString()}
               </div>
-              <div style={{ fontSize: 10, color: '#4a5568', marginTop: 2 }}>100% mandatory solatium</div>
+              <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>100% mandatory solatium</div>
             </div>
 
-            <div style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 9, border: '1px solid rgba(255,255,255,0.06)' }}>
-              <div style={{ fontSize: 9, color: '#6b7a94', fontFamily: 'JetBrains Mono, monospace' }}>12% INTEREST (SEC 30(3))</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: '#38bdf8', marginTop: 4, fontFamily: 'JetBrains Mono, monospace' }}>
+            <div style={{ padding: '12px 14px', background: 'rgba(10,44,95,0.04)', borderRadius: 9, border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: 9, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>12% INTEREST (SEC 30(3))</div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: '#0284c7', marginTop: 4, fontFamily: 'JetBrains Mono, monospace' }}>
                 ₹{(activeParcel.compensation.interest_12pct_amount || 0).toLocaleString()}
               </div>
-              <div style={{ fontSize: 10, color: '#4a5568', marginTop: 2 }}>Accrued from Sec 11 notification</div>
+              <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>Accrued from Sec 11 notification</div>
             </div>
 
             <div style={{ padding: '12px 14px', background: 'rgba(16,185,129,0.1)', borderRadius: 9, border: '1px solid rgba(16,185,129,0.3)' }}>
@@ -392,8 +392,8 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
       <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Immutable Statutory Audit Trail</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Cryptographic CALA Ledger</div>
+            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Immutable Statutory Audit Trail</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', marginTop: 2 }}>Cryptographic CALA Ledger</div>
           </div>
           <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '4px 10px', borderRadius: 6, background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981' }}>
             <Hash style={{ width: 10, height: 10 }} /> SHA-256 Verified
@@ -406,26 +406,26 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
             {auditLogs.map((log: any, index: number) => (
               <div key={log.id || index} style={{ position: 'relative' }}>
                 <div style={{ position: 'absolute', left: -20, top: 12, width: 12, height: 12, borderRadius: '50%', background: '#6366f1', border: '2px solid rgba(99,102,241,0.4)', boxShadow: '0 0 8px rgba(99,102,241,0.4)' }} />
-                <div style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10 }}>
+                <div style={{ padding: '14px 16px', background: 'rgba(10,44,95,0.04)', border: '1px solid #e2e8f0', borderRadius: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6, flexWrap: 'wrap', gap: 6 }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: '#c4cfe4' }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#1e293b' }}>
                       {log.action}
                       {log.state_after?.stage && (
-                        <span style={{ marginLeft: 8, fontSize: 9, fontFamily: 'JetBrains Mono, monospace', padding: '2px 6px', borderRadius: 3, background: 'rgba(99,102,241,0.15)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.25)' }}>
+                        <span style={{ marginLeft: 8, fontSize: 9, fontFamily: 'JetBrains Mono, monospace', padding: '2px 6px', borderRadius: 3, background: 'rgba(99,102,241,0.15)', color: '#0a2c5f', border: '1px solid rgba(99,102,241,0.25)' }}>
                           {log.state_after.stage}
                         </span>
                       )}
                     </span>
-                    <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#4a5568' }}>
+                    <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8' }}>
                       {new Date(log.created_at).toLocaleString()}
                     </span>
                   </div>
-                  <p style={{ fontSize: 11, color: '#6b7a94', margin: '0 0 6px' }}>
-                    Authorized: <strong style={{ color: '#8899b4' }}>{log.actor_role}</strong> ({log.actor_id})
+                  <p style={{ fontSize: 11, color: '#94a3b8', margin: '0 0 6px' }}>
+                    Authorized: <strong style={{ color: '#475569' }}>{log.actor_role}</strong> ({log.actor_id})
                   </p>
                   {log.state_after?.gazette_no && (
-                    <p style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#4a5568', margin: '0 0 4px' }}>
-                      Gazette: <span style={{ color: '#8899b4' }}>{log.state_after.gazette_no}</span>
+                    <p style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', margin: '0 0 4px' }}>
+                      Gazette: <span style={{ color: '#475569' }}>{log.state_after.gazette_no}</span>
                     </p>
                   )}
                   {log.state_after?.alert && (
@@ -433,7 +433,7 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
                       <AlertCircle style={{ width: 11, height: 11, flexShrink: 0 }} /> {log.state_after.alert}
                     </div>
                   )}
-                  <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.04)', display: 'flex', justifyContent: 'space-between', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#2d3748' }}>
+                  <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#2d3748' }}>
                     <span>Sig: 0x{(index * 1337 + 42091).toString(16)}...{(index * 9876 + 12345).toString(16)}</span>
                     <span style={{ color: '#10b981', fontFamily: 'Inter, sans-serif' }}>Verified Officer Credential</span>
                   </div>
@@ -441,7 +441,7 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
               </div>
             ))}
             {auditLogs.length === 0 && (
-              <div style={{ padding: '32px 24px', textAlign: 'center', color: '#4a5568', fontSize: 12 }}>
+              <div style={{ padding: '32px 24px', textAlign: 'center', color: '#94a3b8', fontSize: 12 }}>
                 No statutory audit records registered for this survey parcel.
               </div>
             )}
@@ -457,8 +457,8 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
 
       {/* Document Register */}
       <div>
-        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 4 }}>Cadastral Document Register</div>
-        <div style={{ fontSize: 18, fontWeight: 700, color: '#c4cfe4', marginBottom: 16 }}>Statutory Gazette & Awards Archive</div>
+        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 4 }}>Cadastral Document Register</div>
+        <div style={{ fontSize: 18, fontWeight: 700, color: '#1e293b', marginBottom: 16 }}>Statutory Gazette & Awards Archive</div>
         <DocumentRegister parcelId={parcel.id} projectId={parcel.project_id} />
       </div>
     </div>

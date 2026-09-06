@@ -48,12 +48,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* Breadcrumb */}
-      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>
-        <Link href="/" style={{ color: '#6b7a94', textDecoration: 'none' }}>Dashboard</Link>
+      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
+        <Link href="/" style={{ color: '#94a3b8', textDecoration: 'none' }}>Dashboard</Link>
         <span style={{ color: '#2d3748' }}>/</span>
-        <Link href="/projects" style={{ color: '#6b7a94', textDecoration: 'none' }}>Corridors</Link>
+        <Link href="/projects" style={{ color: '#94a3b8', textDecoration: 'none' }}>Corridors</Link>
         <span style={{ color: '#2d3748' }}>/</span>
-        <span style={{ color: '#c4cfe4' }}>{project.name}</span>
+        <span style={{ color: '#1e293b' }}>{project.name}</span>
       </nav>
 
       {/* Provenance Matrix Banner */}
@@ -71,7 +71,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-              <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#3a4258', letterSpacing: '0.08em' }}>
+              <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.08em' }}>
                 ID:{project.id.substring(0, 8).toUpperCase()}
               </span>
               {hasDelay && (
@@ -89,13 +89,13 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                 textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace'
               }}>Active Alignment</span>
             </div>
-            <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+            <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#0a2c5f', margin: 0 }}>
               {project.name}
             </h1>
-            <p style={{ marginTop: 8, fontSize: 12, color: '#4a5568', display: 'flex', gap: 12 }}>
-              <span>Length: <strong style={{ color: '#818cf8', fontFamily: 'JetBrains Mono, monospace' }}>{project.total_length_km ?? 0} km</strong></span>
-              <span>Area: <strong style={{ color: '#818cf8', fontFamily: 'JetBrains Mono, monospace' }}>{totalAreaHa.toFixed(2)} Ha</strong></span>
-              <span>State: <strong style={{ color: '#c4cfe4' }}>{project.state_name || 'National Scope'}</strong></span>
+            <p style={{ marginTop: 8, fontSize: 12, color: '#94a3b8', display: 'flex', gap: 12 }}>
+              <span>Length: <strong style={{ color: '#0a2c5f', fontFamily: 'JetBrains Mono, monospace' }}>{project.total_length_km ?? 0} km</strong></span>
+              <span>Area: <strong style={{ color: '#0a2c5f', fontFamily: 'JetBrains Mono, monospace' }}>{totalAreaHa.toFixed(2)} Ha</strong></span>
+              <span>State: <strong style={{ color: '#1e293b' }}>{project.state_name || 'National Scope'}</strong></span>
             </p>
           </div>
 
@@ -109,7 +109,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             </Link>
             <Link href={`/projects/${project.id}/impact`} style={{
               padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700,
-              background: 'rgba(99,102,241,0.18)', border: '1px solid rgba(99,102,241,0.35)', color: '#818cf8',
+              background: 'rgba(99,102,241,0.18)', border: '1px solid rgba(99,102,241,0.35)', color: '#0a2c5f',
               textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6
             }}>
               <Activity style={{ width: 13, height: 13 }} /> Impact & Simulation
@@ -125,8 +125,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
         </div>
 
         {/* RoW Progress */}
-        <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 8, color: '#6b7a94' }}>
+        <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 8, color: '#94a3b8' }}>
             <span>Right-of-Way (RoW) Possession Progress
               <strong style={{ color: '#f59e0b', fontFamily: 'JetBrains Mono, monospace', marginLeft: 6 }}>{percentPossessed}%</strong>
             </span>
@@ -141,7 +141,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
       {/* Segments */}
       <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>
+        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>
           Alignment Corridor Segments
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 14 }}>
@@ -151,9 +151,9 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               const unresolved = villageParcels.filter(p => p.status === 'UNRESOLVED');
               const hasDelay = unresolved.length > 0;
               return (
-                <div key={village} style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                <div key={village} style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(10,44,95,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: '#c4cfe4' }}>{village} Segment</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: '#1e293b' }}>{village} Segment</span>
                     <span style={{
                       fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 4,
                       background: hasDelay ? 'rgba(244,63,94,0.12)' : 'rgba(16,185,129,0.12)',
@@ -164,7 +164,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                       {hasDelay ? `${unresolved.length} Unresolved` : '100% Possessed'}
                     </span>
                   </div>
-                  <p style={{ fontSize: 11, color: '#4a5568', margin: '0 0 8px' }}>
+                  <p style={{ fontSize: 11, color: '#94a3b8', margin: '0 0 8px' }}>
                     {villageParcels.length} Registered Parcels ({villageParcels.reduce((s, p) => s + (p.area_hectares || 0), 0).toFixed(2)} Ha)
                   </p>
                   <div style={{
@@ -180,7 +180,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               );
             })
           ) : (
-            <div style={{ padding: '20px', borderRadius: 10, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', color: '#6b7a94', fontSize: 12 }}>
+            <div style={{ padding: '20px', borderRadius: 10, background: 'rgba(10,44,95,0.04)', border: '1px solid #e2e8f0', color: '#94a3b8', fontSize: 12 }}>
               Awaiting parcel cadastral mapping for corridor alignment.
             </div>
           )}
@@ -189,21 +189,21 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
       {/* Parcels Table */}
       <div className="glass" style={{ borderRadius: 14, overflow: 'hidden', padding: 0 }}>
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ padding: '16px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Mapped Land Parcels</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Cadastral Survey Register</div>
+            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Mapped Land Parcels</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', marginTop: 2 }}>Cadastral Survey Register</div>
           </div>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, padding: '4px 10px', borderRadius: 6, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', color: '#818cf8' }}>
+          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, padding: '4px 10px', borderRadius: 6, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', color: '#0a2c5f' }}>
             {parcels.length} Parcels
           </span>
         </div>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
                 {['Survey No.', 'Area (Ha)', 'Classification', 'Stage', 'Possession', ''].map((h) => (
-                  <th key={h} style={{ padding: '11px 18px', textAlign: 'left', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap', background: 'rgba(255,255,255,0.02)' }}>
+                  <th key={h} style={{ padding: '11px 18px', textAlign: 'left', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap', background: 'rgba(10,44,95,0.04)' }}>
                     {h}
                   </th>
                 ))}
@@ -215,9 +215,9 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                 const isLapsed = Boolean(p.is_lapsed);
                 const stageCol = STAGE_COLOR[p.current_stage] || '#6b7a94';
                 return (
-                  <tr key={p.id} className="tr-hover" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                  <tr key={p.id} className="tr-hover" style={{ borderBottom: '1px solid #f1f5f9' }}>
                     <td style={{ padding: '12px 18px' }}>
-                      <Link href={`/parcels/${p.id}`} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, fontWeight: 700, color: '#818cf8', textDecoration: 'none' }}>
+                      <Link href={`/parcels/${p.id}`} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, fontWeight: 700, color: '#0a2c5f', textDecoration: 'none' }}>
                         Survey No. {p.survey_no}
                       </Link>
                       {isLapsed && (
@@ -226,8 +226,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                         </span>
                       )}
                     </td>
-                    <td style={{ padding: '12px 18px', fontFamily: 'JetBrains Mono, monospace', color: '#8899b4' }}>{p.area_hectares} Ha</td>
-                    <td style={{ padding: '12px 18px', color: '#6b7a94' }}>{p.classification || 'Agricultural'}</td>
+                    <td style={{ padding: '12px 18px', fontFamily: 'JetBrains Mono, monospace', color: '#475569' }}>{p.area_hectares} Ha</td>
+                    <td style={{ padding: '12px 18px', color: '#94a3b8' }}>{p.classification || 'Agricultural'}</td>
                     <td style={{ padding: '12px 18px' }}>
                       <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, background: `${stageCol}18`, color: stageCol, border: `1px solid ${stageCol}35`, fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.04em' }}>
                         {p.current_stage || 'PRELIMINARY_NOTIFICATION'}
@@ -240,7 +240,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                       </span>
                     </td>
                     <td style={{ padding: '12px 18px' }}>
-                      <Link href={`/parcels/${p.id}`} style={{ fontSize: 11, fontWeight: 600, color: '#6b7a94', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <Link href={`/parcels/${p.id}`} style={{ fontSize: 11, fontWeight: 600, color: '#94a3b8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
                         Inspect <ArrowRight style={{ width: 11, height: 11 }} />
                       </Link>
                     </td>
@@ -249,7 +249,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               })}
               {parcels.length === 0 && (
                 <tr>
-                  <td colSpan={6} style={{ padding: '40px 24px', textAlign: 'center', color: '#4a5568', fontSize: 12 }}>
+                  <td colSpan={6} style={{ padding: '40px 24px', textAlign: 'center', color: '#94a3b8', fontSize: 12 }}>
                     No land parcels mapped to this project alignment.
                   </td>
                 </tr>
@@ -261,10 +261,10 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
       {/* Document Register */}
       <div style={{ paddingTop: 8 }}>
-        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 4 }}>
+        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 4 }}>
           Corridor Document Register
         </div>
-        <div style={{ fontSize: 18, fontWeight: 700, color: '#c4cfe4', marginBottom: 16 }}>
+        <div style={{ fontSize: 18, fontWeight: 700, color: '#1e293b', marginBottom: 16 }}>
           Statutory Gazette Notifications & Awards
         </div>
         <DocumentRegister projectId={project.id} />

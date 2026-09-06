@@ -265,7 +265,7 @@ export default function FieldLoginPage() {
                   </div>
 
                   <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300">
+                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-[#0a2c5f]/15 border border-[#0a2c5f]/30 text-amber-200">
                       {officer.pending_tasks_count} Cases
                     </span>
                     <div className="w-6 h-6 rounded-md bg-slate-800 group-hover:bg-emerald-600 text-slate-400 group-hover:text-white flex items-center justify-center transition-all">

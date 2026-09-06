@@ -152,7 +152,7 @@ export default function FieldSyncPage() {
                 Submissions cached on this mobile device for guaranteed zero-data-loss field surveys.
               </p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 flex-shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[#0a2c5f]/20 border border-[#0a2c5f]/30 flex items-center justify-center text-amber-200 flex-shrink-0">
               <Database className="w-5 h-5" />
             </div>
           </div>

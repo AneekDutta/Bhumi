@@ -175,7 +175,7 @@ export default function FieldComplaintsListPage() {
                           {c.complaint_id || c.id}
                         </span>
                         {c.parcel_id && (
-                          <span className="text-[9px] font-mono bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 px-1.5 py-0.2 rounded font-bold">
+                          <span className="text-[9px] font-mono bg-[#0a2c5f]/10 text-amber-200 border border-[#0a2c5f]/30 px-1.5 py-0.2 rounded font-bold">
                             PARCEL: #{c.parcel_id}
                           </span>
                         )}

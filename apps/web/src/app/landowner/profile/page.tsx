@@ -81,13 +81,13 @@ export default function LandownerProfilePage() {
       <div className="p-4 space-y-4 max-w-lg mx-auto pb-24">
         
         {/* Profile Details Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+        <div className="bg-white border border-[#e2e8f0] rounded-2xl p-5 shadow-xl space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xl flex-shrink-0">
               {owner.name?.slice(0, 1) || "U"}
             </div>
             <div>
-              <h1 className="font-bold text-white text-base font-display">
+              <h1 className="font-bold text-slate-900 text-base font-display">
                 {owner.name}
               </h1>
               <p className="text-xs text-amber-400 font-medium">
@@ -96,19 +96,19 @@ export default function LandownerProfilePage() {
             </div>
           </div>
 
-          <div className="space-y-2 text-xs border-t border-slate-800 pt-3">
+          <div className="space-y-2 text-xs border-t border-[#e2e8f0] pt-3">
             <div className="flex items-center justify-between py-1">
               <span className="text-slate-400 flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-slate-500" /> Email
               </span>
-              <span className="font-mono text-white">{owner.email || "Not set"}</span>
+              <span className="font-mono text-slate-900">{owner.email || "Not set"}</span>
             </div>
 
             <div className="flex items-center justify-between py-1">
               <span className="text-slate-400 flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-slate-500" /> Village
               </span>
-              <span className="text-white">{owner.contact_village || owner.village || "Corridor Sector"}</span>
+              <span className="text-slate-900">{owner.contact_village || owner.village || "Corridor Sector"}</span>
             </div>
 
             <div className="flex items-center justify-between py-1">
@@ -119,7 +119,7 @@ export default function LandownerProfilePage() {
             </div>
           </div>
 
-          <div className="pt-2 border-t border-slate-800">
+          <div className="pt-2 border-t border-[#e2e8f0]">
             <button
               onClick={handleSignOut}
               className="w-full py-2.5 px-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"

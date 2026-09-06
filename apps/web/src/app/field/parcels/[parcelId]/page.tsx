@@ -263,7 +263,7 @@ export default function ParcelDetailsPage() {
             </div>
 
             <div className="text-right">
-              <span className="inline-block px-2.5 py-1 text-xs font-mono font-bold rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              <span className="inline-block px-2.5 py-1 text-xs font-mono font-bold rounded-lg bg-[#0a2c5f]/20 text-amber-200 border border-[#0a2c5f]/30">
                 {parcel.area_acres || 0} Acres
               </span>
               <span className="block text-[10px] text-slate-400 mt-1">
@@ -733,7 +733,7 @@ export default function ParcelDetailsPage() {
             </div>
             <div>
               <span className="text-[10px] text-slate-400 block">2. Project Corridor</span>
-              <span className="font-mono font-semibold text-indigo-300">{parcel.project_id || "National Corridor"}</span>
+              <span className="font-mono font-semibold text-amber-200">{parcel.project_id || "National Corridor"}</span>
             </div>
 
             <div>

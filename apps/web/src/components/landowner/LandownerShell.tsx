@@ -5,17 +5,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { 
   Home, 
-  Layers, 
   FileText, 
-  AlertCircle, 
-  User, 
   PlusCircle, 
+  User, 
   Monitor, 
   Smartphone, 
-  ShieldCheck, 
-  ArrowLeft,
-  RefreshCw,
-  LogOut
+  ArrowLeft
 } from "lucide-react";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 
@@ -31,7 +26,6 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
   const [owner, setOwner] = useState<any>(null);
 
   useEffect(() => {
-    // Read session cookie
     import("@/lib/supabase/client").then(({ createClient }) => {
       const supabase = createClient();
       supabase.auth.getUser().then(({ data }) => {
@@ -68,7 +62,7 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
       highlight: true
     },
     {
-      label: "Citizen Profile",
+      label: "My Profile",
       href: "/landowner/profile",
       icon: User,
       active: pathname === "/landowner/profile"
@@ -76,92 +70,89 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-emerald-500/30">
+    <div className="min-h-screen flex flex-col bg-[#f4f6f9] text-slate-900 antialiased selection:bg-[#0a2c5f]/15">
       
-      {/* Top Citizen Header */}
-      <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-900/90 backdrop-blur-md px-3 py-2.5">
-        <div className="max-w-lg mx-auto flex items-center justify-between gap-2">
-          
-          <div className="flex items-center gap-2 overflow-hidden">
-            {showBack ? (
+      {/* Government Header — Navy */}
+      <header className="sticky top-0 z-40 w-full flex-shrink-0 shadow-md">
+        {/* Main navy header bar */}
+        <div className="bg-[#0a2c5f] px-3 py-2.5">
+          <div className="max-w-lg mx-auto flex items-center justify-between gap-2">
+
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              {showBack ? (
+                <button
+                  type="button"
+                  onClick={() => router.back()}
+                  className="p-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex-shrink-0"
+                  aria-label="Back"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+              ) : (
+                <Link href="/landowner/home" className="flex items-center gap-2 flex-shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-amber-400 flex items-center justify-center text-[#0a2c5f] font-bold text-sm shadow-sm">
+                    भ
+                  </div>
+                </Link>
+              )}
+
+              <div className="overflow-hidden">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold text-sm text-white truncate block">
+                    {title || "BHUMI Citizen Portal"}
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-amber-400/20 text-amber-200 border border-amber-400/30 whitespace-nowrap">
+                    AFFECTED PERSON
+                  </span>
+                </div>
+                {owner && (
+                  <span className="text-[10px] text-amber-200 font-mono truncate block">
+                    {owner.name}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Right Controls */}
+            <div className="flex items-center gap-1.5 flex-shrink-0">
               <button
                 type="button"
-                onClick={() => router.back()}
-                className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition-colors"
-                aria-label="Back"
+                onClick={() => { window.location.href = "/field/dashboard"; }}
+                title="Field Officer App"
+                className="p-1.5 rounded-lg bg-white/10 text-white/70 hover:text-white border border-white/20 transition-colors cursor-pointer"
               >
-                <ArrowLeft className="w-4 h-4" />
+                <Smartphone className="w-3.5 h-3.5" />
               </button>
-            ) : (
-              <Link href="/landowner/home" className="flex items-center gap-2 flex-shrink-0">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-emerald-950">
-                  भ
-                </div>
-              </Link>
-            )}
 
-            <div className="overflow-hidden">
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-sm text-white truncate block font-display">
-                  {title || "BHUMI Citizen Portal"}
-                </span>
-                <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  AFFECTED PERSON
-                </span>
-              </div>
-              {owner && (
-                <span className="text-[10px] text-emerald-400 font-mono truncate block">
-                  {owner.name} · {owner.contact_village || "Corridor Sector"}
-                </span>
-              )}
+              <button
+                type="button"
+                onClick={() => { window.location.href = "/"; }}
+                title="Admin Console"
+                className="p-1.5 rounded-lg bg-white/10 text-white/70 hover:text-white border border-white/20 transition-colors cursor-pointer"
+              >
+                <Monitor className="w-3.5 h-3.5" />
+              </button>
+
+              <ThemeToggle variant="icon" />
             </div>
           </div>
+        </div>
 
-          {/* Right Action Icons: Role Switchers & Theme */}
-          <div className="flex items-center gap-1.5 flex-shrink-0">
-            {/* Quick Switch to Field Ops */}
-            <button
-              type="button"
-              onClick={() => {
-                const sessionData = {
-                  officer_id: "OFF-001",
-                  name: "Ramesh Patel",
-                  designation: "Patwari / Revenue Lekhpal",
-                  assigned_villages: ["Ramganj Mandi", "Kanhera Kalan"],
-                  role: "FIELD_OFFICER"
-                };
-                window.location.href = "/field/dashboard";
-              }}
-              title="Switch to Field Officer Console"
-              className="p-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-emerald-400 border border-slate-700/60 transition-colors cursor-pointer"
-            >
-              <Smartphone className="w-3.5 h-3.5" />
-            </button>
-
-            {/* Quick Switch to Desktop Admin */}
-            <button
-              type="button"
-              onClick={() => {
-                window.location.href = "/";
-              }}
-              title="Switch to Desktop Admin Console"
-              className="p-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-indigo-400 border border-slate-700/60 transition-colors cursor-pointer"
-            >
-              <Monitor className="w-3.5 h-3.5" />
-            </button>
-
-            <ThemeToggle variant="icon" />
-          </div>
+        {/* Tricolor strip */}
+        <div className="flex h-[2px] w-full">
+          <div className="flex-1 bg-[#FF9933]" />
+          <div className="flex-1 bg-white" />
+          <div className="flex-1 bg-[#138808]" />
         </div>
       </header>
 
-      {/* Main Content Area */}
+      {/* Main Content Area — Light */}
       <main className="flex-1 w-full max-w-lg mx-auto pb-24">
         {children}
       </main>
 
-      {/* Persistent Citizen Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800">
+      {/* Bottom Navigation Bar */}
+      <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-lg border-t border-[#e2e8f0] shadow-lg">
         <div className="max-w-lg mx-auto grid grid-cols-4 h-16">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -171,22 +162,22 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
                 href={item.href}
                 className={`relative flex flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors ${
                   item.highlight
-                    ? "text-emerald-400 font-bold"
+                    ? "text-[#0a2c5f] font-bold"
                     : item.active
-                    ? "text-emerald-400 font-semibold"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "text-[#0a2c5f] font-semibold"
+                    : "text-slate-400 hover:text-slate-700"
                 }`}
               >
                 {item.highlight ? (
-                  <div className="w-9 h-9 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center -mt-4 shadow-lg shadow-emerald-950 border-2 border-slate-900">
+                  <div className="w-9 h-9 rounded-full bg-[#0a2c5f] hover:bg-[#082449] text-white flex items-center justify-center -mt-4 shadow-lg border-2 border-white">
                     <Icon className="w-5 h-5" />
                   </div>
                 ) : (
-                  <Icon className={`w-5 h-5 ${item.active ? "text-emerald-400" : "text-slate-400"}`} />
+                  <Icon className={`w-5 h-5 ${item.active ? "text-[#0a2c5f]" : "text-slate-400"}`} />
                 )}
                 <span>{item.label}</span>
                 {item.active && !item.highlight && (
-                  <span className="absolute bottom-1 w-6 h-0.5 rounded-full bg-emerald-400" />
+                  <span className="absolute bottom-1 w-6 h-0.5 rounded-full bg-[#0a2c5f]" />
                 )}
               </Link>
             );
