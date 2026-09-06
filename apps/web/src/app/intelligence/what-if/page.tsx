@@ -167,7 +167,7 @@ export default function WhatIfSimulationPage() {
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+          <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
             Statutory Parameter Workbench
           </span>
           <button
@@ -196,13 +196,13 @@ export default function WhatIfSimulationPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
             <span style={{
               fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4,
-              background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#0a2c5f',
+              background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8',
               textTransform: 'uppercase', letterSpacing: '0.06em'
             }}>
               Decision Intelligence Workbench
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#0a2c5f', margin: 0 }}>
+          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
             What-If Statutory Simulation Workbench
           </h1>
           <p style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
@@ -216,7 +216,7 @@ export default function WhatIfSimulationPage() {
             style={{
               padding: '8px 16px',
               borderRadius: 8,
-              background: 'rgba(10,44,95,0.04)',
+              background: 'rgba(255,255,255,0.04)',
               border: '1px solid rgba(255,255,255,0.1)',
               color: '#cbd5e1',
               fontSize: 12,
@@ -260,7 +260,7 @@ export default function WhatIfSimulationPage() {
       ) : cases.length === 0 ? (
         <div style={{ padding: '60px 16px', textAlign: 'center', borderRadius: 16, border: '1px dashed rgba(255,255,255,0.1)' }}>
           <CheckCircle2 style={{ width: 36, height: 36, color: '#10b981', margin: '0 auto 12px' }} />
-          <div style={{ fontSize: 16, fontWeight: 700, color: '#0a2c5f', marginBottom: 6 }}>
+          <div style={{ fontSize: 16, fontWeight: 700, color: '#e2e8f0', marginBottom: 6 }}>
             No landowner grievances available.
           </div>
           <p style={{ fontSize: 12, color: '#64748b', maxWidth: 440, margin: '0 auto' }}>
@@ -275,8 +275,8 @@ export default function WhatIfSimulationPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             
             {/* Case Picker Card */}
-            <div className="glass" style={{ borderRadius: 14, padding: 18, border: '1px solid #e2e8f0' }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', display: 'block', marginBottom: 8 }}>
+            <div className="glass" style={{ borderRadius: 14, padding: 18, border: '1px solid rgba(255,255,255,0.08)' }}>
+              <label style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', display: 'block', marginBottom: 8 }}>
                 Select Real Landowner Case
               </label>
               <select
@@ -287,8 +287,8 @@ export default function WhatIfSimulationPage() {
                   padding: '10px 12px',
                   borderRadius: 8,
                   border: '1px solid rgba(255,255,255,0.15)',
-                  background: '#ffffff',
-                  color: '#0a2c5f',
+                  background: 'rgba(15,23,42,0.8)',
+                  color: '#e2e8f0',
                   fontSize: 13,
                   fontWeight: 600,
                   outline: 'none',
@@ -303,10 +303,10 @@ export default function WhatIfSimulationPage() {
               </select>
 
               {selectedCase && parcelMetrics && (
-                <div style={{ marginTop: 14, padding: 12, borderRadius: 8, background: '#ffffff', fontSize: 11 }}>
+                <div style={{ marginTop: 14, padding: 12, borderRadius: 8, background: 'rgba(0,0,0,0.25)', fontSize: 11 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                     <span style={{ color: '#64748b' }}>Owner:</span>
-                    <span style={{ color: '#0a2c5f', fontWeight: 600 }}>{selectedCase.owner_name}</span>
+                    <span style={{ color: '#e2e8f0', fontWeight: 600 }}>{selectedCase.owner_name}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                     <span style={{ color: '#64748b' }}>Declared Area:</span>
@@ -316,7 +316,7 @@ export default function WhatIfSimulationPage() {
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: '#64748b' }}>Base Circle Rate:</span>
-                    <span style={{ color: '#0a2c5f', fontWeight: 600, fontFamily: 'JetBrains Mono, monospace' }}>
+                    <span style={{ color: '#818cf8', fontWeight: 600, fontFamily: 'JetBrains Mono, monospace' }}>
                       ₹{parcelMetrics.ratePerSqm.toLocaleString()}/m&sup2;
                     </span>
                   </div>
@@ -325,8 +325,8 @@ export default function WhatIfSimulationPage() {
             </div>
 
             {/* Statutory Parameters Configurator */}
-            <div className="glass" style={{ borderRadius: 14, padding: 18, border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#0a2c5f', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div className="glass" style={{ borderRadius: 14, padding: 18, border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#e2e8f0', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Scale style={{ width: 14, height: 14, color: '#10b981' }} />
                 <span>RFCTLARR Statutory Parameters</span>
               </div>
@@ -334,8 +334,8 @@ export default function WhatIfSimulationPage() {
               {/* Multiplier Slider */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 6 }}>
-                  <span style={{ color: '#64748b' }}>Rural Multiplier Factor:</span>
-                  <span style={{ color: '#0284c7', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace' }}>
+                  <span style={{ color: '#94a3b8' }}>Rural Multiplier Factor:</span>
+                  <span style={{ color: '#38bdf8', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace' }}>
                     {multiplier.toFixed(2)}&times;
                   </span>
                 </div>
@@ -358,7 +358,7 @@ export default function WhatIfSimulationPage() {
               {/* Solatium Slider */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 6 }}>
-                  <span style={{ color: '#64748b' }}>Mandatory Solatium (Sec 30):</span>
+                  <span style={{ color: '#94a3b8' }}>Mandatory Solatium (Sec 30):</span>
                   <span style={{ color: '#10b981', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace' }}>
                     {solatiumPct}%
                   </span>
@@ -382,7 +382,7 @@ export default function WhatIfSimulationPage() {
               {/* Delay Interest */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 6 }}>
-                  <span style={{ color: '#64748b' }}>Delay Interest (12% p.a.):</span>
+                  <span style={{ color: '#94a3b8' }}>Delay Interest (12% p.a.):</span>
                   <span style={{ color: '#f59e0b', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace' }}>
                     {interestYears} Year{interestYears === 1 ? '' : 's'} (+{(interestYears * 12)}%)
                   </span>
@@ -400,7 +400,7 @@ export default function WhatIfSimulationPage() {
 
               {/* Administrative Intervention Option */}
               <div>
-                <label style={{ fontSize: 11, color: '#64748b', display: 'block', marginBottom: 6 }}>
+                <label style={{ fontSize: 11, color: '#94a3b8', display: 'block', marginBottom: 6 }}>
                   Direct Administrative Intervention:
                 </label>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -470,32 +470,32 @@ export default function WhatIfSimulationPage() {
                 <div className="glass" style={{
                   borderRadius: 14,
                   padding: 20,
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid rgba(255,255,255,0.08)',
                   background: 'rgba(255,255,255,0.015)'
                 }}>
                   <div style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#f59e0b', textTransform: 'uppercase', marginBottom: 4 }}>
                     BEFORE &bull; CURRENT BASELINE
                   </div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: '#0a2c5f', marginBottom: 14 }}>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: '#e2e8f0', marginBottom: 14 }}>
                     Standard Award
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 12 }}>
                     <div>
                       <div style={{ color: '#64748b', fontSize: 11 }}>Total Compensation</div>
-                      <div style={{ fontSize: 22, fontWeight: 800, color: '#0a2c5f', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: '#e2e8f0', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
                         ₹{Math.round(parcelMetrics.beforeTotal).toLocaleString('en-IN')}
                       </div>
                     </div>
 
-                    <div style={{ paddingTop: 10, borderTop: '1px solid #e2e8f0' }}>
+                    <div style={{ paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                       <div style={{ color: '#64748b', fontSize: 11 }}>Litigation Risk</div>
                       <div style={{ fontSize: 14, fontWeight: 700, color: '#ef4444', marginTop: 2 }}>
                         {parcelMetrics.beforeLitigationRisk}
                       </div>
                     </div>
 
-                    <div style={{ paddingTop: 10, borderTop: '1px solid #e2e8f0' }}>
+                    <div style={{ paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                       <div style={{ color: '#64748b', fontSize: 11 }}>Projected Dispute Duration</div>
                       <div style={{ fontSize: 14, fontWeight: 700, color: '#f59e0b', marginTop: 2 }}>
                         ~{parcelMetrics.beforeDelayDays} Days
@@ -530,16 +530,16 @@ export default function WhatIfSimulationPage() {
                       </div>
                     </div>
 
-                    <div style={{ paddingTop: 10, borderTop: '1px solid #e2e8f0' }}>
+                    <div style={{ paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                       <div style={{ color: '#64748b', fontSize: 11 }}>Mitigated Litigation Risk</div>
                       <div style={{ fontSize: 14, fontWeight: 700, color: '#34d399', marginTop: 2 }}>
                         {parcelMetrics.afterLitigationRisk}
                       </div>
                     </div>
 
-                    <div style={{ paddingTop: 10, borderTop: '1px solid #e2e8f0' }}>
+                    <div style={{ paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                       <div style={{ color: '#64748b', fontSize: 11 }}>Time Saved to Handover</div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: '#0284c7', marginTop: 2 }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: '#38bdf8', marginTop: 2 }}>
                         ~{parcelMetrics.estimatedDaysSaved} Days Saved
                       </div>
                     </div>
@@ -549,9 +549,9 @@ export default function WhatIfSimulationPage() {
               </div>
 
               {/* Action Button: Save & Apply Determination */}
-              <div className="glass" style={{ borderRadius: 14, padding: 18, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+              <div className="glass" style={{ borderRadius: 14, padding: 18, border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#0a2c5f' }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#e2e8f0' }}>
                     Issue Statutory Determination Order
                   </div>
                   <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>

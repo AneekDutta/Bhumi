@@ -245,12 +245,12 @@ function LoginPageContent() {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col lg:flex-row bg-[#f4f6f9] text-slate-900 select-none font-sans">
+    <div className="w-full min-h-screen flex flex-col lg:flex-row bg-[#070a14] text-[#e2e8f0] select-none font-sans">
       
       {/* ========================================================================= */}
       {/* LEFT SIDE — PRODUCT INTELLIGENCE PREVIEW (58% desktop width)              */}
       {/* ========================================================================= */}
-      <div className="hidden lg:flex lg:w-[58%] min-h-screen flex-col justify-between p-10 xl:p-14 relative overflow-hidden border-r border-[#e2e8f0] bg-[#0a2c5f]">
+      <div className="hidden lg:flex lg:w-[58%] min-h-screen flex-col justify-between p-10 xl:p-14 relative overflow-hidden border-r border-[#1e293b]/70 bg-[#060811]">
         
         {/* Subtle GIS Background Grid Pattern */}
         <div 
@@ -313,7 +313,7 @@ function LoginPageContent() {
               <div className="text-[10px] font-mono tracking-[0.14em] uppercase text-[#64748b] font-semibold">
                 Ministry of Road Transport & Highways · Govt of India
               </div>
-              <div className="text-xs font-mono font-bold text-slate-500 tracking-wider uppercase">
+              <div className="text-xs font-mono font-bold text-[#94a3b8] tracking-wider uppercase">
                 BHUMI Digital Twin · PM GatiShakti NMP
               </div>
             </div>
@@ -324,11 +324,11 @@ function LoginPageContent() {
               <span className="w-2 h-2 rounded-full bg-[#38bdf8] animate-pulse" />
               National Land Operations Authority
             </div>
-            <h1 className="text-3xl xl:text-4xl font-extrabold text-[#0a2c5f] tracking-tight leading-tight font-sans">
+            <h1 className="text-3xl xl:text-4xl font-extrabold text-[#f8fafc] tracking-tight leading-tight font-sans">
               LAND ACQUISITION<br />
               <span className="text-[#38bdf8]">INTELLIGENCE PLATFORM</span>
             </h1>
-            <p className="text-sm xl:text-base text-slate-500 font-medium tracking-wide">
+            <p className="text-sm xl:text-base text-[#94a3b8] font-medium tracking-wide">
               Monitor. Diagnose. Resolve. Execute.
             </p>
           </div>
@@ -344,9 +344,9 @@ function LoginPageContent() {
                 <span className="text-[10px] font-mono uppercase tracking-widest text-[#38bdf8] font-bold block mb-1">
                   Operational Telemetry & System Status
                 </span>
-                <h3 className="text-base font-bold text-[#0a2c5f] font-sans flex items-center gap-2">
+                <h3 className="text-base font-bold text-[#f8fafc] font-sans flex items-center gap-2">
                   <span>National Corridor Digital Twin</span>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#0f172a] text-slate-500 border border-[#334155]">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#0f172a] text-[#94a3b8] border border-[#334155]">
                     PROD-CLUSTER
                   </span>
                 </h3>
@@ -431,7 +431,7 @@ function LoginPageContent() {
             <div className="bg-[#070a14] border border-[#1e293b] rounded-lg px-3.5 py-2.5 flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Database className="w-4 h-4 text-[#10b981]" />
-                <span className="text-xs font-semibold text-slate-700">Institutional Network Authority</span>
+                <span className="text-xs font-semibold text-[#cbd5e1]">Institutional Network Authority</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#10b981] animate-ping" />
@@ -443,7 +443,7 @@ function LoginPageContent() {
 
             {/* Security Boundary Notice: Protecting Confidential / Parcel / Legal Data */}
             <div className="p-3 rounded-lg bg-[#070a14]/90 border border-[#334155]/60 text-xs">
-              <div className="flex items-center gap-2 text-slate-500 font-mono text-[11px] font-bold uppercase mb-1">
+              <div className="flex items-center gap-2 text-[#94a3b8] font-mono text-[11px] font-bold uppercase mb-1">
                 <Lock className="w-3.5 h-3.5 text-[#38bdf8]" />
                 <span>Statutory Access Boundary Notice</span>
               </div>
@@ -470,21 +470,21 @@ function LoginPageContent() {
       {/* ========================================================================= */}
       {/* RIGHT SIDE — AUTHENTICATION PANEL (42% desktop width)                     */}
       {/* ========================================================================= */}
-      <div className="w-full lg:w-[42%] min-h-screen lg:h-screen flex flex-col justify-between p-6 sm:p-10 xl:p-12 overflow-y-auto bg-white">
+      <div className="w-full lg:w-[42%] min-h-screen lg:h-screen flex flex-col justify-between p-6 sm:p-10 xl:p-12 overflow-y-auto bg-[#070a14]">
         
         {/* Top Header / System Identification (Mobile & Desktop) */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-[#0a2c5f] flex items-center justify-center font-bold text-white font-mono text-base">
+            <div className="w-9 h-9 rounded-lg bg-[#0c1322] border border-[#1e293b] flex items-center justify-center font-bold text-[#38bdf8] font-mono text-base">
               भ
             </div>
             <div>
-              <div className="font-bold text-sm text-[#0a2c5f] tracking-tight">BHUMI PLATFORM</div>
-              <div className="text-[9px] font-mono text-amber-200 tracking-wider uppercase">Govt. Command Portal</div>
+              <div className="font-bold text-sm text-[#f8fafc] tracking-tight">BHUMI PLATFORM</div>
+              <div className="text-[9px] font-mono text-[#64748b] tracking-wider uppercase">Govt. Command Portal</div>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-[#0c1322] border border-[#1e293b] text-[10px] font-mono text-slate-500">
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-[#0c1322] border border-[#1e293b] text-[10px] font-mono text-[#94a3b8]">
             <Lock className="w-3 h-3 text-[#10b981]" />
             <span>256-BIT SSL</span>
           </div>
@@ -495,7 +495,7 @@ function LoginPageContent() {
           
           {/* Session Expired Banner */}
           {sessionExpired && (
-            <div className="mb-6 p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-xs flex items-start gap-2.5">
+            <div className="mb-6 p-3.5 rounded-lg bg-[#f59e0b]/10 border border-[#f59e0b]/30 text-[#f59e0b] text-xs flex items-start gap-2.5">
               <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <div>
                 <span className="font-bold block uppercase tracking-wider text-[10px]">Session Terminated</span>
@@ -506,7 +506,7 @@ function LoginPageContent() {
 
           {/* Authentication Error Banner */}
           {errorMsg && (
-            <div className="mb-6 p-3.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5 animate-fadeIn">
+            <div className="mb-6 p-3.5 rounded-lg bg-[#ef4444]/10 border border-[#ef4444]/40 text-[#fca5a5] text-xs flex items-start gap-2.5 animate-fadeIn">
               <AlertTriangle className="w-4 h-4 text-[#ef4444] flex-shrink-0 mt-0.5" />
               <div>
                 <span className="font-bold block uppercase tracking-wider text-[10px] text-[#ef4444]">Authentication Alert</span>
@@ -517,7 +517,7 @@ function LoginPageContent() {
 
           {/* Success Banner */}
           {successMsg && (
-            <div className="mb-6 p-3.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-start gap-2.5 animate-fadeIn">
+            <div className="mb-6 p-3.5 rounded-lg bg-[#10b981]/10 border border-[#10b981]/30 text-[#6ee7b7] text-xs flex items-start gap-2.5 animate-fadeIn">
               <CheckCircle2 className="w-4 h-4 text-[#10b981] flex-shrink-0 mt-0.5" />
               <div>
                 <span className="font-bold block uppercase tracking-wider text-[10px] text-[#10b981]">Authorization Status</span>
@@ -527,7 +527,7 @@ function LoginPageContent() {
           )}
 
           {/* Card Frame */}
-          <div className="rounded-2xl bg-white border border-[#e2e8f0] p-6 sm:p-8 shadow-gov">
+          <div className="rounded-2xl bg-[#0b1021] border border-[#1e293b] p-6 sm:p-8 shadow-xl">
             
             {/* =================================================================== */}
             {/* STATE 1: LOGIN FORM                                                 */}
@@ -538,10 +538,10 @@ function LoginPageContent() {
                   <span className="text-[10px] font-mono tracking-widest uppercase text-[#38bdf8] font-bold block mb-1">
                     Officer Portal Access
                   </span>
-                  <h2 className="text-2xl font-extrabold text-[#0a2c5f] tracking-tight font-sans">
+                  <h2 className="text-2xl font-extrabold text-[#f8fafc] tracking-tight font-sans">
                     WELCOME BACK
                   </h2>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-[#94a3b8] mt-1">
                     Sign in to your command dashboard.
                   </p>
                 </div>
@@ -550,7 +550,7 @@ function LoginPageContent() {
                   
                   {/* Field: Official Email / Officer ID */}
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5 uppercase tracking-wide text-[11px]">
+                    <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5 uppercase tracking-wide text-[11px]">
                       Official Email / Officer ID
                     </label>
                     <div className="relative">
@@ -561,7 +561,7 @@ function LoginPageContent() {
                         onChange={(e) => setEmailOrId(e.target.value)}
                         placeholder="Enter your official email or officer ID"
                         disabled={loading}
-                        className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-[#cbd5e1] text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0a2c5f] focus:ring-1 focus:ring-[#0a2c5f] transition-colors disabled:opacity-60"
+                        className="w-full px-3.5 py-2.5 rounded-lg bg-[#070a14] border border-[#1e293b] text-sm text-[#f1f5f9] placeholder-[#475569] focus:outline-none focus:border-[#38bdf8] focus:ring-1 focus:ring-[#38bdf8] transition-colors disabled:opacity-60"
                       />
                     </div>
                   </div>
@@ -569,7 +569,7 @@ function LoginPageContent() {
                   {/* Field: Password */}
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wide text-[11px]">
+                      <label className="block text-xs font-semibold text-[#cbd5e1] uppercase tracking-wide text-[11px]">
                         Password
                       </label>
                     </div>
@@ -586,7 +586,7 @@ function LoginPageContent() {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748b] hover:text-slate-500 transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748b] hover:text-[#94a3b8] transition-colors"
                         tabIndex={-1}
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -603,7 +603,7 @@ function LoginPageContent() {
                         onChange={(e) => setRememberDevice(e.target.checked)}
                         className="w-4 h-4 rounded bg-[#070a14] border-[#1e293b] text-[#0284c7] focus:ring-0 focus:ring-offset-0 cursor-pointer"
                       />
-                      <span className="text-xs text-slate-500 font-medium">Remember this device</span>
+                      <span className="text-xs text-[#94a3b8] font-medium">Remember this device</span>
                     </label>
 
                     <button
@@ -613,7 +613,7 @@ function LoginPageContent() {
                         setErrorMsg(null);
                         setSuccessMsg(null);
                       }}
-                      className="text-xs font-medium text-[#0a2c5f] hover:text-[#082449] transition-colors"
+                      className="text-xs font-medium text-[#38bdf8] hover:text-[#7dd3fc] transition-colors"
                     >
                       Forgot password?
                     </button>
@@ -624,7 +624,7 @@ function LoginPageContent() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-2.5 px-4 rounded-lg bg-[#0a2c5f] hover:bg-[#082449] text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full py-2.5 px-4 rounded-lg bg-[#0284c7] hover:bg-[#0369a1] text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       {loading ? (
                         <>
@@ -643,11 +643,11 @@ function LoginPageContent() {
                 </form>
 
                 {/* Quick-Fill Demonstration Utility */}
-                <div className="mt-4 pt-4 border-t border-[#e2e8f0] text-center space-y-2.5">
+                <div className="mt-4 pt-4 border-t border-[#1e293b] text-center space-y-2.5">
                   <button
                     type="button"
                     onClick={handleQuickFill}
-                    className="text-[11px] font-mono text-slate-500 hover:text-[#0a2c5f] transition-colors inline-flex items-center gap-1.5"
+                    className="text-[11px] font-mono text-[#64748b] hover:text-[#38bdf8] transition-colors inline-flex items-center gap-1.5"
                   >
                     <KeyRound className="w-3 h-3" />
                     <span>[ Load Authorized Official Credentials ]</span>
@@ -656,7 +656,7 @@ function LoginPageContent() {
                   <div>
                     <Link
                       href="/field/login"
-                      className="text-[11px] font-mono text-emerald-600 hover:text-emerald-700 hover:underline transition-colors inline-flex items-center gap-1.5"
+                      className="text-[11px] font-mono text-[#10b981] hover:text-[#34d399] hover:underline transition-colors inline-flex items-center gap-1.5"
                     >
                       <Smartphone className="w-3.5 h-3.5" />
                       <span>Switch to Field Officer Mobile Login →</span>
@@ -685,17 +685,17 @@ function LoginPageContent() {
                   <span className="text-[10px] font-mono tracking-widest uppercase text-[#38bdf8] font-bold block mb-1">
                     Credential Recovery
                   </span>
-                  <h2 className="text-xl font-extrabold text-[#0a2c5f] tracking-tight font-sans">
+                  <h2 className="text-xl font-extrabold text-[#f8fafc] tracking-tight font-sans">
                     RESET CREDENTIALS
                   </h2>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-[#94a3b8] mt-1">
                     Enter your official government email to receive password recovery instructions.
                   </p>
                 </div>
 
                 <form onSubmit={handleForgotPassword} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5 uppercase tracking-wide text-[11px]">
+                    <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5 uppercase tracking-wide text-[11px]">
                       Official Email Address
                     </label>
                     <input
@@ -705,7 +705,7 @@ function LoginPageContent() {
                       onChange={(e) => setEmailOrId(e.target.value)}
                       placeholder="e.g. officer@bhumi.gov.in"
                       disabled={loading}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-[#cbd5e1] text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0a2c5f] focus:ring-1 focus:ring-[#0a2c5f] transition-colors disabled:opacity-60"
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#070a14] border border-[#1e293b] text-sm text-[#f1f5f9] placeholder-[#475569] focus:outline-none focus:border-[#38bdf8] focus:ring-1 focus:ring-[#38bdf8] transition-colors disabled:opacity-60"
                     />
                   </div>
 
@@ -713,7 +713,7 @@ function LoginPageContent() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-2.5 px-4 rounded-lg bg-[#0a2c5f] hover:bg-[#082449] text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-60"
+                      className="w-full py-2.5 px-4 rounded-lg bg-[#0284c7] hover:bg-[#0369a1] text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-60"
                     >
                       {loading ? (
                         <>
@@ -737,7 +737,7 @@ function LoginPageContent() {
                         setErrorMsg(null);
                         setSuccessMsg(null);
                       }}
-                      className="text-xs font-medium text-slate-500 hover:text-[#0a2c5f] transition-colors"
+                      className="text-xs font-medium text-[#94a3b8] hover:text-[#f8fafc] transition-colors"
                     >
                       ← Return to Officer Sign In
                     </button>
@@ -755,17 +755,17 @@ function LoginPageContent() {
                   <span className="text-[10px] font-mono tracking-widest uppercase text-[#38bdf8] font-bold block mb-1">
                     Statutory Protocol
                   </span>
-                  <h2 className="text-xl font-extrabold text-[#0a2c5f] tracking-tight font-sans">
+                  <h2 className="text-xl font-extrabold text-[#f8fafc] tracking-tight font-sans">
                     SET NEW PASSWORD
                   </h2>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-[#94a3b8] mt-1">
                     Establish updated access credentials for your command dashboard account.
                   </p>
                 </div>
 
                 <form onSubmit={handleUpdatePassword} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5 uppercase tracking-wide text-[11px]">
+                    <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5 uppercase tracking-wide text-[11px]">
                       New Security Password
                     </label>
                     <input
@@ -775,12 +775,12 @@ function LoginPageContent() {
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Minimum 8 characters"
                       disabled={loading}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-[#cbd5e1] text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0a2c5f] focus:ring-1 focus:ring-[#0a2c5f] transition-colors disabled:opacity-60"
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#070a14] border border-[#1e293b] text-sm text-[#f1f5f9] placeholder-[#475569] focus:outline-none focus:border-[#38bdf8] focus:ring-1 focus:ring-[#38bdf8] transition-colors disabled:opacity-60"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5 uppercase tracking-wide text-[11px]">
+                    <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5 uppercase tracking-wide text-[11px]">
                       Confirm New Password
                     </label>
                     <input
@@ -790,7 +790,7 @@ function LoginPageContent() {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Re-enter password"
                       disabled={loading}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-[#cbd5e1] text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0a2c5f] focus:ring-1 focus:ring-[#0a2c5f] transition-colors disabled:opacity-60"
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#070a14] border border-[#1e293b] text-sm text-[#f1f5f9] placeholder-[#475569] focus:outline-none focus:border-[#38bdf8] focus:ring-1 focus:ring-[#38bdf8] transition-colors disabled:opacity-60"
                     />
                   </div>
 
@@ -798,7 +798,7 @@ function LoginPageContent() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-2.5 px-4 rounded-lg bg-[#0a2c5f] hover:bg-[#082449] text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-60"
+                      className="w-full py-2.5 px-4 rounded-lg bg-[#0284c7] hover:bg-[#0369a1] text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-60"
                     >
                       {loading ? (
                         <>
@@ -823,7 +823,7 @@ function LoginPageContent() {
 
         {/* Bottom Notice: Institutional Security Declaration */}
         <div className="pt-6 border-t border-[#1e293b]/60 text-center">
-          <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 mb-1">
+          <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[#cbd5e1] mb-1">
             <Shield className="w-3.5 h-3.5 text-[#38bdf8]" />
             <span>Secure Government Access</span>
           </div>

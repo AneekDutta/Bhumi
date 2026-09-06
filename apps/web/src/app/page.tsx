@@ -85,7 +85,7 @@ export default async function NationalDashboardPage() {
               Institutional Operations &middot; CALA Administration
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 28, fontWeight: 800, color: '#0a2c5f', margin: 0, lineHeight: 1.2 }}>
+          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 28, fontWeight: 800, color: '#e2e8f0', margin: 0, lineHeight: 1.2 }}>
             National Land Acquisition Operations
           </h1>
           <p style={{ marginTop: 6, fontSize: 13, color: '#64748b', lineHeight: 1.5 }}>
@@ -119,7 +119,7 @@ export default async function NationalDashboardPage() {
       <section style={{
         borderRadius: 16,
         padding: 24,
-        background: 'rgba(245,158,11,0.04)',
+        background: 'rgba(245,158,11,0.02)',
         border: '1px solid rgba(245,158,11,0.2)',
         display: 'flex',
         flexDirection: 'column',
@@ -146,7 +146,7 @@ export default async function NationalDashboardPage() {
             </h2>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+            <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
               6 Strategic National Corridors
             </span>
             <Link
@@ -167,13 +167,13 @@ export default async function NationalDashboardPage() {
           </div>
         </div>
 
-        <p style={{ fontSize: 12, color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 12, color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
           Multi-sector linear corridor footprints representing Highways, Railways, Industrial Corridors, Irrigation, Renewable Energy, and Urban Development. Isolated from citizen-submitted records.
         </p>
 
         {/* Section A Portfolio KPI Strip */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: '#ffffff', border: '1px solid rgba(245,158,11,0.15)' }}>
+          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(245,158,11,0.15)' }}>
             <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Total Length</div>
             <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 800, color: '#fcd34d', marginTop: 4 }}>
               {mockTotalLength.toFixed(1)} <span style={{ fontSize: 12, fontWeight: 500 }}>km</span>
@@ -181,15 +181,15 @@ export default async function NationalDashboardPage() {
             <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Highways &amp; Railways</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: '#ffffff', border: '1px solid rgba(245,158,11,0.15)' }}>
+          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(245,158,11,0.15)' }}>
             <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Planned Acquisition</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 800, color: '#0284c7', marginTop: 4 }}>
+            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
               {mockTotalPlannedAcq.toLocaleString()} <span style={{ fontSize: 12, fontWeight: 500 }}>Ha</span>
             </div>
             <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Projected corridor land</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: '#ffffff', border: '1px solid rgba(245,158,11,0.15)' }}>
+          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(245,158,11,0.15)' }}>
             <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Acquired to Date</div>
             <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 800, color: '#10b981', marginTop: 4 }}>
               {mockTotalAcquired.toLocaleString()} <span style={{ fontSize: 12, fontWeight: 500 }}>Ha</span>
@@ -197,7 +197,7 @@ export default async function NationalDashboardPage() {
             <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>{mockAvgProgress}% Portfolio throughput</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: '#ffffff', border: '1px solid rgba(245,158,11,0.15)' }}>
+          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(245,158,11,0.15)' }}>
             <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Corridor Bottlenecks</div>
             <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 800, color: '#f59e0b', marginTop: 4 }}>
               {mockBottlenecks}
@@ -214,7 +214,7 @@ export default async function NationalDashboardPage() {
               style={{
                 borderRadius: 10,
                 padding: '14px 16px',
-                background: '#ffffff',
+                background: 'rgba(15,23,42,0.6)',
                 border: '1px solid rgba(255,255,255,0.06)',
                 display: 'flex',
                 flexDirection: 'column',
@@ -224,7 +224,7 @@ export default async function NationalDashboardPage() {
             >
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                  <span style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#0a2c5f', fontWeight: 700 }}>
+                  <span style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#818cf8', fontWeight: 700 }}>
                     {p.code} &middot; {p.sector}
                   </span>
                   <span style={{
@@ -236,7 +236,7 @@ export default async function NationalDashboardPage() {
                     {p.status.replace('_', ' ')}
                   </span>
                 </div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#0a2c5f', lineHeight: 1.3 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0', lineHeight: 1.3 }}>
                   {p.name}
                 </div>
                 <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
@@ -250,7 +250,7 @@ export default async function NationalDashboardPage() {
                 </span>
                 <Link
                   href={`/projects/gis?id=${p.id}`}
-                  style={{ fontSize: 11, fontWeight: 700, color: '#0a2c5f', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 3 }}
+                  style={{ fontSize: 11, fontWeight: 700, color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 3 }}
                 >
                   <span>Corridor GIS</span>
                   <ArrowRight style={{ width: 11, height: 11 }} />
@@ -267,7 +267,7 @@ export default async function NationalDashboardPage() {
       <section style={{
         borderRadius: 16,
         padding: 24,
-        background: 'rgba(16,185,129,0.04)',
+        background: 'rgba(16,185,129,0.02)',
         border: '1px solid rgba(16,185,129,0.25)',
         display: 'flex',
         flexDirection: 'column',
@@ -294,7 +294,7 @@ export default async function NationalDashboardPage() {
             </h2>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+            <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
               Field Officer: Ramesh Patel (OFF-001)
             </span>
             <Link
@@ -315,46 +315,46 @@ export default async function NationalDashboardPage() {
           </div>
         </div>
 
-        <p style={{ fontSize: 12, color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 12, color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
           Sole source of truth for citizen cases. Originates strictly from citizen parcel registrations (4+ GPS coordinates) &rarr; landowner complaints &rarr; Field Officer ground verification &rarr; Admin statutory determination.
         </p>
 
         {/* Real KPIs Cards */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 12 }}>
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: '#ffffff', border: '1px solid rgba(16,185,129,0.2)' }}>
-            <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Registered Parcels</div>
+          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(16,185,129,0.2)' }}>
+            <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Registered Parcels</div>
             <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#10b981', marginTop: 4 }}>
               {totalParcels}
             </div>
             <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>{stats.area_proposed_acres || 0} Acres Proposed</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: '#ffffff', border: '1px solid rgba(245,158,11,0.2)' }}>
-            <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Pending Inspection</div>
+          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(245,158,11,0.2)' }}>
+            <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Pending Inspection</div>
             <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#f59e0b', marginTop: 4 }}>
               {pendingVerification}
             </div>
             <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Ramesh Patel (OFF-001)</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: '#ffffff', border: '1px solid rgba(99,102,241,0.2)' }}>
-            <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Verified Cases</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#0a2c5f', marginTop: 4 }}>
+          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(99,102,241,0.2)' }}>
+            <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Verified Cases</div>
+            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#818cf8', marginTop: 4 }}>
               {verifiedCount}
             </div>
             <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Passed ground check</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: '#ffffff', border: '1px solid rgba(56,189,248,0.2)' }}>
-            <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Active Orders</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#0284c7', marginTop: 4 }}>
+          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(56,189,248,0.2)' }}>
+            <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Active Orders</div>
+            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
               {implementationInitiated}
             </div>
             <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Admin implementation</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: '#ffffff', border: '1px solid rgba(16,185,129,0.2)' }}>
-            <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Completed Awards</div>
+          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(16,185,129,0.2)' }}>
+            <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Completed Awards</div>
             <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#34d399', marginTop: 4 }}>
               {implementationCompleted}
             </div>
@@ -366,13 +366,13 @@ export default async function NationalDashboardPage() {
         <div style={{
           padding: '16px 20px',
           borderRadius: 12,
-          background: '#ffffff',
+          background: 'rgba(0,0,0,0.35)',
           border: '1px solid rgba(255,255,255,0.06)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <Scale style={{ width: 14, height: 14, color: '#10b981' }} />
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#0a2c5f', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'JetBrains Mono, monospace' }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#e2e8f0', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'JetBrains Mono, monospace' }}>
                 RFCTLARR 2013 Statutory First Schedule Aggregations
               </span>
             </div>
@@ -384,7 +384,7 @@ export default async function NationalDashboardPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
             <div>
               <span style={{ fontSize: 9, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Compensation Assessed</span>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#0a2c5f', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
+              <div style={{ fontSize: 15, fontWeight: 800, color: '#818cf8', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
                 ₹{(stats.compensation_assessed_inr || 0).toLocaleString()}
               </div>
             </div>
@@ -396,13 +396,13 @@ export default async function NationalDashboardPage() {
             </div>
             <div>
               <span style={{ fontSize: 9, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Affected Families</span>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#0a2c5f', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
+              <div style={{ fontSize: 15, fontWeight: 800, color: '#e2e8f0', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
                 {stats.affected_families_count || 0}
               </div>
             </div>
             <div>
               <span style={{ fontSize: 9, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Possession Complete</span>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#0284c7', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
+              <div style={{ fontSize: 15, fontWeight: 800, color: '#38bdf8', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
                 {stats.possession_complete_count || 0} / {totalParcels || 0}
               </div>
             </div>

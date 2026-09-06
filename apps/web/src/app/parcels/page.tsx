@@ -92,7 +92,7 @@ export default function ParcelsPage() {
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+          <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
             Official Revenue Parcels
           </span>
           <button
@@ -127,7 +127,7 @@ export default function ParcelsPage() {
               {parcels.length} Registered Parcels
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#0a2c5f', margin: 0 }}>
+          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
             Cadastral Parcel Register
           </h1>
           <p style={{ fontSize: 12, color: '#64748b', marginTop: 6 }}>
@@ -179,27 +179,27 @@ export default function ParcelsPage() {
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
         <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Registered Parcels</div>
+          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Registered Parcels</div>
           <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#10b981', marginTop: 4 }}>{parcels.length}</div>
           <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Registered in System</div>
         </div>
 
         <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Aadhaar Verified</div>
-          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#0a2c5f', marginTop: 4 }}>{verifiedIdentityCount}</div>
+          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Aadhaar Verified</div>
+          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#818cf8', marginTop: 4 }}>{verifiedIdentityCount}</div>
           <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Citizen identity confirmed</div>
         </div>
 
         <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Registered Area</div>
-          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#0284c7', marginTop: 4 }}>
+          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Registered Area</div>
+          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
             {totalAreaAcres.toFixed(2)} <span style={{ fontSize: 14, fontWeight: 500 }}>Acres</span>
           </div>
           <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Total declared cadastral land</div>
         </div>
 
         <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Field Officer</div>
+          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Field Officer</div>
           <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 18, fontWeight: 800, color: '#f59e0b', marginTop: 8 }}>Ramesh Patel</div>
           <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>OFF-001 &middot; Patwari</div>
         </div>
@@ -218,9 +218,9 @@ export default function ParcelsPage() {
               width: '100%',
               padding: '8px 12px 8px 34px',
               borderRadius: 8,
-              border: '1px solid #e2e8f0',
-              background: '#ffffff',
-              color: '#0f172a',
+              border: '1px solid rgba(255,255,255,0.1)',
+              background: 'rgba(15,23,42,0.6)',
+              color: '#e2e8f0',
               fontSize: 12,
               outline: 'none'
             }}
@@ -238,7 +238,7 @@ export default function ParcelsPage() {
             <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#64748b', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
               Cadastral Parcel Register
             </div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', marginTop: 2 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>
               Authoritative Records
             </div>
           </div>
@@ -252,7 +252,7 @@ export default function ParcelsPage() {
         ) : filteredParcels.length === 0 ? (
           <div style={{ padding: '48px 16px', textAlign: 'center' }}>
             <CheckCircle2 style={{ width: 36, height: 36, color: '#10b981', margin: '0 auto 12px' }} />
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#0a2c5f', marginBottom: 6 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#e2e8f0', marginBottom: 6 }}>
               No registered land parcels available.
             </div>
             <p style={{ fontSize: 12, color: '#64748b', margin: 0, maxWidth: 440, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.6 }}>
@@ -263,7 +263,7 @@ export default function ParcelsPage() {
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: '#f8fafc' }}>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
                   {['Parcel ID', 'Owner Name', 'Identity Status', 'Location', 'Area (Acres)', 'Boundary GPS', 'Documents', 'Action'].map(h => (
                     <th key={h} style={{ padding: '11px 16px', textAlign: 'left', fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap' }}>
                       {h}
@@ -283,10 +283,10 @@ export default function ParcelsPage() {
 
                   return (
                     <tr key={p.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                      <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#0284c7' }}>
+                      <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#38bdf8' }}>
                         #{pid}
                       </td>
-                      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#0a2c5f' }}>
+                      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#e2e8f0' }}>
                         {owner}
                       </td>
                       <td style={{ padding: '12px 16px' }}>
@@ -307,18 +307,18 @@ export default function ParcelsPage() {
                           <span>{isVerified ? 'Aadhaar Verified' : 'Pending Verification'}</span>
                         </span>
                       </td>
-                      <td style={{ padding: '12px 16px', color: '#64748b' }}>
+                      <td style={{ padding: '12px 16px', color: '#94a3b8' }}>
                         {location}
                       </td>
                       <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600, color: '#10b981' }}>
                         {areaAcres} Acres
                       </td>
                       <td style={{ padding: '12px 16px' }}>
-                        <span style={{ fontSize: 11, color: '#0a2c5f', fontFamily: 'JetBrains Mono, monospace' }}>
+                        <span style={{ fontSize: 11, color: '#818cf8', fontFamily: 'JetBrains Mono, monospace' }}>
                           {coordsCount} GPS Vertices
                         </span>
                       </td>
-                      <td style={{ padding: '12px 16px', color: '#64748b', fontSize: 11 }}>
+                      <td style={{ padding: '12px 16px', color: '#94a3b8', fontSize: 11 }}>
                         {docCount} Document{docCount === 1 ? '' : 's'}
                       </td>
                       <td style={{ padding: '12px 16px' }}>
@@ -327,7 +327,7 @@ export default function ParcelsPage() {
                           style={{
                             fontSize: 11,
                             fontWeight: 700,
-                            color: '#0a2c5f',
+                            color: '#818cf8',
                             textDecoration: 'none',
                             display: 'inline-flex',
                             alignItems: 'center',

@@ -263,7 +263,7 @@ export default function FieldDashboardPage() {
               className="p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-slate-200 font-semibold text-xs shadow-md flex flex-col justify-between h-24 transition-all"
             >
               <div className="flex items-center justify-between">
-                <Database className="w-5 h-5 text-amber-300" />
+                <Database className="w-5 h-5 text-indigo-400" />
                 <ArrowRight className="w-4 h-4 text-slate-400" />
               </div>
               <div>
@@ -308,7 +308,7 @@ export default function FieldDashboardPage() {
 
                   <div className="flex items-center justify-between text-[11px] text-slate-400">
                     <span>{p.village_name || "Corridor Sector"} · {p.owner_name || "Landowner"}</span>
-                    <span className="text-amber-300 font-mono">{p.area_acres || 0} Acres</span>
+                    <span className="text-indigo-400 font-mono">{p.area_acres || 0} Acres</span>
                   </div>
                 </div>
               ))}

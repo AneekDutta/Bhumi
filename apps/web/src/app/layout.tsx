@@ -25,12 +25,12 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#0a2c5f',
+  themeColor: '#059669',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="min-h-full" suppressHydrationWarning>
+    <html lang="en" className="min-h-full dark" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 try {
                   var saved = localStorage.getItem('bhumi-theme');
                   var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  var isDark = saved === 'dark' || (saved === 'system' && prefersDark);
+                  var isDark = saved === 'dark' || (saved === 'system' && prefersDark) || (!saved);
                   var root = document.documentElement;
                   if (isDark) {
                     root.classList.add('dark');
@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         />
       </head>
-      <body className="min-h-full bg-[#f4f6f9] dark:bg-[#070a14] text-slate-900 dark:text-[#f0f4ff] font-sans antialiased transition-colors duration-200">
+      <body className="min-h-full bg-slate-50 dark:bg-[#070a14] text-slate-900 dark:text-[#f0f4ff] font-sans antialiased transition-colors duration-200">
         <ThemeProvider>
           <AppShell>{children}</AppShell>
         </ThemeProvider>

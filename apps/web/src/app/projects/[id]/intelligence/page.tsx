@@ -37,14 +37,14 @@ export default async function IntelligencePage({ params }: { params: Promise<{ i
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* Breadcrumb */}
-      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
-        <Link href="/" style={{ color: '#94a3b8', textDecoration: 'none' }}>Dashboard</Link>
+      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>
+        <Link href="/" style={{ color: '#6b7a94', textDecoration: 'none' }}>Dashboard</Link>
         <span>/</span>
-        <Link href="/projects" style={{ color: '#94a3b8', textDecoration: 'none' }}>Corridors</Link>
+        <Link href="/projects" style={{ color: '#6b7a94', textDecoration: 'none' }}>Corridors</Link>
         <span>/</span>
-        <Link href={`/projects/${project.id}`} style={{ color: '#94a3b8', textDecoration: 'none' }}>{project.name}</Link>
+        <Link href={`/projects/${project.id}`} style={{ color: '#6b7a94', textDecoration: 'none' }}>{project.name}</Link>
         <span>/</span>
-        <span style={{ color: '#1e293b' }}>Bottleneck Intelligence</span>
+        <span style={{ color: '#c4cfe4' }}>Bottleneck Intelligence</span>
       </nav>
 
       {/* Header */}
@@ -55,14 +55,14 @@ export default async function IntelligencePage({ params }: { params: Promise<{ i
               Critical Chain Analysis
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#0a2c5f', margin: 0 }}>
+          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
             Corridor Bottleneck Intelligence
           </h1>
-          <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 6 }}>
+          <p style={{ fontSize: 12, color: '#4a5568', marginTop: 6 }}>
             Graph traversal of statutory milestones, parcel dependency chains, and active legal injunctions
           </p>
         </div>
-        <Link href={`/projects/${project.id}/impact`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#0a2c5f', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <Link href={`/projects/${project.id}/impact`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
           <Activity style={{ width: 13, height: 13 }} /> Simulate Impact
         </Link>
       </div>
@@ -70,14 +70,14 @@ export default async function IntelligencePage({ params }: { params: Promise<{ i
       {/* Summary KPI cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14 }}>
         {[
-          { label: 'Total Bottlenecks', val: `${bottlenecks.length} Detected`, color: '#0a2c5f', bg: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.22)', sub: 'Across surveys & legal hearings' },
+          { label: 'Total Bottlenecks', val: `${bottlenecks.length} Detected`, color: '#6366f1', bg: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.22)', sub: 'Across surveys & legal hearings' },
           { label: 'Zero-Float Blockers', val: `${criticalCount} Critical`, color: '#f43f5e', bg: 'rgba(244,63,94,0.1)', border: 'rgba(244,63,94,0.22)', sub: `Directly delaying completion +${project.project_delay_days || 0}d` },
           { label: 'Float Consumption', val: `${highCount} High`, color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.22)', sub: 'Consuming activity float on corridor' },
         ].map((s) => (
           <div key={s.label} style={{ borderRadius: 13, padding: '18px 20px', background: s.bg, border: `1px solid ${s.border}` }}>
-            <div style={{ fontSize: 10, color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>{s.label}</div>
+            <div style={{ fontSize: 10, color: '#6b7a94', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>{s.label}</div>
             <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: s.color, marginTop: 4 }}>{s.val}</div>
-            <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>{s.sub}</div>
+            <div style={{ fontSize: 11, color: '#4a5568', marginTop: 4 }}>{s.sub}</div>
           </div>
         ))}
       </div>
@@ -89,30 +89,30 @@ export default async function IntelligencePage({ params }: { params: Promise<{ i
           return (
             <div key={idx} className="glass" style={{ borderRadius: 14, overflow: 'hidden', padding: 0, borderLeft: `4px solid ${u.barColor}` }}>
               {/* Card header */}
-              <div style={{ padding: '14px 20px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+              <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <span style={{ fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 4, background: u.bg, color: u.color, border: `1px solid ${u.border}`, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace' }}>
                     {b.status} URGENCY
                   </span>
-                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 700, color: '#1e293b' }}>
+                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 700, color: '#c4cfe4' }}>
                     {b.entity_type}: {b.entity_id}
                   </span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#94a3b8' }}>
-                  <GitBranch style={{ width: 12, height: 12, color: '#0a2c5f' }} />
-                  Downstream: <strong style={{ color: '#0a2c5f', fontFamily: 'JetBrains Mono, monospace', marginLeft: 4 }}>{b.downstream_impact_count} CPM Activities</strong>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#6b7a94' }}>
+                  <GitBranch style={{ width: 12, height: 12, color: '#818cf8' }} />
+                  Downstream: <strong style={{ color: '#818cf8', fontFamily: 'JetBrains Mono, monospace', marginLeft: 4 }}>{b.downstream_impact_count} CPM Activities</strong>
                 </div>
               </div>
 
               {/* Card body */}
               <div style={{ padding: '16px 20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
-                  <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 5 }}>
                     <AlertTriangle style={{ width: 10, height: 10, color: '#f43f5e' }} /> Statutory Impediments
                   </div>
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
                     {b.reasons?.map((r: string, i: number) => (
-                      <li key={i} style={{ fontSize: 12, color: '#475569', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                      <li key={i} style={{ fontSize: 12, color: '#8899b4', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
                         <span style={{ width: 4, height: 4, borderRadius: '50%', background: u.color, flexShrink: 0, marginTop: 6 }} />
                         {r}
                       </li>
@@ -120,50 +120,50 @@ export default async function IntelligencePage({ params }: { params: Promise<{ i
                   </ul>
                 </div>
                 <div>
-                  <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 5 }}>
                     <AlertOctagon style={{ width: 10, height: 10, color: '#f59e0b' }} /> Contractual Milestones Exposed
                   </div>
                   {b.affected_milestones?.length > 0 ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                       {b.affected_milestones.map((m: string, i: number) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', background: 'rgba(10,44,95,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 7 }}>
-                          <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#475569' }}>Milestone: {m}</span>
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 7 }}>
+                          <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#8899b4' }}>Milestone: {m}</span>
                           <span style={{ fontSize: 10, fontWeight: 700, color: '#f43f5e' }}>Penalties at Risk</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p style={{ fontSize: 11, color: '#94a3b8', fontStyle: 'italic' }}>No direct contractual milestone breaches recorded.</p>
+                    <p style={{ fontSize: 11, color: '#4a5568', fontStyle: 'italic' }}>No direct contractual milestone breaches recorded.</p>
                   )}
                 </div>
               </div>
 
               {/* Recommendation footer */}
-              <div style={{ padding: '12px 20px', borderTop: '1px solid #e2e8f0', background: 'rgba(99,102,241,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
+              <div style={{ padding: '12px 20px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(99,102,241,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                  <Scale style={{ width: 13, height: 13, color: '#0a2c5f', flexShrink: 0, marginTop: 1 }} />
-                  <span style={{ fontSize: 11, color: '#94a3b8', lineHeight: 1.5 }}>
+                  <Scale style={{ width: 13, height: 13, color: '#818cf8', flexShrink: 0, marginTop: 1 }} />
+                  <span style={{ fontSize: 11, color: '#6b7a94', lineHeight: 1.5 }}>
                     {b.status === 'CRITICAL'
                       ? 'Invoke RFCTLARR Section 40 urgency powers or fast-track SLAO awards to clear zero-float constraint.'
                       : 'Instruct District Collector counsel for urgent hearing to vacate Bombay HC interim stay order.'}
                   </span>
                 </div>
-                <Link href={`/projects/${project.id}/impact`} style={{ padding: '7px 14px', borderRadius: 7, fontSize: 11, fontWeight: 700, background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.35)', color: '#0a2c5f', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
+                <Link href={`/projects/${project.id}/impact`} style={{ padding: '7px 14px', borderRadius: 7, fontSize: 11, fontWeight: 700, background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.35)', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
                   Model Resolution <ArrowRight style={{ width: 11, height: 11 }} />
                 </Link>
               </div>
 
               {/* Causal chain */}
               {b.blocking_chain?.length > 0 && (
-                <div style={{ padding: '10px 20px', borderTop: '1px solid #e2e8f0', background: 'rgba(10,44,95,0.04)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6 }}>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>Causal Chain:</span>
+                <div style={{ padding: '10px 20px', borderTop: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.02)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>Causal Chain:</span>
                   {b.blocking_chain.map((node: string, nIdx: number) => (
                     <React.Fragment key={nIdx}>
-                      <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#1e293b' }}>
+                      <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#c4cfe4' }}>
                         {node}
                       </span>
                       {nIdx < b.blocking_chain.length - 1 && (
-                        <span style={{ color: '#0a2c5f', fontWeight: 700 }}>→</span>
+                        <span style={{ color: '#818cf8', fontWeight: 700 }}>→</span>
                       )}
                     </React.Fragment>
                   ))}
@@ -174,7 +174,7 @@ export default async function IntelligencePage({ params }: { params: Promise<{ i
         })}
 
         {bottlenecks.length === 0 && (
-          <div style={{ padding: '48px 24px', textAlign: 'center', borderRadius: 14, border: '1px dashed rgba(255,255,255,0.1)', color: '#94a3b8', fontSize: 13 }}>
+          <div style={{ padding: '48px 24px', textAlign: 'center', borderRadius: 14, border: '1px dashed rgba(255,255,255,0.1)', color: '#4a5568', fontSize: 13 }}>
             No critical bottlenecks currently detected along this project corridor.
           </div>
         )}

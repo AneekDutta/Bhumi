@@ -79,7 +79,7 @@ export default function LandownerComplaintsPage() {
         {/* Header Bar */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-base font-bold text-slate-900 font-display">
+            <h1 className="text-base font-bold text-white font-display">
               Grievance Records
             </h1>
             <p className="text-xs text-slate-400">
@@ -89,7 +89,7 @@ export default function LandownerComplaintsPage() {
 
           <Link
             href="/landowner/complaints/new"
-            className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-900 text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-1.5 shadow-md transition-all"
+            className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-1.5 shadow-md transition-all"
           >
             <PlusCircle className="w-3.5 h-3.5" />
             <span>Lodge Issue</span>
@@ -110,8 +110,8 @@ export default function LandownerComplaintsPage() {
               onClick={() => setFilter(item.id as any)}
               className={`px-3 py-1.5 rounded-xl font-medium transition-all flex-shrink-0 cursor-pointer ${
                 filter === item.id
-                  ? "bg-emerald-600 text-slate-900 font-bold shadow-sm"
-                  : "bg-white border border-[#e2e8f0] text-slate-400 hover:text-slate-900"
+                  ? "bg-emerald-600 text-white font-bold shadow-sm"
+                  : "bg-slate-900 border border-slate-800 text-slate-400 hover:text-white"
               }`}
             >
               {item.label}
@@ -127,7 +127,7 @@ export default function LandownerComplaintsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by Complaint ID, Parcel, or Issue..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-white border border-[#e2e8f0] text-xs text-slate-900 placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
           />
         </div>
 
@@ -138,7 +138,7 @@ export default function LandownerComplaintsPage() {
             <span>Connecting to Land Records Registry...</span>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="bg-white border border-[#e2e8f0] rounded-2xl p-8 text-center space-y-2">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-2">
             <FileText className="w-8 h-8 text-slate-600 mx-auto" />
             <p className="text-xs text-slate-300 font-medium">No grievances matching criteria</p>
             <p className="text-[11px] text-slate-500">
@@ -156,7 +156,7 @@ export default function LandownerComplaintsPage() {
                 <Link
                   key={cmp.id}
                   href={`/landowner/complaints/${cmp.id}`}
-                  className="block bg-white border border-[#e2e8f0] hover:border-slate-200 rounded-2xl p-4 space-y-3 transition-colors shadow-lg"
+                  className="block bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 space-y-3 transition-colors shadow-lg"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="space-y-0.5">
@@ -169,7 +169,7 @@ export default function LandownerComplaintsPage() {
                           Parcel: {cmp.parcel_id}
                         </span>
                       </div>
-                      <h2 className="font-bold text-slate-900 text-sm">
+                      <h2 className="font-bold text-white text-sm">
                         {cmp.complaint_type}
                       </h2>
                     </div>
@@ -194,12 +194,12 @@ export default function LandownerComplaintsPage() {
                   </p>
 
                   {/* 4-Step Visual Progress Bar */}
-                  <div className="pt-2 border-t border-[#e2e8f0]/80 space-y-1.5">
+                  <div className="pt-2 border-t border-slate-800/80 space-y-1.5">
                     <div className="grid grid-cols-4 gap-1">
                       <div className="h-1.5 rounded-full bg-emerald-500" title="Submitted" />
-                      <div className={`h-1.5 rounded-full ${isAssigned || isVerified || isResolved ? "bg-emerald-500" : "bg-slate-100"}`} title="Assigned" />
-                      <div className={`h-1.5 rounded-full ${isVerified || isResolved ? "bg-emerald-500" : "bg-slate-100"}`} title="Verified" />
-                      <div className={`h-1.5 rounded-full ${isResolved ? "bg-emerald-500" : "bg-slate-100"}`} title="Resolved" />
+                      <div className={`h-1.5 rounded-full ${isAssigned || isVerified || isResolved ? "bg-emerald-500" : "bg-slate-800"}`} title="Assigned" />
+                      <div className={`h-1.5 rounded-full ${isVerified || isResolved ? "bg-emerald-500" : "bg-slate-800"}`} title="Verified" />
+                      <div className={`h-1.5 rounded-full ${isResolved ? "bg-emerald-500" : "bg-slate-800"}`} title="Resolved" />
                     </div>
 
                     <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">

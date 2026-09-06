@@ -88,7 +88,7 @@ export default function FieldSettingsPage() {
         {/* Offline Storage & PWA Diagnostics */}
         <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3 text-xs">
           <div className="flex items-center gap-2 font-bold text-white uppercase tracking-wider font-mono text-[11px]">
-            <Database className="w-4 h-4 text-amber-300" />
+            <Database className="w-4 h-4 text-indigo-400" />
             <span>Local Device Storage & PWA Mode</span>
           </div>
 
@@ -141,7 +141,7 @@ export default function FieldSettingsPage() {
             onClick={() => {
               window.location.href = "/";
             }}
-            className="w-full py-3 px-4 bg-[#0a2c5f]/20 hover:bg-[#0a2c5f]/30 text-amber-200 rounded-xl text-xs font-semibold border border-[#0a2c5f]/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 px-4 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 rounded-xl text-xs font-semibold border border-indigo-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <ExternalLink className="w-3.5 h-3.5" />
             <span>Switch to Desktop Web Officer Portal</span>

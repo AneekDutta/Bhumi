@@ -107,7 +107,7 @@ export default function SpatialIntelligencePage() {
       {loading && (
         <div style={{ padding: '48px 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
           <div style={{ width: 32, height: 32, borderRadius: '50%', border: '3px solid rgba(16,185,129,0.2)', borderTopColor: '#10b981', animation: 'spin 1s linear infinite' }} />
-          <p style={{ fontSize: 12, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>Loading cadastral parcels and CPM spatial layers...</p>
+          <p style={{ fontSize: 12, color: '#6b7a94', fontFamily: 'JetBrains Mono, monospace' }}>Loading cadastral parcels and CPM spatial layers...</p>
         </div>
       )}
 
