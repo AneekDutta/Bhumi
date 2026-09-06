@@ -32,57 +32,42 @@ export default function LandownerHomePage() {
   const [owner, setOwner] = useState<any>(null);
 
   useEffect(() => {
-    // 1. Read authenticated session
-    const cookies = document.cookie.split(";").map((c) => c.trim());
-    const sessionCookie = cookies.find((c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session="));
-    
-    let activeOwnerId: string | null = null;
-    let activeOwnerName = "Citizen Titleholder";
-    let activeVillage = "Corridor Sector";
+    async function init() {
+      const { data: authData } = await supabase.auth.getUser();
+      let activeOwnerId = null;
+      let activeOwnerName = "Citizen Titleholder";
+      let activeVillage = "Corridor Sector";
 
-    if (sessionCookie) {
-      try {
-        const val = decodeURIComponent(sessionCookie.split("=")[1]);
-        const parsed = JSON.parse(val);
-        if (parsed?.user_id || parsed?.owner_id) {
-          activeOwnerId = parsed.user_id || parsed.owner_id;
-          activeOwnerName = parsed.name || activeOwnerName;
-          activeVillage = parsed.contact_village || parsed.village || activeVillage;
-          setOwner({
-            owner_id: activeOwnerId,
-            name: activeOwnerName,
-            contact_village: activeVillage,
-            email: parsed.email
-          });
-        }
-      } catch {}
-    }
+      if (authData?.user) {
+        activeOwnerId = authData.user.id;
+        activeOwnerName = authData.user.user_metadata?.full_name || activeOwnerName;
+        setOwner({
+          owner_id: activeOwnerId,
+          name: activeOwnerName,
+          contact_village: activeVillage,
+          email: authData.user.email
+        });
+      } else {
+        router.push("/landowner/login");
+        return;
+      }
 
-    if (!activeOwnerId) {
-      // Redirect to login if unauthenticated
-      router.push("/landowner/login");
-      return;
-    }
-
-    async function fetchData() {
-      setLoading(true);
       try {
         const [pData, cData, bData] = await Promise.all([
-          getLandownerParcels(activeOwnerId!),
-          getLandownerComplaints({ owner_id: activeOwnerId! }),
-          getLandownerBoundaries({ owner_id: activeOwnerId! })
+          getLandownerParcels(activeOwnerId),
+          getLandownerComplaints({ owner_id: activeOwnerId }),
+          getLandownerBoundaries({ owner_id: activeOwnerId })
         ]);
         setParcels(pData || []);
         setComplaints(cData || []);
         setBoundaries(bData || []);
       } catch (err) {
-        console.error(err);
+        console.error("Error loading home data:", err);
       } finally {
         setLoading(false);
       }
     }
-
-    fetchData();
+    init();
   }, [router]);
 
   // Realtime subscription for instant grievance status updates

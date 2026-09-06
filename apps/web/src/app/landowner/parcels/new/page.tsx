@@ -89,27 +89,29 @@ export default function RegisterParcelPage() {
 
   // Read authenticated session
   useEffect(() => {
-    const cookies = document.cookie.split(";").map((c) => c.trim());
-    const sessionCookie = cookies.find(
-      (c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session=")
-    );
+    async function init() {
+      const { data: authData } = await supabase.auth.getUser();
+      let activeOwnerId = null;
+      let activeOwnerName = "Citizen Titleholder";
+      let activeVillage = "Corridor Sector";
 
-    if (sessionCookie) {
-      try {
-        const val = decodeURIComponent(sessionCookie.split("=")[1]);
-        const parsed = JSON.parse(val);
-        if (parsed?.user_id || parsed?.owner_id) {
-          const ownerId = parsed.user_id || parsed.owner_id;
-          const ownerName = parsed.name || "Citizen Titleholder";
-          const village = parsed.contact_village || parsed.village || "Corridor Sector";
-          setOwner({ owner_id: ownerId, name: ownerName, contact_village: village });
-          setLegalName(ownerName);
-          setContactVillage(village);
-        }
-      } catch {}
-    } else {
-      router.push("/landowner/login");
+      if (authData?.user) {
+        activeOwnerId = authData.user.id;
+        activeOwnerName = authData.user.user_metadata?.full_name || activeOwnerName;
+        setOwner({
+          owner_id: activeOwnerId,
+          name: activeOwnerName,
+          contact_village: activeVillage,
+          email: authData.user.email
+        });
+        setLegalName(activeOwnerName);
+        setContactVillage(activeVillage);
+      } else {
+        router.push("/landowner/login");
+        return;
+      }
     }
+    init();
   }, [router]);
 
   // Polygon validation and calculated area
