@@ -7,22 +7,18 @@ from app.services.sih26016_service import sih_service
 
 def test_get_field_officers():
     officers = sih_service.get_field_officers()
-    assert len(officers) >= 6
-    patwari = next((o for o in officers if o["officer_id"] == "OF005"), None)
+    assert len(officers) == 1
+    patwari = next((o for o in officers if o["officer_id"] == "OFF-001"), None)
     assert patwari is not None
-    assert patwari["name"] == "Girdhari Rathore"
-    assert "V01" in patwari["assigned_villages"]
-    assert patwari["pending_tasks_count"] > 0
+    assert patwari["name"] == "Ramesh Patel"
+    assert patwari["pending_tasks_count"] == 0
 
 
 def test_get_officer_parcels():
-    parcels = sih_service.get_officer_parcels(officer_id="OF005")
-    assert len(parcels) > 0
-    p = parcels[0]
-    assert "survey_number" in p
-    assert "village_id" in p
-    assert "area_hectares" in p
-    assert "verification_status" in p
+    parcels = sih_service.get_officer_parcels(officer_id="OFF-001")
+    # Starts with ZERO cases until registered by landowners
+    assert isinstance(parcels, list)
+    assert len(parcels) == 0
 
 
 def test_field_issue_reporting_causal_chain():
@@ -88,13 +84,14 @@ async def test_field_api_endpoints():
         res_officers = await ac.get("/api/v1/sih26016/field/officers", headers={"x-mock-role": "FIELD_OFFICER"})
         assert res_officers.status_code == 200
         officers_data = res_officers.json()
-        assert len(officers_data) >= 6
+        assert len(officers_data) == 1
+        assert officers_data[0]["officer_id"] == "OFF-001"
 
-        # Test list parcels
-        res_parcels = await ac.get("/api/v1/sih26016/field/parcels?officer_id=OF002", headers={"x-mock-role": "FIELD_OFFICER"})
+        # Test list parcels (starts at 0)
+        res_parcels = await ac.get("/api/v1/sih26016/field/parcels?officer_id=OFF-001", headers={"x-mock-role": "FIELD_OFFICER"})
         assert res_parcels.status_code == 200
         parcels_data = res_parcels.json()
-        assert len(parcels_data) > 0
+        assert len(parcels_data) == 0
 
         # Test submit clean verification
         payload = {
