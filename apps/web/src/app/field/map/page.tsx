@@ -98,7 +98,7 @@ export default function FieldMapPage() {
 
   return (
     <FieldShell title="Corridor Spatial GIS">
-      <div className="flex flex-col h-[calc(100vh-120px)] max-w-lg mx-auto p-3 space-y-2.5">
+      <div className="flex flex-col min-h-[calc(100vh-120px)] max-w-lg mx-auto p-3 space-y-3">
         
         {/* Search & Filter Header */}
         <div className="space-y-2">
@@ -173,7 +173,7 @@ export default function FieldMapPage() {
         </div>
 
         {/* Real Mobile Spatial Map Container */}
-        <div className="flex-1 min-h-[300px] relative rounded-2xl overflow-hidden shadow-2xl border border-slate-800">
+        <div className="h-[380px] sm:h-[450px] relative rounded-2xl overflow-hidden shadow-2xl border border-slate-800 flex-shrink-0">
           {loading ? (
             <div className="w-full h-full flex flex-col items-center justify-center bg-slate-950 text-slate-400 gap-3">
               <RefreshCw className="w-6 h-6 animate-spin text-emerald-400" />

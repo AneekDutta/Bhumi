@@ -30,7 +30,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="h-full dark" suppressHydrationWarning>
+    <html lang="en" className="min-h-full dark" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         />
       </head>
-      <body className="h-full bg-slate-50 dark:bg-[#070a14] text-slate-900 dark:text-[#f0f4ff] font-sans antialiased overflow-hidden transition-colors duration-200">
+      <body className="min-h-full bg-slate-50 dark:bg-[#070a14] text-slate-900 dark:text-[#f0f4ff] font-sans antialiased transition-colors duration-200">
         <ThemeProvider>
           <AppShell>{children}</AppShell>
         </ThemeProvider>

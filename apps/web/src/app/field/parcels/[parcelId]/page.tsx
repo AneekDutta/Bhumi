@@ -19,7 +19,15 @@ import {
   Compass
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
-import { getFieldParcels, getFieldIncidents, confirmFieldIncident, getLandownerComplaints, submitComplaintVerification } from "@/lib/api";
+import { 
+  getFieldParcels, 
+  getFieldIncidents, 
+  confirmFieldIncident, 
+  getLandownerComplaints, 
+  submitComplaintVerification,
+  getLandownerBoundaries,
+  submitFieldBoundaryVerification
+} from "@/lib/api";
 import { useRealtimeParcel, useRealtimeComplaints } from "@/lib/supabase/useRealtime";
 import { CaptureLocation } from "@/components/field/CaptureLocation";
 import { offlineStore } from "@/lib/offlineStore";
@@ -41,6 +49,12 @@ export default function ParcelDetailsPage() {
   const [complaintObservations, setComplaintObservations] = useState("");
   const [verifyingSubmitting, setVerifyingSubmitting] = useState(false);
 
+  // Landowner Claimed Boundary States
+  const [claimedBoundaries, setClaimedBoundaries] = useState<any[]>([]);
+  const [verifyingBoundaryId, setVerifyingBoundaryId] = useState<string | null>(null);
+  const [boundaryStatus, setBoundaryStatus] = useState<"verified_match" | "minor_variance" | "demarcation_dispute" | "requires_joint_survey">("verified_match");
+  const [boundaryAuditNotes, setBoundaryAuditNotes] = useState<string>("");
+  const [boundarySubmitting, setBoundarySubmitting] = useState<boolean>(false);
 
   const loadParcel = async () => {
     try {
@@ -51,6 +65,8 @@ export default function ParcelDetailsPage() {
       setIncidents(incs || []);
       const cmps = await getLandownerComplaints({ parcel_id: parcelId });
       setComplaints(cmps || []);
+      const bounds = await getLandownerBoundaries({ parcel_id: parcelId });
+      setClaimedBoundaries(bounds || []);
     } catch {}
   };
 
@@ -131,11 +147,44 @@ export default function ParcelDetailsPage() {
       } catch {
         setIncidents([]);
       }
+
+      try {
+        const bounds = await getLandownerBoundaries({ parcel_id: parcelId });
+        setClaimedBoundaries(bounds || []);
+      } catch {
+        setClaimedBoundaries([]);
+      }
     }
 
     load();
   }, [parcelId]);
 
+  const handleVerifyBoundary = async (boundaryId: string) => {
+    if (!boundaryAuditNotes.trim()) {
+      alert("Please provide boundary audit observations.");
+      return;
+    }
+    setBoundarySubmitting(true);
+    try {
+      const officer = offlineStore.getActiveOfficer();
+      const res = await submitFieldBoundaryVerification({
+        boundary_id: boundaryId,
+        parcel_id: parcelId,
+        officer_id: officer?.officer_id || officer?.id || "OFF-001",
+        officer_name: officer?.name || "Ramesh Patel",
+        verification_status: boundaryStatus,
+        field_notes: boundaryAuditNotes.trim()
+      });
+      setFeedback(res.message || "Boundary audit recorded. Landowner claimed boundary preserved.");
+      setVerifyingBoundaryId(null);
+      setBoundaryAuditNotes("");
+      await loadParcel();
+    } catch (err: any) {
+      alert(err?.message || "Failed to submit boundary audit.");
+    } finally {
+      setBoundarySubmitting(false);
+    }
+  };
 
   const handleVerifyComplaint = async (complaintId: string) => {
     if (!complaintObservations.trim()) {
@@ -481,6 +530,221 @@ export default function ParcelDetailsPage() {
           </div>
         )}
 
+        {/* Landowner Reported Boundary (Claimed / Unverified) */}
+        {claimedBoundaries.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-xs font-bold text-amber-400 px-1">
+              <span className="flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                <Compass className="w-4 h-4 text-amber-400" /> Landowner Reported Boundary ({claimedBoundaries.length})
+              </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                CLAIMED / UNVERIFIED
+              </span>
+            </div>
+
+            {claimedBoundaries.map((b, idx) => {
+              const pts = b.boundary_points || [];
+              const verification = b.metadata?.field_verification || b.field_verification;
+              const hasHighUncertainty = pts.some((p: any) => p.accuracy > 15);
+
+              return (
+                <div
+                  key={b.id || idx}
+                  className="bg-slate-900/90 border border-amber-500/30 rounded-2xl p-4 space-y-3 text-xs"
+                >
+                  <div className="flex items-start justify-between gap-2 border-b border-slate-800 pb-2">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-white text-sm">
+                          Citizen Claimed Boundary
+                        </span>
+                        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-950 text-slate-400 border border-slate-800">
+                          {pts.length} GPS Points
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        Claimant: <strong className="text-slate-200">{b.metadata?.owner_name || parcel.owner_name || "Landowner"}</strong>
+                        {b.created_at ? ` · Recorded ${new Date(b.created_at).toLocaleDateString()}` : ""}
+                      </p>
+                    </div>
+
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded uppercase font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                      {b.status || "CLAIMED / UNVERIFIED"}
+                    </span>
+                  </div>
+
+                  {/* Calculated Area & Uncertainty */}
+                  <div className="grid grid-cols-2 gap-2 font-mono text-[11px]">
+                    <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
+                      <span className="text-[10px] text-slate-400 block font-sans">Geodesic Area (ESTIMATED)</span>
+                      <span className="text-white font-bold text-sm">
+                        {b.area_sqm ? Number(b.area_sqm).toLocaleString() : "—"} m²
+                      </span>
+                      <span className="text-slate-400 text-[10px] block mt-0.5">
+                        {b.area_acres || (b.area_sqm ? (b.area_sqm * 0.000247105).toFixed(3) : "—")} Acres · {b.area_hectares || (b.area_sqm ? (b.area_sqm / 10000).toFixed(4) : "—")} Ha
+                      </span>
+                    </div>
+
+                    <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
+                      <span className="text-[10px] text-slate-400 block font-sans">GPS Error Uncertainty</span>
+                      {b.area_uncertainty_sqm ? (
+                        <>
+                          <span className="text-amber-400 font-bold text-sm">
+                            ±{Number(b.area_uncertainty_sqm).toFixed(1)} m²
+                          </span>
+                          <span className="text-slate-400 text-[10px] block mt-0.5">
+                            Derived from device accuracy
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-slate-400 text-[10px] block italic pt-1">
+                          Area uncertainty cannot be reliably calculated from the available GPS data.
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* High uncertainty warning if any point > 15m */}
+                  {hasHighUncertainty && (
+                    <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] flex items-center gap-2">
+                      <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 text-amber-400" />
+                      <span>One or more claimed points have GPS accuracy &gt; 15m. Field verification recommended.</span>
+                    </div>
+                  )}
+
+                  {/* GPS Points Table */}
+                  <div className="space-y-1.5 pt-1">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">
+                      Landowner Recorded GPS Points ({pts.length})
+                    </span>
+                    <div className="overflow-x-auto border border-slate-800 rounded-xl bg-slate-950/60">
+                      <table className="w-full text-left text-[11px] font-mono">
+                        <thead className="bg-slate-900/90 text-slate-400 border-b border-slate-800">
+                          <tr>
+                            <th className="p-2">#</th>
+                            <th className="p-2">Latitude</th>
+                            <th className="p-2">Longitude</th>
+                            <th className="p-2">Accuracy</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-800/60">
+                          {pts.map((pt: any, pIdx: number) => (
+                            <tr key={pt.id || pIdx} className="hover:bg-slate-900/40">
+                              <td className="p-2 text-slate-400">{pt.sequence || pIdx + 1}</td>
+                              <td className="p-2 text-slate-200">{Number(pt.lat).toFixed(6)}°</td>
+                              <td className="p-2 text-slate-200">{Number(pt.lng).toFixed(6)}°</td>
+                              <td className="p-2">
+                                <span className={`px-1.5 py-0.5 rounded text-[10px] ${
+                                  pt.accuracy <= 5
+                                    ? "bg-emerald-500/20 text-emerald-300"
+                                    : pt.accuracy <= 15
+                                    ? "bg-amber-500/20 text-amber-300"
+                                    : "bg-red-500/20 text-red-300"
+                                }`}>
+                                  ±{pt.accuracy}m
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Existing Field Officer Boundary Verification Audit */}
+                  {verification && (
+                    <div className="p-3 rounded-xl bg-slate-950/90 border border-emerald-500/30 text-xs space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-emerald-400 font-bold flex items-center gap-1 font-mono text-[11px]">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> Field Boundary Inspection Recorded
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                          {verification.verification_status?.replace(/_/g, " ")}
+                        </span>
+                      </div>
+                      <p className="text-slate-300 text-[11px] leading-relaxed">
+                        {verification.field_notes}
+                      </p>
+                      <div className="text-[10px] text-slate-400 pt-1 border-t border-slate-800 flex items-center justify-between font-mono">
+                        <span>Audited by: {verification.officer_name || "Field Officer"}</span>
+                        <span>{verification.verified_at ? new Date(verification.verified_at).toLocaleDateString() : ""}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Verification action form */}
+                  {verifyingBoundaryId === (b.id || String(idx)) ? (
+                    <div className="space-y-2.5 pt-2 border-t border-slate-800 bg-slate-950/80 p-3 rounded-xl">
+                      <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block font-mono">
+                        Record Field Boundary Inspection
+                      </span>
+                      <p className="text-[10px] text-slate-400 leading-tight">
+                        Note: This records your field verification audit. The landowner claimed boundary coordinates and area will remain preserved in the permanent record.
+                      </p>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-medium text-slate-400">Ground Inspection Finding:</label>
+                        <select
+                          value={boundaryStatus}
+                          onChange={(e: any) => setBoundaryStatus(e.target.value)}
+                          className="w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-emerald-500"
+                        >
+                          <option value="verified_match">Verified Match — On-site boundary aligns with claimed GPS</option>
+                          <option value="minor_variance">Minor Variance — Alignment shift &lt; 2 meters</option>
+                          <option value="demarcation_dispute">Demarcation Dispute — Overlaps adjacent survey or ROW</option>
+                          <option value="requires_joint_survey">Requires Joint Cadastral Survey with Revenue Lekhpal</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-medium text-slate-400">Field Notes & Observation Details:</label>
+                        <textarea
+                          rows={2}
+                          value={boundaryAuditNotes}
+                          onChange={(e) => setBoundaryAuditNotes(e.target.value)}
+                          placeholder="Boundary peg marks checked, stone pillars verified, alignment matches Section 11 map..."
+                          className="w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-end gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => setVerifyingBoundaryId(null)}
+                          className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white text-[11px]"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          disabled={boundarySubmitting}
+                          onClick={() => handleVerifyBoundary(b.id || b.document_id)}
+                          className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold uppercase transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>{boundarySubmitting ? "Submitting..." : "Submit Boundary Audit"}</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setVerifyingBoundaryId(b.id || String(idx));
+                        setBoundaryAuditNotes("");
+                      }}
+                      className="w-full py-2 px-3 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>{verification ? "Re-inspect Boundary on Ground" : "Audit & Verify Landowner Boundary on Ground"}</span>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* 10 Required Data Points Specification */}
         <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3.5 text-xs">
           <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider font-mono">
@@ -561,7 +825,13 @@ export default function ParcelDetailsPage() {
           targetLng={parcel.centroid_lng || 75.9284}
           surveyNo={sNo}
           parcelId={parcelId}
-          polygonCoords={parcel.geometry_coordinates}
+          polygonCoords={
+            (parcel.geometry_coordinates && parcel.geometry_coordinates.length > 0)
+              ? parcel.geometry_coordinates
+              : (claimedBoundaries[0]?.boundary_points && claimedBoundaries[0].boundary_points.length >= 3)
+              ? claimedBoundaries[0].boundary_points.map((p: any) => [p.lng, p.lat])
+              : undefined
+          }
           onLocationCaptured={(pos) => {
             console.log("Captured GPS:", pos);
           }}

@@ -415,6 +415,7 @@ export function FieldSpatialMap({
         mapStyle={isLight ? LIGHT_MAP_STYLE : DARK_MAP_STYLE}
         interactiveLayerIds={locationPicker ? [] : ["field-parcels-fill"]}
         onClick={handleMapClick}
+        cooperativeGestures={true}
         style={{ width: "100%", height: "100%" }}
       >
         <NavigationControl position="bottom-right" />

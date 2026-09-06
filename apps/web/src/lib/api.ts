@@ -1020,35 +1020,8 @@ export const apiClient = {
     return await res.json();
   },
 
-  
-  uploadEvidenceDocument: async (file: File | Blob, fileName: string, parcelId: string) => {
-    const { createClient } = await import("@/lib/supabase/client");
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error("Must be logged in to upload evidence");
-    
-    // Path structure: auth.uid() / parcelId / timestamp_filename
-    const filePath = `${user.id}/${parcelId}/${Date.now()}_${fileName}`;
-    
-    const { data, error } = await supabase.storage
-      .from('documents')
-      .upload(filePath, file, { cacheControl: '3600', upsert: false });
-      
-    if (error) {
-      console.error("Upload error:", error);
-      throw error;
-    }
-    
-    const { data: { publicUrl } } = supabase.storage.from('documents').getPublicUrl(filePath);
-    
-    return {
-      storage_path: data?.path || filePath,
-      public_url: publicUrl,
-      file_name: fileName,
-      file_size: file.size,
-      mime_type: file.type,
-      uploaded_at: new Date().toISOString()
-    };
+  uploadEvidenceDocument: async (file: File | Blob, fileName: string, parcelId?: string | null) => {
+    return await supabaseDataService.uploadEvidenceDocument(file, fileName, parcelId);
   },
 
   createOrUpdateLandownerProfile: async (profile: any) => {
@@ -1062,15 +1035,42 @@ export const apiClient = {
   },
 
   getLandownerProfile: async (userId: string) => {
-    const res = await authenticatedFetch(`/landowner/profile/${userId}`);
-    if (!res.ok) return null;
-    return await res.json();
+    return await supabaseDataService.getLandownerProfile(userId);
+  },
+
+  submitLandownerBoundary: async (payload: any) => {
+    return await supabaseDataService.submitLandownerBoundary(payload);
+  },
+
+  getLandownerBoundaries: async (filters?: any) => {
+    return await supabaseDataService.getLandownerBoundaries(filters);
+  },
+
+  submitFieldBoundaryVerification: async (payload: any) => {
+    return await supabaseDataService.submitFieldBoundaryVerification(payload);
+  },
+
+  acceptComplaintForSiteVisit: async (complaintId: string, officerId: string, officerName: string, notes?: string) => {
+    return await supabaseDataService.acceptComplaintForSiteVisit(complaintId, officerId, officerName, notes);
+  },
+
+  submitFieldGroundVerification: async (payload: any) => {
+    return await supabaseDataService.submitFieldGroundVerification(payload);
+  },
+
+  linkOfficialParcelToComplaint: async (complaintId: string, parcelId: string, actorName: string) => {
+    return await supabaseDataService.linkOfficialParcelToComplaint(complaintId, parcelId, actorName);
+  },
+
+  adminDecisionOnComplaint: async (complaintId: string, decision: any) => {
+    return await supabaseDataService.adminDecisionOnComplaint(complaintId, decision);
   }
 };
 
 export const getFieldOfficers = () => apiClient.getFieldOfficers();
 export const getParcels = () => apiClient.getParcels();
 export const getFieldParcels = (officerId?: string, villageId?: string) => apiClient.getFieldParcels(officerId, villageId);
+export const getParcels = (officerId?: string, villageId?: string) => apiClient.getFieldParcels(officerId, villageId);
 export const submitFieldVerification = (payload: any) => apiClient.submitFieldVerification(payload);
 export const syncFieldBatch = (officerId: string, submissions: any[]) => apiClient.syncFieldBatch(officerId, submissions);
 export const getFieldIncidents = (filters?: { parcel_id?: string; project_id?: string; status?: string }) => apiClient.getFieldIncidents(filters);
@@ -1087,8 +1087,18 @@ export const assignComplaintToOfficer = (complaintId: string, officerId: string,
   apiClient.assignComplaintToOfficer(complaintId, officerId, officerName, adminNotes);
 export const submitComplaintVerification = (payload: any) => apiClient.submitComplaintVerification(payload);
 export const resolveComplaint = (complaintId: string, resolution: any) => apiClient.resolveComplaint(complaintId, resolution);
-export const uploadEvidenceDocument = (file: File | Blob, fileName: string, parcelId: string) =>
+export const uploadEvidenceDocument = (file: File | Blob, fileName: string, parcelId?: string | null) =>
   apiClient.uploadEvidenceDocument(file, fileName, parcelId);
 export const createOrUpdateLandownerProfile = (profile: any) => apiClient.createOrUpdateLandownerProfile(profile);
 export const getLandownerProfile = (userId: string) => apiClient.getLandownerProfile(userId);
+export const submitLandownerBoundary = (payload: any) => apiClient.submitLandownerBoundary(payload);
+export const getLandownerBoundaries = (filters?: any) => apiClient.getLandownerBoundaries(filters);
+export const submitFieldBoundaryVerification = (payload: any) => apiClient.submitFieldBoundaryVerification(payload);
+export const acceptComplaintForSiteVisit = (complaintId: string, officerId: string, officerName: string, notes?: string) =>
+  apiClient.acceptComplaintForSiteVisit(complaintId, officerId, officerName, notes);
+export const submitFieldGroundVerification = (payload: any) => apiClient.submitFieldGroundVerification(payload);
+export const linkOfficialParcelToComplaint = (complaintId: string, parcelId: string, actorName: string) =>
+  apiClient.linkOfficialParcelToComplaint(complaintId, parcelId, actorName);
+export const adminDecisionOnComplaint = (complaintId: string, decision: any) =>
+  apiClient.adminDecisionOnComplaint(complaintId, decision);
 

@@ -15,7 +15,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   if (isAuthPage) {
     return (
-      <div className="w-full h-screen overflow-hidden bg-slate-50 dark:bg-[#070a14] text-slate-900 dark:text-[#f0f4ff] transition-colors duration-200">
+      <div className="w-full min-h-screen bg-slate-50 dark:bg-[#070a14] text-slate-900 dark:text-[#f0f4ff] transition-colors duration-200">
         <div className="fixed top-4 right-4 z-50">
           <ThemeToggle variant="icon" />
         </div>
@@ -26,7 +26,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   if (isFieldPage) {
     return (
-      <div className="w-full min-h-screen bg-slate-900 text-slate-100 antialiased selection:bg-emerald-500/30">
+      <div className="w-full min-h-screen bg-slate-900 text-slate-100 antialiased selection:bg-emerald-500/30 overflow-x-hidden">
         {children}
       </div>
     );
@@ -34,7 +34,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   if (isLandownerPage) {
     return (
-      <div className="w-full min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-emerald-500/30">
+      <div className="w-full min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-emerald-500/30 overflow-x-hidden">
         {children}
       </div>
     );
