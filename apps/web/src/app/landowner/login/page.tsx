@@ -61,12 +61,16 @@ export default function LandownerLoginPage() {
         if (error.message.includes("Email not confirmed")) {
           const uid = toUuid(cleanEmail);
           const userName = cleanEmail.split("@")[0];
-          await createOrUpdateLandownerProfile({
-            user_id: uid,
-            name: userName,
-            email: cleanEmail,
-            contact_village: "Corridor Sector"
-          });
+          try {
+            await createOrUpdateLandownerProfile({
+              user_id: uid,
+              name: userName,
+              email: cleanEmail,
+              contact_village: "Corridor Sector"
+            });
+          } catch (profileErr) {
+            console.warn("Could not sync profile to backend immediately:", profileErr);
+          }
 
           const sessionPayload = {
             user_id: uid,
@@ -98,18 +102,15 @@ export default function LandownerLoginPage() {
       const userId = data.user?.id || toUuid(cleanEmail);
       const userName = data.user?.user_metadata?.full_name || cleanEmail.split("@")[0];
 
-      await createOrUpdateLandownerProfile({
-        user_id: userId,
-        name: userName,
-        email: cleanEmail
-      });
-
-      const sessionPayload = {
-        user_id: userId,
-        name: userName,
-        email: cleanEmail,
-        role: "LANDOWNER"
-      };
+      try {
+        await createOrUpdateLandownerProfile({
+          user_id: userId,
+          name: userName,
+          email: cleanEmail
+        });
+      } catch (profileErr) {
+        console.warn("Could not sync profile to backend immediately:", profileErr);
+      }
 
       setSuccessMsg("Login successful! Loading Landowner Portal...");
       setTimeout(() => {

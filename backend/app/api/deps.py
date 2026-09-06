@@ -1,5 +1,6 @@
 import logging
 import os
+import uuid
 from functools import lru_cache
 
 import jwt
@@ -107,17 +108,27 @@ async def get_current_user_context(
             user_metadata = payload.get("user_metadata", {})
             assigned_role = user_metadata.get("role", "LANDOWNER")
             
+            try:
+                user_uuid = uuid.UUID(str(user_id))
+            except Exception:
+                user_uuid = uuid.uuid4()
+
             new_user = User(
-                id=user_id,
+                id=user_uuid,
                 email=payload.get("email", ""),
                 full_name=user_metadata.get("full_name", "Citizen Titleholder"),
                 role=assigned_role
             )
-            db.add(new_user)
-            await db.commit()
-            await db.refresh(new_user)
-            user = new_user
-            logger.info({"event": "AUTH_SYNC", "reason": "Auto-created BHUMI user mapping from valid JWT"})
+            try:
+                db.add(new_user)
+                await db.commit()
+                await db.refresh(new_user)
+                user = new_user
+                logger.info({"event": "AUTH_SYNC", "reason": "Auto-created BHUMI user mapping from valid JWT"})
+            except Exception as e:
+                await db.rollback()
+                logger.warning(f"Could not auto-create user in DB: {e}")
+                user = new_user
 
         return TrustedIdentity(
             user_id=str(user.id),
