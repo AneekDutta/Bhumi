@@ -359,7 +359,7 @@ export default function MarkBoundaryPage() {
         throw new Error("Unable to save boundary. Please try again.");
       }
 
-      setSubmitSuccess(`Boundary #${result.boundary_id} saved to Supabase. Synchronized to CALA and Field Officers.`);
+      setSubmitSuccess(`Boundary #${result.boundary_id} saved successfully. Synchronized with CALA and Field Officers.`);
       setTimeout(() => {
         if (complaintId) {
           router.push(`/landowner/complaints/${complaintId}`);
@@ -833,20 +833,20 @@ export default function MarkBoundaryPage() {
             {submitting ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Saving Boundary to Supabase...</span>
+                <span>Saving Land Boundary...</span>
               </>
             ) : !isPolygonReady ? (
               <span>CAPTURE AT LEAST 4 POINTS TO CONFIRM BOUNDARY</span>
             ) : (
               <>
                 <ShieldCheck className="w-4 h-4 text-emerald-300" />
-                <span>CONFIRM & SAVE LAND BOUNDARY TO SUPABASE</span>
+                <span>CONFIRM & SAVE LAND BOUNDARY</span>
               </>
             )}
           </button>
 
           <p className="text-[10px] text-slate-500 text-center">
-            Persisted in Supabase single source of truth. Synchronized in real time with CALA Admin and Field Verification Officers.
+            Persisted in official Land Record Database. Synchronized in real time with CALA Admin and Field Officers.
           </p>
         </form>
 

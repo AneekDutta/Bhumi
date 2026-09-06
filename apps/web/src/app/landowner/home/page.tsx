@@ -14,7 +14,10 @@ import {
   AlertCircle,
   Compass,
   UploadCloud,
-  FileText
+  FileText,
+  Eye,
+  FileCheck2,
+  CheckCircle2
 } from "lucide-react";
 import { LandownerShell } from "@/components/landowner/LandownerShell";
 import { getLandownerParcels, getLandownerComplaints, getLandownerBoundaries } from "@/lib/api";
@@ -28,20 +31,40 @@ export default function LandownerHomePage() {
   const [loading, setLoading] = useState(true);
   const [owner, setOwner] = useState<any>(null);
 
-  
   useEffect(() => {
-    async function init() {
-      const { createClient } = await import("@/lib/supabase/client");
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        router.push("/landowner/login");
-        return;
-      }
-      
-      const activeOwnerId = user.id;
+    // 1. Read authenticated session
+    const cookies = document.cookie.split(";").map((c) => c.trim());
+    const sessionCookie = cookies.find((c) => c.startsWith("bhumi_landowner_session=") || c.startsWith("bhumi_officer_session="));
+    
+    let activeOwnerId: string | null = null;
+    let activeOwnerName = "Citizen Titleholder";
+    let activeVillage = "Corridor Sector";
 
+    if (sessionCookie) {
+      try {
+        const val = decodeURIComponent(sessionCookie.split("=")[1]);
+        const parsed = JSON.parse(val);
+        if (parsed?.user_id || parsed?.owner_id) {
+          activeOwnerId = parsed.user_id || parsed.owner_id;
+          activeOwnerName = parsed.name || activeOwnerName;
+          activeVillage = parsed.contact_village || parsed.village || activeVillage;
+          setOwner({
+            owner_id: activeOwnerId,
+            name: activeOwnerName,
+            contact_village: activeVillage,
+            email: parsed.email
+          });
+        }
+      } catch {}
+    }
+
+    if (!activeOwnerId) {
+      // Redirect to login if unauthenticated
+      router.push("/landowner/login");
+      return;
+    }
+
+    async function fetchData() {
       setLoading(true);
       try {
         const [pData, cData, bData] = await Promise.all([
@@ -53,17 +76,16 @@ export default function LandownerHomePage() {
         setComplaints(cData || []);
         setBoundaries(bData || []);
       } catch (err) {
-        console.error("Error loading home data:", err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
     }
-    
-    init();
+
+    fetchData();
   }, [router]);
 
-
-  // Supabase Realtime for instant grievance status updates
+  // Realtime subscription for instant grievance status updates
   useRealtimeComplaints(owner?.owner_id || "", async () => {
     if (!owner?.owner_id) return;
     try {
@@ -77,7 +99,7 @@ export default function LandownerHomePage() {
       <LandownerShell title="My Land & Rights">
         <div className="py-24 text-center text-xs text-slate-400 space-y-2">
           <RefreshCw className="w-6 h-6 animate-spin mx-auto text-amber-400" />
-          <span>Loading citizen land records from Supabase...</span>
+          <span>Loading citizen land records...</span>
         </div>
       </LandownerShell>
     );
@@ -88,7 +110,7 @@ export default function LandownerHomePage() {
 
   return (
     <LandownerShell title="My Land & Rights">
-      <div className="p-4 space-y-4 max-w-lg mx-auto pb-24">
+      <div className="p-4 space-y-4 max-w-lg mx-auto pb-28">
         
         {/* Welcome Profile Card */}
         <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/20 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
@@ -132,21 +154,21 @@ export default function LandownerHomePage() {
 
         {/* Quick Actions Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {/* Hero CTA 1: Mark Boundary */}
+          {/* Hero CTA 1: Register New Parcel */}
           <Link
-            href="/landowner/boundary/new"
-            className="p-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white shadow-lg shadow-emerald-950/40 border border-emerald-400/30 flex items-center justify-between transition-all group"
+            href="/landowner/parcels/new"
+            className="p-4 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white shadow-lg shadow-amber-950/40 border border-amber-400/30 flex items-center justify-between transition-all group"
           >
             <div className="space-y-0.5">
-              <div className="flex items-center gap-1.5 text-emerald-100 text-xs font-bold uppercase tracking-wider font-mono">
-                <Compass className="w-4 h-4 text-white" />
-                <span>Mark Land Boundary</span>
+              <div className="flex items-center gap-1.5 text-amber-100 text-xs font-bold uppercase tracking-wider font-mono">
+                <FileCheck2 className="w-4 h-4 text-white" />
+                <span>Statutory Prerequisite</span>
               </div>
               <h2 className="text-sm font-extrabold text-white">
-                Walk & Record GPS Corners
+                Register New Parcel
               </h2>
-              <p className="text-[11px] text-emerald-100/90 leading-tight">
-                Walk your parcel perimeter with your device to record real GPS corner points for field officer verification.
+              <p className="text-[11px] text-amber-100/90 leading-tight">
+                Demarcate corners, authenticate Aadhaar, and obtain your official 14-digit Parcel ID.
               </p>
             </div>
             <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white group-hover:translate-x-0.5 transition-transform flex-shrink-0 ml-3">
@@ -154,21 +176,21 @@ export default function LandownerHomePage() {
             </div>
           </Link>
 
-          {/* Hero CTA 2: Lodge Complaint */}
+          {/* Hero CTA 2: Lodge Grievance / File Complaint */}
           <Link
             href="/landowner/complaints/new"
-            className="p-4 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white shadow-lg shadow-amber-950/40 border border-amber-400/30 flex items-center justify-between transition-all group"
+            className="p-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white shadow-lg shadow-emerald-950/40 border border-emerald-400/30 flex items-center justify-between transition-all group"
           >
             <div className="space-y-0.5">
-              <div className="flex items-center gap-1.5 text-amber-100 text-xs font-bold uppercase tracking-wider font-mono">
+              <div className="flex items-center gap-1.5 text-emerald-100 text-xs font-bold uppercase tracking-wider font-mono">
                 <PlusCircle className="w-4 h-4 text-white" />
-                <span>Facing a Problem?</span>
+                <span>File Grievance</span>
               </div>
               <h2 className="text-sm font-extrabold text-white">
-                Lodge Grievance / Inquiry
+                Lodge Land Complaint
               </h2>
-              <p className="text-[11px] text-amber-100/90 leading-tight">
-                Report compensation delays, demarcation issues, or title errors for immediate on-site field review.
+              <p className="text-[11px] text-emerald-100/90 leading-tight">
+                Report compensation delays, boundary disputes, or title mismatches on your registered parcel.
               </p>
             </div>
             <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white group-hover:translate-x-0.5 transition-transform flex-shrink-0 ml-3">
@@ -177,146 +199,124 @@ export default function LandownerHomePage() {
           </Link>
         </div>
 
-        {/* Section: My Land Parcels */}
+        {/* Section: My Registered Land Parcels */}
         <div className="space-y-2.5">
           <div className="flex items-center justify-between px-1">
             <h2 className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-amber-400" />
               <span>My Registered Land Parcels ({parcels.length})</span>
             </h2>
-            <span className="text-[10px] font-mono text-slate-500">PostGIS Authentic</span>
+            <Link
+              href="/landowner/parcels/new"
+              className="text-[11px] font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>Register Parcel</span>
+            </Link>
           </div>
 
-          <div className="space-y-2.5">
+          <div className="space-y-3">
             {parcels.length === 0 ? (
-              <div className="bg-slate-900/80 border border-amber-500/30 rounded-2xl p-6 text-center space-y-4">
+              <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 text-center space-y-4">
                 <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mx-auto">
                   <AlertCircle className="w-6 h-6" />
                 </div>
                 <div className="space-y-1.5 max-w-md mx-auto">
                   <h3 className="text-sm font-bold text-white uppercase tracking-wide">
-                    No registered parcel linked to this account.
+                    No registered parcels found.
                   </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    You can still report an issue by providing your documents and marking the approximate land boundary.
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Under statutory grievance rules, you must first register your parcel of land before you can file a complaint against it.
                   </p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2">
+                <div className="pt-2">
                   <Link
-                    href="/landowner/boundary/new"
-                    className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md"
+                    href="/landowner/parcels/new"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold transition-all shadow-md"
                   >
-                    <Compass className="w-3.5 h-3.5" />
-                    <span>Mark Land Boundary</span>
-                  </Link>
-                  <Link
-                    href="/landowner/complaints/new#documents"
-                    className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-bold transition-all"
-                  >
-                    <UploadCloud className="w-3.5 h-3.5" />
-                    <span>Upload Documents</span>
-                  </Link>
-                  <Link
-                    href="/landowner/complaints/new"
-                    className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white text-xs font-bold transition-all shadow-md"
-                  >
-                    <PlusCircle className="w-3.5 h-3.5" />
-                    <span>Submit Complaint</span>
+                    <FileCheck2 className="w-4 h-4" />
+                    <span>Register New Parcel</span>
                   </Link>
                 </div>
               </div>
             ) : (
               parcels.map((parcel) => {
                 const pId = parcel.parcel_id || parcel.id;
-                const survey = parcel.survey_number || parcel.survey_no || pId;
-                const village = parcel.village_name || owner.contact_village;
-                const area = parcel.area_hectares || (parcel.area_sqm ? (parcel.area_sqm / 10000).toFixed(2) : "0.50");
-                const stage = parcel.acquisition_status || "award_declared";
-                const claimedBoundary = boundaries.find(
-                  (b) => b.parcel_id === pId || b.metadata?.parcel_id === pId
-                );
+                const ownerName = parcel.owner_legal_name || parcel.owner_name || owner.name;
+                const village = parcel.village_name || parcel.contact_village || owner.contact_village;
+                const areaSqm = parcel.area_sqm || (parcel.calculated_area?.sqm);
+                const areaHa = parcel.area_hectares || (areaSqm ? (areaSqm / 10000).toFixed(2) : "0.50");
+                const docCount = parcel.documents?.length || 0;
+                const regStatus = parcel.registration_status || parcel.status || "Registered";
 
                 return (
                   <div
                     key={pId}
-                    className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 space-y-2.5 hover:border-slate-700 transition-colors"
+                    className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 hover:border-slate-700 transition-colors shadow-lg"
                   >
+                    {/* Header with 14-Digit ID */}
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-white text-sm">
-                            Survey #{survey}
+                          <span className="text-[10px] font-bold text-amber-400 font-mono uppercase tracking-wider">
+                            PARCEL ID:
                           </span>
-                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-950 border border-slate-800 text-slate-400">
+                          <span className="font-mono text-base font-extrabold text-white tracking-wide">
                             {pId}
                           </span>
                         </div>
+                        <p className="text-xs text-slate-300 mt-0.5">
+                          Owner: <span className="font-semibold text-white">{ownerName}</span>
+                        </p>
                         <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-                          <MapPin className="w-3 h-3 text-slate-500" />
-                          <span>Village: {village} · NH-927A Corridor</span>
+                          <MapPin className="w-3 h-3 text-amber-400 flex-shrink-0" />
+                          <span>Village: {village}</span>
                         </p>
                       </div>
 
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
-                        {stage.replace(/_/g, " ")}
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                        {regStatus}
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-slate-800/60 font-mono">
-                      <div>
-                        <span className="text-slate-500 block text-[9px]">Acquired Area</span>
-                        <span className="text-slate-200 font-semibold">{area} Hectares</span>
+                    {/* Land Details Grid */}
+                    <div className="grid grid-cols-3 gap-2 text-xs pt-2 border-t border-slate-800/80 font-mono text-center">
+                      <div className="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                        <span className="text-slate-500 block text-[9px]">SURFACE AREA</span>
+                        <span className="text-amber-400 font-bold text-xs">
+                          {areaSqm ? `${Number(areaSqm).toLocaleString(undefined, { maximumFractionDigits: 1 })} m²` : `${areaHa} Ha`}
+                        </span>
                       </div>
-                      <div>
-                        <span className="text-slate-500 block text-[9px]">Land Classification</span>
-                        <span className="text-slate-200 font-semibold capitalize">{parcel.classification || "Agricultural"}</span>
+                      <div className="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                        <span className="text-slate-500 block text-[9px]">CORNERS</span>
+                        <span className="text-white font-bold text-xs">
+                          {parcel.coordinates?.length || 4} GPS Points
+                        </span>
+                      </div>
+                      <div className="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                        <span className="text-slate-500 block text-[9px]">DOCUMENTS</span>
+                        <span className="text-slate-200 font-bold text-xs">
+                          {docCount > 0 ? `${docCount} Verified/Sub` : "Submitted"}
+                        </span>
                       </div>
                     </div>
 
-                    {/* Claimed Boundary Info if recorded */}
-                    {claimedBoundary && (
-                      <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-xs space-y-1 font-mono">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
-                            <Compass className="w-3 h-3" />
-                            <span>Claimed Boundary</span>
-                          </span>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/40">
-                            {claimedBoundary.status || "CLAIMED / UNVERIFIED"}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between text-[11px] pt-0.5">
-                          <span className="text-slate-200 font-semibold">
-                            {claimedBoundary.area_sqm
-                              ? `${claimedBoundary.area_sqm.toLocaleString()} m² (${claimedBoundary.area_acres || (claimedBoundary.area_sqm * 0.000247105).toFixed(3)} ac)`
-                              : "Area recorded"}
-                          </span>
-                          <span className="text-slate-400 text-[10px]">
-                            {claimedBoundary.boundary_points?.length || 0} GPS Points
-                          </span>
-                        </div>
-                        {claimedBoundary.area_uncertainty_sqm ? (
-                          <div className="text-[10px] text-slate-400">
-                            Uncertainty: ±{claimedBoundary.area_uncertainty_sqm.toFixed(1)} m² (derived from device accuracy)
-                          </div>
-                        ) : null}
-                      </div>
-                    )}
-
-                    <div className="pt-2 flex items-center justify-between gap-2 border-t border-slate-800/60">
+                    {/* Action Buttons: View Parcel & File Complaint */}
+                    <div className="pt-1 flex items-center justify-between gap-2 border-t border-slate-800/60">
                       <Link
-                        href={`/landowner/boundary/new?parcel_id=${pId}`}
-                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 px-2.5 py-1.5 rounded-lg border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                        href={`/landowner/parcels/${pId}`}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-200 hover:text-white bg-slate-800 hover:bg-slate-700 py-2.5 px-3 rounded-xl border border-slate-700 transition-colors"
                       >
-                        <Compass className="w-3.5 h-3.5" />
-                        <span>{claimedBoundary ? "Re-mark GPS Boundary" : "Mark Land Boundary"}</span>
+                        <Eye className="w-3.5 h-3.5 text-amber-400" />
+                        <span>View Parcel</span>
                       </Link>
 
                       <Link
                         href={`/landowner/complaints/new?parcel_id=${pId}`}
-                        className="text-[11px] text-amber-400 hover:text-amber-300 hover:underline font-semibold flex items-center gap-1"
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 py-2.5 px-3 rounded-xl transition-colors shadow-sm"
                       >
-                        <span>Report Issue →</span>
+                        <FileText className="w-3.5 h-3.5" />
+                        <span>File Complaint</span>
                       </Link>
                     </div>
                   </div>
@@ -340,7 +340,7 @@ export default function LandownerHomePage() {
           <div className="space-y-2">
             {complaints.length === 0 ? (
               <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 text-center text-xs text-slate-400">
-                <span>No complaints lodged. Everything in order.</span>
+                <span>No complaints lodged.</span>
               </div>
             ) : (
               complaints.slice(0, 3).map((comp) => {
@@ -359,9 +359,16 @@ export default function LandownerHomePage() {
                         {comp.status}
                       </span>
                     </div>
+
                     <p className="text-xs text-slate-300 mt-1 line-clamp-1">
                       {comp.complaint_type || comp.title}
                     </p>
+
+                    {comp.parcel_id && (
+                      <p className="text-[10px] text-slate-400 font-mono mt-1">
+                        Parcel ID: {comp.parcel_id}
+                      </p>
+                    )}
                   </Link>
                 );
               })

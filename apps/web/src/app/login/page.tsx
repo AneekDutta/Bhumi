@@ -358,7 +358,7 @@ function LoginPageContent() {
                   type="button"
                   onClick={fetchAggregateStats}
                   disabled={stats.isLoading}
-                  title="Click to refresh Supabase aggregate statistics"
+                  title="Click to refresh institutional statistics"
                   className="flex items-center justify-end gap-1.5 text-xs text-[#38bdf8] hover:text-[#7dd3fc] font-mono transition-colors"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${stats.isLoading ? "animate-spin text-[#38bdf8]" : ""}`} />
@@ -370,7 +370,7 @@ function LoginPageContent() {
               </div>
             </div>
 
-            {/* Real-Time Aggregate Database Metrics Grid (Direct from Supabase database) */}
+            {/* Real-Time Aggregate Database Metrics Grid (Direct from institutional database) */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-4">
               
               {/* Metric 1: Registered Corridors / Projects */}

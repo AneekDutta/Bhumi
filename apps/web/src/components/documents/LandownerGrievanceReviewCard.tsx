@@ -229,7 +229,7 @@ export function LandownerGrievanceReviewCard({ parcelId }: LandownerGrievanceRev
       {loading ? (
         <div style={{ padding: "30px 0", textAlign: "center", color: "#6b7a94", fontSize: 12 }}>
           <RefreshCw style={{ width: 18, height: 18, margin: "0 auto 8px", animation: "spin 1s linear infinite", color: "#10b981" }} />
-          <span>Querying Supabase Grievance Registry...</span>
+          <span>Querying Grievance Registry...</span>
         </div>
       ) : complaints.length === 0 ? (
         <div style={{

@@ -63,7 +63,7 @@ export default function LandownerComplaintDetailPage() {
       <LandownerShell title="Grievance Details" showBack>
         <div className="py-20 text-center text-xs text-slate-400 space-y-2">
           <RefreshCw className="w-6 h-6 animate-spin mx-auto text-emerald-400" />
-          <span>Fetching real-time case data from Supabase...</span>
+          <span>Fetching real-time case data...</span>
         </div>
       </LandownerShell>
     );

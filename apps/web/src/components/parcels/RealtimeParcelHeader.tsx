@@ -73,7 +73,7 @@ export function RealtimeParcelHeader({
             alignItems: "center",
             gap: 4
           }}>
-            <Sparkles style={{ width: 11, height: 11 }} /> Live Supabase Synced at {lastSyncTime}
+            <Sparkles style={{ width: 11, height: 11 }} /> Live Synchronized at {lastSyncTime}
           </span>
         )}
 
