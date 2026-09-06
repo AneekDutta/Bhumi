@@ -34,6 +34,11 @@ export async function updateSession(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+  // Never redirect API calls to HTML login pages
+  if (pathname.startsWith('/api/')) {
+    return supabaseResponse;
+  }
+
   // Public paths that don't require auth
   const publicPaths = ['/login', '/auth/callback', '/auth/confirm', '/field/login', '/landowner/login', '/landowner/register'];
   const isPublicPath = publicPaths.some((p) => pathname.startsWith(p));

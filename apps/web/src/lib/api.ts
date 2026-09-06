@@ -10,6 +10,9 @@ const getBaseUrl = () => {
   }
   
   if (typeof window !== 'undefined') {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://127.0.0.1:8000/api/v1';
+    }
     return '/api/v1';
   }
   
@@ -19,21 +22,24 @@ const getBaseUrl = () => {
   
   // Local development fallback
   if (process.env.NODE_ENV === 'development') {
-    return 'http://localhost:8000/api/v1';
+    return 'http://127.0.0.1:8000/api/v1';
   }
 
   // Fallback for build time module evaluation
-  return 'http://localhost:8000/api/v1';
+  return 'http://127.0.0.1:8000/api/v1';
 };
 
 export const API_URL = getBaseUrl();
 
 import { createClient } from '@/lib/supabase/client';
 
-
 export const authenticatedFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
-  const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  let session = null;
+  try {
+    const supabase = createClient();
+    const { data } = await supabase.auth.getSession();
+    session = data?.session;
+  } catch {}
 
   const headers = new Headers(init?.headers || {});
 
@@ -43,7 +49,11 @@ export const authenticatedFetch = async (input: RequestInfo | URL, init?: Reques
 
   let url = input.toString();
   if (url.startsWith('/')) {
-    url = `${API_URL}${url}`;
+    if (url.startsWith('/api/v1/')) {
+      url = `${API_URL.replace(/\/api\/v1\/?$/, '')}${url}`;
+    } else {
+      url = `${API_URL}${url}`;
+    }
   }
 
   const res = await globalThis.fetch(url, {
@@ -60,6 +70,18 @@ export const authenticatedFetch = async (input: RequestInfo | URL, init?: Reques
 
   return res;
 };
+
+export async function safeJson<T = any>(res: Response | any, fallback: T): Promise<T> {
+  try {
+    if (res && typeof res.json === 'function') {
+      const ct = res.headers?.get ? (res.headers.get('content-type') || '') : '';
+      if (!res.headers || ct.includes('application/json') || ct === '') {
+        return await res.json();
+      }
+    }
+  } catch {}
+  return fallback;
+}
 
 // Override local fetch
 const fetch = authenticatedFetch;
@@ -952,77 +974,39 @@ export const apiClient = {
 
   // Landowner / Affected Person Methods
   getParcels: async () => {
-    const res = await authenticatedFetch(`/landowner/parcels`);
-    if (!res.ok) return [];
-    return await res.json();
+    return await supabaseDataService.getParcels();
   },
 
   getLandowners: async () => {
-    const res = await authenticatedFetch(`/landowner/owners`);
-    if (!res.ok) return [];
-    return await res.json();
+    return await supabaseDataService.getLandowners();
   },
 
   getLandownerById: async (ownerId: string) => {
-    const res = await authenticatedFetch(`/landowner/owners/${ownerId}`);
-    if (!res.ok) return null;
-    return await res.json();
+    return await supabaseDataService.getLandownerById(ownerId);
   },
 
   getLandownerParcels: async (ownerId: string) => {
-    const res = await authenticatedFetch(`/landowner/owners/${ownerId}/parcels`);
-    if (!res.ok) return [];
-    return await res.json();
+    return await supabaseDataService.getLandownerParcels(ownerId);
   },
 
   submitLandownerComplaint: async (payload: any) => {
-    const res = await authenticatedFetch(`/landowner/complaints`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) throw new Error("Failed to submit complaint");
-    return await res.json();
+    return await supabaseDataService.submitLandownerComplaint(payload);
   },
 
   getLandownerComplaints: async (filters?: { owner_id?: string; parcel_id?: string; status?: string }) => {
-    const params = new URLSearchParams();
-    if (filters?.owner_id) params.append("owner_id", filters.owner_id);
-    if (filters?.parcel_id) params.append("parcel_id", filters.parcel_id);
-    if (filters?.status) params.append("status", filters.status);
-    const res = await authenticatedFetch(`/landowner/complaints?${params.toString()}`);
-    if (!res.ok) return [];
-    return await res.json();
+    return await supabaseDataService.getLandownerComplaints(filters);
   },
 
   assignComplaintToOfficer: async (complaintId: string, officerId: string, officerName: string, adminNotes?: string) => {
-    const res = await authenticatedFetch(`/landowner/complaints/${complaintId}/assign`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ officer_id: officerId, officer_name: officerName, admin_notes: adminNotes })
-    });
-    if (!res.ok) throw new Error("Failed to assign complaint");
-    return await res.json();
+    return await supabaseDataService.assignComplaintToOfficer(complaintId, officerId, officerName, adminNotes);
   },
 
   submitComplaintVerification: async (payload: any) => {
-    const res = await authenticatedFetch(`/landowner/complaints/${payload.complaint_id}/verify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) throw new Error("Failed to verify complaint");
-    return await res.json();
+    return await supabaseDataService.submitComplaintVerification(payload);
   },
 
   resolveComplaint: async (complaintId: string, resolution: any) => {
-    const res = await authenticatedFetch(`/landowner/complaints/${complaintId}/resolve`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(resolution)
-    });
-    if (!res.ok) throw new Error("Failed to resolve complaint");
-    return await res.json();
+    return await supabaseDataService.resolveComplaint(complaintId, resolution);
   },
 
   uploadEvidenceDocument: async (file: File | Blob, fileName: string, parcelId?: string | null) => {
@@ -1030,13 +1014,7 @@ export const apiClient = {
   },
 
   createOrUpdateLandownerProfile: async (profile: any) => {
-    const res = await authenticatedFetch(`/landowner/profile`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(profile)
-    });
-    if (!res.ok) throw new Error("Failed to update profile");
-    return await res.json();
+    return await supabaseDataService.createOrUpdateLandownerProfile(profile);
   },
 
   getLandownerProfile: async (userId: string) => {
