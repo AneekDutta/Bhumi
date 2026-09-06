@@ -1,4 +1,5 @@
 "use client";
+import { createClient } from "@/lib/supabase/client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
@@ -90,6 +91,7 @@ export default function RegisterParcelPage() {
   // Read authenticated session
   useEffect(() => {
     async function init() {
+      const supabase = createClient();
       const { data: authData } = await supabase.auth.getUser();
       let activeOwnerId = null;
       let activeOwnerName = "Citizen Titleholder";
