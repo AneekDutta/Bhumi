@@ -448,41 +448,41 @@ export default function NewComplaintPage() {
 
   return (
     <LandownerShell>
-      <div className="p-4 space-y-6 pb-24 max-w-lg mx-auto">
+      <div className="space-y-5 pb-24 max-w-lg mx-auto">
         
         {/* Navigation / Header */}
         <div className="flex items-center justify-between">
           <Link
             href="/landowner/complaints"
-            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-[#5A6A80] dark:text-slate-400 hover:text-[#0B2E59] dark:hover:text-white transition-colors font-semibold"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Grievances</span>
           </Link>
-          <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/30">
-            SUBMITTED — AWAITING FIELD REVIEW
+          <span className="text-[10px] font-mono uppercase tracking-wider text-[#B36B00] dark:text-amber-400 font-bold bg-[#FFF8E1] dark:bg-amber-950/40 px-2 py-0.5 rounded-[3px] border border-[#FFE082] dark:border-amber-800/50">
+            SUBMITTED — AWAITING REVIEW
           </span>
         </div>
 
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
-            Lodge Official Grievance
+          <h1 className="text-lg font-bold text-[#14213D] dark:text-white tracking-tight font-display">
+            Lodge Statutory Grievance
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Submit an official objection to the Competent Authority (CALA) with GPS boundary capture and supporting documentation.
+          <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-0.5">
+            Submit an official objection to CALA with GPS boundary capture and supporting documentation under RFCTLARR 2013.
           </p>
         </div>
 
-        {/* Real Mode vs Demo Simulation Switcher */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 space-y-2.5">
+        {/* Operating GPS Mode Switcher */}
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-3.5 space-y-2.5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-[#14213D] dark:text-slate-300 uppercase tracking-wider">
               Operating GPS Mode
             </span>
-            <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
+            <span className={`text-[10px] font-mono px-2 py-0.5 rounded-[3px] font-bold uppercase ${
               isDemoMode 
-                ? "bg-purple-500/20 text-purple-300 border border-purple-500/40" 
-                : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+                ? "bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/40" 
+                : "bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-300 border border-[#C8E6C9] dark:border-emerald-800/50"
             }`}>
               {isDemoMode ? "DEMO DATA / SIMULATION" : "REAL HARDWARE GPS"}
             </span>
@@ -492,10 +492,10 @@ export default function NewComplaintPage() {
             <button
               type="button"
               onClick={() => setIsDemoMode(false)}
-              className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              className={`py-2 px-3 rounded-[4px] text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 !isDemoMode
-                  ? "bg-emerald-600 text-white shadow-md"
-                  : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-white"
+                  ? "bg-[#0B2E59] text-white shadow-xs"
+                  : "bg-[#F8FAFC] dark:bg-[#07080F] text-[#5A6A80] dark:text-slate-400 border border-[#CBD5E1] dark:border-white/10 hover:text-[#14213D] dark:hover:text-white"
               }`}
             >
               <Compass className="w-3.5 h-3.5" />
@@ -505,10 +505,10 @@ export default function NewComplaintPage() {
             <button
               type="button"
               onClick={() => setIsDemoMode(true)}
-              className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              className={`py-2 px-3 rounded-[4px] text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 isDemoMode
-                  ? "bg-purple-600 text-white shadow-md"
-                  : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-white"
+                  ? "bg-[#0B2E59] text-white shadow-xs"
+                  : "bg-[#F8FAFC] dark:bg-[#07080F] text-[#5A6A80] dark:text-slate-400 border border-[#CBD5E1] dark:border-white/10 hover:text-[#14213D] dark:hover:text-white"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -517,17 +517,17 @@ export default function NewComplaintPage() {
           </div>
 
           {isDemoMode ? (
-            <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-200 text-xs space-y-1">
-              <div className="flex items-center gap-1.5 font-bold text-[10px] uppercase tracking-wider text-purple-300">
-                <AlertTriangle className="w-3.5 h-3.5 text-purple-400" />
+            <div className="p-2.5 rounded-[4px] bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800/40 text-purple-900 dark:text-purple-200 text-xs space-y-1">
+              <div className="flex items-center gap-1.5 font-bold text-[10px] uppercase tracking-wider text-purple-800 dark:text-purple-300">
+                <AlertTriangle className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                 <span>DEMO DATA / SIMULATION</span>
               </div>
-              <p className="text-[10px] text-purple-200/90 leading-relaxed">
+              <p className="text-[10px] text-purple-800/90 dark:text-purple-200/90 leading-relaxed">
                 Simulated coordinates modeled strictly within ±12m to ±15m accuracy (never wildly varying, not presented as real).
               </p>
             </div>
           ) : (
-            <p className="text-[10px] text-slate-400">
+            <p className="text-[10px] text-[#5A6A80] dark:text-slate-400">
               Real Mode: Hardware GPS accuracy only. Zero fake or fabricated coordinates.
             </p>
           )}
@@ -535,14 +535,14 @@ export default function NewComplaintPage() {
 
         {/* Fallback Banner for Landowners without Pre-existing Land Parcels */}
         {isUnregistered && (
-          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs space-y-3 animate-fadeIn">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 flex-shrink-0 text-amber-400 mt-0.5" />
-              <div className="space-y-1">
-                <span className="font-bold text-white uppercase tracking-wider text-[11px] block">
+          <div className="p-3.5 rounded-[4px] bg-[#FFF8E1] dark:bg-amber-950/20 border border-[#FFE082] dark:border-amber-800/50 text-[#B36B00] dark:text-amber-200 text-xs space-y-2.5 animate-fadeIn">
+            <div className="flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-[#B36B00] dark:text-amber-400 mt-0.5" />
+              <div className="space-y-0.5">
+                <span className="font-bold text-[#14213D] dark:text-white uppercase tracking-wider text-[11px] block">
                   No registered parcel linked to this account.
                 </span>
-                <p className="text-slate-300 leading-relaxed text-xs">
+                <p className="text-[#5A6A80] dark:text-slate-300 leading-relaxed text-xs">
                   You can still report an issue by providing your documents and marking the approximate land boundary.
                 </p>
               </div>
@@ -551,13 +551,13 @@ export default function NewComplaintPage() {
             <div className="grid grid-cols-3 gap-2 pt-1 font-mono text-[10px]">
               <a
                 href="#boundary-marking-section"
-                className="py-1.5 px-2 rounded-lg bg-emerald-600/30 hover:bg-emerald-600/40 border border-emerald-500/40 text-emerald-300 text-center font-bold"
+                className="py-1.5 px-2 rounded-[3px] bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/50 text-[#1E7E34] dark:text-emerald-300 text-center font-bold"
               >
                 1. Mark Boundary
               </a>
               <a
                 href="#documents-section"
-                className="py-1.5 px-2 rounded-lg bg-amber-600/30 hover:bg-amber-600/40 border border-amber-500/40 text-amber-300 text-center font-bold"
+                className="py-1.5 px-2 rounded-[3px] bg-white dark:bg-[#0D121F] border border-[#CBD5E1] dark:border-white/10 text-[#0B2E59] dark:text-sky-300 text-center font-bold"
               >
                 2. Upload Docs
               </a>
@@ -567,7 +567,7 @@ export default function NewComplaintPage() {
                   const submitBtn = document.getElementById("submit-complaint-btn");
                   submitBtn?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-center font-bold border border-slate-700 cursor-pointer"
+                className="py-1.5 px-2 rounded-[3px] bg-[#0B2E59] text-white text-center font-bold cursor-pointer"
               >
                 3. Submit
               </button>
@@ -577,38 +577,38 @@ export default function NewComplaintPage() {
 
         {/* Global Error Banner */}
         {errorMsg && (
-          <div className="p-4 rounded-xl bg-red-500/15 border border-red-500/40 text-red-200 text-xs flex items-start gap-3 animate-fadeIn">
-            <AlertTriangle className="w-5 h-5 flex-shrink-0 text-red-400 mt-0.5" />
-            <div className="space-y-1">
-              <span className="font-bold text-red-300 block uppercase tracking-wider text-[11px]">Submission Error</span>
+          <div className="p-3 rounded-[4px] bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/50 text-[#B32424] dark:text-rose-200 text-xs flex items-start gap-2.5 animate-fadeIn">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0 text-[#B32424] dark:text-rose-400 mt-0.5" />
+            <div className="space-y-0.5">
+              <span className="font-bold text-[#B32424] dark:text-rose-300 block uppercase tracking-wider text-[11px]">Submission Error</span>
               <p className="leading-relaxed">{errorMsg}</p>
             </div>
           </div>
         )}
 
         {/* Form Container */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           
           {/* SECTION 1: PARCEL & DISPUTE DETAILS */}
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-            <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
-              <span className="w-5 h-5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs font-bold flex items-center justify-center font-mono">
+          <div className="p-4 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 space-y-4 shadow-xs">
+            <div className="flex items-center gap-2 border-b border-[#DCE2E8] dark:border-white/10 pb-2.5">
+              <span className="w-5 h-5 rounded-[3px] bg-[#0B2E59] text-white text-xs font-bold flex items-center justify-center font-mono">
                 1
               </span>
-              <h2 className="text-xs font-bold text-white uppercase tracking-wider">
+              <h2 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wider">
                 Parcel & Objection Category
               </h2>
             </div>
 
             {/* Affected Parcel Dropdown */}
             <div>
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-semibold text-[#14213D] dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Impacted Land Parcel
               </label>
               <select
                 value={selectedParcel}
                 onChange={(e) => setSelectedParcel(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-amber-500 font-mono"
+                className="w-full px-3 py-2 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white text-xs focus:outline-none focus:border-[#0B2E59] font-mono"
               >
                 <option value="unregistered">Unregistered Land Claim (No Official Parcel Linked)</option>
                 {parcels.map((p) => (
@@ -618,7 +618,7 @@ export default function NewComplaintPage() {
                 ))}
               </select>
               {selectedParcel === "unregistered" && (
-                <span className="text-[10px] text-amber-400 font-mono block mt-1">
+                <span className="text-[10px] text-[#B36B00] dark:text-amber-400 font-mono block mt-1">
                   Claim without pre-registered parcel. An official parcel will be linked during field verification.
                 </span>
               )}
@@ -626,14 +626,14 @@ export default function NewComplaintPage() {
 
             {/* Complaint Category */}
             <div>
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Objection / Grievance Category <span className="text-amber-400">*</span>
+              <label className="block text-[11px] font-semibold text-[#14213D] dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                Objection / Grievance Category <span className="text-rose-600">*</span>
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 required
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-amber-500"
+                className="w-full px-3 py-2 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white text-xs focus:outline-none focus:border-[#0B2E59]"
               >
                 {COMPLAINT_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -646,10 +646,10 @@ export default function NewComplaintPage() {
             {/* Problem Description */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
-                  Detailed Explanation of the Problem <span className="text-amber-400">*</span>
+                <label className="block text-[11px] font-semibold text-[#14213D] dark:text-slate-300 uppercase tracking-wider">
+                  Detailed Explanation of the Problem <span className="text-rose-600">*</span>
                 </label>
-                <span className={`text-[10px] font-mono ${description.length < 15 ? "text-amber-400" : "text-emerald-400"}`}>
+                <span className={`text-[10px] font-mono ${description.length < 15 ? "text-[#B36B00] dark:text-amber-400" : "text-[#1E7E34] dark:text-emerald-400"}`}>
                   {description.length} / 15 min chars
                 </span>
               </div>
@@ -659,13 +659,13 @@ export default function NewComplaintPage() {
                 required
                 rows={4}
                 placeholder="Explain the discrepancy, boundary pillar offset, delayed compensation notice, or unauthorized possession..."
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-amber-500 placeholder-slate-600 leading-relaxed"
+                className="w-full px-3 py-2 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white text-xs focus:outline-none focus:border-[#0B2E59] placeholder-[#5A6A80] dark:placeholder-slate-500 leading-relaxed"
               />
             </div>
 
             {/* Priority Picker */}
             <div>
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-semibold text-[#14213D] dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Impact Urgency
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -674,14 +674,14 @@ export default function NewComplaintPage() {
                     key={p}
                     type="button"
                     onClick={() => setPriority(p)}
-                    className={`py-2 px-3 rounded-lg text-xs font-bold transition-all ${
+                    className={`py-2 px-3 rounded-[4px] text-xs font-bold transition-all ${
                       priority === p
                         ? p === "CRITICAL"
-                          ? "bg-red-500/20 border border-red-500/50 text-red-400"
+                          ? "bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/50 text-[#B32424] dark:text-rose-400"
                           : p === "URGENT"
-                          ? "bg-amber-500/20 border border-amber-500/50 text-amber-400"
-                          : "bg-indigo-500/20 border border-indigo-500/50 text-indigo-300"
-                        : "bg-slate-950 border border-slate-800 text-slate-400 hover:text-white"
+                          ? "bg-[#FFF8E1] dark:bg-amber-950/40 border border-[#FFE082] dark:border-amber-800/50 text-[#B36B00] dark:text-amber-400"
+                          : "bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/50 text-[#0B2E59] dark:text-sky-300"
+                        : "bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/10 text-[#5A6A80] dark:text-slate-400 hover:text-[#14213D] dark:hover:text-white"
                     }`}
                   >
                     {p}
@@ -692,30 +692,30 @@ export default function NewComplaintPage() {
           </div>
 
           {/* SECTION 2: GPS LOCATION & BOUNDARY MARKING */}
-          <div id="boundary-marking-section" className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div id="boundary-marking-section" className="p-4 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 space-y-4 shadow-xs">
+            <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-2.5">
               <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs font-bold flex items-center justify-center font-mono">
+                <span className="w-5 h-5 rounded-[3px] bg-[#0B2E59] text-white text-xs font-bold flex items-center justify-center font-mono">
                   2
                 </span>
-                <h2 className="text-xs font-bold text-white uppercase tracking-wider">
+                <h2 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wider">
                   GPS Land Location & Corner Marking
                 </h2>
               </div>
-              <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+              <span className="text-[10px] font-mono font-bold text-[#0B2E59] dark:text-sky-400 uppercase tracking-wider bg-sky-50 dark:bg-sky-950/40 px-2 py-0.5 rounded-[3px] border border-sky-200 dark:border-sky-800/50">
                 Satellite Capture
               </span>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-[#5A6A80] dark:text-slate-300 leading-relaxed">
               Capture your physical device GPS coordinates. You can also walk the corners of your parcel (P1 → P2 → P3 → P4 → P1) to mark your claimed boundary.
             </p>
 
             {/* Error / Warning Alert */}
             {gpsError && (
-              <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-start gap-2.5 animate-fadeIn">
-                <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-400 mt-0.5" />
-                <div className="space-y-1">
+              <div className="p-3 rounded-[4px] bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/50 text-[#B32424] dark:text-rose-300 text-xs flex items-start gap-2.5 animate-fadeIn">
+                <AlertCircle className="w-4 h-4 flex-shrink-0 text-[#B32424] dark:text-rose-400 mt-0.5" />
+                <div className="space-y-0.5">
                   <span className="font-bold block text-[11px] uppercase tracking-wider">Location Error</span>
                   <p>{gpsError}</p>
                 </div>
@@ -723,18 +723,18 @@ export default function NewComplaintPage() {
             )}
 
             {accuracyWarning && (
-              <div className="p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2 animate-fadeIn">
-                <ShieldAlert className="w-4 h-4 flex-shrink-0 text-amber-400" />
+              <div className="p-3 rounded-[4px] bg-[#FFF8E1] dark:bg-amber-950/40 border border-[#FFE082] dark:border-amber-800/50 text-[#B36B00] dark:text-amber-300 text-xs flex items-center gap-2 animate-fadeIn">
+                <ShieldAlert className="w-4 h-4 flex-shrink-0 text-[#B36B00] dark:text-amber-400" />
                 <span>{accuracyWarning}</span>
               </div>
             )}
 
             {/* Primary GPS Status */}
             {gpsLocation ? (
-              <div className="p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 space-y-2">
+              <div className="p-3.5 rounded-[4px] bg-[#E8F5E9] dark:bg-emerald-950/30 border border-[#C8E6C9] dark:border-emerald-800/50 text-[#1E7E34] dark:text-emerald-300 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <CheckCircle2 className="w-4 h-4 text-[#1E7E34] dark:text-emerald-400" />
                     <span className="text-xs font-bold">
                       {isDemoMode ? "Simulated GPS Position" : "Device GPS Coordinates Verified"}
                     </span>
@@ -742,22 +742,22 @@ export default function NewComplaintPage() {
                   <button
                     type="button"
                     onClick={handleCaptureLocation}
-                    className="text-[10px] font-mono text-emerald-400 hover:underline cursor-pointer"
+                    className="text-[10px] font-mono text-[#1E7E34] dark:text-emerald-400 hover:underline cursor-pointer"
                   >
                     [ Refresh Fix ]
                   </button>
                 </div>
-                <div className="grid grid-cols-3 gap-2 font-mono text-xs pt-1 border-t border-emerald-500/20">
+                <div className="grid grid-cols-3 gap-2 font-mono text-xs pt-1 border-t border-[#C8E6C9] dark:border-emerald-800/30">
                   <div>
-                    <span className="text-[10px] text-emerald-500 block">Latitude</span>
+                    <span className="text-[10px] text-[#5A6A80] dark:text-emerald-400 block">Latitude</span>
                     <span className="font-bold">{gpsLocation.lat}° N</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-emerald-500 block">Longitude</span>
+                    <span className="text-[10px] text-[#5A6A80] dark:text-emerald-400 block">Longitude</span>
                     <span className="font-bold">{gpsLocation.lng}° E</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-emerald-500 block">Accuracy</span>
+                    <span className="text-[10px] text-[#5A6A80] dark:text-emerald-400 block">Accuracy</span>
                     <span className="font-bold">±{gpsLocation.accuracy}m</span>
                   </div>
                 </div>
@@ -767,16 +767,16 @@ export default function NewComplaintPage() {
                 type="button"
                 disabled={capturingGps}
                 onClick={handleCaptureLocation}
-                className="w-full py-3 px-4 rounded-xl bg-slate-950 hover:bg-slate-800 border-2 border-dashed border-amber-500/50 hover:border-amber-400 text-amber-300 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 shadow-inner"
+                className="w-full py-3 px-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] hover:bg-[#EDF2F7] dark:hover:bg-white/5 border-2 border-dashed border-[#0B2E59]/40 hover:border-[#0B2E59] text-[#0B2E59] dark:text-sky-400 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
               >
                 {capturingGps ? (
                   <>
-                    <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
+                    <RefreshCw className="w-4 h-4 animate-spin text-[#0B2E59] dark:text-sky-400" />
                     <span>Acquiring Device GPS Coordinates...</span>
                   </>
                 ) : (
                   <>
-                    <Compass className="w-4 h-4 text-amber-400" />
+                    <Compass className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
                     <span>Capture Current GPS Location (Required)</span>
                   </>
                 )}
@@ -784,13 +784,13 @@ export default function NewComplaintPage() {
             )}
 
             {/* Corner Marking Sub-flow (P1 -> P2 -> P3 -> P4 -> P1) */}
-            <div className="pt-2 border-t border-slate-800 space-y-3">
+            <div className="pt-2 border-t border-[#DCE2E8] dark:border-white/10 space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-bold text-white block">
+                  <span className="text-xs font-bold text-[#14213D] dark:text-white block">
                     Mark Land Boundary Corners (P1 → P2 → P3 → P4)
                   </span>
-                  <span className="text-[10px] text-slate-400">
+                  <span className="text-[10px] text-[#5A6A80] dark:text-slate-400">
                     Walk to each corner of your land plot to record a closed polygon
                   </span>
                 </div>
@@ -798,7 +798,7 @@ export default function NewComplaintPage() {
                   type="button"
                   disabled={capturingCorner}
                   onClick={handleAddCornerPoint}
-                  className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold font-mono uppercase flex items-center gap-1.5 transition-all cursor-pointer"
+                  className="px-3 py-1.5 rounded-[4px] bg-sky-50 dark:bg-sky-950/40 hover:bg-sky-100 text-[#0B2E59] dark:text-sky-300 border border-sky-200 dark:border-sky-800/50 text-xs font-bold font-mono uppercase flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   {capturingCorner ? (
                     <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -815,23 +815,23 @@ export default function NewComplaintPage() {
                   {boundaryPoints.map((pt, idx) => (
                     <div
                       key={idx}
-                      className="p-2 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs font-mono"
+                      className="p-2 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 flex items-center justify-between text-xs font-mono"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-md bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center text-[10px]">
+                        <span className="w-5 h-5 rounded-[3px] bg-[#0B2E59] text-white font-bold flex items-center justify-center text-[10px]">
                           P{pt.sequence}
                         </span>
-                        <span className="text-white text-[11px]">
+                        <span className="text-[#14213D] dark:text-white text-[11px]">
                           {pt.lat}°, {pt.lng}°
                         </span>
-                        <span className="text-slate-400 text-[10px]">
+                        <span className="text-[#5A6A80] dark:text-slate-400 text-[10px]">
                           (±{pt.accuracy}m)
                         </span>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleRemoveCorner(idx)}
-                        className="text-red-400 hover:text-red-300 p-1"
+                        className="text-rose-600 hover:text-rose-700 p-1 cursor-pointer"
                         title="Remove point"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -843,40 +843,40 @@ export default function NewComplaintPage() {
 
               {/* Calculated Area Card if >= 4 points */}
               {boundaryPoints.length >= 4 && (
-                <div className="p-3.5 rounded-xl bg-slate-950 border border-amber-500/40 space-y-2">
+                <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                    <span className="text-[10px] font-mono uppercase font-bold text-[#0B2E59] dark:text-sky-400 bg-sky-50 dark:bg-sky-950/40 px-2 py-0.5 rounded-[3px] border border-sky-200 dark:border-sky-800/40">
                       LANDOWNER-REPORTED / ESTIMATED
                     </span>
-                    <span className="text-[10px] font-mono text-slate-400">
+                    <span className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400">
                       {isDemoMode ? "SIMULATED ESTIMATE" : "GPS-based estimate"}
                     </span>
                   </div>
 
                   {areaResult ? (
                     <div className="space-y-1.5 pt-1">
-                      <div className="text-xl font-bold font-mono text-white text-center">
-                        {areaResult.areaAcres} <span className="text-sm font-medium text-amber-400">acres</span>
-                        <span className="text-xs text-slate-400 font-normal block mt-0.5">
+                      <div className="text-xl font-bold font-mono text-[#0B2E59] dark:text-white text-center">
+                        {areaResult.areaAcres} <span className="text-sm font-medium text-[#B36B00] dark:text-amber-400">acres</span>
+                        <span className="text-xs text-[#5A6A80] dark:text-slate-400 font-normal block mt-0.5">
                           {areaResult.areaSqm.toLocaleString()} m² · {areaResult.areaHectares} Ha
                         </span>
                       </div>
 
-                      <div className="text-[10px] text-slate-400 font-mono border-t border-slate-800 pt-1.5">
-                        <span className="text-slate-300 font-bold block mb-0.5">Uncertainty:</span>
+                      <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono border-t border-[#DCE2E8] dark:border-white/10 pt-1.5">
+                        <span className="text-[#14213D] dark:text-slate-300 font-bold block mb-0.5">Uncertainty:</span>
                         {areaResult.uncertaintySqm !== null ? (
-                          <span className="text-amber-300">
+                          <span className="text-[#B36B00] dark:text-amber-300">
                             ±{areaResult.uncertaintySqm} m² (±{areaResult.uncertaintyAcres} acres)
                           </span>
                         ) : (
-                          <span className="text-slate-400 italic">
+                          <span className="text-[#5A6A80] dark:text-slate-400 italic">
                             Area uncertainty cannot be reliably calculated from the available GPS data.
                           </span>
                         )}
                       </div>
                     </div>
                   ) : (
-                    <p className="text-[10px] text-slate-400 italic">
+                    <p className="text-[10px] text-[#5A6A80] dark:text-slate-400 italic">
                       Area uncertainty cannot be reliably calculated from the available GPS data.
                     </p>
                   )}
@@ -884,7 +884,7 @@ export default function NewComplaintPage() {
               )}
 
               {boundaryPoints.length > 0 && boundaryPoints.length < 4 && (
-                <p className="text-[11px] text-slate-400 italic">
+                <p className="text-[11px] text-[#5A6A80] dark:text-slate-400 italic">
                   Recorded {boundaryPoints.length} of 4 points. Capture at least 4 corner points to define a closed land boundary polygon.
                 </p>
               )}
@@ -892,34 +892,34 @@ export default function NewComplaintPage() {
           </div>
 
           {/* SECTION 3: COMPULSORY DOCUMENT EVIDENCE UPLOAD */}
-          <div id="documents-section" className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div id="documents-section" className="p-4 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 space-y-3 shadow-xs">
+            <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-2.5">
               <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs font-bold flex items-center justify-center font-mono">
+                <span className="w-5 h-5 rounded-[3px] bg-[#0B2E59] text-white text-xs font-bold flex items-center justify-center font-mono">
                   3
                 </span>
-                <h2 className="text-xs font-bold text-white uppercase tracking-wider">
+                <h2 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wider">
                   Supporting Legal Document
                 </h2>
               </div>
-              <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+              <span className="text-[10px] font-mono font-bold text-[#B36B00] dark:text-amber-400 uppercase tracking-wider bg-[#FFF8E1] dark:bg-amber-950/40 px-2 py-0.5 rounded-[3px] border border-[#FFE082] dark:border-amber-800/50">
                 LANDOWNER-SUBMITTED / UNVERIFIED
               </span>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-[#5A6A80] dark:text-slate-300 leading-relaxed">
               Upload title deed, tax receipt, electricity bill, boundary demarcation photo, or physical possession proof.
             </p>
 
             {/* Document Type Dropdown */}
             <div>
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-semibold text-[#14213D] dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Document Type
               </label>
               <select
                 value={docCategory}
                 onChange={(e) => setDocCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-amber-500"
+                className="w-full px-3 py-2 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white text-xs focus:outline-none focus:border-[#0B2E59]"
               >
                 {DOCUMENT_TYPES.map((dt) => (
                   <option key={dt} value={dt}>
@@ -931,24 +931,24 @@ export default function NewComplaintPage() {
 
             {/* File Error Alert */}
             {fileError && (
-              <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2 animate-fadeIn">
-                <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-400" />
+              <div className="p-3 rounded-[4px] bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/50 text-[#B32424] dark:text-rose-300 text-xs flex items-center gap-2 animate-fadeIn">
+                <AlertCircle className="w-4 h-4 flex-shrink-0 text-[#B32424] dark:text-rose-400" />
                 <span>{fileError}</span>
               </div>
             )}
 
             {/* File Upload Widget */}
             {evidenceFile ? (
-              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
-                <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center flex-shrink-0">
-                    <FileCheck className="w-5 h-5" />
+              <div className="p-3 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 flex items-center justify-between">
+                <div className="flex items-center gap-2.5 overflow-hidden">
+                  <div className="w-9 h-9 rounded-[4px] bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/40 text-[#0B2E59] dark:text-sky-400 flex items-center justify-center flex-shrink-0">
+                    <FileCheck className="w-4 h-4" />
                   </div>
                   <div className="overflow-hidden">
-                    <span className="font-bold text-xs text-white truncate block">
+                    <span className="font-bold text-xs text-[#14213D] dark:text-white truncate block">
                       {evidenceFile.name}
                     </span>
-                    <span className="text-[10px] font-mono text-slate-400">
+                    <span className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400">
                       {(evidenceFile.size / (1024 * 1024)).toFixed(2)} MB · {docCategory}
                     </span>
                   </div>
@@ -957,19 +957,19 @@ export default function NewComplaintPage() {
                 <button
                   type="button"
                   onClick={() => setEvidenceFile(null)}
-                  className="text-xs text-red-400 hover:text-red-300 font-semibold px-2 py-1 rounded bg-red-500/10 border border-red-500/20 cursor-pointer"
+                  className="text-xs text-rose-600 hover:text-rose-700 font-bold px-2 py-1 rounded-[3px] bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/40 cursor-pointer"
                 >
                   Remove
                 </button>
               </div>
             ) : (
               <div>
-                <label className="block w-full p-4 rounded-xl bg-slate-950 hover:bg-slate-800/80 border-2 border-dashed border-amber-500/50 hover:border-amber-400 transition-all text-center cursor-pointer group">
-                  <UploadCloud className="w-7 h-7 text-amber-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-bold text-white block">
+                <label className="block w-full p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] hover:bg-[#EDF2F7] dark:hover:bg-white/5 border-2 border-dashed border-[#CBD5E1] dark:border-white/20 hover:border-[#0B2E59] transition-all text-center cursor-pointer group">
+                  <UploadCloud className="w-6 h-6 text-[#0B2E59] dark:text-sky-400 mx-auto mb-1.5 group-hover:scale-105 transition-transform" />
+                  <span className="text-xs font-bold text-[#14213D] dark:text-white block">
                     Choose Supporting Document or Photo
                   </span>
-                  <span className="text-[10px] text-slate-400 block mt-1">
+                  <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block mt-0.5">
                     PDF, JPG, PNG, WEBP (Max 50 MB)
                   </span>
                   <input
@@ -985,13 +985,13 @@ export default function NewComplaintPage() {
           </div>
 
           {/* SECTION 4: SUBMIT ACTION */}
-          <div className="space-y-3 pt-2">
+          <div className="space-y-2.5 pt-2">
             
             {/* Progress Phase Notification */}
             {submitPhase && (
-              <div className="p-3.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2.5 animate-fadeIn">
-                <RefreshCw className="w-4 h-4 flex-shrink-0 animate-spin text-amber-400" />
-                <span className="font-medium">{submitPhase}</span>
+              <div className="p-3 rounded-[4px] bg-[#FFF8E1] dark:bg-amber-950/30 border border-[#FFE082] dark:border-amber-800/40 text-[#B36B00] dark:text-amber-300 text-xs flex items-center gap-2 animate-fadeIn">
+                <RefreshCw className="w-3.5 h-3.5 flex-shrink-0 animate-spin text-[#B36B00] dark:text-amber-400" />
+                <span className="font-semibold">{submitPhase}</span>
               </div>
             )}
 
@@ -999,15 +999,15 @@ export default function NewComplaintPage() {
               id="submit-complaint-btn"
               type="submit"
               disabled={!isSubmitReady}
-              className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xl cursor-pointer ${
+              className={`w-full py-2.5 px-4 rounded-[4px] font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer ${
                 isSubmitReady
-                  ? "bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white shadow-amber-950/50"
-                  : "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700"
+                  ? "bg-[#0B2E59] hover:bg-[#082242] text-white"
+                  : "bg-[#E2E8F0] dark:bg-white/10 text-[#5A6A80] dark:text-slate-500 cursor-not-allowed border border-[#CBD5E1] dark:border-white/10"
               }`}
             >
               {submitting ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                   <span>Processing Submission...</span>
                 </>
               ) : !gpsLocation ? (
@@ -1016,13 +1016,13 @@ export default function NewComplaintPage() {
                 <span>ATTACH COMPULSORY DOCUMENT TO PROCEED</span>
               ) : (
                 <>
-                  <Send className="w-4 h-4" />
-                  <span>SUBMIT STATUTORY GRIEVANCE TO SUPABASE</span>
+                  <Send className="w-3.5 h-3.5" />
+                  <span>SUBMIT STATUTORY GRIEVANCE TO CALA</span>
                 </>
               )}
             </button>
 
-            <p className="text-[10px] text-slate-500 text-center">
+            <p className="text-[10px] text-[#5A6A80] dark:text-slate-400 text-center">
               Initial status: SUBMITTED — AWAITING FIELD REVIEW. Recorded in immutable Supabase audit log.
             </p>
           </div>

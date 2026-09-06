@@ -101,7 +101,7 @@ export function ProvenanceBadge({
           alignItems: 'center',
           gap: 5,
           padding: fontSizes.px,
-          borderRadius: 6,
+          borderRadius: 3,
           background: cfg.bg,
           border: `1px solid ${cfg.border}`,
           color: cfg.text,
@@ -128,10 +128,10 @@ export function ProvenanceBadge({
             transform: 'translateX(-50%)',
             width: 260,
             padding: '12px 14px',
-            borderRadius: 10,
-            background: '#0d1322',
+            borderRadius: 4,
+            background: '#0D121F',
             border: `1px solid ${cfg.border}`,
-            boxShadow: '0 10px 30px -5px rgba(0,0,0,0.8), 0 0 20px rgba(56,189,248,0.1)',
+            boxShadow: '0 8px 24px -4px rgba(0,0,0,0.6)',
             zIndex: 9999,
             fontSize: 11,
             color: '#c4cfe4',
@@ -194,27 +194,14 @@ export function ProvenanceBadge({
 
 export function DataRealityBanner() {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 10,
-        padding: '8px 16px',
-        borderRadius: 8,
-        background: 'rgba(15, 23, 42, 0.75)',
-        border: '1px solid rgba(148, 163, 184, 0.15)',
-        marginBottom: 16
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <Info style={{ width: 14, height: 14, color: '#38bdf8' }} />
-        <span style={{ fontSize: 11, color: '#cbd5e1', fontWeight: 600 }}>
+    <div className="flex items-center justify-between flex-wrap gap-2.5 px-4 py-2.5 rounded-[4px] bg-[#E8F1FA] dark:bg-[#0B2E59]/30 border border-[#B8D5E5] dark:border-[#0B2E59] mb-4 shadow-xs">
+      <div className="flex items-center gap-2">
+        <Info className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400 shrink-0" />
+        <span className="text-xs text-[#0B2E59] dark:text-sky-200 font-semibold">
           SIH26016 Provenance Reality Matrix Active:
         </span>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+      <div className="flex items-center gap-2 flex-wrap">
         <ProvenanceBadge sourceType="REAL_PUBLIC" size="xs" />
         <ProvenanceBadge sourceType="SYNTHETIC" size="xs" />
         <ProvenanceBadge sourceType="USER_ENTERED" size="xs" />

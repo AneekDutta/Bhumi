@@ -28,142 +28,149 @@ export default async function IntelligencePage({ params }: { params: Promise<{ i
   const highCount = bottlenecks.filter((b: any) => b.status === 'HIGH').length;
 
   const URGENCY_STYLE: Record<string, { bg: string; color: string; border: string; barColor: string }> = {
-    CRITICAL: { bg: 'rgba(244,63,94,0.08)', color: '#f43f5e', border: 'rgba(244,63,94,0.3)', barColor: '#f43f5e' },
-    HIGH: { bg: 'rgba(249,115,22,0.08)', color: '#f97316', border: 'rgba(249,115,22,0.3)', barColor: '#f97316' },
-    MEDIUM: { bg: 'rgba(245,158,11,0.08)', color: '#f59e0b', border: 'rgba(245,158,11,0.3)', barColor: '#f59e0b' },
-    LOW: { bg: 'rgba(16,185,129,0.08)', color: '#10b981', border: 'rgba(16,185,129,0.3)', barColor: '#10b981' },
+    CRITICAL: { bg: 'bg-[#FFEBEE] dark:bg-rose-950/40', color: 'text-[#B32424] dark:text-rose-300', border: 'border-[#FFCDD2] dark:border-rose-800/40', barColor: 'border-l-[#B32424]' },
+    HIGH: { bg: 'bg-[#FFF8E1] dark:bg-amber-950/40', color: 'text-[#B36B00] dark:text-amber-300', border: 'border-[#FFE082] dark:border-amber-800/40', barColor: 'border-l-amber-500' },
+    MEDIUM: { bg: 'bg-[#FFF8E1] dark:bg-amber-950/40', color: 'text-[#B36B00] dark:text-amber-300', border: 'border-[#FFE082] dark:border-amber-800/40', barColor: 'border-l-amber-400' },
+    LOW: { bg: 'bg-[#E8F5E9] dark:bg-emerald-950/40', color: 'text-[#1E7E34] dark:text-emerald-300', border: 'border-[#C8E6C9] dark:border-emerald-800/40', barColor: 'border-l-[#1E7E34]' },
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="flex flex-col gap-5">
       {/* Breadcrumb */}
-      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>
-        <Link href="/" style={{ color: '#6b7a94', textDecoration: 'none' }}>Dashboard</Link>
+      <nav className="flex items-center gap-1.5 text-xs text-[#5A6A80] dark:text-slate-400 font-mono">
+        <Link href="/" className="hover:text-[#0B2E59] dark:hover:text-white transition-colors">Dashboard</Link>
         <span>/</span>
-        <Link href="/projects" style={{ color: '#6b7a94', textDecoration: 'none' }}>Corridors</Link>
+        <Link href="/projects" className="hover:text-[#0B2E59] dark:hover:text-white transition-colors">Corridors</Link>
         <span>/</span>
-        <Link href={`/projects/${project.id}`} style={{ color: '#6b7a94', textDecoration: 'none' }}>{project.name}</Link>
+        <Link href={`/projects/${project.id}`} className="hover:text-[#0B2E59] dark:hover:text-white transition-colors">{project.name}</Link>
         <span>/</span>
-        <span style={{ color: '#c4cfe4' }}>Bottleneck Intelligence</span>
+        <span className="text-[#14213D] dark:text-white font-bold">Bottleneck Intelligence</span>
       </nav>
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+      <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4, background: 'rgba(244,63,94,0.15)', border: '1px solid rgba(244,63,94,0.3)', color: '#f43f5e', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-[3px] bg-[#FFEBEE] text-[#B32424] border border-[#FFCDD2] dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/40 uppercase font-bold tracking-wider">
               Critical Chain Analysis
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+          <h1 className="text-2xl font-extrabold text-[#14213D] dark:text-white m-0 font-display">
             Corridor Bottleneck Intelligence
           </h1>
-          <p style={{ fontSize: 12, color: '#4a5568', marginTop: 6 }}>
+          <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
             Graph traversal of statutory milestones, parcel dependency chains, and active legal injunctions
           </p>
         </div>
-        <Link href={`/projects/${project.id}/impact`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Activity style={{ width: 13, height: 13 }} /> Simulate Impact
+        <Link
+          href={`/projects/${project.id}/impact`}
+          className="px-3.5 py-2 rounded-[4px] text-xs font-bold bg-[#0B2E59] hover:bg-[#082242] text-white flex items-center gap-1.5 shadow-xs transition-all"
+        >
+          <Activity className="w-3.5 h-3.5" /> Simulate Impact
         </Link>
       </div>
 
       {/* Summary KPI cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
-          { label: 'Total Bottlenecks', val: `${bottlenecks.length} Detected`, color: '#6366f1', bg: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.22)', sub: 'Across surveys & legal hearings' },
-          { label: 'Zero-Float Blockers', val: `${criticalCount} Critical`, color: '#f43f5e', bg: 'rgba(244,63,94,0.1)', border: 'rgba(244,63,94,0.22)', sub: `Directly delaying completion +${project.project_delay_days || 0}d` },
-          { label: 'Float Consumption', val: `${highCount} High`, color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.22)', sub: 'Consuming activity float on corridor' },
+          { label: 'Total Bottlenecks', val: `${bottlenecks.length} Detected`, color: 'text-[#0B2E59] dark:text-sky-400', bg: 'bg-[#F8FAFC] dark:bg-[#07080F]', border: 'border-[#DCE2E8] dark:border-white/10', sub: 'Across surveys & legal hearings' },
+          { label: 'Zero-Float Blockers', val: `${criticalCount} Critical`, color: 'text-[#B32424] dark:text-rose-400', bg: 'bg-[#FFF5F5] dark:bg-rose-950/20', border: 'border-[#FFCDD2] dark:border-rose-800/40', sub: `Directly delaying completion +${project.project_delay_days || 0}d` },
+          { label: 'Float Consumption', val: `${highCount} High`, color: 'text-[#B36B00] dark:text-amber-400', bg: 'bg-[#FFF8E1] dark:bg-amber-950/20', border: 'border-[#FFE082] dark:border-amber-800/40', sub: 'Consuming activity float on corridor' },
         ].map((s) => (
-          <div key={s.label} style={{ borderRadius: 13, padding: '18px 20px', background: s.bg, border: `1px solid ${s.border}` }}>
-            <div style={{ fontSize: 10, color: '#6b7a94', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>{s.label}</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: s.color, marginTop: 4 }}>{s.val}</div>
-            <div style={{ fontSize: 11, color: '#4a5568', marginTop: 4 }}>{s.sub}</div>
+          <div key={s.label} className={`rounded-[4px] p-3.5 border ${s.bg} ${s.border} shadow-xs`}>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-mono font-semibold">{s.label}</div>
+            <div className={`font-mono text-xl font-bold ${s.color} mt-1`}>{s.val}</div>
+            <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">{s.sub}</div>
           </div>
         ))}
       </div>
 
       {/* Bottleneck Cards */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div className="flex flex-col gap-3.5">
         {bottlenecks.map((b: any, idx: number) => {
           const u = URGENCY_STYLE[b.status] || URGENCY_STYLE.MEDIUM;
           return (
-            <div key={idx} className="glass" style={{ borderRadius: 14, overflow: 'hidden', padding: 0, borderLeft: `4px solid ${u.barColor}` }}>
+            <div key={idx} className={`bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] overflow-hidden shadow-xs ${u.barColor} border-l-4`}>
               {/* Card header */}
-              <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 4, background: u.bg, color: u.color, border: `1px solid ${u.border}`, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace' }}>
+              <div className="p-3.5 border-b border-[#DCE2E8] dark:border-white/10 flex items-center justify-between flex-wrap gap-2.5">
+                <div className="flex items-center gap-2.5">
+                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded-[3px] border uppercase font-mono tracking-wider ${u.bg} ${u.color} ${u.border}`}>
                     {b.status} URGENCY
                   </span>
-                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 700, color: '#c4cfe4' }}>
+                  <span className="font-mono text-xs font-bold text-[#14213D] dark:text-white">
                     {b.entity_type}: {b.entity_id}
                   </span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#6b7a94' }}>
-                  <GitBranch style={{ width: 12, height: 12, color: '#818cf8' }} />
-                  Downstream: <strong style={{ color: '#818cf8', fontFamily: 'JetBrains Mono, monospace', marginLeft: 4 }}>{b.downstream_impact_count} CPM Activities</strong>
+                <div className="flex items-center gap-1.5 text-xs text-[#5A6A80] dark:text-slate-400">
+                  <GitBranch className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
+                  <span>Downstream:</span>
+                  <strong className="text-[#0B2E59] dark:text-sky-400 font-mono">{b.downstream_impact_count} CPM Activities</strong>
                 </div>
               </div>
 
               {/* Card body */}
-              <div style={{ padding: '16px 20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <AlertTriangle style={{ width: 10, height: 10, color: '#f43f5e' }} /> Statutory Impediments
+                  <div className="text-[10px] font-mono font-bold text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <AlertTriangle className="w-3.5 h-3.5 text-[#B32424] dark:text-rose-400" /> Statutory Impediments
                   </div>
-                  <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <ul className="list-none p-0 m-0 flex flex-col gap-1.5">
                     {b.reasons?.map((r: string, i: number) => (
-                      <li key={i} style={{ fontSize: 12, color: '#8899b4', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                        <span style={{ width: 4, height: 4, borderRadius: '50%', background: u.color, flexShrink: 0, marginTop: 6 }} />
-                        {r}
+                      <li key={i} className="text-xs text-[#14213D] dark:text-slate-300 flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#B32424] dark:bg-rose-400 flex-shrink-0 mt-1.5" />
+                        <span>{r}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
                 <div>
-                  <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <AlertOctagon style={{ width: 10, height: 10, color: '#f59e0b' }} /> Contractual Milestones Exposed
+                  <div className="text-[10px] font-mono font-bold text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <AlertOctagon className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" /> Contractual Milestones Exposed
                   </div>
                   {b.affected_milestones?.length > 0 ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    <div className="flex flex-col gap-1.5">
                       {b.affected_milestones.map((m: string, i: number) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 7 }}>
-                          <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#8899b4' }}>Milestone: {m}</span>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: '#f43f5e' }}>Penalties at Risk</span>
+                        <div key={i} className="flex items-center justify-between p-2 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[3px]">
+                          <span className="text-xs font-mono text-[#14213D] dark:text-slate-300">Milestone: {m}</span>
+                          <span className="text-[10px] font-bold text-[#B32424] dark:text-rose-400 font-mono">Penalties at Risk</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p style={{ fontSize: 11, color: '#4a5568', fontStyle: 'italic' }}>No direct contractual milestone breaches recorded.</p>
+                    <p className="text-xs text-[#5A6A80] dark:text-slate-400 italic">No direct contractual milestone breaches recorded.</p>
                   )}
                 </div>
               </div>
 
               {/* Recommendation footer */}
-              <div style={{ padding: '12px 20px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(99,102,241,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                  <Scale style={{ width: 13, height: 13, color: '#818cf8', flexShrink: 0, marginTop: 1 }} />
-                  <span style={{ fontSize: 11, color: '#6b7a94', lineHeight: 1.5 }}>
+              <div className="p-3 px-4 border-t border-[#DCE2E8] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#07080F] flex items-center justify-between gap-3 flex-wrap">
+                <div className="flex items-start gap-2 max-w-xl">
+                  <Scale className="w-4 h-4 text-[#0B2E59] dark:text-sky-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-xs text-[#5A6A80] dark:text-slate-300 leading-relaxed">
                     {b.status === 'CRITICAL'
                       ? 'Invoke RFCTLARR Section 40 urgency powers or fast-track SLAO awards to clear zero-float constraint.'
-                      : 'Instruct District Collector counsel for urgent hearing to vacate Bombay HC interim stay order.'}
+                      : 'Instruct District Collector counsel for urgent hearing to vacate court interim stay order.'}
                   </span>
                 </div>
-                <Link href={`/projects/${project.id}/impact`} style={{ padding: '7px 14px', borderRadius: 7, fontSize: 11, fontWeight: 700, background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.35)', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
-                  Model Resolution <ArrowRight style={{ width: 11, height: 11 }} />
+                <Link
+                  href={`/projects/${project.id}/impact`}
+                  className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#E6F0FA] text-[#0B2E59] border border-[#B8D5ED] dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/40 hover:bg-[#D4E6F7] inline-flex items-center gap-1.5 transition-all shadow-xs"
+                >
+                  Model Resolution <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
 
               {/* Causal chain */}
               {b.blocking_chain?.length > 0 && (
-                <div style={{ padding: '10px 20px', borderTop: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.02)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6 }}>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>Causal Chain:</span>
+                <div className="p-2.5 px-4 border-t border-[#DCE2E8]/60 dark:border-white/5 bg-[#F8FAFC]/50 dark:bg-[#07080F]/50 flex flex-wrap items-center gap-1.5">
+                  <span className="text-[10px] font-bold text-[#5A6A80] dark:text-slate-400 font-mono uppercase tracking-wider">Causal Chain:</span>
                   {b.blocking_chain.map((node: string, nIdx: number) => (
                     <React.Fragment key={nIdx}>
-                      <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#c4cfe4' }}>
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 text-[#14213D] dark:text-white shadow-xs">
                         {node}
                       </span>
                       {nIdx < b.blocking_chain.length - 1 && (
-                        <span style={{ color: '#818cf8', fontWeight: 700 }}>→</span>
+                        <span className="text-[#0B2E59] dark:text-sky-400 font-bold text-xs">&rarr;</span>
                       )}
                     </React.Fragment>
                   ))}
@@ -174,7 +181,7 @@ export default async function IntelligencePage({ params }: { params: Promise<{ i
         })}
 
         {bottlenecks.length === 0 && (
-          <div style={{ padding: '48px 24px', textAlign: 'center', borderRadius: 14, border: '1px dashed rgba(255,255,255,0.1)', color: '#4a5568', fontSize: 13 }}>
+          <div className="p-8 text-center rounded-[4px] border border-dashed border-[#CBD5E1] dark:border-white/10 text-[#5A6A80] dark:text-slate-400 text-xs bg-[#F8FAFC] dark:bg-[#07080F]">
             No critical bottlenecks currently detected along this project corridor.
           </div>
         )}

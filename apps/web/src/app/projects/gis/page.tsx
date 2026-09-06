@@ -102,71 +102,44 @@ export default function GovernmentProjectGISPage() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <div className="flex flex-col gap-5">
       {/* Official Spatial Map Banner */}
-      <div style={{
-        padding: '10px 16px',
-        borderRadius: 10,
-        background: 'rgba(99,102,241,0.08)',
-        border: '1px solid rgba(99,102,241,0.25)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 10
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{
-            fontSize: 10,
-            fontFamily: 'JetBrains Mono, monospace',
-            fontWeight: 800,
-            padding: '2px 8px',
-            borderRadius: 4,
-            background: '#6366f1',
-            color: '#fff',
-            textTransform: 'uppercase'
-          }}>
+      <div className="p-3 rounded-[4px] bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 flex items-center justify-between flex-wrap gap-2 shadow-xs transition-colors">
+        <div className="flex items-center gap-2.5">
+          <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-[3px] bg-[#0B2E59] text-white uppercase tracking-wider">
             STRATEGIC CORRIDORS
           </span>
-          <span style={{ fontSize: 12, color: '#c7d2fe', fontWeight: 600 }}>
+          <span className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF]">
             National Infrastructure Spatial Alignment Map &bull; Linear Corridors &amp; Macro-Bottlenecks
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-[#5A6A80] dark:text-slate-400 font-mono">
             Domain: National Project Planning
           </span>
           <Link
             href="/landowner-gis"
-            style={{
-              fontSize: 11,
-              color: '#38bdf8',
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              fontWeight: 600
-            }}
+            className="text-xs font-bold text-[#0B2E59] dark:text-sky-400 hover:underline flex items-center gap-1"
           >
             <span>Switch to Land Parcel Map</span>
-            <ArrowRight style={{ width: 12, height: 12 }} />
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>
 
       {/* Header & Sector Filter Bar */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+          <h1 className="text-2xl font-extrabold text-[#14213D] dark:text-[#F0F4FF] m-0 font-display">
             Project Spatial Map
           </h1>
-          <p style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
+          <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
             Visualizing macro infrastructure centerlines, planned RoW acquisitions, and projected cadastral pinch-points
           </p>
         </div>
 
         {/* Sector Filter Chips */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+        <div className="flex flex-wrap gap-1.5">
           {sectors.map(sec => {
             const isSelected = selectedSector === sec;
             return (
@@ -174,18 +147,11 @@ export default function GovernmentProjectGISPage() {
                 key={sec}
                 type="button"
                 onClick={() => setSelectedSector(sec)}
-                style={{
-                  fontSize: 11,
-                  fontFamily: 'JetBrains Mono, monospace',
-                  padding: '5px 10px',
-                  borderRadius: 6,
-                  border: isSelected ? '1px solid #6366f1' : '1px solid rgba(255,255,255,0.08)',
-                  background: isSelected ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.02)',
-                  color: isSelected ? '#a5b4fc' : '#94a3b8',
-                  cursor: 'pointer',
-                  fontWeight: isSelected ? 700 : 500,
-                  transition: 'all 0.15s ease'
-                }}
+                className={`text-xs font-mono px-3 py-1 rounded-[3px] border transition-all cursor-pointer font-bold ${
+                  isSelected
+                    ? "bg-[#0B2E59] text-white border-[#0B2E59] shadow-xs"
+                    : "bg-white dark:bg-[#0D121F] text-[#5A6A80] dark:text-slate-300 border-[#DCE2E8] dark:border-white/10 hover:border-[#CBD5E1]"
+                }`}
               >
                 {sec}
               </button>
@@ -195,60 +161,48 @@ export default function GovernmentProjectGISPage() {
       </div>
 
       {/* Main Two-Column GIS Interface */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 360px) 1fr', gap: 18, alignItems: 'start' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-4 items-start">
         
         {/* Left Side: Corridor Explorer & Inspector */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="flex flex-col gap-3.5">
           
           {/* Corridor Cards List */}
-          <div style={{
-            borderRadius: 12,
-            border: '1px solid rgba(255,255,255,0.08)',
-            background: 'rgba(15,23,42,0.6)',
-            padding: 14,
-            maxHeight: 280,
-            overflowY: 'auto'
-          }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', marginBottom: 10 }}>
+          <div className="rounded-[4px] border border-[#DCE2E8] dark:border-white/10 bg-white dark:bg-[#0D121F] p-3 shadow-xs max-h-[280px] overflow-y-auto space-y-2">
+            <div className="text-[10px] font-bold text-[#5A6A80] dark:text-slate-400 uppercase font-mono tracking-wider mb-2">
               National Corridors ({filteredProjects.length})
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div className="flex flex-col gap-2">
               {filteredProjects.map(p => {
                 const isSelected = selectedProject?.id === p.id;
                 return (
                   <div
                     key={p.id}
                     onClick={() => handleSelectProject(p)}
-                    style={{
-                      padding: '10px 12px',
-                      borderRadius: 8,
-                      border: isSelected ? '1px solid #6366f1' : '1px solid rgba(255,255,255,0.06)',
-                      background: isSelected ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.02)',
-                      cursor: 'pointer',
-                      transition: 'background 0.15s'
-                    }}
+                    className={`p-2.5 rounded-[3px] border cursor-pointer transition-all ${
+                      isSelected
+                        ? "bg-[#F0F4F9] dark:bg-sky-950/30 border-[#0B2E59] dark:border-sky-600 shadow-xs"
+                        : "bg-[#F8FAFC] dark:bg-[#07080F] border-[#DCE2E8] dark:border-white/10 hover:border-[#CBD5E1]"
+                    }`}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                      <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#818cf8', fontWeight: 700 }}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] font-mono font-bold text-[#0B2E59] dark:text-sky-400">
                         {p.code}
                       </span>
-                      <span style={{
-                        fontSize: 9,
-                        fontFamily: 'JetBrains Mono, monospace',
-                        fontWeight: 700,
-                        padding: '1px 6px',
-                        borderRadius: 4,
-                        background: p.status === 'DELAYED' ? 'rgba(245,158,11,0.2)' : p.status === 'CRITICAL_BLOCKER' ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)',
-                        color: p.status === 'DELAYED' ? '#f59e0b' : p.status === 'CRITICAL_BLOCKER' ? '#ef4444' : '#10b981'
-                      }}>
+                      <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-[3px] border ${
+                        p.status === 'DELAYED'
+                          ? 'bg-[#FFF8E1] text-[#B36B00] border-[#FFE082] dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800'
+                          : p.status === 'CRITICAL_BLOCKER'
+                          ? 'bg-[#FFEBEE] text-[#B32424] border-[#FFCDD2] dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800'
+                          : 'bg-[#E8F5E9] text-[#1E7E34] border-[#C8E6C9] dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800'
+                      }`}>
                         {p.status.replace('_', ' ')}
                       </span>
                     </div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: '#e2e8f0', lineHeight: 1.2 }}>
+                    <div className="text-xs font-bold text-[#14213D] dark:text-white leading-snug">
                       {p.name}
                     </div>
-                    <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>
-                      {p.state} &middot; {p.acquisition_progress_pct}% Acquired
+                    <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">
+                      {p.state} &middot; <span className="font-semibold text-[#1E7E34] dark:text-emerald-400">{p.acquisition_progress_pct}%</span> Acquired
                     </div>
                   </div>
                 );
@@ -258,91 +212,70 @@ export default function GovernmentProjectGISPage() {
 
           {/* Detailed Selected Corridor Inspector */}
           {selectedProject && (
-            <div style={{
-              borderRadius: 12,
-              border: '1px solid rgba(99,102,241,0.3)',
-              background: 'rgba(99,102,241,0.04)',
-              padding: 16,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 12
-            }}>
+            <div className="rounded-[4px] border border-[#DCE2E8] dark:border-white/10 bg-white dark:bg-[#0D121F] p-4 shadow-xs flex flex-col gap-3">
               <div>
-                <span style={{
-                  fontSize: 9,
-                  fontFamily: 'JetBrains Mono, monospace',
-                  fontWeight: 800,
-                  padding: '2px 6px',
-                  borderRadius: 4,
-                  background: 'rgba(99,102,241,0.2)',
-                  color: '#a5b4fc',
-                  textTransform: 'uppercase'
-                }}>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40 uppercase">
                   {selectedProject.sector}
                 </span>
-                <h3 style={{ fontSize: 15, fontWeight: 800, color: '#e2e8f0', margin: '6px 0 2px' }}>
+                <h3 className="text-sm font-bold text-[#14213D] dark:text-white mt-1.5 mb-0.5">
                   {selectedProject.name}
                 </h3>
-                <div style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+                <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 font-mono">
                   Nodal: {selectedProject.department}
                 </div>
               </div>
 
               {/* Progress & Corridor Metrics */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                <div style={{ padding: '8px 10px', borderRadius: 8, background: 'rgba(0,0,0,0.3)' }}>
-                  <div style={{ fontSize: 10, color: '#64748b' }}>Planned Acquisition</div>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: '#38bdf8', fontFamily: 'JetBrains Mono, monospace' }}>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="p-2.5 rounded-[3px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                  <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-semibold">Planned Acquisition</div>
+                  <div className="text-sm font-bold text-[#0B2E59] dark:text-sky-400 font-mono mt-0.5">
                     {selectedProject.planned_acquisition_ha} Ha
                   </div>
                 </div>
-                <div style={{ padding: '8px 10px', borderRadius: 8, background: 'rgba(0,0,0,0.3)' }}>
-                  <div style={{ fontSize: 10, color: '#64748b' }}>Corridor Length</div>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: '#818cf8', fontFamily: 'JetBrains Mono, monospace' }}>
+                <div className="p-2.5 rounded-[3px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                  <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-semibold">Corridor Length</div>
+                  <div className="text-sm font-bold text-[#14213D] dark:text-white font-mono mt-0.5">
                     {selectedProject.total_length_km || '—'} km
                   </div>
                 </div>
               </div>
 
               {/* Macro Bottlenecks Alert */}
-              <div style={{
-                padding: '10px 12px',
-                borderRadius: 8,
-                background: selectedProject.statistics.unresolved_bottlenecks > 0 ? 'rgba(245,158,11,0.08)' : 'rgba(16,185,129,0.08)',
-                border: selectedProject.statistics.unresolved_bottlenecks > 0 ? '1px solid rgba(245,158,11,0.25)' : '1px solid rgba(16,185,129,0.25)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8
-              }}>
-                <AlertTriangle style={{ width: 16, height: 16, color: selectedProject.statistics.unresolved_bottlenecks > 0 ? '#f59e0b' : '#10b981', flexShrink: 0 }} />
+              <div className={`p-2.5 rounded-[3px] border flex items-center gap-2.5 ${
+                selectedProject.statistics.unresolved_bottlenecks > 0
+                  ? 'bg-[#FFF8E1] dark:bg-amber-950/30 border-[#FFE082] dark:border-amber-800/40 text-[#B36B00] dark:text-amber-300'
+                  : 'bg-[#E8F5E9] dark:bg-emerald-950/30 border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300'
+              }`}>
+                <AlertTriangle className={`w-4 h-4 flex-shrink-0 ${
+                  selectedProject.statistics.unresolved_bottlenecks > 0 ? 'text-[#B36B00] dark:text-amber-400' : 'text-[#1E7E34] dark:text-emerald-400'
+                }`} />
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: selectedProject.statistics.unresolved_bottlenecks > 0 ? '#fcd34d' : '#6ee7b7' }}>
+                  <div className="text-xs font-bold">
                     {selectedProject.statistics.unresolved_bottlenecks} Projected Alignment Bottlenecks
                   </div>
-                  <div style={{ fontSize: 10, color: '#94a3b8' }}>
-                    {selectedProject.statistics.contiguous_clusters} contiguous land dispute clusters identified
+                  <div className="text-[11px] opacity-85">
+                    {selectedProject.statistics.contiguous_clusters} contiguous dispute clusters identified
                   </div>
                 </div>
               </div>
 
               {/* Statutory Milestones */}
               <div>
-                <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', marginBottom: 6 }}>
+                <div className="text-[10px] font-bold text-[#5A6A80] dark:text-slate-400 uppercase font-mono tracking-wider mb-1.5">
                   Statutory RoW Milestones
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div className="flex flex-col gap-1.5">
                   {selectedProject.milestones.map((m, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 11 }}>
-                      <span style={{ color: '#cbd5e1' }}>{m.name}</span>
-                      <span style={{
-                        fontSize: 9,
-                        fontFamily: 'JetBrains Mono, monospace',
-                        fontWeight: 700,
-                        padding: '1px 5px',
-                        borderRadius: 3,
-                        background: m.status === 'COMPLETED' ? 'rgba(16,185,129,0.2)' : m.status === 'IN_PROGRESS' ? 'rgba(56,189,248,0.2)' : 'rgba(100,116,139,0.2)',
-                        color: m.status === 'COMPLETED' ? '#34d399' : m.status === 'IN_PROGRESS' ? '#38bdf8' : '#94a3b8'
-                      }}>
+                    <div key={idx} className="flex items-center justify-between text-xs py-0.5 border-b border-[#DCE2E8]/60 dark:border-white/5 last:border-0">
+                      <span className="text-[#14213D] dark:text-slate-300">{m.name}</span>
+                      <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-[3px] border ${
+                        m.status === 'COMPLETED'
+                          ? 'bg-[#E8F5E9] text-[#1E7E34] border-[#C8E6C9] dark:bg-emerald-950/40 dark:text-emerald-300'
+                          : m.status === 'IN_PROGRESS'
+                          ? 'bg-[#E6F0FA] text-[#0B2E59] border-[#B8D5ED] dark:bg-sky-950/40 dark:text-sky-300'
+                          : 'bg-[#F1F4F7] text-[#5A6A80] border-[#CBD5E1] dark:bg-slate-800 dark:text-slate-400'
+                      }`}>
                         {m.status}
                       </span>
                     </div>
@@ -350,21 +283,13 @@ export default function GovernmentProjectGISPage() {
                 </div>
               </div>
 
-              <div style={{ paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="pt-2 border-t border-[#DCE2E8] dark:border-white/10">
                 <Link
-                  href="/projects"
-                  style={{
-                    fontSize: 11,
-                    color: '#818cf8',
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    fontWeight: 600
-                  }}
+                  href={`/projects/${selectedProject.id}`}
+                  className="text-xs font-bold text-[#0B2E59] dark:text-sky-400 hover:underline flex items-center gap-1.5"
                 >
-                  <span>View All Project Specifications in Directory</span>
-                  <ArrowRight style={{ width: 12, height: 12 }} />
+                  <span>View Project Dossier &amp; Intelligence</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
@@ -372,36 +297,13 @@ export default function GovernmentProjectGISPage() {
         </div>
 
         {/* Right Side: Large Interactive Map Canvas */}
-        <div style={{
-          height: 560,
-          borderRadius: 14,
-          overflow: 'hidden',
-          border: '1px solid rgba(255,255,255,0.1)',
-          position: 'relative',
-          background: '#0f172a'
-        }}>
+        <div className="h-[580px] rounded-[4px] overflow-hidden border border-[#DCE2E8] dark:border-white/10 relative bg-[#EBF0F5] dark:bg-[#07080F] shadow-xs">
           {/* Top Floating Badge */}
-          <div style={{
-            position: 'absolute',
-            top: 12,
-            left: 12,
-            zIndex: 10,
-            background: 'rgba(15,23,42,0.85)',
-            backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255,255,255,0.12)',
-            padding: '6px 12px',
-            borderRadius: 8,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            color: '#e2e8f0',
-            fontSize: 11,
-            fontWeight: 600
-          }}>
-            <Navigation style={{ width: 14, height: 14, color: '#818cf8' }} />
+          <div className="absolute top-3 left-3 z-10 bg-white/95 dark:bg-[#0D121F]/95 backdrop-blur-xs border border-[#DCE2E8] dark:border-white/10 px-3 py-1.5 rounded-[4px] flex items-center gap-2 text-xs font-bold text-[#14213D] dark:text-white shadow-xs">
+            <Navigation className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
             <span>National Infrastructure Alignment Corridors</span>
-            <span style={{ color: '#64748b' }}>|</span>
-            <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#818cf8', fontSize: 10 }}>
+            <span className="text-[#5A6A80] dark:text-slate-500">|</span>
+            <span className="font-mono text-[#0B2E59] dark:text-sky-400 text-[10px]">
               Active Alignments
             </span>
           </div>
@@ -420,16 +322,16 @@ export default function GovernmentProjectGISPage() {
                   id="corridors-casing"
                   type="line"
                   paint={{
-                    'line-color': '#000',
+                    'line-color': '#0B2E59',
                     'line-width': 5,
-                    'line-opacity': 0.4
+                    'line-opacity': 0.3
                   }}
                 />
                 <Layer
                   id="corridors-line"
                   type="line"
                   paint={{
-                    'line-color': '#6366f1',
+                    'line-color': '#0B2E59',
                     'line-width': 3,
                     'line-dasharray': [2, 1]
                   }}
@@ -452,40 +354,19 @@ export default function GovernmentProjectGISPage() {
                   }}
                 >
                   <div
-                    style={{
-                      cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      position: 'relative'
-                    }}
+                    className="cursor-pointer flex flex-col items-center relative"
                     onMouseEnter={() => setHoveredProject(p)}
                     onMouseLeave={() => setHoveredProject(null)}
                   >
-                    <div style={{
-                      padding: 6,
-                      borderRadius: '50%',
-                      background: isSelected ? '#f59e0b' : '#6366f1',
-                      color: '#fff',
-                      boxShadow: isSelected ? '0 0 16px rgba(245,158,11,0.6)' : '0 0 10px rgba(99,102,241,0.5)',
-                      transform: isSelected ? 'scale(1.2)' : 'scale(1)',
-                      transition: 'transform 0.15s ease'
-                    }}>
-                      <Building2 style={{ width: 14, height: 14 }} />
+                    <div className={`p-1.5 rounded-full text-white transition-transform ${
+                      isSelected 
+                        ? 'bg-[#FF9933] shadow-md ring-2 ring-white scale-110' 
+                        : 'bg-[#0B2E59] shadow-xs'
+                    }`}>
+                      <Building2 className="w-3.5 h-3.5" />
                     </div>
 
-                    <div style={{
-                      marginTop: 3,
-                      padding: '2px 6px',
-                      borderRadius: 4,
-                      background: 'rgba(15,23,42,0.9)',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      color: '#fff',
-                      fontSize: 9,
-                      fontWeight: 700,
-                      fontFamily: 'JetBrains Mono, monospace',
-                      whiteSpace: 'nowrap'
-                    }}>
+                    <div className="mt-1 px-1.5 py-0.5 rounded-[3px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 text-[#14213D] dark:text-white text-[9px] font-bold font-mono whitespace-nowrap shadow-xs">
                       {p.code}
                     </div>
                   </div>
@@ -495,34 +376,20 @@ export default function GovernmentProjectGISPage() {
           </Map>
 
           {/* Bottom Right Map Legend */}
-          <div style={{
-            position: 'absolute',
-            bottom: 12,
-            right: 12,
-            background: 'rgba(15,23,42,0.85)',
-            backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            padding: '10px 14px',
-            borderRadius: 8,
-            fontSize: 10,
-            color: '#94a3b8',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 6
-          }}>
-            <div style={{ fontWeight: 700, color: '#e2e8f0', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>
+          <div className="absolute bottom-3 right-3 bg-white/95 dark:bg-[#0D121F]/95 backdrop-blur-xs border border-[#DCE2E8] dark:border-white/10 p-3 rounded-[4px] text-[10px] text-[#5A6A80] dark:text-slate-300 flex flex-col gap-1.5 shadow-xs">
+            <div className="font-bold text-[#14213D] dark:text-white uppercase font-mono tracking-wider">
               Project GIS Legend
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 16, height: 3, background: '#6366f1', borderRadius: 2 }} />
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-1 bg-[#0B2E59] rounded-[1px]" />
               <span>Corridor Right-of-Way Alignment</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6366f1' }} />
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#0B2E59]" />
               <span>Project Nodal Headquarters</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#f59e0b' }} />
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#FF9933]" />
               <span>Selected Project Focus</span>
             </div>
           </div>

@@ -257,78 +257,55 @@ export function LandownerGrievanceReviewCard({
   };
 
   return (
-    <div className="glass" style={{ borderRadius: 14, padding: "20px 24px", marginBottom: 24 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+    <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 mb-6 shadow-sm transition-colors">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div>
-          <div style={{ fontSize: 11, fontFamily: "JetBrains Mono, monospace", color: "#64748b", letterSpacing: "0.07em", textTransform: "uppercase" }}>
+          <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 tracking-wider uppercase font-semibold">
             CALA Command Operations &bull; Authoritative Records
           </div>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: "#c4cfe4", marginTop: 2 }}>
+          <h2 className="text-sm font-bold text-[#14213D] dark:text-[#F0F4FF] mt-0.5">
             Admin Implementation Queue &amp; Redressal Directives
           </h2>
         </div>
         <button
           onClick={loadComplaints}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#6b7a94",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: 4,
-            fontSize: 11,
-            fontFamily: "JetBrains Mono, monospace"
-          }}
+          className="bg-transparent border-0 text-[#0B5FA5] dark:text-sky-400 hover:underline cursor-pointer flex items-center gap-1.5 text-xs font-mono font-semibold"
         >
-          <RefreshCw style={{ width: 12, height: 12, animation: loading ? "spin 1s linear infinite" : "none" }} />
+          <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin" : ""}`} />
           <span>Refresh</span>
         </button>
       </div>
 
       {feedback && (
-        <div style={{
-          padding: "10px 14px",
-          borderRadius: 8,
-          marginBottom: 14,
-          fontSize: 12,
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          background: feedback.type === "success" ? "rgba(16,185,129,0.12)" : "rgba(239,68,68,0.12)",
-          border: `1px solid ${feedback.type === "success" ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)"}`,
-          color: feedback.type === "success" ? "#10b981" : "#ef4444"
-        }}>
-          {feedback.type === "success" ? <CheckCircle2 style={{ width: 14, height: 14 }} /> : <AlertTriangle style={{ width: 14, height: 14 }} />}
+        <div className={`p-2.5 rounded-[3px] mb-3 text-xs flex items-center gap-2 ${
+          feedback.type === "success"
+            ? "bg-[#EBF7EE] dark:bg-emerald-950/40 border border-[#BEE3C8] dark:border-emerald-800 text-[#1E7E34] dark:text-emerald-300"
+            : "bg-[#FDF0F0] dark:bg-rose-950/40 border border-[#F8C8C8] dark:border-rose-800 text-[#B32424] dark:text-rose-300"
+        }`}>
+          {feedback.type === "success" ? <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" /> : <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />}
           <span>{feedback.message}</span>
         </div>
       )}
 
       {loading ? (
-        <div style={{ padding: "30px 0", textAlign: "center", color: "#6b7a94", fontSize: 12 }}>
-          <RefreshCw style={{ width: 18, height: 18, margin: "0 auto 8px", animation: "spin 1s linear infinite", color: "#10b981" }} />
+        <div className="py-8 text-center text-[#64748B] dark:text-slate-400 text-xs space-y-2">
+          <RefreshCw className="w-4 h-4 mx-auto animate-spin text-[#0B5FA5] dark:text-sky-400" />
           <span>Loading verified complaints queue...</span>
         </div>
       ) : verifiedComplaints.length === 0 ? (
         /* Empty State */
-        <div style={{
-          padding: "36px 16px",
-          borderRadius: 12,
-          background: "rgba(255,255,255,0.015)",
-          border: "1px dashed rgba(255,255,255,0.1)",
-          textAlign: "center"
-        }}>
-          <CheckCircle2 style={{ width: 32, height: 32, color: "#10b981", margin: "0 auto 10px" }} />
-          <p style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0", margin: "0 0 6px" }}>
+        <div className="p-8 rounded-[4px] bg-[#F8FAFC] dark:bg-[#0B1220] border border-dashed border-[#CBD5E1] dark:border-slate-800 text-center">
+          <CheckCircle2 className="w-8 h-8 text-[#1E7E34] dark:text-emerald-400 mx-auto mb-2" />
+          <p className="text-sm font-bold text-[#14213D] dark:text-[#F0F4FF] mb-1">
             No landowner grievances available.
           </p>
-          <p style={{ fontSize: 12, color: "#64748b", margin: 0, maxWidth: 460, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
+          <p className="text-xs text-[#64748B] dark:text-slate-400 m-0 max-w-md mx-auto leading-relaxed">
             Complaints submitted by landowners and verified by the Field Officer will appear here for administrative review, statutory What-If simulation, and implementation orders.
           </p>
         </div>
       ) : (
         /* Verified Implementation Queue */
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div className="space-y-3.5">
           {verifiedComplaints.map((cmp) => {
             const status = cmp.status || "Verified by Field Officer";
             const isVerifiedPending = status === "Verified by Field Officer" || status === "Field Verified";
@@ -346,97 +323,80 @@ export function LandownerGrievanceReviewCard({
               <div
                 key={cmp.id}
                 id={`complaint-card-${cmp.id}`}
-                style={{
-                  padding: 18,
-                  borderRadius: 12,
-                  background: isCompleted ? "rgba(16,185,129,0.03)" : isInitiated ? "rgba(99,102,241,0.04)" : "rgba(245,158,11,0.04)",
-                  border: isSelected 
-                    ? "2px solid #f59e0b" 
-                    : isCompleted 
-                      ? "1px solid rgba(16,185,129,0.25)" 
-                      : isInitiated 
-                        ? "1px solid rgba(99,102,241,0.3)" 
-                        : "1px solid rgba(245,158,11,0.3)",
-                  transition: "all 0.2s ease"
-                }}
+                className={`p-4 rounded-[4px] transition-all border ${
+                  isSelected
+                    ? "border-[#0B5FA5] ring-2 ring-[#0B5FA5]/20 bg-white dark:bg-[#0B1220]"
+                    : "bg-[#F8FAFC] dark:bg-[#0B1220] border-[#DCE2E8] dark:border-white/10"
+                }`}
               >
                 {/* Status Bar */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{
-                      padding: "3px 8px",
-                      borderRadius: 6,
-                      fontSize: 10,
-                      fontWeight: 700,
-                      fontFamily: "JetBrains Mono, monospace",
-                      background: isCompleted ? "rgba(16,185,129,0.15)" : isInitiated ? "rgba(99,102,241,0.15)" : "rgba(245,158,11,0.15)",
-                      color: isCompleted ? "#10b981" : isInitiated ? "#818cf8" : "#f59e0b",
-                      border: `1px solid ${isCompleted ? "rgba(16,185,129,0.3)" : isInitiated ? "rgba(99,102,241,0.3)" : "rgba(245,158,11,0.3)"}`
-                    }}>
+                <div className="flex items-center justify-between flex-wrap gap-2 mb-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] border ${
+                      isCompleted
+                        ? "bg-[#EBF7EE] text-[#1E7E34] border-[#BEE3C8] dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
+                        : isInitiated
+                        ? "bg-[#E6F0FA] text-[#0B5FA5] border-[#BDD7EE] dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800"
+                        : "bg-[#FFF8E6] text-[#B36B00] border-[#FFE29A] dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800"
+                    }`}>
                       {status.toUpperCase()}
                     </span>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>
+                    <span className="text-sm font-bold text-[#14213D] dark:text-[#F0F4FF]">
                       Case #{cmp.complaint_id || cmp.id}
                     </span>
                   </div>
 
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "#64748b", fontFamily: "JetBrains Mono, monospace" }}>
-                    <Clock style={{ width: 12, height: 12 }} />
+                  <div className="flex items-center gap-1.5 text-xs text-[#64748B] dark:text-slate-400 font-mono">
+                    <Clock className="w-3.5 h-3.5" />
                     <span suppressHydrationWarning>{cmp.submitted_at ? new Date(cmp.submitted_at).toLocaleDateString() : "Verified"}</span>
                   </div>
                 </div>
 
                 {/* Primary Demarcation Summary Grid */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 14 }}>
-                  <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", fontFamily: "JetBrains Mono, monospace" }}>14-Digit Parcel ID</div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#818cf8", fontFamily: "JetBrains Mono, monospace", marginTop: 2 }}>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3">
+                  <div className="p-2.5 rounded-[3px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                    <div className="text-[9px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">14-Digit Parcel ID</div>
+                    <div className="text-xs font-bold text-[#0B5FA5] dark:text-sky-400 font-mono mt-0.5">
                       {parcelId}
                     </div>
                   </div>
 
-                  <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", fontFamily: "JetBrains Mono, monospace" }}>Verified Landowner</div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0", marginTop: 2 }}>
+                  <div className="p-2.5 rounded-[3px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                    <div className="text-[9px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Verified Landowner</div>
+                    <div className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] mt-0.5">
                       {cmp.owner_name || "Landowner"}
                     </div>
                   </div>
 
-                  <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", fontFamily: "JetBrains Mono, monospace" }}>Cadastral Demarcation</div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#10b981", fontFamily: "JetBrains Mono, monospace", marginTop: 2 }}>
+                  <div className="p-2.5 rounded-[3px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                    <div className="text-[9px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Cadastral Demarcation</div>
+                    <div className="text-xs font-bold text-[#1E7E34] dark:text-emerald-400 font-mono mt-0.5">
                       {areaAcres} Acres ({Number(areaSqm).toLocaleString()} m²)
                     </div>
                   </div>
 
-                  <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", fontFamily: "JetBrains Mono, monospace" }}>Operational Sector</div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0", marginTop: 2 }}>
+                  <div className="p-2.5 rounded-[3px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                    <div className="text-[9px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Operational Sector</div>
+                    <div className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] mt-0.5">
                       {cmp.contact_village || cmp.village || "Corridor Sector"}
                     </div>
                   </div>
                 </div>
 
                 {/* Grievance Description */}
-                <div style={{ marginBottom: 12, fontSize: 12, color: "#94a3b8", background: "rgba(0,0,0,0.2)", padding: "10px 12px", borderRadius: 8 }}>
-                  <strong style={{ color: "#e2e8f0" }}>Grievance Claim: </strong>
+                <div className="mb-3 text-xs text-[#333333] dark:text-slate-300 bg-white dark:bg-[#07080F] p-3 rounded-[3px] border border-[#DCE2E8] dark:border-white/10">
+                  <strong className="text-[#14213D] dark:text-white">Grievance Claim: </strong>
                   {cmp.description || cmp.complaint_type || "Boundary demarcation adjustment claim against cadastral survey."}
                 </div>
 
                 {/* Field Officer Ground Verification Banner */}
                 {cmp.field_verification && (
-                  <div style={{
-                    padding: "10px 14px",
-                    borderRadius: 8,
-                    marginBottom: 14,
-                    background: "rgba(99,102,241,0.08)",
-                    border: "1px solid rgba(99,102,241,0.25)"
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#818cf8", marginBottom: 4 }}>
-                      <ShieldCheck style={{ width: 14, height: 14 }} />
+                  <div className="p-3 rounded-[3px] mb-3 bg-[#E6F0FA] dark:bg-sky-950/40 border border-[#BDD7EE] dark:border-sky-800">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-[#0B5FA5] dark:text-sky-300 mb-1">
+                      <ShieldCheck className="w-3.5 h-3.5" />
                       <span>FIELD VERIFICATION ACCORD &bull; Verified by {cmp.field_verification.officer_name || "Ramesh Patel (Patwari)"}</span>
                     </div>
-                    <div style={{ fontSize: 12, color: "#c4cfe4" }}>
+                    <div className="text-xs text-[#333333] dark:text-slate-200 italic">
                       &ldquo;{cmp.field_verification.notes}&rdquo;
                     </div>
                   </div>
@@ -444,70 +404,35 @@ export function LandownerGrievanceReviewCard({
 
                 {/* Attached What-If Simulation Badge */}
                 {(cmp.what_if_simulation || cmp.simulation_record) && (
-                  <div style={{
-                    padding: "8px 12px",
-                    borderRadius: 8,
-                    marginBottom: 12,
-                    background: "rgba(99,102,241,0.08)",
-                    border: "1px solid rgba(99,102,241,0.25)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    gap: 8
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#818cf8" }}>
-                      <Sparkles style={{ width: 13, height: 13 }} />
+                  <div className="p-2.5 rounded-[3px] mb-3 bg-[#FFF8E6] dark:bg-amber-950/40 border border-[#FFE29A] dark:border-amber-800 flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-[#B36B00] dark:text-amber-300">
+                      <Sparkles className="w-3.5 h-3.5" />
                       <span>SIMULATION ATTACHED: {(cmp.what_if_simulation || cmp.simulation_record).simulation_id || "SIM-RFCTLARR"}</span>
                     </div>
-                    <div style={{ fontSize: 11, color: "#cbd5e1", fontFamily: "JetBrains Mono, monospace" }}>
+                    <div className="text-xs text-[#14213D] dark:text-slate-200 font-mono font-bold">
                       Statutory Award: ₹{Number((cmp.what_if_simulation || cmp.simulation_record).simulated?.award_breakdown?.total_statutory_award || 4850000).toLocaleString()}
                     </div>
                   </div>
                 )}
 
                 {/* Administrative Actions Strip */}
-                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                <div className="flex items-center gap-2 flex-wrap pt-2.5 border-t border-[#DCE2E8] dark:border-white/10">
                   
                   {/* Action 1: What-If Simulation */}
                   <button
                     onClick={() => setSimulatingComplaint(cmp)}
-                    style={{
-                      padding: "7px 14px",
-                      borderRadius: 8,
-                      fontSize: 11,
-                      fontWeight: 700,
-                      background: "rgba(99,102,241,0.15)",
-                      border: "1px solid rgba(99,102,241,0.4)",
-                      color: "#818cf8",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6
-                    }}
+                    className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/50 border border-[#BDD7EE] dark:border-sky-800 text-[#0B5FA5] dark:text-sky-300 hover:bg-[#D4E6F8] dark:hover:bg-sky-900/50 transition-colors flex items-center gap-1.5"
                   >
-                    <Sparkles style={{ width: 13, height: 13, color: "#818cf8" }} />
+                    <Sparkles className="w-3.5 h-3.5 text-[#0B5FA5] dark:text-sky-300" />
                     <span>Run What-If Simulation</span>
                   </button>
 
                   {/* Action 2: Detailed What-If Case Report & PDF */}
                   <button
                     onClick={() => setSelectedReportComplaint(cmp)}
-                    style={{
-                      padding: "7px 14px",
-                      borderRadius: 8,
-                      fontSize: 11,
-                      fontWeight: 700,
-                      background: "rgba(16,185,129,0.12)",
-                      border: "1px solid rgba(16,185,129,0.35)",
-                      color: "#10b981",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6
-                    }}
+                    className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#EBF7EE] dark:bg-emerald-950/50 border border-[#BEE3C8] dark:border-emerald-800 text-[#1E7E34] dark:text-emerald-300 hover:bg-[#DCF2E2] dark:hover:bg-emerald-900/50 transition-colors flex items-center gap-1.5"
                   >
-                    <FileText style={{ width: 13, height: 13, color: "#10b981" }} />
+                    <FileText className="w-3.5 h-3.5 text-[#1E7E34] dark:text-emerald-300" />
                     <span>Detailed Case Report &amp; PDF</span>
                   </button>
 
@@ -519,21 +444,9 @@ export function LandownerGrievanceReviewCard({
                         setInitiatingId(null);
                         setCompletingId(null);
                       }}
-                      style={{
-                        padding: "7px 14px",
-                        borderRadius: 8,
-                        fontSize: 11,
-                        fontWeight: 700,
-                        background: "linear-gradient(135deg, #059669 0%, #0d9488 100%)",
-                        border: "none",
-                        color: "#fff",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6
-                      }}
+                      className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#0B2E59] hover:bg-[#123C6B] text-white transition-colors flex items-center gap-1.5 shadow-sm"
                     >
-                      <Scale style={{ width: 13, height: 13 }} />
+                      <Scale className="w-3.5 h-3.5" />
                       <span>Resolve Matter</span>
                     </button>
                   )}
@@ -546,21 +459,9 @@ export function LandownerGrievanceReviewCard({
                         setCompletingId(null);
                         setResolvingId(null);
                       }}
-                      style={{
-                        padding: "7px 14px",
-                        borderRadius: 8,
-                        fontSize: 11,
-                        fontWeight: 700,
-                        background: "#6366f1",
-                        border: "none",
-                        color: "#fff",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6
-                      }}
+                      className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#0B5FA5] hover:bg-[#094d87] text-white transition-colors flex items-center gap-1.5 shadow-sm"
                     >
-                      <Briefcase style={{ width: 13, height: 13 }} />
+                      <Briefcase className="w-3.5 h-3.5" />
                       <span>Initiate Implementation</span>
                     </button>
                   )}
@@ -576,29 +477,17 @@ export function LandownerGrievanceReviewCard({
                         setStatutoryAssessed(Math.round(Number(areaAcres) * 1850000 * 2.24));
                         setStatutoryPaid(Math.round(Number(areaAcres) * 1850000 * 2.24));
                       }}
-                      style={{
-                        padding: "7px 14px",
-                        borderRadius: 8,
-                        fontSize: 11,
-                        fontWeight: 700,
-                        background: "#10b981",
-                        border: "none",
-                        color: "#fff",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6
-                      }}
+                      className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#1E7E34] hover:bg-[#18662a] text-white transition-colors flex items-center gap-1.5 shadow-sm"
                     >
-                      <CheckCircle2 style={{ width: 13, height: 13 }} />
+                      <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>Complete Implementation</span>
                     </button>
                   )}
 
                   {/* Completed Badge */}
                   {isCompleted && (
-                    <span style={{ fontSize: 11, color: "#10b981", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
-                      <CheckCircle2 style={{ width: 13, height: 13 }} />
+                    <span className="text-xs text-[#1E7E34] dark:text-emerald-400 font-bold flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
                       Statutory resolution completed &amp; recorded.
                     </span>
                   )}
@@ -606,8 +495,8 @@ export function LandownerGrievanceReviewCard({
 
                 {/* Initiate Implementation Drawer */}
                 {initiatingId === cmp.id && (
-                  <div style={{ marginTop: 12, padding: 14, borderRadius: 10, background: "rgba(0,0,0,0.4)", border: "1px solid rgba(99,102,241,0.4)" }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#818cf8", marginBottom: 8 }}>
+                  <div className="mt-3 p-3.5 rounded-[4px] bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 space-y-2.5">
+                    <div className="text-xs font-bold text-[#0B5FA5] dark:text-sky-300">
                       Issue Administrative Implementation Order:
                     </div>
 
@@ -616,17 +505,7 @@ export function LandownerGrievanceReviewCard({
                       placeholder="Administrative Order Reference (e.g. CALA-ORDER-2026-081)..."
                       value={orderRef}
                       onChange={(e) => setOrderRef(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "8px 12px",
-                        borderRadius: 6,
-                        background: "#070a14",
-                        border: "1px solid #1e293b",
-                        color: "#fff",
-                        fontSize: 12,
-                        marginBottom: 8,
-                        fontFamily: "JetBrains Mono, monospace"
-                      }}
+                      className="input w-full font-mono bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
                     />
 
                     <textarea
@@ -634,46 +513,20 @@ export function LandownerGrievanceReviewCard({
                       placeholder="Enter specific implementation directives (e.g., sanction boundary adjustment, order PFMS compensation calculation)..."
                       value={initiateNotes}
                       onChange={(e) => setInitiateNotes(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "8px 12px",
-                        borderRadius: 6,
-                        background: "#070a14",
-                        border: "1px solid #1e293b",
-                        color: "#fff",
-                        fontSize: 12,
-                        marginBottom: 8
-                      }}
+                      className="input w-full bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
                     />
 
-                    <div style={{ display: "flex", gap: 8 }}>
+                    <div className="flex gap-2">
                       <button
                         onClick={() => handleInitiate(cmp.complaint_id || cmp.id)}
                         disabled={initiateSubmitting}
-                        style={{
-                          padding: "7px 16px",
-                          borderRadius: 6,
-                          fontSize: 11,
-                          fontWeight: 700,
-                          background: "#6366f1",
-                          border: "none",
-                          color: "#fff",
-                          cursor: "pointer"
-                        }}
+                        className="btn-primary py-1.5 px-3 text-xs"
                       >
                         {initiateSubmitting ? "Initiating..." : "Confirm & Initiate Implementation"}
                       </button>
                       <button
                         onClick={() => setInitiatingId(null)}
-                        style={{
-                          padding: "7px 12px",
-                          borderRadius: 6,
-                          fontSize: 11,
-                          background: "none",
-                          border: "1px solid #334155",
-                          color: "#94a3b8",
-                          cursor: "pointer"
-                        }}
+                        className="px-3 py-1.5 rounded-[3px] text-xs font-semibold border border-[#CBD5E1] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
                       >
                         Cancel
                       </button>
@@ -683,14 +536,14 @@ export function LandownerGrievanceReviewCard({
 
                 {/* Complete Implementation Drawer with Statutory Parameters */}
                 {completingId === cmp.id && (
-                  <div style={{ marginTop: 12, padding: 16, borderRadius: 10, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(16,185,129,0.4)", display: "flex", flexDirection: "column", gap: 12 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#10b981" }}>
+                  <div className="mt-3 p-3.5 rounded-[4px] bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 space-y-3">
+                    <div className="text-xs font-bold text-[#1E7E34] dark:text-emerald-400">
                       Finalize Statutory Acquisition Record:
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                       <div>
-                        <label style={{ fontSize: 10, color: "#94a3b8", fontFamily: "JetBrains Mono, monospace", display: "block", marginBottom: 4 }}>
+                        <label className="text-[10px] text-[#64748B] dark:text-slate-400 font-mono block mb-1">
                           Area Acquired (Acres)
                         </label>
                         <input
@@ -698,42 +551,42 @@ export function LandownerGrievanceReviewCard({
                           step="0.001"
                           value={statutoryAcqAcres}
                           onChange={(e) => setStatutoryAcqAcres(Number(e.target.value))}
-                          style={{ width: "100%", padding: "6px 10px", borderRadius: 6, background: "#070a14", border: "1px solid #1e293b", color: "#fff", fontSize: 12, fontFamily: "JetBrains Mono, monospace" }}
+                          className="input w-full font-mono text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
                         />
                       </div>
 
                       <div>
-                        <label style={{ fontSize: 10, color: "#94a3b8", fontFamily: "JetBrains Mono, monospace", display: "block", marginBottom: 4 }}>
+                        <label className="text-[10px] text-[#64748B] dark:text-slate-400 font-mono block mb-1">
                           Compensation Assessed (₹)
                         </label>
                         <input
                           type="number"
                           value={statutoryAssessed}
                           onChange={(e) => setStatutoryAssessed(Number(e.target.value))}
-                          style={{ width: "100%", padding: "6px 10px", borderRadius: 6, background: "#070a14", border: "1px solid #1e293b", color: "#fff", fontSize: 12, fontFamily: "JetBrains Mono, monospace" }}
+                          className="input w-full font-mono text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
                         />
                       </div>
 
                       <div>
-                        <label style={{ fontSize: 10, color: "#94a3b8", fontFamily: "JetBrains Mono, monospace", display: "block", marginBottom: 4 }}>
+                        <label className="text-[10px] text-[#64748B] dark:text-slate-400 font-mono block mb-1">
                           Compensation Paid (₹)
                         </label>
                         <input
                           type="number"
                           value={statutoryPaid}
                           onChange={(e) => setStatutoryPaid(Number(e.target.value))}
-                          style={{ width: "100%", padding: "6px 10px", borderRadius: 6, background: "#070a14", border: "1px solid #1e293b", color: "#fff", fontSize: 12, fontFamily: "JetBrains Mono, monospace" }}
+                          className="input w-full font-mono text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
                         />
                       </div>
 
                       <div>
-                        <label style={{ fontSize: 10, color: "#94a3b8", fontFamily: "JetBrains Mono, monospace", display: "block", marginBottom: 4 }}>
+                        <label className="text-[10px] text-[#64748B] dark:text-slate-400 font-mono block mb-1">
                           Possession Status
                         </label>
                         <select
                           value={statutoryPossession}
                           onChange={(e) => setStatutoryPossession(e.target.value)}
-                          style={{ width: "100%", padding: "6px 10px", borderRadius: 6, background: "#070a14", border: "1px solid #1e293b", color: "#fff", fontSize: 12 }}
+                          className="input w-full text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
                         >
                           <option value="Possession Handed Over">Possession Handed Over</option>
                           <option value="Physical Possession Complete">Physical Possession Complete</option>
@@ -747,45 +600,20 @@ export function LandownerGrievanceReviewCard({
                       placeholder="Enter final resolution directives and revenue mutation reference..."
                       value={completeNotes}
                       onChange={(e) => setCompleteNotes(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "8px 12px",
-                        borderRadius: 6,
-                        background: "#070a14",
-                        border: "1px solid #1e293b",
-                        color: "#fff",
-                        fontSize: 12
-                      }}
+                      className="input w-full bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs"
                     />
 
-                    <div style={{ display: "flex", gap: 8 }}>
+                    <div className="flex gap-2">
                       <button
                         onClick={() => handleComplete(cmp.complaint_id || cmp.id, Number(areaAcres))}
                         disabled={completeSubmitting}
-                        style={{
-                          padding: "7px 16px",
-                          borderRadius: 6,
-                          fontSize: 11,
-                          fontWeight: 700,
-                          background: "#10b981",
-                          border: "none",
-                          color: "#fff",
-                          cursor: "pointer"
-                        }}
+                        className="px-3.5 py-1.5 rounded-[3px] text-xs font-bold bg-[#1E7E34] hover:bg-[#18662a] text-white transition-colors"
                       >
-                        {completeSubmitting ? "Finalizing Order..." : "Finalize Acquisition &amp; Close Case"}
+                        {completeSubmitting ? "Finalizing Order..." : "Finalize Acquisition & Close Case"}
                       </button>
                       <button
                         onClick={() => setCompletingId(null)}
-                        style={{
-                          padding: "7px 12px",
-                          borderRadius: 6,
-                          fontSize: 11,
-                          background: "none",
-                          border: "1px solid #334155",
-                          color: "#94a3b8",
-                          cursor: "pointer"
-                        }}
+                        className="px-3 py-1.5 rounded-[3px] text-xs font-semibold border border-[#CBD5E1] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
                       >
                         Cancel
                       </button>
@@ -795,12 +623,12 @@ export function LandownerGrievanceReviewCard({
 
                 {/* Resolve Matter Drawer */}
                 {resolvingId === cmp.id && (
-                  <div style={{ marginTop: 12, padding: 16, borderRadius: 10, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(16,185,129,0.4)", display: "flex", flexDirection: "column", gap: 10 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#10b981", display: "flex", alignItems: "center", gap: 6 }}>
-                      <Scale style={{ width: 14, height: 14 }} />
+                  <div className="mt-3 p-3.5 rounded-[4px] bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 space-y-2.5">
+                    <div className="text-xs font-bold text-[#1E7E34] dark:text-emerald-400 flex items-center gap-1.5">
+                      <Scale className="w-3.5 h-3.5" />
                       <span>Issue Statutory Resolution &amp; Formal Notice (RFCTLARR Act 2013):</span>
                     </div>
-                    <p style={{ fontSize: 11, color: "#94a3b8", margin: 0, lineHeight: 1.5 }}>
+                    <p className="text-xs text-[#64748B] dark:text-slate-400 m-0 leading-relaxed">
                       Resolving this matter will finalize the administrative record, issue an official notice with a unique statutory reference number to the citizen landowner, and archive the counterfactual simulation.
                     </p>
 
@@ -809,45 +637,20 @@ export function LandownerGrievanceReviewCard({
                       placeholder="Enter final administrative determination, boundary rectification findings, and compensation sanction details..."
                       value={resolveNotes}
                       onChange={(e) => setResolveNotes(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "8px 12px",
-                        borderRadius: 6,
-                        background: "#070a14",
-                        border: "1px solid #1e293b",
-                        color: "#fff",
-                        fontSize: 12
-                      }}
+                      className="input w-full bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs"
                     />
 
-                    <div style={{ display: "flex", gap: 8 }}>
+                    <div className="flex gap-2">
                       <button
                         onClick={() => handleResolveMatter(cmp.complaint_id || cmp.id)}
                         disabled={resolveSubmitting}
-                        style={{
-                          padding: "7px 16px",
-                          borderRadius: 6,
-                          fontSize: 11,
-                          fontWeight: 700,
-                          background: "linear-gradient(135deg, #059669 0%, #0d9488 100%)",
-                          border: "none",
-                          color: "#fff",
-                          cursor: "pointer"
-                        }}
+                        className="px-3.5 py-1.5 rounded-[3px] text-xs font-bold bg-[#0B2E59] hover:bg-[#123C6B] text-white transition-colors"
                       >
                         {resolveSubmitting ? "Issuing Statutory Determination..." : "Confirm Resolution & Issue Notice"}
                       </button>
                       <button
                         onClick={() => setResolvingId(null)}
-                        style={{
-                          padding: "7px 12px",
-                          borderRadius: 6,
-                          fontSize: 11,
-                          background: "none",
-                          border: "1px solid #334155",
-                          color: "#94a3b8",
-                          cursor: "pointer"
-                        }}
+                        className="px-3 py-1.5 rounded-[3px] text-xs font-semibold border border-[#CBD5E1] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
                       >
                         Cancel
                       </button>
@@ -857,68 +660,33 @@ export function LandownerGrievanceReviewCard({
 
                 {/* Resolved Case Banner & Direct PDF Downloads */}
                 {isCompleted && (
-                  <div style={{
-                    marginTop: 14,
-                    padding: "12px 16px",
-                    borderRadius: 10,
-                    background: "rgba(16,185,129,0.06)",
-                    border: "1px solid rgba(16,185,129,0.3)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    gap: 12
-                  }}>
+                  <div className="mt-3 p-3 rounded-[3px] bg-[#EBF7EE] dark:bg-emerald-950/40 border border-[#BEE3C8] dark:border-emerald-800 flex items-center justify-between flex-wrap gap-3">
                     <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: "#10b981" }}>
-                        <CheckCircle2 style={{ width: 16, height: 16 }} />
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#1E7E34] dark:text-emerald-300">
+                        <CheckCircle2 className="w-4 h-4" />
                         <span>MATTER RESOLVED &bull; STATUTORY NOTICE ISSUED</span>
                       </div>
-                      <div style={{ fontSize: 11, color: "#94a3b8", fontFamily: "JetBrains Mono, monospace", marginTop: 2 }}>
-                        Notice Ref: <strong style={{ color: "#f59e0b" }}>{cmp.notice_reference || cmp.resolution_notice?.notice_reference || `CALA/NOTICE/2026/${String(cmp.complaint_id || cmp.id || "101").slice(-4)}`}</strong>
+                      <div className="text-[11px] text-[#64748B] dark:text-slate-300 font-mono mt-0.5">
+                        Notice Ref: <strong className="text-[#B36B00] dark:text-amber-400">{cmp.notice_reference || cmp.resolution_notice?.notice_reference || `CALA/NOTICE/2026/${String(cmp.complaint_id || cmp.id || "101").slice(-4)}`}</strong>
                       </div>
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={() => generateLandownerNoticePdf(buildLandownerNoticeData(cmp))}
-                        style={{
-                          padding: "7px 12px",
-                          borderRadius: 6,
-                          fontSize: 11,
-                          fontWeight: 700,
-                          background: "rgba(245,158,11,0.15)",
-                          border: "1px solid rgba(245,158,11,0.4)",
-                          color: "#f59e0b",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 5
-                        }}
+                        className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#FFF8E6] dark:bg-amber-950/50 border border-[#FFE29A] dark:border-amber-800 text-[#B36B00] dark:text-amber-300 hover:bg-[#FEEFC3] transition-colors flex items-center gap-1.5"
                         title="Download Official Statutory Resolution Notice (PDF)"
                       >
-                        <Download style={{ width: 12, height: 12 }} />
+                        <Download className="w-3.5 h-3.5" />
                         <span>Notice (PDF)</span>
                       </button>
 
                       <button
                         onClick={() => generateCaseReportPdf(buildCaseReportData(cmp))}
-                        style={{
-                          padding: "7px 12px",
-                          borderRadius: 6,
-                          fontSize: 11,
-                          fontWeight: 700,
-                          background: "rgba(99,102,241,0.15)",
-                          border: "1px solid rgba(99,102,241,0.4)",
-                          color: "#818cf8",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 5
-                        }}
+                        className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/50 border border-[#BDD7EE] dark:border-sky-800 text-[#0B5FA5] dark:text-sky-300 hover:bg-[#D4E6F8] transition-colors flex items-center gap-1.5"
                         title="Download Complete Case Report (PDF)"
                       >
-                        <Download style={{ width: 12, height: 12 }} />
+                        <Download className="w-3.5 h-3.5" />
                         <span>Case File (PDF)</span>
                       </button>
                     </div>

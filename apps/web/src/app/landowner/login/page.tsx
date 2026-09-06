@@ -16,6 +16,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { createOrUpdateLandownerProfile } from "@/lib/api";
 import { toUuid } from "@/lib/supabase/supabaseService";
+import { ThemeToggle } from "@/components/common/ThemeToggle";
 
 export default function LandownerLoginPage() {
   const router = useRouter();
@@ -125,82 +126,98 @@ export default function LandownerLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between p-4 selection:bg-amber-500/30">
-      <div className="w-full max-w-md mx-auto space-y-5 pt-8 pb-12">
+    <div className="min-h-screen bg-[#F4F6F8] dark:bg-[#07080F] text-[#14213D] dark:text-[#F0F4FF] flex flex-col justify-between p-4 transition-colors duration-200">
+      <div className="w-full max-w-md mx-auto space-y-4 pt-6 pb-12">
         
-        {/* Header Branding */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 text-white shadow-xl shadow-amber-950/60 mb-1 border border-amber-400/30">
-            <Users className="w-7 h-7" />
+        {/* Top bar with Theme Toggle */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-[4px] bg-[#0B2E59] text-amber-400 flex items-center justify-center font-black text-xs border border-[#0B2E59]">
+              भ
+            </div>
+            <span className="text-[11px] font-bold tracking-wider uppercase text-[#5A6A80] dark:text-slate-400">
+              Govt. of India · MoRTH
+            </span>
           </div>
-          <h1 className="text-2xl font-black font-display tracking-tight text-white">
-            BHUMI Landowner Portal
+          <ThemeToggle variant="icon" className="!rounded-[4px] border border-[#DCE2E8] dark:border-white/10" />
+        </div>
+
+        {/* Header Branding */}
+        <div className="text-center space-y-1.5 pt-2">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-[4px] bg-[#0B2E59] text-amber-400 shadow-sm mb-1 border border-[#082242]">
+            <Users className="w-6 h-6" />
+          </div>
+          <div className="text-[10px] font-bold uppercase tracking-widest text-[#B36B00] dark:text-amber-400">
+            RFCTLARR 2013 Statutory Compliance
+          </div>
+          <h1 className="text-xl font-bold font-display tracking-tight text-[#0B2E59] dark:text-white">
+            BHUMI Landowner & Citizen Portal
           </h1>
-          <p className="text-xs text-slate-400 max-w-xs mx-auto">
-            Citizen Grievance Redressal & Statutory Land Acquisition Records
+          <p className="text-xs text-[#5A6A80] dark:text-slate-400 max-w-xs mx-auto">
+            Grievance Redressal, Cadastral Boundary Registry & Compensation Tracking
           </p>
         </div>
 
         {/* Feedback Messages */}
         {successMsg && (
-          <div className="p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2.5 animate-fadeIn">
-            <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-emerald-400" />
-            <span className="font-medium">{successMsg}</span>
+          <div className="p-3 rounded-[4px] bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/50 text-[#1E7E34] dark:text-emerald-300 text-xs flex items-center gap-2.5 animate-fadeIn">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-[#1E7E34] dark:text-emerald-400" />
+            <span className="font-semibold">{successMsg}</span>
           </div>
         )}
 
         {errorMsg && (
-          <div className="p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2.5 animate-fadeIn">
-            <AlertTriangle className="w-4 h-4 flex-shrink-0 text-red-400" />
+          <div className="p-3 rounded-[4px] bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/50 text-[#B32424] dark:text-rose-300 text-xs flex items-center gap-2.5 animate-fadeIn">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0 text-[#B32424] dark:text-rose-400" />
             <span>{errorMsg}</span>
           </div>
         )}
 
-        {/* Login Form */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-          <div className="space-y-1">
-            <span className="text-[10px] font-mono tracking-widest uppercase text-amber-400 font-bold block">
+        {/* Login Form Card */}
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-sm space-y-4 transition-colors duration-200">
+          <div className="border-b border-[#DCE2E8] dark:border-white/10 pb-3 space-y-1">
+            <span className="text-[10px] font-mono tracking-widest uppercase text-[#0B2E59] dark:text-sky-400 font-bold block">
               Citizen Portal Access
             </span>
-            <h3 className="text-base font-bold text-white">
+            <h2 className="text-sm font-bold text-[#14213D] dark:text-white">
               Sign In to Your Account
-            </h3>
-            <p className="text-xs text-slate-400">
+            </h2>
+            <p className="text-[11px] text-[#5A6A80] dark:text-slate-400">
               Enter your registered email and password to access your land parcels and grievance dashboard.
             </p>
           </div>
 
-          <form onSubmit={handleLoginSubmit} className="space-y-4 text-xs">
+          <form onSubmit={handleLoginSubmit} className="space-y-3.5 text-xs">
             <div>
-              <label className="block text-slate-300 font-semibold mb-1.5 text-[11px] uppercase tracking-wider">
+              <label className="block text-[#14213D] dark:text-slate-300 font-semibold mb-1 text-[11px] uppercase tracking-wider">
                 Registered Email Address
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                <Mail className="w-4 h-4 text-[#5A6A80] dark:text-slate-500 absolute left-3 top-2.5" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your.email@example.com"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono"
+                  className="w-full pl-9 pr-3 py-2 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white placeholder-[#5A6A80] dark:placeholder-slate-600 focus:outline-none focus:border-[#0B2E59] dark:focus:border-sky-400 font-mono text-xs"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-slate-300 font-semibold mb-1.5 text-[11px] uppercase tracking-wider">
+              <label className="block text-[#14213D] dark:text-slate-300 font-semibold mb-1 text-[11px] uppercase tracking-wider">
                 Password
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                <Lock className="w-4 h-4 text-[#5A6A80] dark:text-slate-500 absolute left-3 top-2.5" />
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                  className="w-full pl-9 pr-3 py-2 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white placeholder-[#5A6A80] dark:placeholder-slate-600 focus:outline-none focus:border-[#0B2E59] dark:focus:border-sky-400 text-xs"
                 />
               </div>
             </div>
@@ -208,25 +225,25 @@ export default function LandownerLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/40 disabled:opacity-50 cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
             >
               {loading ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                   <span>Authenticating...</span>
                 </>
               ) : (
                 <>
                   <span>SIGN IN TO CITIZEN PORTAL</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </>
               )}
             </button>
           </form>
 
-          <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <div className="pt-3 border-t border-[#DCE2E8] dark:border-white/10 flex items-center justify-between text-xs text-[#5A6A80] dark:text-slate-400">
             <span>New titleholder?</span>
-            <Link href="/landowner/register" className="text-amber-400 hover:underline font-semibold inline-flex items-center gap-1">
+            <Link href="/landowner/register" className="text-[#0B2E59] dark:text-sky-400 hover:underline font-bold inline-flex items-center gap-1">
               <UserPlus className="w-3.5 h-3.5" />
               <span>Register New Account →</span>
             </Link>
@@ -234,15 +251,15 @@ export default function LandownerLoginPage() {
         </div>
 
         {/* Cross-Role Links */}
-        <div className="pt-2 text-center space-y-1.5 border-t border-slate-900">
-          <p className="text-[11px] text-slate-500">
+        <div className="pt-2 text-center space-y-1.5 border-t border-[#DCE2E8] dark:border-white/10">
+          <p className="text-[11px] text-[#5A6A80] dark:text-slate-400">
             Authorized Personnel Navigation
           </p>
           <div className="flex justify-center gap-4 text-xs font-semibold">
-            <Link href="/field/login" className="text-emerald-400 hover:underline">
+            <Link href="/field/login" className="text-[#1E7E34] dark:text-emerald-400 hover:underline">
               Field Officer Console →
             </Link>
-            <Link href="/login" className="text-sky-400 hover:underline">
+            <Link href="/login" className="text-[#0B2E59] dark:text-sky-400 hover:underline">
               Admin Web Console →
             </Link>
           </div>
@@ -250,8 +267,8 @@ export default function LandownerLoginPage() {
 
       </div>
 
-      <div className="text-center text-[10px] font-mono text-slate-500 py-3 border-t border-slate-900">
-        BHUMI Land Records Management System · PostGIS & NetworkX Causal Graph
+      <div className="text-center text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 py-3 border-t border-[#DCE2E8] dark:border-white/10">
+        BHUMI Land Records Management System · PostGIS & NetworkX Causal Graph · NIC Standard
       </div>
     </div>
   );

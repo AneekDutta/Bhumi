@@ -115,17 +115,17 @@ export function CaptureLocation({
   const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${targetLat},${targetLng}`;
 
   return (
-    <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+    <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-3">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs font-semibold text-white">
-          <Crosshair className="w-4 h-4 text-emerald-400" />
-          <span>Real Spatial Map & Cadastral Demarcation</span>
+        <div className="flex items-center gap-2 text-xs font-bold text-[#0B2E59] dark:text-white">
+          <Crosshair className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
+          <span>Real Spatial Map &amp; Cadastral Demarcation</span>
         </div>
         {coords && (
-          <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
+          <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] border ${
             coords.accuracy <= 15
-              ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-300"
-              : "bg-amber-500/15 border-amber-500/30 text-amber-300"
+              ? "bg-[#E8F5E9] border-[#C8E6C9] text-[#1E7E34] dark:bg-emerald-950/40 dark:border-emerald-800/40 dark:text-emerald-300"
+              : "bg-[#FFF8E1] border-[#FFE082] text-[#B36B00] dark:bg-amber-950/40 dark:border-amber-800/40 dark:text-amber-300"
           }`}>
             ±{coords.accuracy}m Accuracy
           </span>
@@ -133,7 +133,7 @@ export function CaptureLocation({
       </div>
 
       {/* Real MapLibre GL Cadastral Map */}
-      <div className="relative w-full h-44 rounded-xl border border-slate-700/80 overflow-hidden shadow-inner">
+      <div className="relative w-full h-44 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 overflow-hidden shadow-xs">
         <FieldSpatialMap
           geojson={parcelGeoJSON}
           height="100%"
@@ -142,7 +142,7 @@ export function CaptureLocation({
           showControls={false}
           interactive={true}
         />
-        <div className="absolute bottom-2 left-2 text-[10px] font-mono text-slate-200 bg-slate-900/90 px-2 py-0.5 rounded border border-white/10 z-10">
+        <div className="absolute bottom-2 left-2 text-[10px] font-mono text-slate-800 dark:text-slate-200 bg-white/95 dark:bg-[#07080F]/95 px-2 py-0.5 rounded-[2px] border border-[#DCE2E8] dark:border-white/10 z-10 shadow-xs">
           Centroid: {targetLat.toFixed(4)}°N, {targetLng.toFixed(4)}°E
         </div>
       </div>
@@ -153,12 +153,12 @@ export function CaptureLocation({
           type="button"
           onClick={handleAcquireGPS}
           disabled={loading}
-          className="py-2.5 px-3 rounded-xl bg-slate-700/80 hover:bg-slate-700 text-white text-xs font-semibold flex items-center justify-center gap-2 border border-slate-600 transition-all cursor-pointer disabled:opacity-60"
+          className="py-2 px-3 rounded-[4px] bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-slate-200 text-xs font-semibold flex items-center justify-center gap-2 border border-[#DCE2E8] dark:border-white/10 transition-colors cursor-pointer disabled:opacity-60 shadow-xs"
         >
           {loading ? (
-            <RefreshCw className="w-4 h-4 animate-spin text-emerald-400" />
+            <RefreshCw className="w-4 h-4 animate-spin text-[#0B2E59] dark:text-sky-400" />
           ) : (
-            <MapPin className="w-4 h-4 text-emerald-400" />
+            <MapPin className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
           )}
           <span>{coords ? "Re-acquire GPS" : "Capture Real GPS Fix"}</span>
         </button>
@@ -167,7 +167,7 @@ export function CaptureLocation({
           href={navUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="py-2.5 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center justify-center gap-2 shadow-sm transition-all text-center"
+          className="py-2 px-3 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-colors text-center"
         >
           <Navigation className="w-4 h-4" />
           <span>Turn-by-Turn</span>
@@ -175,17 +175,17 @@ export function CaptureLocation({
       </div>
 
       {coords && (
-        <div className="text-[11px] font-mono text-slate-300 bg-slate-900/80 p-2.5 rounded-lg border border-white/5 flex items-center justify-between">
+        <div className="text-[11px] font-mono text-slate-700 dark:text-slate-300 bg-[#F8FAFC] dark:bg-[#07080F] p-2.5 rounded-[3px] border border-[#DCE2E8] dark:border-white/10 flex items-center justify-between">
           <span>Lat: {coords.lat}°, Lng: {coords.lng}°</span>
-          <span className="text-emerald-400 font-semibold flex items-center gap-1">
+          <span className="text-[#1E7E34] dark:text-emerald-400 font-bold flex items-center gap-1">
             <CheckCircle2 className="w-3.5 h-3.5" /> Fixed
           </span>
         </div>
       )}
 
       {error && (
-        <div className="text-xs text-red-400 bg-red-500/10 p-2 rounded-lg border border-red-500/20 flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
+        <div className="text-xs text-[#B32424] dark:text-rose-300 bg-[#FFEBEE] dark:bg-rose-950/40 p-2 rounded-[3px] border border-[#FFCDD2] dark:border-rose-800/40 flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-[#B32424] dark:text-rose-400 flex-shrink-0" />
           <span>{error}</span>
         </div>
       )}

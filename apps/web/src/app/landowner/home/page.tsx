@@ -100,41 +100,41 @@ export default function LandownerHomePage() {
       <div className="p-4 space-y-4 max-w-lg mx-auto pb-28">
         
         {/* Welcome Profile Card */}
-        <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/20 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
-          <div className="flex items-center justify-between">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm space-y-3">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-base flex-shrink-0">
+              <div className="w-10 h-10 rounded-[4px] bg-[#E8F1FA] dark:bg-sky-950/40 border border-[#B8D5E5] dark:border-sky-800/40 flex items-center justify-center text-[#0B2E59] dark:text-sky-300 font-bold text-base shrink-0">
                 {owner.name.slice(0, 1)}
               </div>
               <div>
-                <h1 className="font-bold text-white text-base font-display">
+                <h1 className="font-bold text-[#14213D] dark:text-white text-base">
                   {owner.name}
                 </h1>
-                <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-                  <MapPin className="w-3 h-3 text-amber-400" />
+                <p className="text-xs text-[#555555] dark:text-slate-400 flex items-center gap-1 mt-0.5">
+                  <MapPin className="w-3 h-3 text-[#B36B00] dark:text-amber-400" />
                   <span>{owner.contact_village}</span>
                 </p>
               </div>
             </div>
 
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            <span className="px-2 py-0.5 rounded-[3px] text-[10px] font-mono font-bold bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border border-[#C8E6C9] dark:border-emerald-800/50">
               Registered Citizen
             </span>
           </div>
 
           {/* Quick Metrics */}
-          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800/80 text-center">
-            <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
-              <span className="text-slate-400 block text-[10px]">Registered Land</span>
-              <span className="text-base font-bold text-white font-mono">{parcels.length} Parcels</span>
+          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#DCE2E8] dark:border-white/10 text-center">
+            <div className="bg-[#F8FAFC] dark:bg-white/[0.02] p-2.5 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+              <span className="text-[#64748B] dark:text-slate-400 block text-[10px]">Registered Land</span>
+              <span className="text-sm font-bold text-[#14213D] dark:text-white font-mono">{parcels.length} Parcels</span>
             </div>
-            <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
-              <span className="text-slate-400 block text-[10px]">Total Area</span>
-              <span className="text-base font-bold text-amber-400 font-mono">{totalAreaHectares} Ha</span>
+            <div className="bg-[#F8FAFC] dark:bg-white/[0.02] p-2.5 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+              <span className="text-[#64748B] dark:text-slate-400 block text-[10px]">Total Area</span>
+              <span className="text-sm font-bold text-[#0B5FA5] dark:text-sky-400 font-mono">{totalAreaHectares} Ha</span>
             </div>
-            <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
-              <span className="text-slate-400 block text-[10px]">Grievances</span>
-              <span className="text-base font-bold text-emerald-400 font-mono">{activeComplaints} Active</span>
+            <div className="bg-[#F8FAFC] dark:bg-white/[0.02] p-2.5 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+              <span className="text-[#64748B] dark:text-slate-400 block text-[10px]">Grievances</span>
+              <span className="text-sm font-bold text-[#1E7E34] dark:text-emerald-400 font-mono">{activeComplaints} Active</span>
             </div>
           </div>
         </div>
@@ -144,21 +144,21 @@ export default function LandownerHomePage() {
           {/* Hero CTA 1: Register New Parcel */}
           <Link
             href="/landowner/parcels/new"
-            className="p-4 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white shadow-lg shadow-amber-950/40 border border-amber-400/30 flex items-center justify-between transition-all group"
+            className="p-4 rounded-[4px] bg-white dark:bg-[#0D121F] hover:bg-slate-50 dark:hover:bg-white/5 border-2 border-[#0B2E59] dark:border-sky-500 shadow-sm flex items-center justify-between transition-all group cursor-pointer"
           >
             <div className="space-y-0.5">
-              <div className="flex items-center gap-1.5 text-amber-100 text-xs font-bold uppercase tracking-wider font-mono">
-                <FileCheck2 className="w-4 h-4 text-white" />
+              <div className="flex items-center gap-1.5 text-[#0B2E59] dark:text-sky-400 text-xs font-bold uppercase tracking-wider font-mono">
+                <FileCheck2 className="w-3.5 h-3.5" />
                 <span>Statutory Prerequisite</span>
               </div>
-              <h2 className="text-sm font-extrabold text-white">
+              <h2 className="text-sm font-bold text-[#14213D] dark:text-white">
                 Register New Parcel
               </h2>
-              <p className="text-[11px] text-amber-100/90 leading-tight">
+              <p className="text-[11px] text-[#555555] dark:text-slate-400 leading-tight">
                 Demarcate corners, authenticate Aadhaar, and obtain your official 14-digit Parcel ID.
               </p>
             </div>
-            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white group-hover:translate-x-0.5 transition-transform flex-shrink-0 ml-3">
+            <div className="w-7 h-7 rounded-[4px] bg-[#E8F1FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 flex items-center justify-center group-hover:translate-x-0.5 transition-transform shrink-0 ml-3">
               <ArrowRight className="w-4 h-4" />
             </div>
           </Link>
@@ -166,21 +166,21 @@ export default function LandownerHomePage() {
           {/* Hero CTA 2: Lodge Grievance / File Complaint */}
           <Link
             href="/landowner/complaints/new"
-            className="p-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white shadow-lg shadow-emerald-950/40 border border-emerald-400/30 flex items-center justify-between transition-all group"
+            className="p-4 rounded-[4px] bg-white dark:bg-[#0D121F] hover:bg-slate-50 dark:hover:bg-white/5 border-2 border-[#B36B00] dark:border-amber-500 shadow-sm flex items-center justify-between transition-all group cursor-pointer"
           >
             <div className="space-y-0.5">
-              <div className="flex items-center gap-1.5 text-emerald-100 text-xs font-bold uppercase tracking-wider font-mono">
-                <PlusCircle className="w-4 h-4 text-white" />
+              <div className="flex items-center gap-1.5 text-[#B36B00] dark:text-amber-400 text-xs font-bold uppercase tracking-wider font-mono">
+                <PlusCircle className="w-3.5 h-3.5" />
                 <span>File Grievance</span>
               </div>
-              <h2 className="text-sm font-extrabold text-white">
+              <h2 className="text-sm font-bold text-[#14213D] dark:text-white">
                 Lodge Land Complaint
               </h2>
-              <p className="text-[11px] text-emerald-100/90 leading-tight">
+              <p className="text-[11px] text-[#555555] dark:text-slate-400 leading-tight">
                 Report compensation delays, boundary disputes, or title mismatches on your registered parcel.
               </p>
             </div>
-            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white group-hover:translate-x-0.5 transition-transform flex-shrink-0 ml-3">
+            <div className="w-7 h-7 rounded-[4px] bg-[#FFF8E1] dark:bg-amber-950/40 text-[#B36B00] dark:text-amber-400 flex items-center justify-center group-hover:translate-x-0.5 transition-transform shrink-0 ml-3">
               <ArrowRight className="w-4 h-4" />
             </div>
           </Link>
@@ -189,13 +189,13 @@ export default function LandownerHomePage() {
         {/* Section: My Registered Land Parcels */}
         <div className="space-y-2.5">
           <div className="flex items-center justify-between px-1">
-            <h2 className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-amber-400" />
+            <h2 className="text-xs font-bold text-[#14213D] dark:text-slate-300 uppercase tracking-wider font-mono flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
               <span>My Registered Land Parcels ({parcels.length})</span>
             </h2>
             <Link
               href="/landowner/parcels/new"
-              className="text-[11px] font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1"
+              className="text-[11px] font-semibold text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>Register Parcel</span>
@@ -204,24 +204,24 @@ export default function LandownerHomePage() {
 
           <div className="space-y-3">
             {parcels.length === 0 ? (
-              <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 text-center space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mx-auto">
-                  <AlertCircle className="w-6 h-6" />
+              <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-6 text-center space-y-3 shadow-sm">
+                <div className="w-10 h-10 rounded-[4px] bg-[#FFF8E1] dark:bg-amber-950/40 border border-[#FFE082] dark:border-amber-800/50 flex items-center justify-center text-[#B36B00] dark:text-amber-400 mx-auto">
+                  <AlertCircle className="w-5 h-5" />
                 </div>
-                <div className="space-y-1.5 max-w-md mx-auto">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wide">
+                <div className="space-y-1 max-w-md mx-auto">
+                  <h3 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wide">
                     No registered parcels found.
                   </h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-[#555555] dark:text-slate-400 leading-relaxed">
                     Under statutory grievance rules, you must first register your parcel of land before you can file a complaint against it.
                   </p>
                 </div>
-                <div className="pt-2">
+                <div className="pt-1">
                   <Link
                     href="/landowner/parcels/new"
-                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold transition-all shadow-md"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-semibold transition-all shadow-xs"
                   >
-                    <FileCheck2 className="w-4 h-4" />
+                    <FileCheck2 className="w-3.5 h-3.5" />
                     <span>Register New Parcel</span>
                   </Link>
                 </div>
@@ -239,68 +239,68 @@ export default function LandownerHomePage() {
                 return (
                   <div
                     key={pId}
-                    className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 hover:border-slate-700 transition-colors shadow-lg"
+                    className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-3 shadow-sm hover:border-[#0B2E59] transition-colors"
                   >
                     {/* Header with 14-Digit ID */}
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-bold text-amber-400 font-mono uppercase tracking-wider">
+                          <span className="text-[10px] font-bold text-[#64748B] dark:text-slate-400 font-mono uppercase tracking-wider">
                             PARCEL ID:
                           </span>
-                          <span className="font-mono text-base font-extrabold text-white tracking-wide">
+                          <span className="font-mono text-sm font-bold text-[#0B5FA5] dark:text-sky-400">
                             {pId}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-300 mt-0.5">
-                          Owner: <span className="font-semibold text-white">{ownerName}</span>
+                        <p className="text-xs text-[#555555] dark:text-slate-300 mt-0.5">
+                          Owner: <span className="font-semibold text-[#14213D] dark:text-white">{ownerName}</span>
                         </p>
-                        <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-                          <MapPin className="w-3 h-3 text-amber-400 flex-shrink-0" />
+                        <p className="text-xs text-[#64748B] dark:text-slate-400 flex items-center gap-1 mt-0.5">
+                          <MapPin className="w-3 h-3 text-[#B36B00] dark:text-amber-400 shrink-0" />
                           <span>Village: {village}</span>
                         </p>
                       </div>
 
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                      <span className="px-2 py-0.5 rounded-[3px] text-[10px] font-mono font-bold uppercase bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border border-[#C8E6C9] dark:border-emerald-800/50">
                         {regStatus}
                       </span>
                     </div>
 
                     {/* Land Details Grid */}
-                    <div className="grid grid-cols-3 gap-2 text-xs pt-2 border-t border-slate-800/80 font-mono text-center">
-                      <div className="bg-slate-950 p-2 rounded-xl border border-slate-800">
-                        <span className="text-slate-500 block text-[9px]">SURFACE AREA</span>
-                        <span className="text-amber-400 font-bold text-xs">
+                    <div className="grid grid-cols-3 gap-2 text-xs pt-2 border-t border-[#DCE2E8] dark:border-white/10 font-mono text-center">
+                      <div className="bg-[#F8FAFC] dark:bg-white/[0.02] p-2 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+                        <span className="text-[#64748B] block text-[9px]">SURFACE AREA</span>
+                        <span className="text-[#1E7E34] dark:text-emerald-400 font-bold text-xs">
                           {areaSqm ? `${Number(areaSqm).toLocaleString(undefined, { maximumFractionDigits: 1 })} m²` : `${areaHa} Ha`}
                         </span>
                       </div>
-                      <div className="bg-slate-950 p-2 rounded-xl border border-slate-800">
-                        <span className="text-slate-500 block text-[9px]">CORNERS</span>
-                        <span className="text-white font-bold text-xs">
+                      <div className="bg-[#F8FAFC] dark:bg-white/[0.02] p-2 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+                        <span className="text-[#64748B] block text-[9px]">CORNERS</span>
+                        <span className="text-[#14213D] dark:text-white font-bold text-xs">
                           {parcel.coordinates?.length || 4} GPS Points
                         </span>
                       </div>
-                      <div className="bg-slate-950 p-2 rounded-xl border border-slate-800">
-                        <span className="text-slate-500 block text-[9px]">DOCUMENTS</span>
-                        <span className="text-slate-200 font-bold text-xs">
-                          {docCount > 0 ? `${docCount} Verified/Sub` : "Submitted"}
+                      <div className="bg-[#F8FAFC] dark:bg-white/[0.02] p-2 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+                        <span className="text-[#64748B] block text-[9px]">DOCUMENTS</span>
+                        <span className="text-[#333333] dark:text-slate-200 font-bold text-xs">
+                          {docCount > 0 ? `${docCount} Verified` : "Submitted"}
                         </span>
                       </div>
                     </div>
 
                     {/* Action Buttons: View Parcel & File Complaint */}
-                    <div className="pt-1 flex items-center justify-between gap-2 border-t border-slate-800/60">
+                    <div className="pt-1 flex items-center justify-between gap-2 border-t border-[#DCE2E8] dark:border-white/10">
                       <Link
                         href={`/landowner/parcels/${pId}`}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-200 hover:text-white bg-slate-800 hover:bg-slate-700 py-2.5 px-3 rounded-xl border border-slate-700 transition-colors"
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-[#0B2E59] dark:text-sky-400 hover:bg-slate-50 dark:hover:bg-white/5 bg-white dark:bg-white/[0.02] py-2 px-3 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 transition-colors"
                       >
-                        <Eye className="w-3.5 h-3.5 text-amber-400" />
+                        <Eye className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
                         <span>View Parcel</span>
                       </Link>
 
                       <Link
                         href={`/landowner/complaints/new?parcel_id=${pId}`}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 py-2.5 px-3 rounded-xl transition-colors shadow-sm"
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-white bg-[#0B2E59] hover:bg-[#082242] py-2 px-3 rounded-[4px] transition-colors shadow-xs"
                       >
                         <FileText className="w-3.5 h-3.5" />
                         <span>File Complaint</span>
@@ -316,17 +316,17 @@ export default function LandownerHomePage() {
         {/* Section: Recent Grievances */}
         <div className="space-y-2.5 pt-2">
           <div className="flex items-center justify-between px-1">
-            <h2 className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
+            <h2 className="text-xs font-bold text-[#14213D] dark:text-slate-300 uppercase tracking-wider font-mono">
               My Grievances & Inquiries ({complaints.length})
             </h2>
-            <Link href="/landowner/complaints" className="text-[11px] text-amber-400 hover:underline">
-              View All →
+            <Link href="/landowner/complaints" className="text-[11px] font-semibold text-[#0B5FA5] dark:text-sky-400 hover:underline">
+              View All &rarr;
             </Link>
           </div>
 
           <div className="space-y-2">
             {complaints.length === 0 ? (
-              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 text-center text-xs text-slate-400">
+              <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 text-center text-xs text-[#64748B] shadow-sm">
                 <span>No complaints lodged.</span>
               </div>
             ) : (
@@ -336,23 +336,23 @@ export default function LandownerHomePage() {
                   <Link
                     key={cId}
                     href={`/landowner/complaints/${cId}`}
-                    className="block bg-slate-900 border border-slate-800 rounded-xl p-3 hover:border-slate-700 transition-colors"
+                    className="block bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-3 hover:border-[#0B2E59] transition-colors shadow-sm"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-white text-xs font-mono">
+                      <span className="font-bold text-[#0B5FA5] dark:text-sky-400 text-xs font-mono">
                         #{comp.complaint_id || cId.slice(0, 8)}
                       </span>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#FFF8E1] dark:bg-amber-950/40 text-[#B36B00] dark:text-amber-400 border border-[#FFE082] dark:border-amber-800/50">
                         {comp.status}
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-300 mt-1 line-clamp-1">
+                    <p className="text-xs text-[#333333] dark:text-slate-300 mt-1 line-clamp-1 font-medium">
                       {comp.complaint_type || comp.title}
                     </p>
 
                     {comp.parcel_id && (
-                      <p className="text-[10px] text-slate-400 font-mono mt-1">
+                      <p className="text-[10px] text-[#64748B] font-mono mt-1">
                         Parcel ID: {comp.parcel_id}
                       </p>
                     )}

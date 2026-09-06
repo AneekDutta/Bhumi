@@ -75,21 +75,20 @@ export function Sidebar() {
   };
 
   const navContent = (
-    <div className="h-full flex flex-col justify-between bg-white dark:bg-[#05060e]/95 backdrop-blur-xl border-r border-slate-200 dark:border-white/[0.07] text-slate-800 dark:text-[#f0f4ff] transition-colors duration-200">
+    <div className="h-full flex flex-col justify-between bg-white dark:bg-[#080E18] border-r border-[#DCE2E8] dark:border-white/[0.07] text-[#333333] dark:text-[#F0F4FF] transition-colors duration-200">
       <div>
         {/* Brand */}
-        <div className="p-5 pb-4 border-b border-slate-200 dark:border-white/[0.06] flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-[34px] h-[34px] rounded-[10px] flex-shrink-0 bg-gradient-to-br from-[#7c3aed] to-[#6366f1] flex items-center justify-center shadow-[0_4px_16px_rgba(99,102,241,0.35)] group-hover:scale-105 transition-transform">
-              <span className="font-display font-bold text-white text-base">भ</span>
+        <div className="p-4 pb-3 border-b border-[#DCE2E8] dark:border-white/[0.06] flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-[34px] h-[34px] rounded-[4px] flex-shrink-0 bg-[#0B2E59] flex items-center justify-center text-white font-devanagari font-bold text-base shadow-sm">
+              भ
             </div>
             <div>
-              <div className="font-display font-extrabold text-slate-900 dark:text-[#f0f4ff] text-[15px] tracking-tight leading-tight flex items-center gap-2">
-                BHUMI
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="font-bold text-[#14213D] dark:text-white text-[15px] leading-tight">
+                BHUMI Portal
               </div>
-              <div className="text-[10px] text-slate-500 dark:text-[#4a5568] font-mono tracking-wider">
-                SIH26016 · CALA Administration
+              <div className="text-[10px] text-[#64748B] dark:text-[#94A3B8] font-mono">
+                CALA Directorate · MoRTH
               </div>
             </div>
           </Link>
@@ -107,7 +106,7 @@ export function Sidebar() {
           {navGroups.map((grp) => (
             <div key={grp.group}>
               <div className="px-2 mb-1.5 flex items-center justify-between">
-                <span className="text-[10px] font-semibold tracking-wider text-slate-400 dark:text-[#5a6680] uppercase font-mono">
+                <span className="text-[11px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase">
                   {grp.group}
                 </span>
               </div>
@@ -120,13 +119,13 @@ export function Sidebar() {
                       key={item.id}
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
-                      className={`flex items-center gap-2.5 px-3 py-2 text-xs font-medium rounded-lg transition-all ${
+                      className={`flex items-center gap-2.5 px-3 py-2 text-xs rounded-[4px] transition-all ${
                         active
-                          ? "bg-indigo-50 dark:bg-gradient-to-r dark:from-indigo-500/20 dark:to-indigo-500/5 text-indigo-700 dark:text-indigo-300 border-l-2 border-indigo-600 dark:border-indigo-500 font-semibold shadow-sm"
-                          : "text-slate-600 dark:text-[#8892a4] hover:text-slate-900 dark:hover:text-[#f0f4ff] hover:bg-slate-100 dark:hover:bg-white/[0.035] border-l-2 border-transparent"
+                          ? "bg-[#E6F0FA] dark:bg-[#0B5FA5]/20 text-[#0B2E59] dark:text-[#38BDF8] font-bold border-l-[3px] border-[#0B5FA5] shadow-sm"
+                          : "text-[#333333] dark:text-[#CBD5E1] hover:text-[#0B2E59] hover:bg-[#F1F4F7] dark:hover:bg-white/[0.04] font-medium"
                       }`}
                     >
-                      <Icon className={`w-4 h-4 flex-shrink-0 ${active ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400 dark:text-[#5a6680]"}`} />
+                      <Icon className={`w-4 h-4 flex-shrink-0 ${active ? "text-[#0B5FA5] dark:text-[#38BDF8]" : "text-[#0B2E59]/70 dark:text-slate-400"}`} strokeWidth={active ? 2 : 1.5} />
                       <span>{item.label}</span>
                     </Link>
                   );
@@ -138,11 +137,11 @@ export function Sidebar() {
       </div>
 
       {/* Footer Controls: Theme Toggle & User Profile */}
-      <div className="p-3 border-t border-slate-200 dark:border-white/[0.06] bg-slate-50/70 dark:bg-black/20 space-y-2.5">
+      <div className="p-3 border-t border-[#DCE2E8] dark:border-white/[0.06] bg-[#F8FAFC] dark:bg-black/20 space-y-2.5">
         {/* Theme Switcher Pill */}
-        <div className="flex items-center justify-between px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200/80 dark:border-white/[0.05]">
-          <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-            Theme
+        <div className="flex items-center justify-between px-2 py-1 rounded-[4px] bg-white dark:bg-slate-900/60 border border-[#DCE2E8] dark:border-white/[0.05]">
+          <span className="text-[11px] font-semibold text-[#64748B] dark:text-slate-400">
+            Appearance
           </span>
           <ThemeToggle variant="pill" />
         </div>
@@ -150,15 +149,15 @@ export function Sidebar() {
         {/* Officer Profile & Sign Out */}
         <div className="flex items-center justify-between pt-1 gap-2">
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-lg flex-shrink-0 bg-gradient-to-br from-indigo-100 to-indigo-200 dark:from-[#1e3a5f] dark:to-[#153247] border border-indigo-300 dark:border-[#38bdf8]/30 flex items-center justify-center text-xs font-bold text-indigo-700 dark:text-[#38bdf8] font-mono shadow-sm">
-              BH
+            <div className="w-8 h-8 rounded-[4px] flex-shrink-0 bg-[#0B2E59] text-white flex items-center justify-center text-xs font-bold font-mono shadow-sm">
+              RK
             </div>
             <div className="truncate">
-              <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
-                CALA Directorate
+              <div className="text-xs font-bold text-[#14213D] dark:text-slate-200 truncate">
+                Sh. Rajesh Kumar
               </div>
-              <div className="text-[10px] text-slate-400 font-mono truncate">
-                Land Acquisition Authority
+              <div className="text-[10px] text-[#64748B] dark:text-slate-400 truncate">
+                CALA Varanasi
               </div>
             </div>
           </div>
@@ -173,7 +172,7 @@ export function Sidebar() {
       {/* Mobile Menu Trigger button */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="md:hidden fixed top-3 left-3 z-40 p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-md"
+        className="md:hidden fixed top-3 left-3 z-40 p-1.5 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 text-[#0B2E59] dark:text-slate-200 shadow-xs"
         aria-label="Open navigation menu"
       >
         <Menu className="w-5 h-5" />

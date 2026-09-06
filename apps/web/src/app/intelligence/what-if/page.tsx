@@ -135,188 +135,117 @@ export default function WhatIfSimulationPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      
+    <div className="space-y-6">
       {/* Statutory Simulation Banner */}
-      <div style={{
-        padding: '10px 16px',
-        borderRadius: 10,
-        background: 'rgba(16,185,129,0.08)',
-        border: '1px solid rgba(16,185,129,0.25)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 10
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{
-            fontSize: 10,
-            fontFamily: 'JetBrains Mono, monospace',
-            fontWeight: 800,
-            padding: '2px 8px',
-            borderRadius: 4,
-            background: '#10b981',
-            color: '#000',
-            textTransform: 'uppercase'
-          }}>
+      <div className="bg-[#E8F1FA] dark:bg-[#0B2E59]/30 border border-[#B8D5E5] dark:border-[#0B2E59] px-4 py-2.5 rounded-[4px] flex items-center justify-between flex-wrap gap-2.5">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-[#0B2E59] text-white uppercase">
             WHAT-IF SIMULATION
           </span>
-          <span style={{ fontSize: 12, color: '#6ee7b7', fontWeight: 600 }}>
+          <span className="text-xs text-[#0B2E59] dark:text-[#93C5FD] font-semibold">
             RFCTLARR 2013 Statutory Compensation Assessment
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
-            Statutory Parameter Workbench
-          </span>
+        <div className="flex items-center gap-3.5 text-xs text-[#555555] dark:text-slate-400">
+          <span className="font-mono text-[11px]">Statutory Parameter Workbench</span>
           <button
             onClick={loadData}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#34d399',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              fontSize: 11,
-              fontWeight: 600
-            }}
+            className="text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1 font-semibold"
           >
-            <RefreshCw style={{ width: 12, height: 12, animation: loading ? 'spin 1s linear infinite' : 'none' }} />
+            <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
           </button>
         </div>
       </div>
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-            <span style={{
-              fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4,
-              background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8',
-              textTransform: 'uppercase', letterSpacing: '0.06em'
-            }}>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-[#0B2E59] text-white uppercase">
               Decision Intelligence Workbench
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+          <h1 className="text-xl md:text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF]">
             What-If Statutory Simulation Workbench
           </h1>
-          <p style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
+          <p className="text-xs text-[#555555] dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
             Simulate the impact of adjusting statutory multipliers, solatium, and dispute interventions on real landowner compensation awards and court litigation risk.
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div className="flex items-center gap-2.5">
           <Link
             href="/landowner-cases"
-            style={{
-              padding: '8px 16px',
-              borderRadius: 8,
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              color: '#cbd5e1',
-              fontSize: 12,
-              fontWeight: 600,
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}
+            className="px-3.5 py-2 rounded-[4px] bg-white dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#0B2E59] dark:text-sky-400 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/10 flex items-center gap-1.5 transition-colors"
           >
             <span>Landowner Cases Queue</span>
-            <ArrowRight style={{ width: 13, height: 13 }} />
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
           <Link
             href="/landowner-gis"
-            style={{
-              padding: '8px 16px',
-              borderRadius: 8,
-              background: 'rgba(99,102,241,0.15)',
-              border: '1px solid rgba(99,102,241,0.3)',
-              color: '#a5b4fc',
-              fontSize: 12,
-              fontWeight: 700,
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}
+            className="px-3.5 py-2 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
           >
-            <Navigation style={{ width: 14, height: 14 }} />
+            <Navigation className="w-3.5 h-3.5" />
             <span>Real Landowner GIS</span>
           </Link>
         </div>
       </div>
 
       {loading ? (
-        <div style={{ padding: '60px 16px', textAlign: 'center', color: '#64748b' }}>
-          <RefreshCw style={{ width: 24, height: 24, margin: '0 auto 12px', animation: 'spin 1s linear infinite', color: '#10b981' }} />
+        <div className="py-16 text-center text-[#64748B] text-xs">
+          <RefreshCw className="w-5 h-5 mx-auto mb-2 animate-spin text-[#0B2E59] dark:text-sky-400" />
           <span>Loading real cases for simulation...</span>
         </div>
       ) : cases.length === 0 ? (
-        <div style={{ padding: '60px 16px', textAlign: 'center', borderRadius: 16, border: '1px dashed rgba(255,255,255,0.1)' }}>
-          <CheckCircle2 style={{ width: 36, height: 36, color: '#10b981', margin: '0 auto 12px' }} />
-          <div style={{ fontSize: 16, fontWeight: 700, color: '#e2e8f0', marginBottom: 6 }}>
+        <div className="py-16 px-4 text-center rounded-[4px] border border-dashed border-[#DCE2E8] dark:border-white/15 bg-white dark:bg-[#0D121F]">
+          <CheckCircle2 className="w-8 h-8 text-[#1E7E34] mx-auto mb-2" />
+          <div className="text-sm font-bold text-[#14213D] dark:text-white mb-1">
             No landowner grievances available.
           </div>
-          <p style={{ fontSize: 12, color: '#64748b', maxWidth: 440, margin: '0 auto' }}>
+          <p className="text-xs text-[#64748B] dark:text-slate-400 max-w-md mx-auto leading-relaxed">
             What-If simulation runs exclusively on verified citizen cases. When a landowner files a complaint and the Field Officer verifies it, you can simulate counterfactual awards here.
           </p>
         </div>
       ) : (
         /* Active Simulation Workbench */
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 380px) 1fr', gap: 20, alignItems: 'start' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
           
           {/* Left Column: Target Case Selector & Parameter Sliders */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div className="lg:col-span-5 space-y-4">
             
             {/* Case Picker Card */}
-            <div className="glass" style={{ borderRadius: 14, padding: 18, border: '1px solid rgba(255,255,255,0.08)' }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', display: 'block', marginBottom: 8 }}>
+            <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
+              <label className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider block mb-2 font-mono">
                 Select Real Landowner Case
               </label>
               <select
                 value={selectedCaseId}
                 onChange={e => setSelectedCaseId(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '10px 12px',
-                  borderRadius: 8,
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  background: 'rgba(15,23,42,0.8)',
-                  color: '#e2e8f0',
-                  fontSize: 13,
-                  fontWeight: 600,
-                  outline: 'none',
-                  cursor: 'pointer'
-                }}
+                className="w-full px-3 py-2 rounded-[4px] border border-[#CBD5E1] dark:border-white/15 bg-white dark:bg-[#0a0f1d] text-[#14213D] dark:text-white text-xs font-semibold outline-none focus:border-[#0B2E59]"
               >
                 {cases.map(c => (
                   <option key={c.id} value={c.id}>
-                    Parcel #{c.parcel_id} &middot; {c.owner_name} ({c.status || 'Active'})
+                    Parcel #{c.parcel_id} &bull; {c.owner_name} ({c.status || 'Active'})
                   </option>
                 ))}
               </select>
 
               {selectedCase && parcelMetrics && (
-                <div style={{ marginTop: 14, padding: 12, borderRadius: 8, background: 'rgba(0,0,0,0.25)', fontSize: 11 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <span style={{ color: '#64748b' }}>Owner:</span>
-                    <span style={{ color: '#e2e8f0', fontWeight: 600 }}>{selectedCase.owner_name}</span>
+                <div className="mt-3.5 p-3 rounded-[4px] bg-[#F8FAFC] dark:bg-white/[0.02] border border-[#DCE2E8] dark:border-white/10 text-xs space-y-1.5">
+                  <div className="flex justify-between">
+                    <span className="text-[#64748B]">Owner:</span>
+                    <span className="font-bold text-[#14213D] dark:text-white">{selectedCase.owner_name}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <span style={{ color: '#64748b' }}>Declared Area:</span>
-                    <span style={{ color: '#10b981', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
+                  <div className="flex justify-between">
+                    <span className="text-[#64748B]">Declared Area:</span>
+                    <span className="font-mono font-bold text-[#1E7E34] dark:text-emerald-400">
                       {parcelMetrics.areaAcres.toFixed(2)} Acres ({parcelMetrics.areaSqm.toLocaleString()} m&sup2;)
                     </span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#64748b' }}>Base Circle Rate:</span>
-                    <span style={{ color: '#818cf8', fontWeight: 600, fontFamily: 'JetBrains Mono, monospace' }}>
+                  <div className="flex justify-between">
+                    <span className="text-[#64748B]">Base Circle Rate:</span>
+                    <span className="font-mono font-bold text-[#0B5FA5] dark:text-sky-400">
                       ₹{parcelMetrics.ratePerSqm.toLocaleString()}/m&sup2;
                     </span>
                   </div>
@@ -325,17 +254,17 @@ export default function WhatIfSimulationPage() {
             </div>
 
             {/* Statutory Parameters Configurator */}
-            <div className="glass" style={{ borderRadius: 14, padding: 18, border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#e2e8f0', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Scale style={{ width: 14, height: 14, color: '#10b981' }} />
+            <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm space-y-4">
+              <div className="text-xs font-bold text-[#14213D] dark:text-white flex items-center gap-1.5">
+                <Scale className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
                 <span>RFCTLARR Statutory Parameters</span>
               </div>
 
               {/* Multiplier Slider */}
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 6 }}>
-                  <span style={{ color: '#94a3b8' }}>Rural Multiplier Factor:</span>
-                  <span style={{ color: '#38bdf8', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace' }}>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-[#555555] dark:text-slate-400">Rural Multiplier Factor:</span>
+                  <span className="font-mono font-bold text-[#0B5FA5] dark:text-sky-400">
                     {multiplier.toFixed(2)}&times;
                   </span>
                 </div>
@@ -346,9 +275,9 @@ export default function WhatIfSimulationPage() {
                   step="0.05"
                   value={multiplier}
                   onChange={e => setMultiplier(parseFloat(e.target.value))}
-                  style={{ width: '100%', accentColor: '#38bdf8', cursor: 'pointer' }}
+                  className="w-full accent-[#0B2E59] cursor-pointer"
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#64748b', marginTop: 2, fontFamily: 'JetBrains Mono, monospace' }}>
+                <div className="flex justify-between text-[10px] text-[#64748B] mt-0.5 font-mono">
                   <span>1.0x (Urban)</span>
                   <span>1.5x (Semi-rural)</span>
                   <span>2.0x (Rural Remote)</span>
@@ -357,9 +286,9 @@ export default function WhatIfSimulationPage() {
 
               {/* Solatium Slider */}
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 6 }}>
-                  <span style={{ color: '#94a3b8' }}>Mandatory Solatium (Sec 30):</span>
-                  <span style={{ color: '#10b981', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace' }}>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-[#555555] dark:text-slate-400">Mandatory Solatium (Sec 30):</span>
+                  <span className="font-mono font-bold text-[#1E7E34] dark:text-emerald-400">
                     {solatiumPct}%
                   </span>
                 </div>
@@ -370,9 +299,9 @@ export default function WhatIfSimulationPage() {
                   step="10"
                   value={solatiumPct}
                   onChange={e => setSolatiumPct(parseInt(e.target.value))}
-                  style={{ width: '100%', accentColor: '#10b981', cursor: 'pointer' }}
+                  className="w-full accent-[#1E7E34] cursor-pointer"
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#64748b', marginTop: 2, fontFamily: 'JetBrains Mono, monospace' }}>
+                <div className="flex justify-between text-[10px] text-[#64748B] mt-0.5 font-mono">
                   <span>50%</span>
                   <span>100% (Statutory Norm)</span>
                   <span>150%</span>
@@ -381,9 +310,9 @@ export default function WhatIfSimulationPage() {
 
               {/* Delay Interest */}
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 6 }}>
-                  <span style={{ color: '#94a3b8' }}>Delay Interest (12% p.a.):</span>
-                  <span style={{ color: '#f59e0b', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace' }}>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-[#555555] dark:text-slate-400">Delay Interest (12% p.a.):</span>
+                  <span className="font-mono font-bold text-[#B36B00] dark:text-amber-400">
                     {interestYears} Year{interestYears === 1 ? '' : 's'} (+{(interestYears * 12)}%)
                   </span>
                 </div>
@@ -394,16 +323,16 @@ export default function WhatIfSimulationPage() {
                   step="0.5"
                   value={interestYears}
                   onChange={e => setInterestYears(parseFloat(e.target.value))}
-                  style={{ width: '100%', accentColor: '#f59e0b', cursor: 'pointer' }}
+                  className="w-full accent-[#B36B00] cursor-pointer"
                 />
               </div>
 
               {/* Administrative Intervention Option */}
               <div>
-                <label style={{ fontSize: 11, color: '#94a3b8', display: 'block', marginBottom: 6 }}>
+                <label className="text-xs text-[#555555] dark:text-slate-400 block mb-1.5 font-medium">
                   Direct Administrative Intervention:
                 </label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div className="space-y-1.5">
                   {[
                     { id: 'pfms_direct', label: 'PFMS Direct Disbursal (+₹50k fast-track)' },
                     { id: 'joint_cadastral', label: 'Joint Cadastral Demarcation Order' },
@@ -411,18 +340,11 @@ export default function WhatIfSimulationPage() {
                   ].map(opt => (
                     <label
                       key={opt.id}
-                      style={{
-                        padding: '8px 10px',
-                        borderRadius: 6,
-                        border: selectedIntervention === opt.id ? '1px solid #6366f1' : '1px solid rgba(255,255,255,0.06)',
-                        background: selectedIntervention === opt.id ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.02)',
-                        fontSize: 11,
-                        color: selectedIntervention === opt.id ? '#c7d2fe' : '#94a3b8',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8
-                      }}
+                      className={`p-2.5 rounded-[4px] border text-xs cursor-pointer flex items-center gap-2 transition-colors ${
+                        selectedIntervention === opt.id
+                          ? 'bg-[#E8F1FA] dark:bg-[#0B2E59]/30 border-[#0B2E59] text-[#0B2E59] dark:text-sky-300 font-semibold'
+                          : 'bg-white dark:bg-white/[0.02] border-[#DCE2E8] dark:border-white/10 text-[#555555] dark:text-slate-400'
+                      }`}
                     >
                       <input
                         type="radio"
@@ -430,7 +352,7 @@ export default function WhatIfSimulationPage() {
                         value={opt.id}
                         checked={selectedIntervention === opt.id}
                         onChange={() => setSelectedIntervention(opt.id)}
-                        style={{ accentColor: '#6366f1' }}
+                        className="accent-[#0B2E59]"
                       />
                       <span>{opt.label}</span>
                     </label>
@@ -444,60 +366,45 @@ export default function WhatIfSimulationPage() {
 
           {/* Right Column: Live Side-by-Side BEFORE vs AFTER Comparison */}
           {parcelMetrics && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="lg:col-span-7 space-y-4">
               
               {applySuccess && (
-                <div style={{
-                  padding: '12px 16px',
-                  borderRadius: 10,
-                  background: 'rgba(16,185,129,0.15)',
-                  border: '1px solid rgba(16,185,129,0.35)',
-                  color: '#34d399',
-                  fontSize: 12,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8
-                }}>
-                  <CheckCircle2 style={{ width: 16, height: 16, flexShrink: 0 }} />
+                <div className="p-3 rounded-[4px] bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/50 text-[#1E7E34] dark:text-emerald-400 text-xs flex items-center gap-2 font-medium">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
                   <span>{applySuccess}</span>
                 </div>
               )}
 
               {/* Side-by-Side Comparison Container */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 
                 {/* BEFORE / Current State */}
-                <div className="glass" style={{
-                  borderRadius: 14,
-                  padding: 20,
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  background: 'rgba(255,255,255,0.015)'
-                }}>
-                  <div style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#f59e0b', textTransform: 'uppercase', marginBottom: 4 }}>
+                <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
+                  <div className="text-[10px] font-mono font-bold text-[#B36B00] dark:text-amber-400 uppercase tracking-wider mb-1">
                     BEFORE &bull; CURRENT BASELINE
                   </div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: '#e2e8f0', marginBottom: 14 }}>
+                  <div className="text-sm font-bold text-[#14213D] dark:text-white mb-3">
                     Standard Award
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 12 }}>
+                  <div className="space-y-3 text-xs">
                     <div>
-                      <div style={{ color: '#64748b', fontSize: 11 }}>Total Compensation</div>
-                      <div style={{ fontSize: 22, fontWeight: 800, color: '#e2e8f0', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
+                      <div className="text-[11px] text-[#64748B]">Total Compensation</div>
+                      <div className="text-xl font-bold font-mono text-[#14213D] dark:text-white mt-0.5">
                         ₹{Math.round(parcelMetrics.beforeTotal).toLocaleString('en-IN')}
                       </div>
                     </div>
 
-                    <div style={{ paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div style={{ color: '#64748b', fontSize: 11 }}>Litigation Risk</div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: '#ef4444', marginTop: 2 }}>
+                    <div className="pt-2.5 border-t border-[#DCE2E8] dark:border-white/10">
+                      <div className="text-[11px] text-[#64748B]">Litigation Risk</div>
+                      <div className="text-xs font-bold text-[#B32424] dark:text-rose-400 mt-0.5">
                         {parcelMetrics.beforeLitigationRisk}
                       </div>
                     </div>
 
-                    <div style={{ paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div style={{ color: '#64748b', fontSize: 11 }}>Projected Dispute Duration</div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: '#f59e0b', marginTop: 2 }}>
+                    <div className="pt-2.5 border-t border-[#DCE2E8] dark:border-white/10">
+                      <div className="text-[11px] text-[#64748B]">Projected Dispute Duration</div>
+                      <div className="text-xs font-bold text-[#B36B00] dark:text-amber-400 mt-0.5">
                         ~{parcelMetrics.beforeDelayDays} Days
                       </div>
                     </div>
@@ -505,41 +412,36 @@ export default function WhatIfSimulationPage() {
                 </div>
 
                 {/* AFTER / Simulated State */}
-                <div className="glass" style={{
-                  borderRadius: 14,
-                  padding: 20,
-                  border: '1px solid rgba(16,185,129,0.3)',
-                  background: 'rgba(16,185,129,0.04)'
-                }}>
-                  <div style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#10b981', textTransform: 'uppercase', marginBottom: 4 }}>
+                <div className="bg-[#F0FDF4] dark:bg-emerald-950/20 border border-emerald-300 dark:border-emerald-800/50 rounded-[4px] p-4 shadow-sm">
+                  <div className="text-[10px] font-mono font-bold text-[#1E7E34] dark:text-emerald-400 uppercase tracking-wider mb-1">
                     AFTER &bull; SIMULATED INTERVENTION
                   </div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: '#34d399', marginBottom: 14 }}>
+                  <div className="text-sm font-bold text-[#1E7E34] dark:text-emerald-300 mb-3">
                     Revised Statutory Award
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 12 }}>
+                  <div className="space-y-3 text-xs">
                     <div>
-                      <div style={{ color: '#64748b', fontSize: 11 }}>Simulated Compensation</div>
-                      <div style={{ fontSize: 22, fontWeight: 800, color: '#10b981', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
+                      <div className="text-[11px] text-[#64748B]">Simulated Compensation</div>
+                      <div className="text-xl font-bold font-mono text-[#1E7E34] dark:text-emerald-400 mt-0.5">
                         ₹{Math.round(parcelMetrics.afterTotal).toLocaleString('en-IN')}
                       </div>
-                      <div style={{ fontSize: 11, color: '#34d399', fontWeight: 600, marginTop: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <TrendingUp style={{ width: 12, height: 12 }} />
+                      <div className="text-[11px] text-[#1E7E34] dark:text-emerald-400 font-semibold mt-1 flex items-center gap-1">
+                        <TrendingUp className="w-3 h-3" />
                         <span>+₹{Math.round(parcelMetrics.netDifference).toLocaleString('en-IN')} ({Math.round((parcelMetrics.netDifference / parcelMetrics.beforeTotal) * 100)}% uplift)</span>
                       </div>
                     </div>
 
-                    <div style={{ paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div style={{ color: '#64748b', fontSize: 11 }}>Mitigated Litigation Risk</div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: '#34d399', marginTop: 2 }}>
+                    <div className="pt-2.5 border-t border-emerald-200 dark:border-emerald-800/30">
+                      <div className="text-[11px] text-[#64748B]">Mitigated Litigation Risk</div>
+                      <div className="text-xs font-bold text-[#1E7E34] dark:text-emerald-400 mt-0.5">
                         {parcelMetrics.afterLitigationRisk}
                       </div>
                     </div>
 
-                    <div style={{ paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div style={{ color: '#64748b', fontSize: 11 }}>Time Saved to Handover</div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: '#38bdf8', marginTop: 2 }}>
+                    <div className="pt-2.5 border-t border-emerald-200 dark:border-emerald-800/30">
+                      <div className="text-[11px] text-[#64748B]">Time Saved to Handover</div>
+                      <div className="text-xs font-bold text-[#0B5FA5] dark:text-sky-400 mt-0.5">
                         ~{parcelMetrics.estimatedDaysSaved} Days Saved
                       </div>
                     </div>
@@ -549,12 +451,12 @@ export default function WhatIfSimulationPage() {
               </div>
 
               {/* Action Button: Save & Apply Determination */}
-              <div className="glass" style={{ borderRadius: 14, padding: 18, border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+              <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm flex items-center justify-between flex-wrap gap-3">
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#e2e8f0' }}>
+                  <div className="text-xs font-bold text-[#14213D] dark:text-white">
                     Issue Statutory Determination Order
                   </div>
-                  <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
+                  <div className="text-[11px] text-[#64748B] mt-0.5">
                     Will issue statutory determination orders and update citizen grievance #{selectedCase.parcel_id} records.
                   </div>
                 </div>
@@ -563,22 +465,9 @@ export default function WhatIfSimulationPage() {
                   type="button"
                   onClick={handleApplyToDatabase}
                   disabled={applying}
-                  style={{
-                    padding: '10px 20px',
-                    borderRadius: 10,
-                    background: 'linear-gradient(135deg, #10b981, #059669)',
-                    color: '#fff',
-                    fontSize: 13,
-                    fontWeight: 700,
-                    border: 'none',
-                    cursor: applying ? 'not-allowed' : 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    boxShadow: '0 4px 14px rgba(16,185,129,0.35)'
-                  }}
+                  className="px-4 py-2 rounded-[4px] bg-[#1E7E34] hover:bg-[#166527] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50 shadow-xs cursor-pointer"
                 >
-                  <FileCheck style={{ width: 16, height: 16 }} />
+                  <FileCheck className="w-4 h-4" />
                   <span>{applying ? 'Applying...' : 'Apply Statutory Determination'}</span>
                 </button>
               </div>

@@ -222,183 +222,114 @@ export default function RealLandownerGISPage() {
   const hasItems = gisParcels.length > 0;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <div className="flex flex-col gap-5">
       
       {/* Top Provenance Banner */}
-      <div style={{
-        padding: '10px 16px',
-        borderRadius: 10,
-        background: 'rgba(16,185,129,0.08)',
-        border: '1px solid rgba(16,185,129,0.3)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 10
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{
-            fontSize: 10,
-            fontFamily: 'JetBrains Mono, monospace',
-            fontWeight: 800,
-            padding: '2px 8px',
-            borderRadius: 4,
-            background: '#10b981',
-            color: '#000',
-            textTransform: 'uppercase'
-          }}>
+      <div className="p-3 rounded-[4px] bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 flex items-center justify-between flex-wrap gap-2 shadow-xs transition-colors">
+        <div className="flex items-center gap-2.5">
+          <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-[3px] bg-[#0B2E59] text-white uppercase tracking-wider">
             CADASTRAL SPATIAL MAP
           </span>
-          <span style={{ fontSize: 12, color: '#6ee7b7', fontWeight: 600 }}>
+          <span className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF]">
             Dedicated Landowner Spatial Boundary Map &bull; Ground Verified Polygons
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-[#5A6A80] dark:text-slate-400 font-mono">
             Domain: Citizen Grievances &amp; Demarcation
           </span>
           <Link
             href="/projects/gis"
-            style={{
-              fontSize: 11,
-              color: '#818cf8',
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              fontWeight: 600
-            }}
+            className="text-xs font-bold text-[#0B2E59] dark:text-sky-400 hover:underline flex items-center gap-1"
           >
             <span>Switch to Project Spatial Map</span>
-            <ArrowRight style={{ width: 12, height: 12 }} />
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-            <span style={{
-              fontSize: 10, fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.07em', textTransform: 'uppercase',
-              padding: '3px 10px', borderRadius: 5,
-              background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#34d399'
-            }}>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300 uppercase">
               {gisParcels.length} Registered Parcel{gisParcels.length === 1 ? '' : 's'}
             </span>
-            <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+            <span className="text-xs text-[#5A6A80] dark:text-slate-400 font-mono">
               Minimum 4 GPS Vertices &bull; Ground Verified by Field Officer
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 24, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+          <h1 className="text-2xl font-extrabold text-[#14213D] dark:text-white m-0 font-display">
             Land Parcel Spatial Map
           </h1>
-          <p style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
+          <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
             Visualizing verified citizen property polygon boundaries. Click any parcel to inspect cadastral vertices and run statutory What-If simulations.
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div className="flex items-center gap-2.5">
           <button
             onClick={loadRealData}
-            style={{
-              padding: '7px 14px',
-              borderRadius: 8,
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              color: '#cbd5e1',
-              fontSize: 11,
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}
+            className="px-3 py-1.5 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-300 hover:text-[#14213D] text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-colors"
           >
-            <RefreshCw style={{ width: 12, height: 12, animation: loading ? 'spin 1s linear infinite' : 'none' }} />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
           </button>
           <Link
             href="/landowner-cases"
-            style={{
-              padding: '7px 14px',
-              borderRadius: 8,
-              background: 'rgba(99,102,241,0.15)',
-              border: '1px solid rgba(99,102,241,0.3)',
-              color: '#a5b4fc',
-              fontSize: 11,
-              fontWeight: 700,
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4
-            }}
+            className="px-3.5 py-1.5 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
           >
             <span>Admin Case Directives</span>
-            <ArrowRight style={{ width: 12, height: 12 }} />
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>
 
       {/* Main Two-Column GIS Interface */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(310px, 370px) 1fr', gap: 18, alignItems: 'start' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-4 items-start">
         
         {/* Left Side: Parcel Selection & Detail Inspector */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="flex flex-col gap-3.5">
           
           {/* Parcel List */}
-          <div style={{
-            borderRadius: 12,
-            border: '1px solid rgba(255,255,255,0.08)',
-            background: 'rgba(15,23,42,0.6)',
-            padding: 14,
-            maxHeight: 250,
-            overflowY: 'auto'
-          }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', marginBottom: 10 }}>
+          <div className="rounded-[4px] border border-[#DCE2E8] dark:border-white/10 bg-white dark:bg-[#0D121F] p-3 shadow-xs max-h-[260px] overflow-y-auto space-y-2">
+            <div className="text-[10px] font-bold text-[#5A6A80] dark:text-slate-400 uppercase font-mono tracking-wider mb-2">
               Registered Parcels ({gisParcels.length})
             </div>
             {gisParcels.length === 0 ? (
-              <div style={{ padding: '24px 10px', textAlign: 'center', color: '#64748b', fontSize: 12 }}>
+              <div className="py-6 text-center text-[#5A6A80] dark:text-slate-400 text-xs">
                 No registered parcels available.
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div className="flex flex-col gap-2">
                 {gisParcels.map(p => {
                   const isSelected = selectedParcel?.map_id === p.map_id || selectedParcel?.parcel_id === p.parcel_id;
                   return (
                     <div
                       key={p.map_id}
                       onClick={() => setSelectedParcel(p)}
-                      style={{
-                        padding: '10px 12px',
-                        borderRadius: 8,
-                        border: isSelected ? '1px solid #10b981' : '1px solid rgba(255,255,255,0.06)',
-                        background: isSelected ? 'rgba(16,185,129,0.12)' : 'rgba(255,255,255,0.02)',
-                        cursor: 'pointer',
-                        transition: 'background 0.15s'
-                      }}
+                      className={`p-2.5 rounded-[3px] border cursor-pointer transition-all ${
+                        isSelected
+                          ? "bg-[#F0F4F9] dark:bg-sky-950/30 border-[#0B2E59] dark:border-sky-600 shadow-xs"
+                          : "bg-[#F8FAFC] dark:bg-[#07080F] border-[#DCE2E8] dark:border-white/10 hover:border-[#CBD5E1]"
+                      }`}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                        <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#38bdf8', fontWeight: 700 }}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] font-mono font-bold text-[#0B2E59] dark:text-sky-400">
                           #{p.parcel_id}
                         </span>
-                        <span style={{
-                          fontSize: 9,
-                          fontFamily: 'JetBrains Mono, monospace',
-                          fontWeight: 700,
-                          padding: '1px 6px',
-                          borderRadius: 4,
-                          background: p.status === 'Implementation Completed' ? 'rgba(16,185,129,0.2)' : 'rgba(245,158,11,0.2)',
-                          color: p.status === 'Implementation Completed' ? '#34d399' : '#f59e0b'
-                        }}>
+                        <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-[3px] border ${
+                          p.status === 'Implementation Completed' || p.status === 'RESOLVED'
+                            ? 'bg-[#E8F5E9] text-[#1E7E34] border-[#C8E6C9] dark:bg-emerald-950/40 dark:text-emerald-300'
+                            : 'bg-[#FFF8E1] text-[#B36B00] border-[#FFE082] dark:bg-amber-950/40 dark:text-amber-300'
+                        }`}>
                           {p.status}
                         </span>
                       </div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
+                      <div className="text-xs font-bold text-[#14213D] dark:text-white leading-snug">
                         {p.owner_name}
                       </div>
-                      <div style={{ fontSize: 11, color: '#64748b', marginTop: 3 }}>
+                      <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1 font-mono">
                         Area: {p.area_acres} Acres &middot; {p.polygonCoordinates?.length || 4} GPS Points
                       </div>
                     </div>
@@ -410,155 +341,87 @@ export default function RealLandownerGISPage() {
 
           {/* Selected Real Parcel Inspector */}
           {selectedParcel ? (
-            <div style={{
-              borderRadius: 12,
-              border: '1px solid rgba(16,185,129,0.3)',
-              background: 'rgba(16,185,129,0.04)',
-              padding: 16,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 12
-            }}>
+            <div className="rounded-[4px] border border-[#DCE2E8] dark:border-white/10 bg-white dark:bg-[#0D121F] p-4 shadow-xs flex flex-col gap-3">
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{
-                    fontSize: 9,
-                    fontFamily: 'JetBrains Mono, monospace',
-                    fontWeight: 800,
-                    padding: '2px 6px',
-                    borderRadius: 4,
-                    background: 'rgba(16,185,129,0.2)',
-                    color: '#6ee7b7',
-                    textTransform: 'uppercase'
-                  }}>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40 uppercase">
                     REAL CADASTRAL PARCEL
                   </span>
-                  <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#38bdf8', fontWeight: 700 }}>
+                  <span className="text-xs font-mono font-bold text-[#0B2E59] dark:text-sky-400">
                     #{selectedParcel.parcel_id}
                   </span>
                 </div>
-                <h3 style={{ fontSize: 16, fontWeight: 800, color: '#e2e8f0', margin: '6px 0 2px' }}>
+                <h3 className="text-sm font-bold text-[#14213D] dark:text-white mt-2 mb-0.5 font-display">
                   {selectedParcel.owner_name}
                 </h3>
-                <div style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
-                  Status: {selectedParcel.status}
+                <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 font-mono">
+                  Status: <span className="font-semibold text-[#14213D] dark:text-slate-200">{selectedParcel.status}</span>
                 </div>
               </div>
 
               {/* Cadastral Specs */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                <div style={{ padding: '8px 10px', borderRadius: 8, background: 'rgba(0,0,0,0.3)' }}>
-                  <div style={{ fontSize: 10, color: '#64748b' }}>Cadastral Area</div>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: '#10b981', fontFamily: 'JetBrains Mono, monospace' }}>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="p-2.5 rounded-[3px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                  <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-semibold">Cadastral Area</div>
+                  <div className="text-sm font-bold text-[#1E7E34] dark:text-emerald-400 font-mono mt-0.5">
                     {selectedParcel.area_acres} Acres
                   </div>
                 </div>
-                <div style={{ padding: '8px 10px', borderRadius: 8, background: 'rgba(0,0,0,0.3)' }}>
-                  <div style={{ fontSize: 10, color: '#64748b' }}>GPS Boundary Points</div>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: '#818cf8', fontFamily: 'JetBrains Mono, monospace' }}>
+                <div className="p-2.5 rounded-[3px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                  <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-semibold">GPS Boundary Points</div>
+                  <div className="text-sm font-bold text-[#0B2E59] dark:text-sky-400 font-mono mt-0.5">
                     {selectedParcel.polygonCoordinates?.length || 4} Vertices
                   </div>
                 </div>
               </div>
 
               {/* Field Officer Notes */}
-              <div style={{
-                padding: '10px 12px',
-                borderRadius: 8,
-                background: 'rgba(0,0,0,0.25)',
-                border: '1px solid rgba(255,255,255,0.06)'
-              }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', marginBottom: 4 }}>
+              <div className="p-2.5 rounded-[3px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 text-xs">
+                <div className="text-[10px] font-bold text-[#5A6A80] dark:text-slate-400 uppercase font-mono tracking-wider mb-1">
                   Field Officer Ground Inspection
                 </div>
-                <div style={{ fontSize: 11, color: '#cbd5e1', lineHeight: 1.4 }}>
+                <div className="text-xs text-[#14213D] dark:text-slate-300 leading-relaxed">
                   {selectedParcel.field_verification_notes || selectedParcel.resolution_notes || 'Verified on ground by Ramesh Patel (OFF-001). Cadastral boundaries matched.'}
                 </div>
               </div>
 
               {/* What-If Simulation Action Trigger */}
-              <div style={{ paddingTop: 4 }}>
+              <div className="pt-1">
                 <button
                   type="button"
                   onClick={() => setWhatIfModalOpen(true)}
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px',
-                    borderRadius: 8,
-                    background: 'linear-gradient(135deg, #10b981, #059669)',
-                    color: '#fff',
-                    fontSize: 12,
-                    fontWeight: 700,
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 8,
-                    boxShadow: '0 4px 12px rgba(16,185,129,0.3)'
-                  }}
+                  className="w-full py-2.5 px-3.5 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold shadow-xs flex items-center justify-center gap-2 cursor-pointer transition-all"
                 >
-                  <Sparkles style={{ width: 14, height: 14 }} />
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                   <span>Run What-If Simulation on Parcel #{selectedParcel.parcel_id}</span>
                 </button>
               </div>
 
-              <div style={{ paddingTop: 6, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="pt-2 border-t border-[#DCE2E8] dark:border-white/10">
                 <Link
                   href="/landowner-cases"
-                  style={{
-                    fontSize: 11,
-                    color: '#34d399',
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    fontWeight: 600
-                  }}
+                  className="text-xs font-bold text-[#0B2E59] dark:text-sky-400 hover:underline flex items-center gap-1.5"
                 >
                   <span>Open Full Administrative Resolution Card</span>
-                  <ArrowRight style={{ width: 12, height: 12 }} />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
           ) : (
-            <div style={{ padding: 20, textAlign: 'center', color: '#64748b', fontSize: 12, borderRadius: 12, border: '1px dashed rgba(255,255,255,0.1)' }}>
+            <div className="p-6 text-center text-[#5A6A80] dark:text-slate-400 text-xs rounded-[4px] border border-dashed border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#07080F]">
               Select a parcel from the list or click a marker on the map to inspect boundary vertices.
             </div>
           )}
         </div>
 
         {/* Right Side: Map Canvas */}
-        <div style={{
-          height: 560,
-          borderRadius: 14,
-          overflow: 'hidden',
-          border: '1px solid rgba(255,255,255,0.1)',
-          position: 'relative',
-          background: '#0f172a'
-        }}>
+        <div className="h-[580px] rounded-[4px] overflow-hidden border border-[#DCE2E8] dark:border-white/10 relative bg-[#EBF0F5] dark:bg-[#07080F] shadow-xs">
           {/* Top Floating Badge */}
-          <div style={{
-            position: 'absolute',
-            top: 12,
-            left: 12,
-            zIndex: 10,
-            background: 'rgba(15,23,42,0.85)',
-            backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255,255,255,0.12)',
-            padding: '6px 12px',
-            borderRadius: 8,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            color: '#e2e8f0',
-            fontSize: 11,
-            fontWeight: 600
-          }}>
-            <Navigation style={{ width: 14, height: 14, color: '#10b981' }} />
+          <div className="absolute top-3 left-3 z-10 bg-white/95 dark:bg-[#0D121F]/95 backdrop-blur-xs border border-[#DCE2E8] dark:border-white/10 px-3 py-1.5 rounded-[4px] flex items-center gap-2 text-xs font-bold text-[#14213D] dark:text-white shadow-xs">
+            <Navigation className="w-3.5 h-3.5 text-[#1E7E34] dark:text-emerald-400" />
             <span>Cadastral Boundary Polygon Layer</span>
-            <span style={{ color: '#64748b' }}>|</span>
-            <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#34d399', fontSize: 10 }}>
+            <span className="text-[#5A6A80] dark:text-slate-500">|</span>
+            <span className="font-mono text-[#1E7E34] dark:text-emerald-400 text-[10px]">
               Authoritative Records
             </span>
           </div>
@@ -580,16 +443,16 @@ export default function RealLandownerGISPage() {
                   id="real-parcels-fill"
                   type="fill"
                   paint={{
-                    'fill-color': '#10b981',
-                    'fill-opacity': 0.35
+                    'fill-color': '#1E7E34',
+                    'fill-opacity': 0.25
                   }}
                 />
                 <Layer
                   id="real-parcels-line"
                   type="line"
                   paint={{
-                    'line-color': '#059669',
-                    'line-width': 2.5
+                    'line-color': '#1E7E34',
+                    'line-width': 2
                   }}
                 />
               </Source>
@@ -611,38 +474,18 @@ export default function RealLandownerGISPage() {
                     setSelectedParcel(p);
                   }}
                 >
-                  <div
-                    style={{
-                      cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <div style={{
-                      padding: 6,
-                      borderRadius: '50%',
-                      background: isSelected ? '#f59e0b' : isCompleted ? '#10b981' : '#6366f1',
-                      color: '#fff',
-                      boxShadow: isSelected ? '0 0 16px rgba(245,158,11,0.7)' : '0 0 10px rgba(16,185,129,0.5)',
-                      transform: isSelected ? 'scale(1.25)' : 'scale(1)',
-                      transition: 'transform 0.15s ease'
-                    }}>
-                      <MapPin style={{ width: 14, height: 14 }} />
+                  <div className="cursor-pointer flex flex-col items-center">
+                    <div className={`p-1.5 rounded-full text-white transition-transform ${
+                      isSelected 
+                        ? 'bg-[#FF9933] shadow-md ring-2 ring-white scale-125' 
+                        : isCompleted 
+                        ? 'bg-[#1E7E34] shadow-xs' 
+                        : 'bg-[#0B2E59] shadow-xs'
+                    }`}>
+                      <MapPin className="w-3.5 h-3.5" />
                     </div>
 
-                    <div style={{
-                      marginTop: 3,
-                      padding: '2px 6px',
-                      borderRadius: 4,
-                      background: 'rgba(15,23,42,0.92)',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      color: '#fff',
-                      fontSize: 9,
-                      fontWeight: 700,
-                      fontFamily: 'JetBrains Mono, monospace',
-                      whiteSpace: 'nowrap'
-                    }}>
+                    <div className="mt-1 px-1.5 py-0.5 rounded-[3px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 text-[#14213D] dark:text-white text-[9px] font-bold font-mono whitespace-nowrap shadow-xs">
                       #{p.parcel_id.slice(-6)} &middot; {p.owner_name}
                     </div>
                   </div>
@@ -653,31 +496,13 @@ export default function RealLandownerGISPage() {
 
           {/* Empty State Overlay */}
           {!hasItems && (
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 24,
-              background: 'rgba(15,23,42,0.6)',
-              backdropFilter: 'blur(2px)',
-              pointerEvents: 'none'
-            }}>
-              <div style={{
-                maxWidth: 420,
-                padding: 24,
-                borderRadius: 16,
-                background: 'rgba(15,23,42,0.92)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                textAlign: 'center',
-                pointerEvents: 'auto'
-              }}>
-                <ShieldCheck style={{ width: 36, height: 36, color: '#10b981', margin: '0 auto 10px' }} />
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#e2e8f0', marginBottom: 6 }}>
+            <div className="absolute inset-0 flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-xs pointer-events-none">
+              <div className="max-w-md p-6 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 text-center pointer-events-auto shadow-lg">
+                <ShieldCheck className="w-8 h-8 text-[#1E7E34] dark:text-emerald-400 mx-auto mb-2.5" />
+                <div className="text-sm font-bold text-[#14213D] dark:text-white mb-1.5">
                   No Parcels in Map View
                 </div>
-                <p style={{ fontSize: 12, color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+                <p className="text-xs text-[#5A6A80] dark:text-slate-400 leading-relaxed">
                   Parcels registered with GPS boundary coordinates will appear here with exact polygon demarcations and statutory simulation tools.
                 </p>
               </div>
@@ -685,38 +510,24 @@ export default function RealLandownerGISPage() {
           )}
 
           {/* Map Legend */}
-          <div style={{
-            position: 'absolute',
-            bottom: 12,
-            right: 12,
-            background: 'rgba(15,23,42,0.85)',
-            backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            padding: '10px 14px',
-            borderRadius: 8,
-            fontSize: 10,
-            color: '#94a3b8',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 6
-          }}>
-            <div style={{ fontWeight: 700, color: '#e2e8f0', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>
+          <div className="absolute bottom-3 right-3 bg-white/95 dark:bg-[#0D121F]/95 backdrop-blur-xs border border-[#DCE2E8] dark:border-white/10 p-3 rounded-[4px] text-[10px] text-[#5A6A80] dark:text-slate-300 flex flex-col gap-1.5 shadow-xs">
+            <div className="font-bold text-[#14213D] dark:text-white uppercase font-mono tracking-wider">
               Cadastral Legend
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 12, height: 12, borderRadius: 2, background: 'rgba(16,185,129,0.4)', border: '1px solid #059669' }} />
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-[2px] bg-[#1E7E34]/30 border border-[#1E7E34]" />
               <span>Cadastral Polygon Boundary</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6366f1' }} />
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#0B2E59]" />
               <span>Verified Complaint Case</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981' }} />
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#1E7E34]" />
               <span>Disbursed Statutory Award</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#f59e0b' }} />
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#FF9933]" />
               <span>Selected Parcel Focus</span>
             </div>
           </div>

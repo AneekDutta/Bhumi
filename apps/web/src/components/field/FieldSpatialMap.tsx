@@ -313,18 +313,18 @@ export function FieldSpatialMap({
   };
 
   return (
-    <div style={{ position: "relative", width: "100%", height, minHeight: 320, borderRadius: 16, overflow: "hidden" }} className="bg-slate-950 border border-slate-800 shadow-xl">
+    <div style={{ position: "relative", width: "100%", height, minHeight: 320, borderRadius: 4, overflow: "hidden" }} className="bg-slate-950 border border-[#DCE2E8] dark:border-white/10 shadow-xs">
       
       {/* Map Control Bar Overlay (Top Left) */}
       {showControls && (
-        <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 p-1 rounded-xl bg-slate-900/90 backdrop-blur-md border border-slate-700/80 shadow-lg text-[10px] font-mono">
+        <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 p-1 rounded-[4px] bg-white/95 dark:bg-[#0D121F]/95 backdrop-blur-md border border-[#DCE2E8] dark:border-white/10 shadow-xs text-[10px] font-mono">
           <button
             type="button"
             onClick={() => setMapMode("STATUS")}
-            className={`px-2.5 py-1 rounded-lg transition-all font-bold ${
+            className={`px-2.5 py-1 rounded-[3px] transition-all font-bold cursor-pointer ${
               mapMode === "STATUS"
-                ? "bg-emerald-600 text-white shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[#1E7E34] text-white shadow-xs"
+                : "text-[#5A6A80] dark:text-slate-400 hover:text-[#14213D] dark:hover:text-white"
             }`}
           >
             Status
@@ -332,10 +332,10 @@ export function FieldSpatialMap({
           <button
             type="button"
             onClick={() => setMapMode("RISK")}
-            className={`px-2.5 py-1 rounded-lg transition-all font-bold ${
+            className={`px-2.5 py-1 rounded-[3px] transition-all font-bold cursor-pointer ${
               mapMode === "RISK"
-                ? "bg-amber-600 text-white shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[#B36B00] text-white shadow-xs"
+                : "text-[#5A6A80] dark:text-slate-400 hover:text-[#14213D] dark:hover:text-white"
             }`}
           >
             Risk
@@ -343,10 +343,10 @@ export function FieldSpatialMap({
           <button
             type="button"
             onClick={() => setMapMode("CRITICAL")}
-            className={`px-2.5 py-1 rounded-lg transition-all font-bold ${
+            className={`px-2.5 py-1 rounded-[3px] transition-all font-bold cursor-pointer ${
               mapMode === "CRITICAL"
-                ? "bg-red-600 text-white shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[#B32424] text-white shadow-xs"
+                : "text-[#5A6A80] dark:text-slate-400 hover:text-[#14213D] dark:hover:text-white"
             }`}
           >
             CPM
@@ -362,11 +362,11 @@ export function FieldSpatialMap({
             type="button"
             onClick={handleUseMyLocation}
             disabled={locating}
-            className="p-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-emerald-400 hover:text-emerald-300 border border-slate-700/80 shadow-lg transition-all flex items-center gap-1.5 text-xs font-semibold"
+            className="p-2.5 rounded-[4px] bg-white/95 dark:bg-[#0D121F]/95 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#1E7E34] dark:text-emerald-400 border border-[#DCE2E8] dark:border-white/10 shadow-xs transition-all flex items-center gap-1.5 text-xs font-semibold cursor-pointer"
             title="Use My Real GPS Location"
           >
             {locating ? (
-              <RefreshCw className="w-4 h-4 animate-spin text-emerald-400" />
+              <RefreshCw className="w-4 h-4 animate-spin text-[#1E7E34]" />
             ) : (
               <Locate className="w-4 h-4" />
             )}
@@ -377,7 +377,7 @@ export function FieldSpatialMap({
           <button
             type="button"
             onClick={fitToCorridorBounds}
-            className="p-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-indigo-400 hover:text-indigo-300 border border-slate-700/80 shadow-lg transition-all flex items-center gap-1.5 text-xs font-semibold"
+            className="p-2.5 rounded-[4px] bg-white/95 dark:bg-[#0D121F]/95 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-sky-300 border border-[#DCE2E8] dark:border-white/10 shadow-xs transition-all flex items-center gap-1.5 text-xs font-semibold cursor-pointer"
             title="Fit Corridor View"
           >
             <Maximize2 className="w-4 h-4" />
@@ -388,14 +388,14 @@ export function FieldSpatialMap({
 
       {/* GPS Error Notification if permission denied */}
       {gpsError && (
-        <div className="absolute top-16 left-3 right-3 z-20 p-2.5 rounded-xl bg-red-950/90 border border-red-500/50 text-red-200 text-xs flex items-center justify-between gap-2 shadow-lg">
+        <div className="absolute top-16 left-3 right-3 z-20 p-2.5 rounded-[4px] bg-[#FFEBEE] dark:bg-rose-950/90 border border-[#FFCDD2] dark:border-rose-800/50 text-[#B32424] dark:text-rose-200 text-xs flex items-center justify-between gap-2 shadow-xs">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
+            <AlertTriangle className="w-4 h-4 text-[#B32424] flex-shrink-0" />
             <span className="text-[11px] leading-tight">{gpsError}</span>
           </div>
           <button
             onClick={() => setGpsError(null)}
-            className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-red-900 text-white"
+            className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-[2px] bg-[#B32424] text-white"
           >
             Dismiss
           </button>
@@ -499,7 +499,7 @@ export function FieldSpatialMap({
       </Map>
 
       {/* Bottom Floating Legend Bar */}
-      <div className="absolute bottom-2 left-3 z-10 hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-lg bg-slate-900/85 backdrop-blur-md border border-white/10 text-[10px] font-mono text-slate-300">
+      <div className="absolute bottom-2 left-3 z-10 hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-[4px] bg-white/95 dark:bg-[#0D121F]/90 backdrop-blur-md border border-[#DCE2E8] dark:border-white/10 shadow-xs text-[10px] font-mono text-[#14213D] dark:text-slate-300">
         <span className="flex items-center gap-1">
           <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500" /> Possessed
         </span>

@@ -60,218 +60,150 @@ export default function ParcelsPage() {
   ).length;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      
+    <div className="space-y-6">
       {/* Real Data Provenance Banner */}
-      <div style={{
-        padding: '10px 16px',
-        borderRadius: 10,
-        background: 'rgba(16,185,129,0.08)',
-        border: '1px solid rgba(16,185,129,0.3)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 10
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{
-            fontSize: 10,
-            fontFamily: 'JetBrains Mono, monospace',
-            fontWeight: 800,
-            padding: '2px 8px',
-            borderRadius: 4,
-            background: '#10b981',
-            color: '#000',
-            textTransform: 'uppercase'
-          }}>
+      <div className="bg-[#E8F1FA] dark:bg-[#0B2E59]/30 border border-[#B8D5E5] dark:border-[#0B2E59] px-4 py-2.5 rounded-[4px] flex items-center justify-between flex-wrap gap-2.5">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-[#0B2E59] text-white uppercase">
             CADASTRAL RECORDS
           </span>
-          <span style={{ fontSize: 12, color: '#6ee7b7', fontWeight: 600 }}>
+          <span className="text-xs text-[#0B2E59] dark:text-[#93C5FD] font-semibold">
             Registered Cadastral Parcels &bull; Authoritative Statutory Registry
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
-            Official Revenue Parcels
-          </span>
+        <div className="flex items-center gap-3.5 text-xs text-[#555555] dark:text-slate-400">
+          <span className="font-mono text-[11px]">Official Revenue Parcels</span>
           <button
             onClick={loadParcels}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#34d399',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              fontSize: 11,
-              fontWeight: 600
-            }}
+            className="text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1 font-semibold"
           >
-            <RefreshCw style={{ width: 12, height: 12, animation: loading ? 'spin 1s linear infinite' : 'none' }} />
+            <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
           </button>
         </div>
       </div>
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{
-              fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4,
-              background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#34d399',
-              textTransform: 'uppercase', letterSpacing: '0.06em'
-            }}>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-emerald-100 dark:bg-emerald-950/50 text-[#1E7E34] dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 uppercase">
               {parcels.length} Registered Parcels
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+          <h1 className="text-xl md:text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF]">
             Cadastral Parcel Register
           </h1>
-          <p style={{ fontSize: 12, color: '#64748b', marginTop: 6 }}>
+          <p className="text-xs text-[#555555] dark:text-slate-400 mt-1">
             Authoritative registry of citizen land parcels with verified Aadhaar identity, official documents, and GPS boundaries
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div className="flex items-center gap-2.5">
           <Link
             href="/landowner-gis"
-            style={{
-              padding: '9px 16px',
-              borderRadius: 8,
-              background: 'rgba(99,102,241,0.15)',
-              border: '1px solid rgba(99,102,241,0.3)',
-              color: '#a5b4fc',
-              fontSize: 12,
-              fontWeight: 700,
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}
+            className="px-3.5 py-2 rounded-[4px] bg-white dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#0B2E59] dark:text-sky-400 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/10 flex items-center gap-1.5 transition-colors"
           >
-            <Navigation style={{ width: 14, height: 14 }} />
+            <Navigation className="w-3.5 h-3.5" />
             <span>View in Landowner GIS</span>
           </Link>
           <Link
             href="/landowner"
-            style={{
-              padding: '9px 16px',
-              borderRadius: 8,
-              background: 'linear-gradient(135deg, #10b981, #059669)',
-              color: '#fff',
-              fontSize: 12,
-              fontWeight: 700,
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}
+            className="px-3.5 py-2 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
           >
-            <FileText style={{ width: 14, height: 14 }} />
+            <FileText className="w-3.5 h-3.5" />
             <span>Citizen Portal</span>
           </Link>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
-        <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Registered Parcels</div>
-          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#10b981', marginTop: 4 }}>{parcels.length}</div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Registered in System</div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Registered Parcels</div>
+          <div className="text-2xl font-bold text-[#14213D] dark:text-white mt-1">{parcels.length}</div>
+          <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Registered in System</div>
         </div>
 
-        <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Aadhaar Verified</div>
-          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#818cf8', marginTop: 4 }}>{verifiedIdentityCount}</div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Citizen identity confirmed</div>
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Aadhaar Verified</div>
+          <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 mt-1">{verifiedIdentityCount}</div>
+          <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Citizen identity confirmed</div>
         </div>
 
-        <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Registered Area</div>
-          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
-            {totalAreaAcres.toFixed(2)} <span style={{ fontSize: 14, fontWeight: 500 }}>Acres</span>
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Registered Area</div>
+          <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 mt-1">
+            {totalAreaAcres.toFixed(2)} <span className="text-xs font-medium text-[#555555] dark:text-slate-400">Acres</span>
           </div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Total declared cadastral land</div>
+          <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Total declared cadastral land</div>
         </div>
 
-        <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}>
-          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Field Officer</div>
-          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 18, fontWeight: 800, color: '#f59e0b', marginTop: 8 }}>Ramesh Patel</div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>OFF-001 &middot; Patwari</div>
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Field Officer</div>
+          <div className="text-base font-bold text-[#B36B00] dark:text-amber-400 mt-1.5">Ramesh Patel</div>
+          <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">OFF-001 &bull; Patwari</div>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-        <div style={{ position: 'relative', minWidth: 280, maxWidth: 400, flex: 1 }}>
-          <Search style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: '#64748b' }} />
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="relative min-w-[280px] max-w-md flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B]" />
           <input
             type="text"
             placeholder="Search by Parcel ID, Owner Name, Village, District..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '8px 12px 8px 34px',
-              borderRadius: 8,
-              border: '1px solid rgba(255,255,255,0.1)',
-              background: 'rgba(15,23,42,0.6)',
-              color: '#e2e8f0',
-              fontSize: 12,
-              outline: 'none'
-            }}
+            className="w-full pl-9 pr-3 py-2 bg-white dark:bg-[#0a0f1d] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white rounded-[4px] text-xs focus:border-[#0B2E59] outline-none shadow-xs"
           />
         </div>
-        <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+        <span className="text-xs text-[#64748B] dark:text-slate-400 font-mono">
           Showing {filteredParcels.length} of {parcels.length} parcels
         </span>
       </div>
 
       {/* Parcel Table */}
-      <div className="glass" style={{ borderRadius: 14, overflow: 'hidden', padding: 0 }}>
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] shadow-sm overflow-hidden">
+        <div className="px-4 py-3 border-b border-[#DCE2E8] dark:border-white/10 flex items-center justify-between bg-slate-50/50 dark:bg-white/[0.02]">
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#64748b', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+            <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 tracking-wider uppercase">
               Cadastral Parcel Register
             </div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>
+            <div className="text-sm font-bold text-[#14213D] dark:text-white">
               Authoritative Records
             </div>
           </div>
         </div>
 
         {loading ? (
-          <div style={{ padding: '40px 16px', textAlign: 'center', color: '#64748b', fontSize: 13 }}>
-            <RefreshCw style={{ width: 20, height: 20, margin: '0 auto 10px', animation: 'spin 1s linear infinite', color: '#10b981' }} />
+          <div className="py-12 text-center text-[#64748B] text-xs">
+            <RefreshCw className="w-5 h-5 mx-auto mb-2 animate-spin text-[#0B2E59] dark:text-sky-400" />
             <span>Loading registered parcels...</span>
           </div>
         ) : filteredParcels.length === 0 ? (
-          <div style={{ padding: '48px 16px', textAlign: 'center' }}>
-            <CheckCircle2 style={{ width: 36, height: 36, color: '#10b981', margin: '0 auto 12px' }} />
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#e2e8f0', marginBottom: 6 }}>
+          <div className="py-12 px-4 text-center">
+            <CheckCircle2 className="w-8 h-8 text-[#1E7E34] mx-auto mb-2" />
+            <div className="text-sm font-bold text-[#14213D] dark:text-white mb-1">
               No registered land parcels available.
             </div>
-            <p style={{ fontSize: 12, color: '#64748b', margin: 0, maxWidth: 440, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.6 }}>
+            <p className="text-xs text-[#64748B] dark:text-slate-400 max-w-md mx-auto leading-relaxed">
               Land parcels registered by citizens in the Landowner Portal will appear here with verified identity, uploaded deeds, and GPS boundary vertices.
             </p>
           </div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs text-left">
               <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+                <tr className="bg-[#F1F4F7] dark:bg-white/5 border-b border-[#DCE2E8] dark:border-white/10 text-[#555555] dark:text-slate-400 uppercase font-semibold text-[11px] tracking-wider">
                   {['Parcel ID', 'Owner Name', 'Identity Status', 'Location', 'Area (Acres)', 'Boundary GPS', 'Documents', 'Action'].map(h => (
-                    <th key={h} style={{ padding: '11px 16px', textAlign: 'left', fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap' }}>
+                    <th key={h} className="px-4 py-2.5 whitespace-nowrap font-semibold">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-[#DCE2E8] dark:divide-white/10">
                 {filteredParcels.map(p => {
                   const pid = p.parcel_id || p.id || 'N/A';
                   const owner = p.owner_legal_name || p.owner_name || 'Landowner';
@@ -282,60 +214,44 @@ export default function ParcelsPage() {
                   const docCount = p.documents?.length || p.document_ids?.length || (p.document_filename ? 1 : 0);
 
                   return (
-                    <tr key={p.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                      <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#38bdf8' }}>
+                    <tr key={p.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                      <td className="px-4 py-3 font-mono font-bold text-[#0B5FA5] dark:text-sky-400">
                         #{pid}
                       </td>
-                      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#e2e8f0' }}>
+                      <td className="px-4 py-3 font-medium text-[#14213D] dark:text-white">
                         {owner}
                       </td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <span style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 4,
-                          fontSize: 10,
-                          fontFamily: 'JetBrains Mono, monospace',
-                          fontWeight: 700,
-                          padding: '2px 8px',
-                          borderRadius: 4,
-                          background: isVerified ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)',
-                          color: isVerified ? '#34d399' : '#f59e0b',
-                          border: `1px solid ${isVerified ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'}`
-                        }}>
-                          <ShieldCheck style={{ width: 11, height: 11 }} />
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-[4px] border ${
+                          isVerified
+                            ? 'bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border-[#C8E6C9] dark:border-emerald-800/50'
+                            : 'bg-[#FFF8E1] dark:bg-amber-950/40 text-[#B36B00] dark:text-amber-400 border-[#FFE082] dark:border-amber-800/50'
+                        }`}>
+                          <ShieldCheck className="w-3 h-3" />
                           <span>{isVerified ? 'Aadhaar Verified' : 'Pending Verification'}</span>
                         </span>
                       </td>
-                      <td style={{ padding: '12px 16px', color: '#94a3b8' }}>
+                      <td className="px-4 py-3 text-[#555555] dark:text-slate-300">
                         {location}
                       </td>
-                      <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600, color: '#10b981' }}>
+                      <td className="px-4 py-3 font-mono font-bold text-[#1E7E34] dark:text-emerald-400">
                         {areaAcres} Acres
                       </td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <span style={{ fontSize: 11, color: '#818cf8', fontFamily: 'JetBrains Mono, monospace' }}>
+                      <td className="px-4 py-3">
+                        <span className="text-xs text-[#0B5FA5] dark:text-sky-400 font-mono">
                           {coordsCount} GPS Vertices
                         </span>
                       </td>
-                      <td style={{ padding: '12px 16px', color: '#94a3b8', fontSize: 11 }}>
+                      <td className="px-4 py-3 text-[#555555] dark:text-slate-300">
                         {docCount} Document{docCount === 1 ? '' : 's'}
                       </td>
-                      <td style={{ padding: '12px 16px' }}>
+                      <td className="px-4 py-3">
                         <Link
                           href={`/landowner-gis?id=${pid}`}
-                          style={{
-                            fontSize: 11,
-                            fontWeight: 700,
-                            color: '#818cf8',
-                            textDecoration: 'none',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: 4
-                          }}
+                          className="font-bold text-[#0B5FA5] dark:text-sky-400 hover:underline inline-flex items-center gap-1"
                         >
                           <span>GIS Boundary</span>
-                          <ArrowRight style={{ width: 12, height: 12 }} />
+                          <ArrowRight className="w-3 h-3" />
                         </Link>
                       </td>
                     </tr>
@@ -346,7 +262,6 @@ export default function ParcelsPage() {
           </div>
         )}
       </div>
-
     </div>
   );
 }

@@ -46,141 +46,124 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="flex flex-col gap-5">
       {/* Breadcrumb */}
-      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>
-        <Link href="/" style={{ color: '#6b7a94', textDecoration: 'none' }}>Dashboard</Link>
-        <span style={{ color: '#2d3748' }}>/</span>
-        <Link href="/projects" style={{ color: '#6b7a94', textDecoration: 'none' }}>Corridors</Link>
-        <span style={{ color: '#2d3748' }}>/</span>
-        <span style={{ color: '#c4cfe4' }}>{project.name}</span>
+      <nav className="flex items-center gap-1.5 text-xs text-[#5A6A80] dark:text-slate-400 font-mono">
+        <Link href="/" className="hover:text-[#0B2E59] dark:hover:text-white transition-colors">Dashboard</Link>
+        <span>/</span>
+        <Link href="/projects" className="hover:text-[#0B2E59] dark:hover:text-white transition-colors">Corridors</Link>
+        <span>/</span>
+        <span className="font-bold text-[#14213D] dark:text-white">{project.name}</span>
       </nav>
 
       {/* Provenance Matrix Banner */}
       <DataRealityBanner />
 
       {/* Project Hero Banner */}
-      <div style={{
-        borderRadius: 16, padding: '24px 28px', overflow: 'hidden',
-        background: 'linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(8,9,20,0) 60%)',
-        border: '1px solid rgba(99,102,241,0.25)',
-        position: 'relative'
-      }}>
-        <div style={{ position: 'absolute', top: 0, right: 0, width: 320, height: 320, borderRadius: '50%', background: 'rgba(99,102,241,0.06)', filter: 'blur(80px)', pointerEvents: 'none' }} />
-
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
+      <div className="rounded-[4px] p-5 bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs relative space-y-4">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-              <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#3a4258', letterSpacing: '0.08em' }}>
-                ID:{project.id.substring(0, 8).toUpperCase()}
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-mono text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-semibold">
+                ID: {project.id.substring(0, 8).toUpperCase()}
               </span>
               {hasDelay && (
-                <span style={{
-                  fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4,
-                  background: 'rgba(244,63,94,0.15)', border: '1px solid rgba(244,63,94,0.3)', color: '#f43f5e',
-                  textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace'
-                }}>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-300 uppercase">
                   ⚠ +{project.project_delay_days}d Overrun
                 </span>
               )}
-              <span style={{
-                fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4,
-                background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.25)', color: '#10b981',
-                textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace'
-              }}>Active Alignment</span>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300 uppercase">
+                Active Alignment
+              </span>
             </div>
-            <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+            <h1 className="text-2xl font-extrabold text-[#14213D] dark:text-white m-0 font-display">
               {project.name}
             </h1>
-            <p style={{ marginTop: 8, fontSize: 12, color: '#4a5568', display: 'flex', gap: 12 }}>
-              <span>Length: <strong style={{ color: '#818cf8', fontFamily: 'JetBrains Mono, monospace' }}>{project.total_length_km ?? 0} km</strong></span>
-              <span>Area: <strong style={{ color: '#818cf8', fontFamily: 'JetBrains Mono, monospace' }}>{totalAreaHa.toFixed(2)} Ha</strong></span>
-              <span>State: <strong style={{ color: '#c4cfe4' }}>{project.state_name || 'National Scope'}</strong></span>
+            <p className="mt-2 text-xs text-[#5A6A80] dark:text-slate-400 flex flex-wrap gap-4">
+              <span>Length: <strong className="text-[#0B2E59] dark:text-sky-400 font-mono font-bold">{project.total_length_km ?? 0} km</strong></span>
+              <span>Area: <strong className="text-[#0B2E59] dark:text-sky-400 font-mono font-bold">{totalAreaHa.toFixed(2)} Ha</strong></span>
+              <span>State: <strong className="text-[#14213D] dark:text-white font-semibold">{project.state_name || 'National Scope'}</strong></span>
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <Link href={`/projects/${project.id}/spatial`} style={{
-              padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700,
-              background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981',
-              textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6
-            }}>
-              <Compass style={{ width: 13, height: 13 }} /> Spatial Map
+          <div className="flex gap-2 flex-wrap">
+            <Link
+              href={`/projects/${project.id}/spatial`}
+              className="px-3.5 py-2 rounded-[4px] text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40 hover:bg-[#D4E6F7] flex items-center gap-1.5 shadow-xs transition-all"
+            >
+              <Compass className="w-3.5 h-3.5" /> Spatial Map
             </Link>
-            <Link href={`/projects/${project.id}/impact`} style={{
-              padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700,
-              background: 'rgba(99,102,241,0.18)', border: '1px solid rgba(99,102,241,0.35)', color: '#818cf8',
-              textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6
-            }}>
-              <Activity style={{ width: 13, height: 13 }} /> Impact & Simulation
+            <Link
+              href={`/projects/${project.id}/impact`}
+              className="px-3.5 py-2 rounded-[4px] text-xs font-bold bg-white dark:bg-[#0D121F] text-[#0B2E59] dark:text-sky-300 border border-[#DCE2E8] dark:border-white/10 hover:bg-[#F4F6F8] dark:hover:bg-slate-800 flex items-center gap-1.5 shadow-xs transition-all"
+            >
+              <Activity className="w-3.5 h-3.5" /> Impact & Simulation
             </Link>
-            <Link href={`/projects/${project.id}/intelligence`} style={{
-              padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700,
-              background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.28)', color: '#f59e0b',
-              textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6
-            }}>
-              <AlertOctagon style={{ width: 13, height: 13 }} /> Bottlenecks
+            <Link
+              href={`/projects/${project.id}/intelligence`}
+              className="px-3.5 py-2 rounded-[4px] text-xs font-bold bg-[#FFF8E1] dark:bg-amber-950/40 text-[#B36B00] dark:text-amber-300 border border-[#FFE082] dark:border-amber-800/40 hover:bg-[#FFF0C2] flex items-center gap-1.5 shadow-xs transition-all"
+            >
+              <AlertOctagon className="w-3.5 h-3.5" /> Bottlenecks
             </Link>
           </div>
         </div>
 
         {/* RoW Progress */}
-        <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 8, color: '#6b7a94' }}>
-            <span>Right-of-Way (RoW) Possession Progress
-              <strong style={{ color: '#f59e0b', fontFamily: 'JetBrains Mono, monospace', marginLeft: 6 }}>{percentPossessed}%</strong>
+        <div className="pt-3 border-t border-[#DCE2E8] dark:border-white/10 space-y-1.5">
+          <div className="flex justify-between text-xs text-[#5A6A80] dark:text-slate-400">
+            <span>
+              Right-of-Way (RoW) Possession Progress:
+              <strong className="text-[#1E7E34] dark:text-emerald-400 font-mono font-bold ml-1.5">{percentPossessed}%</strong>
             </span>
-            <span style={{ fontFamily: 'JetBrains Mono, monospace' }}>{possessedParcels.length} / {parcels.length} Parcels</span>
+            <span className="font-mono text-[11px] font-semibold">{possessedParcels.length} / {parcels.length} Parcels</span>
           </div>
-          <div style={{ width: '100%', height: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 99, overflow: 'hidden', display: 'flex' }}>
-            <div style={{ width: `${percentPossessed}%`, background: 'linear-gradient(90deg,#10b981,#6366f1)', height: '100%', borderRadius: '99px 0 0 99px', transition: 'width 0.5s' }} />
-            <div style={{ flex: 1, background: 'rgba(245,158,11,0.3)', height: '100%' }} />
+          <div className="w-full h-2 bg-[#F1F4F7] dark:bg-slate-800 rounded-[2px] overflow-hidden flex">
+            <div
+              className="h-full bg-[#1E7E34] dark:bg-emerald-500 rounded-[2px] transition-all duration-500"
+              style={{ width: `${percentPossessed}%` }}
+            />
           </div>
         </div>
       </div>
 
       {/* Segments */}
-      <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-3">
+        <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 tracking-wider uppercase font-bold">
           Alignment Corridor Segments
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 14 }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {parcels.length > 0 ? (
             Array.from(new Set(parcels.map(p => p.village_name || 'Alignment Corridor'))).map((village) => {
               const villageParcels = parcels.filter(p => (p.village_name || 'Alignment Corridor') === village);
               const unresolved = villageParcels.filter(p => p.status === 'UNRESOLVED');
               const hasDelay = unresolved.length > 0;
               return (
-                <div key={village} style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: '#c4cfe4' }}>{village} Segment</span>
-                    <span style={{
-                      fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 4,
-                      background: hasDelay ? 'rgba(244,63,94,0.12)' : 'rgba(16,185,129,0.12)',
-                      color: hasDelay ? '#f43f5e' : '#10b981',
-                      border: `1px solid ${hasDelay ? 'rgba(244,63,94,0.3)' : 'rgba(16,185,129,0.3)'}`,
-                      whiteSpace: 'nowrap'
-                    }}>
+                <div key={village} className="rounded-[4px] p-3.5 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-[#14213D] dark:text-white">{village} Segment</span>
+                    <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-[3px] border ${
+                      hasDelay
+                        ? 'bg-[#FFEBEE] text-[#B32424] border-[#FFCDD2] dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800'
+                        : 'bg-[#E8F5E9] text-[#1E7E34] border-[#C8E6C9] dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800'
+                    }`}>
                       {hasDelay ? `${unresolved.length} Unresolved` : '100% Possessed'}
                     </span>
                   </div>
-                  <p style={{ fontSize: 11, color: '#4a5568', margin: '0 0 8px' }}>
+                  <p className="text-[11px] text-[#5A6A80] dark:text-slate-400 m-0">
                     {villageParcels.length} Registered Parcels ({villageParcels.reduce((s, p) => s + (p.area_hectares || 0), 0).toFixed(2)} Ha)
                   </p>
-                  <div style={{
-                    fontSize: 11,
-                    color: hasDelay ? '#f43f5e' : '#10b981',
-                    padding: '8px 12px', borderRadius: 7,
-                    background: hasDelay ? 'rgba(244,63,94,0.08)' : 'rgba(16,185,129,0.08)',
-                    border: `1px solid ${hasDelay ? 'rgba(244,63,94,0.2)' : 'rgba(16,185,129,0.2)'}`
-                  }}>
+                  <div className={`text-[11px] p-2 rounded-[3px] border ${
+                    hasDelay
+                      ? 'bg-[#FFF5F5] dark:bg-rose-950/30 text-[#B32424] dark:text-rose-300 border-[#FFCDD2] dark:border-rose-800/40'
+                      : 'bg-[#E8F5E9]/60 dark:bg-emerald-950/30 text-[#1E7E34] dark:text-emerald-300 border-[#C8E6C9] dark:border-emerald-800/40'
+                  }`}>
                     {hasDelay ? `Parcels: ${unresolved.map(p => p.survey_no).join(', ')} pending acquisition` : 'Clear Right-of-Way secured for civil works'}
                   </div>
                 </div>
               );
             })
           ) : (
-            <div style={{ padding: '20px', borderRadius: 10, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', color: '#6b7a94', fontSize: 12 }}>
+            <div className="p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-dashed border-[#CBD5E1] dark:border-white/10 text-[#5A6A80] dark:text-slate-400 text-xs">
               Awaiting parcel cadastral mapping for corridor alignment.
             </div>
           )}
@@ -188,22 +171,22 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       </div>
 
       {/* Parcels Table */}
-      <div className="glass" style={{ borderRadius: 14, overflow: 'hidden', padding: 0 }}>
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] overflow-hidden shadow-xs">
+        <div className="p-3.5 border-b border-[#DCE2E8] dark:border-white/10 flex items-center justify-between">
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Mapped Land Parcels</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Cadastral Survey Register</div>
+            <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-bold">Mapped Land Parcels</div>
+            <div className="text-sm font-bold text-[#14213D] dark:text-white mt-0.5">Cadastral Survey Register</div>
           </div>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, padding: '4px 10px', borderRadius: 6, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', color: '#818cf8' }}>
+          <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/40 border border-[#B8D5ED] dark:border-sky-800/40 text-[#0B2E59] dark:text-sky-300">
             {parcels.length} Parcels
           </span>
         </div>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-xs">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <tr className="border-b border-[#DCE2E8] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#07080F]">
                 {['Survey No.', 'Area (Ha)', 'Classification', 'Stage', 'Possession', ''].map((h) => (
-                  <th key={h} style={{ padding: '11px 18px', textAlign: 'left', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap', background: 'rgba(255,255,255,0.02)' }}>
+                  <th key={h} className="py-2.5 px-4 text-left text-[10px] font-mono font-bold text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">
                     {h}
                   </th>
                 ))}
@@ -213,35 +196,38 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               {parcels.map((p: any) => {
                 const isPossessed = p.status === 'POSSESSION' || p.status === 'RESOLVED';
                 const isLapsed = Boolean(p.is_lapsed);
-                const stageCol = STAGE_COLOR[p.current_stage] || '#6b7a94';
                 return (
-                  <tr key={p.id} className="tr-hover" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td style={{ padding: '12px 18px' }}>
-                      <Link href={`/parcels/${p.id}`} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, fontWeight: 700, color: '#818cf8', textDecoration: 'none' }}>
+                  <tr key={p.id} className="border-b border-[#DCE2E8]/60 dark:border-white/5 hover:bg-[#F8FAFC] dark:hover:bg-[#07080F]/60 transition-colors">
+                    <td className="py-3 px-4">
+                      <Link href={`/parcels/${p.id}`} className="font-mono text-xs font-bold text-[#0B2E59] dark:text-sky-400 hover:underline">
                         Survey No. {p.survey_no}
                       </Link>
                       {isLapsed && (
-                        <span style={{ marginLeft: 8, fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 3, background: 'rgba(244,63,94,0.15)', color: '#f43f5e', border: '1px solid rgba(244,63,94,0.3)', textTransform: 'uppercase' }}>
+                        <span className="ml-2 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-[3px] bg-[#FFEBEE] text-[#B32424] border border-[#FFCDD2] uppercase">
                           Sec 19(7) Lapsed
                         </span>
                       )}
                     </td>
-                    <td style={{ padding: '12px 18px', fontFamily: 'JetBrains Mono, monospace', color: '#8899b4' }}>{p.area_hectares} Ha</td>
-                    <td style={{ padding: '12px 18px', color: '#6b7a94' }}>{p.classification || 'Agricultural'}</td>
-                    <td style={{ padding: '12px 18px' }}>
-                      <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, background: `${stageCol}18`, color: stageCol, border: `1px solid ${stageCol}35`, fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.04em' }}>
+                    <td className="py-3 px-4 font-mono font-semibold text-[#14213D] dark:text-slate-300">{p.area_hectares} Ha</td>
+                    <td className="py-3 px-4 text-[#5A6A80] dark:text-slate-400">{p.classification || 'Agricultural'}</td>
+                    <td className="py-3 px-4">
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#E6F0FA] text-[#0B2E59] dark:bg-sky-950/40 dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40">
                         {p.current_stage || 'PRELIMINARY_NOTIFICATION'}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 18px' }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 99, background: isPossessed ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.12)', color: isPossessed ? '#10b981' : '#f59e0b', border: `1px solid ${isPossessed ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'}` }}>
-                        {isPossessed ? <CheckCircle2 style={{ width: 11, height: 11 }} /> : <Clock style={{ width: 11, height: 11 }} />}
+                    <td className="py-3 px-4">
+                      <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[3px] border ${
+                        isPossessed
+                          ? 'bg-[#E8F5E9] text-[#1E7E34] border-[#C8E6C9] dark:bg-emerald-950/40 dark:text-emerald-300'
+                          : 'bg-[#FFF8E1] text-[#B36B00] border-[#FFE082] dark:bg-amber-950/40 dark:text-amber-300'
+                      }`}>
+                        {isPossessed ? <CheckCircle2 className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
                         {p.status}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 18px' }}>
-                      <Link href={`/parcels/${p.id}`} style={{ fontSize: 11, fontWeight: 600, color: '#6b7a94', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
-                        Inspect <ArrowRight style={{ width: 11, height: 11 }} />
+                    <td className="py-3 px-4 text-right">
+                      <Link href={`/parcels/${p.id}`} className="text-xs font-bold text-[#0B2E59] dark:text-sky-400 hover:underline inline-flex items-center gap-1">
+                        Inspect <ArrowRight className="w-3 h-3" />
                       </Link>
                     </td>
                   </tr>
@@ -249,7 +235,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               })}
               {parcels.length === 0 && (
                 <tr>
-                  <td colSpan={6} style={{ padding: '40px 24px', textAlign: 'center', color: '#4a5568', fontSize: 12 }}>
+                  <td colSpan={6} className="py-8 px-4 text-center text-xs text-[#5A6A80] dark:text-slate-400">
                     No land parcels mapped to this project alignment.
                   </td>
                 </tr>
@@ -260,12 +246,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       </div>
 
       {/* Document Register */}
-      <div style={{ paddingTop: 8 }}>
-        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 4 }}>
+      <div className="pt-2">
+        <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-bold mb-1">
           Corridor Document Register
         </div>
-        <div style={{ fontSize: 18, fontWeight: 700, color: '#c4cfe4', marginBottom: 16 }}>
-          Statutory Gazette Notifications & Awards
+        <div className="text-base font-bold text-[#14213D] dark:text-white font-display mb-3">
+          Statutory Gazette Notifications &amp; Awards
         </div>
         <DocumentRegister projectId={project.id} />
       </div>

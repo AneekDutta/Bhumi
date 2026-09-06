@@ -24,7 +24,7 @@ export function AdminOperationsSection({ verifiedComplaints, projects }: AdminOp
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+    <div className="space-y-6">
       {/* ADMIN IMPLEMENTATION QUEUE (The Single Source of Truth for verified complaints) */}
       <LandownerGrievanceReviewCard 
         selectedParcelId={selectedParcelId}
@@ -32,17 +32,17 @@ export function AdminOperationsSection({ verifiedComplaints, projects }: AdminOp
       />
 
       {/* Corridor Spatial GIS displaying Real Verified Complaint Parcels */}
-      <div className="glass" style={{ borderRadius: 16, overflow: 'hidden', padding: 0 }}>
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] overflow-hidden shadow-sm transition-colors">
+        <div className="p-4 border-b border-[#DCE2E8] dark:border-white/10 flex items-center justify-between flex-wrap gap-2">
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#64748b', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+            <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 tracking-wider uppercase font-semibold">
               Cadastral Spatial GIS
             </div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>
+            <div className="text-sm font-bold text-[#14213D] dark:text-[#F0F4FF] mt-0.5">
               Verified Demarcation &amp; Cadastral Spatial Overview
             </div>
           </div>
-          <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#818cf8', fontWeight: 600 }}>
+          <div className="text-xs font-mono text-[#0B5FA5] dark:text-sky-400 font-bold">
             {verifiedComplaints.length} Verified Parcel{verifiedComplaints.length === 1 ? '' : 's'} on Ground
           </div>
         </div>

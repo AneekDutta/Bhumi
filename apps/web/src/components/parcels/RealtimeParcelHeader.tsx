@@ -55,7 +55,7 @@ export function RealtimeParcelHeader({
           Cadastral Survey Record
         </span>
         <ProvenanceBadge sourceType={sourceType || "SYNTHETIC"} size="xs" />
-        <span style={{ fontSize: 10, fontFamily: "JetBrains Mono, monospace", padding: "2px 8px", borderRadius: 4, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#6b7a94" }}>
+        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/15 text-slate-700 dark:text-slate-300">
           ID: {parcelId}
         </span>
 
@@ -66,9 +66,9 @@ export function RealtimeParcelHeader({
             fontFamily: "JetBrains Mono, monospace",
             padding: "2px 8px",
             borderRadius: 4,
-            background: "rgba(99,102,241,0.15)",
-            border: "1px solid rgba(99,102,241,0.4)",
-            color: "#818cf8",
+            background: "var(--sync-bg)",
+            border: "1px solid var(--sync-border)",
+            color: "var(--sync-text)",
             display: "inline-flex",
             alignItems: "center",
             gap: 4
@@ -99,10 +99,10 @@ export function RealtimeParcelHeader({
 
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
         <div>
-          <h1 style={{ fontFamily: "Sora, sans-serif", fontSize: 26, fontWeight: 800, color: "#e2e8f0", margin: 0 }}>
+          <h1 className="font-display text-2xl font-extrabold text-slate-900 dark:text-[#f8fafc] m-0">
             Survey No. {surveyNo}
           </h1>
-          <p style={{ fontSize: 12, color: "#4a5568", marginTop: 6 }}>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1.5">
             {villageName} · RFCTLARR Act 2013 · {statutoryAct || "NH Act 1956"}
           </p>
         </div>

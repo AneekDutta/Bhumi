@@ -30,7 +30,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="min-h-full dark" suppressHydrationWarning>
+    <html lang="en" className="min-h-full light" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 try {
                   var saved = localStorage.getItem('bhumi-theme');
                   var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  var isDark = saved === 'dark' || (saved === 'system' && prefersDark) || (!saved);
+                  var isDark = saved === 'dark' || (saved === 'system' && prefersDark);
                   var root = document.documentElement;
                   if (isDark) {
                     root.classList.add('dark');
@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         />
       </head>
-      <body className="min-h-full bg-slate-50 dark:bg-[#070a14] text-slate-900 dark:text-[#f0f4ff] font-sans antialiased transition-colors duration-200">
+      <body className="min-h-full bg-[#F4F6F8] dark:bg-[#07080F] text-[#14213D] dark:text-[#F0F4FF] font-sans antialiased transition-colors duration-150">
         <ThemeProvider>
           <AppShell>{children}</AppShell>
         </ThemeProvider>

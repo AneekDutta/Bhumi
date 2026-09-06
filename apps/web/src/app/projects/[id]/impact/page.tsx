@@ -80,20 +80,20 @@ export default function ProjectImpactPage() {
 
   if (loading) {
     return (
-      <div style={{ padding: '48px 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-        <div style={{ width: 36, height: 36, borderRadius: '50%', border: '3px solid rgba(99,102,241,0.2)', borderTopColor: '#6366f1', animation: 'spin 1s linear infinite' }} />
-        <p style={{ fontSize: 13, color: '#6b7a94', fontFamily: 'JetBrains Mono, monospace' }}>Computing deterministic CPM impact schedule...</p>
+      <div className="py-12 px-6 text-center flex flex-col items-center gap-3">
+        <div className="w-8 h-8 rounded-full border-3 border-[#DCE2E8] border-t-[#0B2E59] animate-spin" />
+        <p className="text-xs text-[#5A6A80] dark:text-slate-400 font-mono">Computing deterministic CPM impact schedule...</p>
       </div>
     );
   }
 
   if (error && !impactData) {
     return (
-      <div style={{ padding: '20px 24px', borderRadius: 12, background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.3)', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-        <AlertTriangle style={{ width: 18, height: 18, color: '#f43f5e', flexShrink: 0 }} />
+      <div className="p-4 rounded-[4px] bg-[#FFEBEE] dark:bg-rose-950/30 border border-[#FFCDD2] dark:border-rose-800/40 flex items-start gap-3">
+        <AlertTriangle className="w-4 h-4 text-[#B32424] dark:text-rose-400 flex-shrink-0 mt-0.5" />
         <div>
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#f43f5e' }}>Schedule Engine Offline</div>
-          <p style={{ fontSize: 12, color: '#8899b4', marginTop: 4 }}>{error}</p>
+          <div className="text-xs font-bold text-[#B32424] dark:text-rose-300">Schedule Engine Notice</div>
+          <p className="text-xs text-[#5A6A80] dark:text-slate-300 mt-1">{error}</p>
         </div>
       </div>
     );
@@ -102,94 +102,103 @@ export default function ProjectImpactPage() {
   if (!impactData) return null;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="flex flex-col gap-5">
       {/* Breadcrumb */}
-      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>
-        <Link href="/" style={{ color: '#6b7a94', textDecoration: 'none' }}>Dashboard</Link>
+      <nav className="flex items-center gap-1.5 text-xs text-[#5A6A80] dark:text-slate-400 font-mono">
+        <Link href="/" className="hover:text-[#0B2E59] dark:hover:text-white transition-colors">Dashboard</Link>
         <span>/</span>
-        <Link href="/projects" style={{ color: '#6b7a94', textDecoration: 'none' }}>Corridors</Link>
+        <Link href="/projects" className="hover:text-[#0B2E59] dark:hover:text-white transition-colors">Corridors</Link>
         <span>/</span>
-        <Link href={`/projects/${id}`} style={{ color: '#6b7a94', textDecoration: 'none', fontFamily: 'JetBrains Mono, monospace' }}>{id.substring(0, 8)}</Link>
+        <Link href={`/projects/${id}`} className="hover:text-[#0B2E59] dark:hover:text-white font-mono transition-colors">{id.substring(0, 8)}</Link>
         <span>/</span>
-        <span style={{ color: '#c4cfe4' }}>Impact & Simulation</span>
+        <span className="text-[#14213D] dark:text-white font-bold">Impact &amp; Simulation</span>
       </nav>
 
       {/* Provenance Banner */}
       <DataRealityBanner />
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+      <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/40 border border-[#B8D5ED] dark:border-sky-800/40 text-[#0B2E59] dark:text-sky-300 uppercase font-bold tracking-wider">
               Deterministic CPM Engine
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
-            Schedule Impact & Counterfactual Simulation
+          <h1 className="text-2xl font-extrabold text-[#14213D] dark:text-white m-0 font-display">
+            Schedule Impact &amp; Counterfactual Simulation
           </h1>
-          <p style={{ fontSize: 12, color: '#4a5568', marginTop: 6 }}>
+          <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
             Attributable critical path delay calculation, statutory causal dependency chains, and interactive intervention modeling
           </p>
         </div>
-        <Link href={`/projects/${id}/spatial`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Compass style={{ width: 13, height: 13 }} /> Spatial Map View
+        <Link
+          href={`/projects/${id}/spatial`}
+          className="px-3.5 py-2 rounded-[4px] text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40 hover:bg-[#D4E6F7] flex items-center gap-1.5 shadow-xs transition-all"
+        >
+          <Compass className="w-3.5 h-3.5" /> Spatial Map View
         </Link>
       </div>
 
       {/* Contract Schedule Variance */}
-      <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-4">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Contract Schedule Variance</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Critical Path Completion Comparison</div>
+            <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-bold">Contract Schedule Variance</div>
+            <div className="text-sm font-bold text-[#14213D] dark:text-white mt-0.5">Critical Path Completion Comparison</div>
           </div>
-          <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '4px 10px', borderRadius: 6, background: (impactData.current_forecast.project_delay_days || 0) > 0 ? 'rgba(244,63,94,0.12)' : 'rgba(16,185,129,0.12)', border: `1px solid ${(impactData.current_forecast.project_delay_days || 0) > 0 ? 'rgba(244,63,94,0.3)' : 'rgba(16,185,129,0.3)'}`, color: (impactData.current_forecast.project_delay_days || 0) > 0 ? '#f43f5e' : '#10b981' }}>
+          <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] border ${
+            (impactData.current_forecast.project_delay_days || 0) > 0
+              ? 'bg-[#FFEBEE] dark:bg-rose-950/40 border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-300'
+              : 'bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300'
+          }`}>
             {impactData.current_forecast.critical_path?.length || 0} Critical Path Activities
           </span>
         </div>
 
         {/* 3 Metric Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
-            { label: 'Baseline Contract Finish', val: formatDate(impactData.baseline.project_finish), sub: 'Original zero-delay baseline', color: '#6366f1', bg: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.22)', icon: Calendar },
-            { label: 'Current Forecast Finish', val: formatDate(impactData.current_forecast.project_finish), sub: 'Pushed out due to unresolved RoW', color: '#f43f5e', bg: 'rgba(244,63,94,0.1)', border: 'rgba(244,63,94,0.22)', icon: Clock },
-            { label: 'Attributable Delay', val: impactData.current_forecast.impact_status === "UNQUANTIFIED_IMPACT" ? "Unquantified" : `+${impactData.current_forecast.project_delay_days || 0}d Overrun`, sub: 'Net delay on zero-float path', color: '#f43f5e', bg: 'rgba(244,63,94,0.1)', border: 'rgba(244,63,94,0.22)', icon: AlertTriangle },
+            { label: 'Baseline Contract Finish', val: formatDate(impactData.baseline.project_finish), sub: 'Original zero-delay baseline', color: 'text-[#0B2E59] dark:text-sky-400', bg: 'bg-[#F8FAFC] dark:bg-[#07080F]', border: 'border-[#DCE2E8] dark:border-white/10', icon: Calendar },
+            { label: 'Current Forecast Finish', val: formatDate(impactData.current_forecast.project_finish), sub: 'Pushed out due to unresolved RoW', color: 'text-[#B32424] dark:text-rose-400', bg: 'bg-[#FFF5F5] dark:bg-rose-950/20', border: 'border-[#FFCDD2] dark:border-rose-800/40', icon: Clock },
+            { label: 'Attributable Delay', val: impactData.current_forecast.impact_status === "UNQUANTIFIED_IMPACT" ? "Unquantified" : `+${impactData.current_forecast.project_delay_days || 0}d Overrun`, sub: 'Net delay on zero-float path', color: 'text-[#B32424] dark:text-rose-400', bg: 'bg-[#FFF5F5] dark:bg-rose-950/20', border: 'border-[#FFCDD2] dark:border-rose-800/40', icon: AlertTriangle },
           ].map((m) => {
             const Icon = m.icon;
             return (
-              <div key={m.label} style={{ borderRadius: 10, padding: '16px 18px', background: m.bg, border: `1px solid ${m.border}` }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <div style={{ fontSize: 9, color: '#6b7a94', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace' }}>{m.label}</div>
-                  <Icon style={{ width: 14, height: 14, color: m.color }} />
+              <div key={m.label} className={`rounded-[4px] p-3.5 border ${m.bg} ${m.border} shadow-xs`}>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-mono font-semibold">{m.label}</div>
+                  <Icon className="w-3.5 h-3.5 text-[#5A6A80] dark:text-slate-400" />
                 </div>
-                <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 18, fontWeight: 800, color: m.color }}>{m.val}</div>
-                <div style={{ fontSize: 10, color: '#4a5568', marginTop: 4 }}>{m.sub}</div>
+                <div className={`font-mono text-base font-bold ${m.color}`}>{m.val}</div>
+                <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">{m.sub}</div>
               </div>
             );
           })}
         </div>
 
         {/* Timeline comparison bars */}
-        <div style={{ marginTop: 16, padding: '14px 16px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12, fontSize: 11, fontWeight: 700, color: '#8899b4' }}>
+        <div className="p-3.5 bg-[#F8FAFC] dark:bg-[#07080F] rounded-[4px] border border-[#DCE2E8] dark:border-white/10 space-y-2.5">
+          <div className="flex justify-between text-xs font-bold text-[#14213D] dark:text-slate-300">
             <span>Critical Path Timeline</span>
-            <span style={{ color: (impactData.current_forecast.project_delay_days || 0) > 0 ? '#f43f5e' : '#10b981', fontFamily: 'JetBrains Mono, monospace' }}>
+            <span className={`font-mono ${
+              (impactData.current_forecast.project_delay_days || 0) > 0 ? 'text-[#B32424] dark:text-rose-400' : 'text-[#1E7E34] dark:text-emerald-400'
+            }`}>
               {(impactData.current_forecast.project_delay_days || 0) > 0 ? `+${impactData.current_forecast.project_delay_days} Calendar Days Slippage` : 'On Schedule (Zero Slippage)'}
             </span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div className="flex flex-col gap-2">
             {[
-              { label: 'Baseline', date: formatDate(impactData.baseline.project_finish), w1: '80%', w2: null, c1: '#6366f1' },
-              { label: 'Forecast (with constraints)', date: formatDate(impactData.current_forecast.project_finish), w1: '80%', w2: '20%', c1: '#6366f1' },
+              { label: 'Baseline', date: formatDate(impactData.baseline.project_finish), w1: '80%', w2: null, c1: 'bg-[#0B2E59] dark:bg-sky-600' },
+              { label: 'Forecast (with constraints)', date: formatDate(impactData.current_forecast.project_finish), w1: '80%', w2: '20%', c1: 'bg-[#0B2E59] dark:bg-sky-600' },
             ].map((bar) => (
               <div key={bar.label}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#6b7a94', marginBottom: 4, fontFamily: 'JetBrains Mono, monospace' }}>
+                <div className="flex justify-between text-[10px] text-[#5A6A80] dark:text-slate-400 mb-1 font-mono">
                   <span>{bar.label}</span><span>{bar.date}</span>
                 </div>
-                <div style={{ width: '100%', height: 8, background: 'rgba(255,255,255,0.06)', borderRadius: 99, overflow: 'hidden', display: 'flex' }}>
-                  <div style={{ width: bar.w1, height: '100%', background: bar.c1, borderRadius: bar.w2 ? '99px 0 0 99px' : 99 }} />
-                  {bar.w2 && <div style={{ width: bar.w2, height: '100%', background: '#f43f5e', animation: 'pulse 2s infinite' }} />}
+                <div className="w-full h-2 bg-[#E2E8F0] dark:bg-slate-800 rounded-[2px] overflow-hidden flex">
+                  <div style={{ width: bar.w1 }} className={`h-full ${bar.c1} rounded-[2px]`} />
+                  {bar.w2 && <div style={{ width: bar.w2 }} className="h-full bg-[#B32424] dark:bg-rose-500 animate-pulse" />}
                 </div>
               </div>
             ))}
@@ -205,64 +214,74 @@ export default function ProjectImpactPage() {
       />
 
       {/* Bottlenecks Table */}
-      <div className="glass" style={{ borderRadius: 14, overflow: 'hidden', padding: 0 }}>
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] overflow-hidden shadow-xs">
+        <div className="p-3.5 border-b border-[#DCE2E8] dark:border-white/10 flex items-center justify-between">
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Ranked Bottleneck Evidence</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Cadastral Critical Path Contributors</div>
+            <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-bold">Ranked Bottleneck Evidence</div>
+            <div className="text-sm font-bold text-[#14213D] dark:text-white mt-0.5">Cadastral Critical Path Contributors</div>
           </div>
-          <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '4px 10px', borderRadius: 6, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', color: '#818cf8' }}>
+          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/40 border border-[#B8D5ED] dark:border-sky-800/40 text-[#0B2E59] dark:text-sky-300">
             {impactData.bottlenecks.length} Contributor{impactData.bottlenecks.length === 1 ? '' : 's'}
           </span>
         </div>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-xs">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+              <tr className="border-b border-[#DCE2E8] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#07080F]">
                 {['Parcel Entity', 'Statutory Blocker / Reason', 'Urgency', 'Attributable Delay', 'Intervention'].map(h => (
-                  <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap' }}>{h}</th>
+                  <th key={h} className="py-2.5 px-4 text-left text-[10px] font-mono font-bold text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {impactData.bottlenecks.length === 0 ? (
                 <tr>
-                  <td colSpan={5} style={{ padding: '36px 16px', textAlign: 'center', color: '#6b7a94', fontSize: 12 }}>
+                  <td colSpan={5} className="py-8 px-4 text-center text-xs text-[#5A6A80] dark:text-slate-400">
                     No critical path bottlenecks or schedule delays detected. All activities within planned float buffers.
                   </td>
                 </tr>
               ) : (
                 impactData.bottlenecks.map((b) => {
-                  const u = URGENCY_STYLE[b.urgency] || URGENCY_STYLE.MEDIUM;
                   const isSelected = selectedBottleneck?.parcel_id === b.parcel_id;
                   return (
-                    <tr key={b.parcel_id} className="tr-hover" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: isSelected ? 'rgba(99,102,241,0.06)' : undefined }}>
-                      <td style={{ padding: '12px 16px' }}>
-                        <Link href={`/parcels/${b.parcel_id}`} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, fontWeight: 700, color: '#818cf8', textDecoration: 'none' }}>
+                    <tr key={b.parcel_id} className={`border-b border-[#DCE2E8]/60 dark:border-white/5 transition-colors ${
+                      isSelected ? 'bg-[#F0F4F9] dark:bg-sky-950/20' : 'hover:bg-[#F8FAFC] dark:hover:bg-[#07080F]/60'
+                    }`}>
+                      <td className="py-3 px-4">
+                        <Link href={`/parcels/${b.parcel_id}`} className="font-mono text-xs font-bold text-[#0B2E59] dark:text-sky-400 hover:underline">
                           {b.survey_no ? `Survey ${b.survey_no}` : `Parcel ${b.parcel_id.substring(0, 8)}`}
                         </Link>
                       </td>
-                      <td style={{ padding: '12px 16px', color: '#8899b4', fontSize: 11, maxWidth: 320 }}>{b.reason}</td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, background: u.bg, color: u.color, border: `1px solid ${u.border}`, textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>{b.urgency}</span>
+                      <td className="py-3 px-4 text-[#5A6A80] dark:text-slate-300 text-xs max-w-xs">{b.reason}</td>
+                      <td className="py-3 px-4">
+                        <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-[3px] border uppercase ${
+                          b.urgency === 'CRITICAL' ? 'bg-[#FFEBEE] text-[#B32424] border-[#FFCDD2] dark:bg-rose-950/40 dark:text-rose-300' :
+                          b.urgency === 'HIGH' ? 'bg-[#FFF8E1] text-[#B36B00] border-[#FFE082] dark:bg-amber-950/40 dark:text-amber-300' :
+                          'bg-[#E8F5E9] text-[#1E7E34] border-[#C8E6C9] dark:bg-emerald-950/40 dark:text-emerald-300'
+                        }`}>
+                          {b.urgency}
+                        </span>
                       </td>
-                      <td style={{ padding: '12px 16px' }}>
+                      <td className="py-3 px-4 font-mono font-bold">
                         {b.project_delay_days === null ? (
-                          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#f59e0b' }}>Unquantified</span>
+                          <span className="text-[#B36B00] dark:text-amber-400">Unquantified</span>
                         ) : b.is_critical_path ? (
-                          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#f43f5e' }}>+{b.project_delay_days}d</span>
+                          <span className="text-[#B32424] dark:text-rose-400">+{b.project_delay_days}d</span>
                         ) : (
-                          <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#4a5568' }}>0d (Has Float)</span>
+                          <span className="text-[#5A6A80] dark:text-slate-400">0d (Has Float)</span>
                         )}
                       </td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <button onClick={() => { setSelectedBottleneck(b); setSimResult(null); setError(null); }} style={{
-                          fontSize: 11, fontWeight: 700, padding: '6px 12px', borderRadius: 7, cursor: 'pointer',
-                          background: isSelected ? 'rgba(99,102,241,0.25)' : 'rgba(99,102,241,0.1)',
-                          border: `1px solid ${isSelected ? 'rgba(99,102,241,0.5)' : 'rgba(99,102,241,0.25)'}`,
-                          color: '#818cf8'
-                        }}>
-                          Investigate & Model
+                      <td className="py-3 px-4">
+                        <button
+                          type="button"
+                          onClick={() => { setSelectedBottleneck(b); setSimResult(null); setError(null); }}
+                          className={`text-xs font-bold px-3 py-1.5 rounded-[3px] transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#0B2E59] text-white'
+                              : 'bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40 hover:bg-[#D4E6F7]'
+                          }`}
+                        >
+                          Investigate &amp; Model
                         </button>
                       </td>
                     </tr>
@@ -276,41 +295,46 @@ export default function ProjectImpactPage() {
 
       {/* Investigation & Simulation Panel */}
       {selectedBottleneck && (
-        <div className="glass" style={{ borderRadius: 14, padding: '20px 24px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.05)' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-4">
+          <div className="flex items-start justify-between flex-wrap gap-3">
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4, background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.4)', color: '#818cf8', textTransform: 'uppercase' }}>Active Investigation</span>
-                <span style={{ fontSize: 16, fontWeight: 700, color: '#c4cfe4', fontFamily: 'Sora, sans-serif' }}>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40 uppercase">
+                  Active Investigation
+                </span>
+                <span className="text-sm font-bold text-[#14213D] dark:text-white font-mono">
                   {selectedBottleneck.survey_no || selectedBottleneck.parcel_id.substring(0, 8)}
                 </span>
               </div>
-              <p style={{ fontSize: 11, color: '#6b7a94' }}>
+              <p className="text-xs text-[#5A6A80] dark:text-slate-400">
                 {selectedBottleneck.is_critical_path
-                  ? <><strong style={{ color: '#f43f5e' }}>Zero Float: Directly Driving Project Completion Date (+20d)</strong></>
+                  ? <strong className="text-[#B32424] dark:text-rose-400">Zero Float: Directly Driving Project Completion Date (+20d)</strong>
                   : 'Possesses 15 days schedule float before critical path impact'}
               </p>
             </div>
-            <Link href={`/parcels/${selectedBottleneck.parcel_id}`} style={{ fontSize: 12, fontWeight: 600, color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5 }}>
-              View Parcel Deed <ArrowRight style={{ width: 12, height: 12 }} />
+            <Link
+              href={`/parcels/${selectedBottleneck.parcel_id}`}
+              className="text-xs font-bold text-[#0B2E59] dark:text-sky-400 hover:underline flex items-center gap-1"
+            >
+              View Parcel Deed <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
           {/* Causal path */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
-              Deterministic Causal Path & Delay Attribution
+          <div className="space-y-2">
+            <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-bold">
+              Deterministic Causal Path &amp; Delay Attribution
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div className="flex flex-col gap-2">
               {selectedBottleneck.causal_path.map((hop, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                  <div style={{ padding: '8px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', fontSize: 12, fontWeight: 700, color: '#c4cfe4', flex: 1, minWidth: 120 }}>
+                <div key={idx} className="flex items-center gap-2 flex-wrap text-xs">
+                  <div className="p-2 rounded-[3px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 font-bold text-[#14213D] dark:text-white flex-1 min-w-[120px]">
                     {hop.source_label}
                   </div>
-                  <div style={{ padding: '4px 10px', borderRadius: 6, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', fontSize: 10, color: '#818cf8', fontFamily: 'JetBrains Mono, monospace', whiteSpace: 'nowrap' }}>
-                    · {hop.relationship} →
+                  <div className="px-2 py-1 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40 font-mono text-[10px] whitespace-nowrap font-bold">
+                    &bull; {hop.relationship} &rarr;
                   </div>
-                  <div style={{ padding: '8px 12px', borderRadius: 8, background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.4)', fontSize: 12, fontWeight: 700, color: '#818cf8', flex: 1, minWidth: 120 }}>
+                  <div className="p-2 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/30 border border-[#B8D5ED] dark:border-sky-800/40 font-bold text-[#0B2E59] dark:text-sky-300 flex-1 min-w-[120px]">
                     {hop.target_label}
                   </div>
                 </div>
@@ -320,52 +344,56 @@ export default function ProjectImpactPage() {
 
           {/* Simulation */}
           {!simResult ? (
-            <div style={{ padding: '20px 24px', borderRadius: 12, background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.2)' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap' }}>
+            <div className="p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+              <div className="flex items-start justify-between gap-4 flex-wrap">
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#c4cfe4', marginBottom: 6 }}>Counterfactual What-If Simulation Engine</div>
-                  <p style={{ fontSize: 12, color: '#6b7a94', maxWidth: 500, lineHeight: 1.6 }}>
+                  <div className="text-xs font-bold text-[#14213D] dark:text-white mb-1">Counterfactual What-If Simulation Engine</div>
+                  <p className="text-xs text-[#5A6A80] dark:text-slate-400 max-w-lg leading-relaxed">
                     Runs an in-memory recalculation of the CPM dependency graph to quantify the exact schedule recovery if this legal impediment is resolved today.
                   </p>
                 </div>
-                <button type="button" onClick={() => runSimulation(selectedBottleneck.parcel_id)} disabled={simulating} style={{
-                  display: 'flex', alignItems: 'center', gap: 8, padding: '12px 20px', borderRadius: 10, fontSize: 12, fontWeight: 800,
-                  background: simulating ? 'rgba(99,102,241,0.2)' : 'rgba(99,102,241,0.3)',
-                  border: '1px solid rgba(99,102,241,0.5)', color: '#818cf8', cursor: simulating ? 'not-allowed' : 'pointer', flexShrink: 0
-                }}>
-                  <Sparkles style={{ width: 15, height: 15, color: '#f59e0b' }} />
+                <button
+                  type="button"
+                  onClick={() => runSimulation(selectedBottleneck.parcel_id)}
+                  disabled={simulating}
+                  className="flex items-center gap-2 px-3.5 py-2.5 rounded-[4px] text-xs font-bold bg-[#0B2E59] hover:bg-[#082242] text-white shadow-xs transition-all cursor-pointer disabled:bg-slate-300 dark:disabled:bg-slate-800"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                   {simulating ? 'Computing Counterfactual...' : 'Simulate: Resolve Blocker'}
                 </button>
               </div>
             </div>
           ) : (
-            <div style={{ padding: '20px 24px', borderRadius: 12, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.3)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <CheckCircle2 style={{ width: 16, height: 16, color: '#10b981' }} />
-                  <span style={{ fontSize: 14, fontWeight: 700, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Counterfactual Simulation Result</span>
+            <div className="p-4 rounded-[4px] bg-[#E8F5E9] dark:bg-emerald-950/20 border border-[#C8E6C9] dark:border-emerald-800/40 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#1E7E34] dark:text-emerald-400" />
+                  <span className="text-xs font-bold text-[#1E7E34] dark:text-emerald-400 uppercase tracking-wider font-mono">Counterfactual Simulation Result</span>
                 </div>
-                <button onClick={() => setSimResult(null)} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#6b7a94', background: 'none', border: 'none', cursor: 'pointer' }}>
-                  <RotateCcw style={{ width: 12, height: 12 }} /> Reset
+                <button
+                  onClick={() => setSimResult(null)}
+                  className="flex items-center gap-1 text-xs font-bold text-[#5A6A80] dark:text-slate-400 hover:text-[#14213D] transition-colors cursor-pointer"
+                >
+                  <RotateCcw className="w-3 h-3" /> Reset
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
-                  { label: 'Status Quo Forecast', val: formatDate(simResult.before.project_finish), sub: '+20 Days Overrun', color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', border: 'rgba(244,63,94,0.25)' },
-                  { label: 'Counterfactual Forecast', val: formatDate(simResult.after.project_finish), sub: 'Schedule Fully Recovered', color: '#10b981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.25)' },
+                  { label: 'Status Quo Forecast', val: formatDate(simResult.before.project_finish), sub: '+20 Days Overrun', color: 'text-[#B32424] dark:text-rose-400', bg: 'bg-[#FFF5F5] dark:bg-rose-950/20', border: 'border-[#FFCDD2] dark:border-rose-800/40' },
+                  { label: 'Counterfactual Forecast', val: formatDate(simResult.after.project_finish), sub: 'Schedule Fully Recovered', color: 'text-[#1E7E34] dark:text-emerald-400', bg: 'bg-white dark:bg-[#0D121F]', border: 'border-[#C8E6C9] dark:border-emerald-800/40' },
                 ].map((c) => (
-                  <div key={c.label} style={{ padding: '14px 16px', borderRadius: 10, background: c.bg, border: `1px solid ${c.border}` }}>
-                    <div style={{ fontSize: 9, color: '#6b7a94', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace', marginBottom: 6 }}>{c.label}</div>
-                    <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 18, fontWeight: 800, color: c.color }}>{c.val}</div>
-                    <div style={{ fontSize: 10, fontWeight: 700, color: c.color, marginTop: 4 }}>{c.sub}</div>
+                  <div key={c.label} className={`p-3 rounded-[4px] ${c.bg} border ${c.border}`}>
+                    <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-mono mb-1">{c.label}</div>
+                    <div className={`font-mono text-base font-bold ${c.color}`}>{c.val}</div>
+                    <div className={`text-[11px] font-bold ${c.color} mt-0.5`}>{c.sub}</div>
                   </div>
                 ))}
               </div>
 
-              <div style={{ padding: '12px 16px', borderRadius: 9, background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: 13, fontWeight: 700, color: '#10b981', fontFamily: 'JetBrains Mono, monospace' }}>Net Critical Delay Recovered:</span>
-                <span style={{ fontSize: 18, fontWeight: 800, color: '#10b981', fontFamily: 'Sora, sans-serif' }}>+{simResult.days_recovered} Calendar Day(s)</span>
+              <div className="p-3 rounded-[3px] bg-white dark:bg-[#0D121F] border border-[#C8E6C9] dark:border-emerald-800/40 flex items-center justify-between">
+                <span className="text-xs font-bold text-[#1E7E34] dark:text-emerald-400 font-mono">Net Critical Delay Recovered:</span>
+                <span className="text-base font-extrabold text-[#1E7E34] dark:text-emerald-400 font-display">+{simResult.days_recovered} Calendar Day(s)</span>
               </div>
             </div>
           )}

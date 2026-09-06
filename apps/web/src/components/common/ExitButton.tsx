@@ -34,7 +34,7 @@ export function ExitButton({ variant = "header", className = "" }: ExitButtonPro
         disabled={exiting}
         title="Exit Admin Console / Sign Out"
         aria-label="Exit Admin Session"
-        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-500/15 border border-rose-200 dark:border-rose-500/30 transition-all shadow-sm cursor-pointer disabled:opacity-50 flex-shrink-0 ${className}`}
+        className={`flex items-center gap-1.5 px-2 py-1 rounded-[3px] text-xs font-semibold text-[#B32424] dark:text-rose-300 hover:bg-[#FFEBEE] dark:hover:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/40 transition-colors shadow-xs cursor-pointer disabled:opacity-50 flex-shrink-0 ${className}`}
       >
         {exiting ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -52,7 +52,7 @@ export function ExitButton({ variant = "header", className = "" }: ExitButtonPro
       disabled={exiting}
       title="Exit Admin Console / Sign Out"
       aria-label="Exit Admin Session"
-      className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60 transition-all shadow-sm cursor-pointer disabled:opacity-50 ${className}`}
+      className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-[3px] bg-[#FFEBEE] hover:bg-[#FFCDD2] dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-[#B32424] dark:text-rose-300 border border-[#FFCDD2] dark:border-rose-800/60 transition-colors shadow-xs cursor-pointer disabled:opacity-50 ${className}`}
     >
       {exiting ? (
         <Loader2 className="w-3.5 h-3.5 animate-spin" />

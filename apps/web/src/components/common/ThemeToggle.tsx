@@ -25,7 +25,7 @@ export function ThemeToggle({
   if (!mounted) {
     return (
       <div
-        className={`inline-flex items-center justify-center p-2 rounded-lg border border-slate-200 dark:border-white/10 text-slate-400 opacity-60 ${className}`}
+        className={`inline-flex items-center justify-center p-2 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 text-slate-400 opacity-60 ${className}`}
         aria-hidden="true"
       >
         <Moon className="w-4 h-4 opacity-0" />
@@ -38,16 +38,16 @@ export function ThemeToggle({
   if (variant === 'pill') {
     return (
       <div
-        className={`inline-flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs shadow-sm ${className}`}
+        className={`inline-flex items-center p-0.5 rounded-[4px] bg-[#F4F6F8] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 text-xs shadow-xs ${className}`}
         role="group"
         aria-label="Theme selection"
       >
         <button
           type="button"
           onClick={() => setTheme('light')}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium transition-all ${
+          className={`flex items-center gap-1.5 px-2 py-1 rounded-[3px] font-medium transition-all ${
             theme === 'light'
-              ? 'bg-white text-amber-600 shadow-sm font-semibold'
+              ? 'bg-white text-[#B36B00] shadow-xs font-bold border border-[#FFE082]'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
           title="Switch to Light Mode"
@@ -60,9 +60,9 @@ export function ThemeToggle({
         <button
           type="button"
           onClick={() => setTheme('dark')}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium transition-all ${
+          className={`flex items-center gap-1.5 px-2 py-1 rounded-[3px] font-medium transition-all ${
             theme === 'dark'
-              ? 'bg-indigo-600 text-white shadow-sm font-semibold'
+              ? 'bg-[#0B2E59] text-white shadow-xs font-bold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
           title="Switch to Dark Mode"
@@ -75,9 +75,9 @@ export function ThemeToggle({
         <button
           type="button"
           onClick={() => setTheme('system')}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium transition-all ${
+          className={`flex items-center gap-1.5 px-2 py-1 rounded-[3px] font-medium transition-all ${
             theme === 'system'
-              ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm font-semibold'
+              ? 'bg-white dark:bg-[#0D121F] text-[#0B2E59] dark:text-white shadow-xs font-bold border border-[#DCE2E8] dark:border-white/10'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
           title="Use System Theme"
@@ -94,10 +94,10 @@ export function ThemeToggle({
     <button
       type="button"
       onClick={toggleTheme}
-      className={`group relative flex items-center gap-2 p-2 rounded-lg transition-all duration-200 border ${
+      className={`group relative flex items-center gap-2 p-1.5 rounded-[4px] transition-colors border shadow-xs ${
         isDark
-          ? 'bg-slate-900/90 hover:bg-slate-800 border-white/10 text-amber-400 hover:text-amber-300 hover:border-amber-400/40 shadow-sm'
-          : 'bg-white hover:bg-slate-100 border-slate-200 text-indigo-600 hover:text-indigo-700 hover:border-indigo-300 shadow-sm'
+          ? 'bg-[#0D121F] hover:bg-white/10 border-white/10 text-amber-400 hover:text-amber-300'
+          : 'bg-white hover:bg-[#F4F6F8] border-[#DCE2E8] text-[#0B2E59] hover:text-[#082242]'
       } ${className}`}
       title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
       aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}

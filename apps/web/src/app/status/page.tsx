@@ -42,65 +42,68 @@ export default async function StatusPage() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="space-y-6">
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+      <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 10, fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: 5, background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981' }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', display: 'inline-block', animation: 'pulse 2s infinite' }} />
+          <div className="flex items-center gap-2 mb-1">
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-[2px] bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border border-[#C8E6C9] dark:border-emerald-800/50">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#1E7E34] inline-block animate-pulse" />
               All Systems Operational
             </span>
-            <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '3px 10px', borderRadius: 5, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#4a5568' }}>
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-slate-200 dark:bg-white/10 text-[#0B2E59] dark:text-slate-300">
               Core Engine {backendHealth?.version || 'v2.4-PROD'}
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+          <h1 className="text-xl md:text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] mt-2">
             Platform Operational Health & Telemetry
           </h1>
-          <p style={{ fontSize: 12, color: '#4a5568', marginTop: 6, maxWidth: 600 }}>
+          <p className="text-xs text-[#555555] dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
             Real-time diagnostic verification of core decision-intelligence microservices, PostGIS spatial databases, deterministic CPM schedule engines, and statutory limitation clocks.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          {[
-            { label: 'API Latency', val: '~34ms', color: '#10b981' },
-            { label: 'Data Integrity', val: '100% Signed', color: '#e2e8f0' },
-          ].map(s => (
-            <div key={s.label} style={{ padding: '12px 16px', borderRadius: 10, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div style={{ fontSize: 9, color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', fontFamily: 'JetBrains Mono, monospace' }}>{s.label}</div>
-              <div style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, fontSize: 14, color: s.color, marginTop: 3 }}>{s.val}</div>
-            </div>
-          ))}
+        <div className="flex items-center gap-2.5">
+          <div className="px-3 py-2 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs text-right">
+            <div className="text-[9px] text-[#64748B] uppercase tracking-wider font-mono">API Latency</div>
+            <div className="font-mono font-bold text-sm text-[#1E7E34] dark:text-emerald-400 mt-0.5">~34ms</div>
+          </div>
+          <div className="px-3 py-2 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs text-right">
+            <div className="text-[9px] text-[#64748B] uppercase tracking-wider font-mono">Data Integrity</div>
+            <div className="font-mono font-bold text-sm text-[#0B2E59] dark:text-sky-400 mt-0.5">100% Signed</div>
+          </div>
         </div>
       </div>
 
       {/* Subsystem Health Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 14 }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
         {subsystems.map((sub) => {
           const SubIcon = sub.icon;
           const isOk = sub.status === 'OPERATIONAL';
           return (
-            <div key={sub.name} className="glass tr-hover" style={{ borderRadius: 14, padding: '20px', borderTop: `3px solid ${sub.color}` }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ padding: 10, borderRadius: 8, background: `${sub.color}18`, border: `1px solid ${sub.color}30` }}>
-                    <SubIcon style={{ width: 16, height: 16, color: sub.color }} />
+            <div key={sub.name} className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-3 mb-2.5">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-[4px] bg-[#E8F1FA] dark:bg-sky-950/40 border border-[#B8D5E5] dark:border-sky-800/40 text-[#0B2E59] dark:text-sky-300">
+                    <SubIcon className="w-4 h-4" />
                   </div>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#c4cfe4' }}>{sub.name}</div>
-                    <div style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#4a5568', marginTop: 1 }}>{sub.type}</div>
+                    <div className="text-xs font-bold text-[#14213D] dark:text-white">{sub.name}</div>
+                    <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 mt-0.5">{sub.type}</div>
                   </div>
                 </div>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 5, background: isOk ? 'rgba(16,185,129,0.12)' : 'rgba(244,63,94,0.12)', color: isOk ? '#10b981' : '#f43f5e', border: `1px solid ${isOk ? 'rgba(16,185,129,0.3)' : 'rgba(244,63,94,0.3)'}`, textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
-                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: isOk ? '#10b981' : '#f43f5e' }} />
+                <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-[3px] border uppercase ${
+                  isOk
+                    ? 'bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border-[#C8E6C9] dark:border-emerald-800/50'
+                    : 'bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-400 border-[#FFCDD2] dark:border-rose-800/50'
+                }`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${isOk ? 'bg-[#1E7E34]' : 'bg-[#B32424]'}`} />
                   {sub.status}
                 </span>
               </div>
-              <p style={{ fontSize: 11, color: '#6b7a94', lineHeight: 1.6, marginBottom: 12 }}>{sub.details}</p>
-              <div style={{ paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#4a5568' }}>
-                <span>Ping: <strong style={{ color: '#8899b4' }}>{sub.latency}</strong></span>
-                <span>Uptime: <strong style={{ color: '#10b981' }}>{sub.uptime}</strong></span>
+              <p className="text-[11px] text-[#555555] dark:text-slate-400 leading-relaxed mb-3">{sub.details}</p>
+              <div className="pt-2.5 border-t border-[#DCE2E8] dark:border-white/10 flex justify-between text-xs font-mono text-[#64748B]">
+                <span>Ping: <strong className="text-[#14213D] dark:text-slate-200">{sub.latency}</strong></span>
+                <span>Uptime: <strong className="text-[#1E7E34] dark:text-emerald-400">{sub.uptime}</strong></span>
               </div>
             </div>
           );
@@ -108,31 +111,31 @@ export default async function StatusPage() {
       </div>
 
       {/* Statutory Ruleset Engine */}
-      <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 8 }}>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-sm">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Statutory Compliance</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Ruleset Engine</div>
+            <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Statutory Compliance</div>
+            <div className="text-sm font-bold text-[#14213D] dark:text-white mt-0.5">Ruleset Engine</div>
           </div>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, padding: '6px 12px', borderRadius: 8, background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981' }}>
-            <ShieldCheck style={{ width: 13, height: 13 }} /> All Rules Active
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-[3px] bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border border-[#C8E6C9] dark:border-emerald-800/50">
+            <ShieldCheck className="w-3.5 h-3.5" /> All Rules Active
           </span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 14 }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
           {statutoryEngines.map((eng) => (
-            <div key={eng.act} style={{ padding: '16px 20px', borderRadius: 10, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: eng.color }}>{eng.act}</div>
-                <span style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: `${eng.color}18`, color: eng.color, border: `1px solid ${eng.color}35` }}>
+            <div key={eng.act} className="p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-white/[0.02] border border-[#DCE2E8] dark:border-white/10">
+              <div className="flex items-center justify-between mb-1">
+                <div className="text-xs font-bold text-[#0B2E59] dark:text-sky-400">{eng.act}</div>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-slate-100 dark:bg-white/10 text-[#0B2E59] dark:text-slate-300 border border-slate-200 dark:border-white/10">
                   {eng.rulesCount}
                 </span>
               </div>
-              <div style={{ fontSize: 11, color: '#4a5568', marginBottom: 12 }}>{eng.title}</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 7, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+              <div className="text-[11px] text-[#64748B] dark:text-slate-400 mb-3">{eng.title}</div>
+              <div className="space-y-1.5 pt-2.5 border-t border-[#DCE2E8] dark:border-white/10">
                 {eng.rules.map((r) => (
-                  <div key={r} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                    <CheckCircle2 style={{ width: 13, height: 13, color: '#10b981', flexShrink: 0, marginTop: 1 }} />
-                    <span style={{ fontSize: 11, color: '#8899b4', lineHeight: 1.4 }}>{r}</span>
+                  <div key={r} className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#1E7E34] shrink-0 mt-0.5" />
+                    <span className="text-[11px] text-[#333333] dark:text-slate-300 leading-snug">{r}</span>
                   </div>
                 ))}
               </div>
@@ -142,25 +145,25 @@ export default async function StatusPage() {
       </div>
 
       {/* Architecture Topology */}
-      <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 4 }}>BHUMI Decision Platform</div>
-        <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginBottom: 16 }}>Architecture Topology</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-sm">
+        <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase tracking-wider">BHUMI Decision Platform</div>
+        <div className="text-sm font-bold text-[#14213D] dark:text-white mt-0.5 mb-4">Architecture Topology</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {archTiers.map((t) => (
-            <div key={t.tier} style={{ padding: '16px 18px', borderRadius: 10, background: `${t.color}0a`, border: `1px solid ${t.color}28` }}>
-              <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: t.color, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>{t.tier}</div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#c4cfe4', marginBottom: 6 }}>{t.name}</div>
-              <p style={{ fontSize: 11, color: '#6b7a94', margin: '0 0 8px', lineHeight: 1.5 }}>{t.desc}</p>
-              <div style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: t.color }}>{t.detail}</div>
+            <div key={t.tier} className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-white/[0.02] border border-[#DCE2E8] dark:border-white/10">
+              <div className="text-[10px] font-mono font-bold text-[#0B5FA5] dark:text-sky-400 uppercase tracking-wider mb-1">{t.tier}</div>
+              <div className="text-xs font-bold text-[#14213D] dark:text-white mb-1.5">{t.name}</div>
+              <p className="text-[11px] text-[#555555] dark:text-slate-400 mb-2 leading-relaxed">{t.desc}</p>
+              <div className="text-[10px] font-mono font-bold text-[#0B2E59] dark:text-slate-300">{t.detail}</div>
             </div>
           ))}
         </div>
-        <div style={{ marginTop: 14, padding: '12px 16px', background: 'rgba(255,255,255,0.03)', borderRadius: 9, border: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Terminal style={{ width: 13, height: 13, color: '#4a5568', flexShrink: 0 }} />
-            <span style={{ fontSize: 11, color: '#6b7a94' }}>Core Daemon: <strong style={{ fontFamily: 'JetBrains Mono, monospace', color: '#8899b4' }}>bhumi-chronos-daemon (Active)</strong></span>
+        <div className="mt-3.5 p-3 bg-slate-50 dark:bg-white/[0.02] rounded-[4px] border border-[#DCE2E8] dark:border-white/10 flex items-center justify-between flex-wrap gap-2 text-xs">
+          <div className="flex items-center gap-2 text-[#555555] dark:text-slate-300">
+            <Terminal className="w-3.5 h-3.5 text-[#64748B]" />
+            <span>Core Daemon: <strong className="font-mono text-[#14213D] dark:text-white">bhumi-chronos-daemon (Active)</strong></span>
           </div>
-          <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#4a5568' }}>Lapse Check: 12h interval · Next in 4h 12m</span>
+          <span className="text-[11px] font-mono text-[#64748B]">Lapse Check: 12h interval &bull; Next in 4h 12m</span>
         </div>
       </div>
     </div>

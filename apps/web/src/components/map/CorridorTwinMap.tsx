@@ -140,7 +140,7 @@ export function CorridorTwinMap({
   const centerCoordinates: [number, number] = geojson?.properties?.center || [75.98, 24.69];
 
   return (
-    <div style={{ position: 'relative', width: '100%', height, borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+    <div style={{ position: 'relative', width: '100%', height, borderRadius: 4, overflow: 'hidden', border: isLight ? '1px solid #DCE2E8' : '1px solid rgba(255,255,255,0.1)' }}>
       {/* Mode Switcher Bar */}
       <div
         style={{
@@ -152,25 +152,24 @@ export function CorridorTwinMap({
           alignItems: 'center',
           gap: 6,
           padding: 4,
-          borderRadius: 10,
-          background: isLight ? 'rgba(255, 255, 255, 0.95)' : 'rgba(9, 13, 22, 0.85)',
-          backdropFilter: 'blur(12px)',
-          border: isLight ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.12)',
-          boxShadow: isLight ? '0 4px 20px rgba(0,0,0,0.08)' : '0 8px 32px rgba(0,0,0,0.6)'
+          borderRadius: 4,
+          background: isLight ? '#ffffff' : '#0D121F',
+          border: isLight ? '1px solid #DCE2E8' : '1px solid rgba(255,255,255,0.12)',
+          boxShadow: isLight ? '0 2px 8px rgba(0,0,0,0.06)' : '0 4px 16px rgba(0,0,0,0.5)'
         }}
       >
         <button
           onClick={() => setMode('NORMAL')}
           style={{
             padding: '6px 12px',
-            borderRadius: 7,
+            borderRadius: 3,
             border: 'none',
             fontSize: 11,
             fontWeight: 700,
             fontFamily: 'JetBrains Mono, monospace',
             cursor: 'pointer',
-            background: mode === 'NORMAL' ? (isLight ? 'rgba(14, 165, 233, 0.15)' : 'rgba(56,189,248,0.2)') : 'transparent',
-            color: mode === 'NORMAL' ? (isLight ? '#0284c7' : '#38bdf8') : (isLight ? '#64748b' : '#94a3b8'),
+            background: mode === 'NORMAL' ? '#0B2E59' : 'transparent',
+            color: mode === 'NORMAL' ? '#ffffff' : (isLight ? '#5A6A80' : '#94a3b8'),
             transition: 'all 0.15s ease'
           }}
         >
@@ -181,14 +180,14 @@ export function CorridorTwinMap({
           onClick={() => setMode('RISK')}
           style={{
             padding: '6px 12px',
-            borderRadius: 7,
+            borderRadius: 3,
             border: 'none',
             fontSize: 11,
             fontWeight: 700,
             fontFamily: 'JetBrains Mono, monospace',
             cursor: 'pointer',
-            background: mode === 'RISK' ? (isLight ? 'rgba(245, 158, 11, 0.15)' : 'rgba(245,158,11,0.2)') : 'transparent',
-            color: mode === 'RISK' ? (isLight ? '#d97706' : '#fbbf24') : (isLight ? '#64748b' : '#94a3b8'),
+            background: mode === 'RISK' ? '#B36B00' : 'transparent',
+            color: mode === 'RISK' ? '#ffffff' : (isLight ? '#5A6A80' : '#94a3b8'),
             transition: 'all 0.15s ease'
           }}
         >
@@ -199,14 +198,14 @@ export function CorridorTwinMap({
           onClick={() => setMode('CRITICAL_PATH')}
           style={{
             padding: '6px 12px',
-            borderRadius: 7,
+            borderRadius: 3,
             border: 'none',
             fontSize: 11,
             fontWeight: 700,
             fontFamily: 'JetBrains Mono, monospace',
             cursor: 'pointer',
-            background: mode === 'CRITICAL_PATH' ? (isLight ? 'rgba(225, 29, 72, 0.12)' : 'rgba(244,63,94,0.2)') : 'transparent',
-            color: mode === 'CRITICAL_PATH' ? (isLight ? '#e11d48' : '#f43f5e') : (isLight ? '#64748b' : '#94a3b8'),
+            background: mode === 'CRITICAL_PATH' ? '#B32424' : 'transparent',
+            color: mode === 'CRITICAL_PATH' ? '#ffffff' : (isLight ? '#5A6A80' : '#94a3b8'),
             transition: 'all 0.15s ease'
           }}
         >
@@ -217,7 +216,7 @@ export function CorridorTwinMap({
       <button
         type="button"
         onClick={() => setMapBase(base => base === 'aerial' ? 'standard' : 'aerial')}
-        className="absolute right-3 bottom-12 z-10 border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+        className="absolute right-3 bottom-12 z-10 rounded-[4px] border border-[#DCE2E8] dark:border-white/15 bg-white dark:bg-[#0D121F] px-3 py-2 text-xs font-semibold text-[#14213D] dark:text-slate-100 shadow-xs cursor-pointer"
       >
         {mapBase === 'aerial' ? 'Standard map' : 'Aerial map'}
       </button>
@@ -233,14 +232,13 @@ export function CorridorTwinMap({
           alignItems: 'center',
           gap: 8,
           padding: '6px 12px',
-          borderRadius: 8,
-          background: isLight ? 'rgba(255, 255, 255, 0.95)' : 'rgba(9, 13, 22, 0.85)',
-          backdropFilter: 'blur(12px)',
-          border: isLight ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.12)',
+          borderRadius: 4,
+          background: isLight ? '#ffffff' : '#0D121F',
+          border: isLight ? '1px solid #DCE2E8' : '1px solid rgba(255,255,255,0.12)',
           boxShadow: isLight ? '0 2px 8px rgba(0,0,0,0.05)' : 'none'
         }}
       >
-        <span style={{ fontSize: 11, color: isLight ? '#0f172a' : '#e2e8f0', fontWeight: 600 }}>NH-927A Kota–Jhalawar Bypass</span>
+        <span style={{ fontSize: 11, color: isLight ? '#14213D' : '#e2e8f0', fontWeight: 600 }}>NH-927A Kota–Jhalawar Bypass</span>
         <ProvenanceBadge sourceType="SYNTHETIC" size="xs" />
       </div>
 
@@ -316,13 +314,12 @@ export function CorridorTwinMap({
           alignItems: 'center',
           gap: 14,
           padding: '8px 14px',
-          borderRadius: 8,
-          background: isLight ? 'rgba(255, 255, 255, 0.95)' : 'rgba(9, 13, 22, 0.85)',
-          backdropFilter: 'blur(10px)',
-          border: isLight ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 4,
+          background: isLight ? '#ffffff' : '#0D121F',
+          border: isLight ? '1px solid #DCE2E8' : '1px solid rgba(255,255,255,0.1)',
           boxShadow: isLight ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
           fontSize: 11,
-          color: isLight ? '#334155' : '#c4cfe4'
+          color: isLight ? '#14213D' : '#c4cfe4'
         }}
       >
         {mode === 'NORMAL' && (

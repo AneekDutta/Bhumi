@@ -390,23 +390,23 @@ export default function RegisterParcelPage() {
 
   return (
     <LandownerShell title="Register New Parcel">
-      <div className="p-4 space-y-4 max-w-lg mx-auto pb-28">
+      <div className="space-y-4 max-w-lg mx-auto pb-28">
         
         {/* Registration Header */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <div className="w-9 h-9 rounded-[4px] bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/40 flex items-center justify-center text-[#0B2E59] dark:text-sky-400">
                 <FileCheck2 className="w-5 h-5" />
               </div>
               <div>
-                <h1 className="font-bold text-white text-base font-display">Statutory Parcel Registration</h1>
-                <p className="text-xs text-slate-400">Prerequisite to Land Grievances & Legal Demarcation</p>
+                <h1 className="font-bold text-[#14213D] dark:text-white text-sm font-display">Statutory Parcel Registration</h1>
+                <p className="text-xs text-[#5A6A80] dark:text-slate-400">Prerequisite to Land Grievances & Legal Demarcation</p>
               </div>
             </div>
             <Link
               href="/landowner/home"
-              className="text-xs text-slate-400 hover:text-white flex items-center gap-1 border border-slate-700/60 px-2.5 py-1 rounded-lg"
+              className="text-xs font-semibold text-[#5A6A80] hover:text-[#0B2E59] dark:text-slate-400 dark:hover:text-white flex items-center gap-1 border border-[#DCE2E8] dark:border-white/10 px-2.5 py-1 rounded-[4px]"
             >
               Cancel
             </Link>
@@ -414,7 +414,7 @@ export default function RegisterParcelPage() {
 
           {/* Stepper indicator (Steps 1 to 5) */}
           {currentStep <= 5 && (
-            <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <div className="mt-3.5 pt-3 border-t border-[#DCE2E8] dark:border-white/10 flex items-center justify-between text-xs">
               {[
                 { step: 1, label: "Owner" },
                 { step: 2, label: "Identity" },
@@ -427,17 +427,17 @@ export default function RegisterParcelPage() {
                 return (
                   <div key={s.step} className="flex flex-col items-center flex-1">
                     <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                      className={`w-6 h-6 rounded-[3px] flex items-center justify-center text-xs font-bold transition-all ${
                         isCompleted
-                          ? "bg-emerald-500 text-slate-950"
+                          ? "bg-[#1E7E34] text-white"
                           : isActive
-                          ? "bg-amber-400 text-slate-950 ring-4 ring-amber-400/20"
-                          : "bg-slate-800 text-slate-400"
+                          ? "bg-[#0B2E59] text-white ring-2 ring-[#0B2E59]/30"
+                          : "bg-[#E2E8F0] dark:bg-white/10 text-[#5A6A80] dark:text-slate-400"
                       }`}
                     >
-                      {isCompleted ? <Check className="w-4 h-4" /> : s.step}
+                      {isCompleted ? <Check className="w-3.5 h-3.5" /> : s.step}
                     </div>
-                    <span className={`text-[10px] mt-1 font-medium ${isActive ? "text-amber-400 font-bold" : "text-slate-400"}`}>
+                    <span className={`text-[10px] mt-1 font-medium ${isActive ? "text-[#0B2E59] dark:text-sky-400 font-bold" : "text-[#5A6A80] dark:text-slate-400"}`}>
                       {s.label}
                     </span>
                   </div>
@@ -451,54 +451,54 @@ export default function RegisterParcelPage() {
         {/* STEP 1: OWNER LEGAL NAME & DETAILS */}
         {/* ============================================================ */}
         {currentStep === 1 && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
-            <div className="border-b border-slate-800 pb-3">
-              <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">1</span>
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-4">
+            <div className="border-b border-[#DCE2E8] dark:border-white/10 pb-3">
+              <h2 className="text-sm font-bold text-[#14213D] dark:text-white flex items-center gap-2">
+                <span className="w-5 h-5 rounded-[3px] bg-[#0B2E59] text-white flex items-center justify-center text-xs font-mono">1</span>
                 Landowner Legal Name & Village
               </h2>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
                 Enter the full legal name exactly as it appears on official land revenue records and government identity.
               </p>
             </div>
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-300 font-medium mb-1">
-                  Full Legal Name of Landowner <span className="text-rose-400">*</span>
+                <label className="block text-[#14213D] dark:text-slate-300 font-semibold mb-1">
+                  Full Legal Name of Landowner <span className="text-rose-600">*</span>
                 </label>
                 <input
                   type="text"
                   value={legalName}
                   onChange={(e) => setLegalName(e.target.value)}
                   placeholder="e.g. Ramesh Chandra Sharma"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                  className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2 text-[#14213D] dark:text-white placeholder-[#5A6A80] dark:placeholder-slate-500 focus:outline-none focus:border-[#0B2E59]"
                 />
-                <p className="text-[11px] text-slate-400 mt-1">
+                <p className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">
                   This legal name will be permanently bound to the 14-digit Parcel ID and official deed records.
                 </p>
               </div>
 
               <div>
-                <label className="block text-slate-300 font-medium mb-1">
-                  Village / Revenue Mauza <span className="text-rose-400">*</span>
+                <label className="block text-[#14213D] dark:text-slate-300 font-semibold mb-1">
+                  Village / Revenue Mauza <span className="text-rose-600">*</span>
                 </label>
                 <input
                   type="text"
                   value={contactVillage}
                   onChange={(e) => setContactVillage(e.target.value)}
                   placeholder="e.g. Chandwas Khurd (Sector 4)"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                  className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2 text-[#14213D] dark:text-white placeholder-[#5A6A80] dark:placeholder-slate-500 focus:outline-none focus:border-[#0B2E59]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Land Use Classification</label>
+                  <label className="block text-[#14213D] dark:text-slate-300 font-semibold mb-1">Land Use Classification</label>
                   <select
                     value={landUse}
                     onChange={(e) => setLandUse(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-2.5 text-white focus:outline-none focus:border-amber-400"
+                    className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-2.5 py-2 text-[#14213D] dark:text-white focus:outline-none focus:border-[#0B2E59]"
                   >
                     <option value="agricultural">Agricultural (Krishi)</option>
                     <option value="residential">Residential (Abadi)</option>
@@ -509,13 +509,13 @@ export default function RegisterParcelPage() {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Survey / Khasra No. (Optional)</label>
+                  <label className="block text-[#14213D] dark:text-slate-300 font-semibold mb-1">Survey / Khasra No. (Optional)</label>
                   <input
                     type="text"
                     value={surveyNumber}
                     onChange={(e) => setSurveyNumber(e.target.value)}
                     placeholder="e.g. 142/1"
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                    className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2 text-[#14213D] dark:text-white placeholder-[#5A6A80] dark:placeholder-slate-500 focus:outline-none focus:border-[#0B2E59]"
                   />
                 </div>
               </div>
@@ -526,7 +526,7 @@ export default function RegisterParcelPage() {
                 type="button"
                 disabled={!legalName.trim()}
                 onClick={() => setCurrentStep(2)}
-                className="w-full py-3 px-4 rounded-xl font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50"
+                className="w-full py-2.5 px-4 rounded-[4px] font-bold text-white bg-[#0B2E59] hover:bg-[#082242] transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50 shadow-xs cursor-pointer"
               >
                 <span>Continue to Identity Verification</span>
                 <ArrowRight className="w-4 h-4" />
@@ -539,51 +539,51 @@ export default function RegisterParcelPage() {
         {/* STEP 2: AADHAAR IDENTITY VERIFICATION */}
         {/* ============================================================ */}
         {currentStep === 2 && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
-            <div className="border-b border-slate-800 pb-3">
-              <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">2</span>
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-4">
+            <div className="border-b border-[#DCE2E8] dark:border-white/10 pb-3">
+              <h2 className="text-sm font-bold text-[#14213D] dark:text-white flex items-center gap-2">
+                <span className="w-5 h-5 rounded-[3px] bg-[#0B2E59] text-white flex items-center justify-center text-xs font-mono">2</span>
                 Aadhaar-Based Identity Verification
               </h2>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
                 Statutory identity verification to ensure parcel registration is authenticated by the rightful owner.
               </p>
             </div>
 
             {/* Aadhaar Gateway Notice */}
-            <div className="p-3 bg-slate-950/80 border border-slate-800 rounded-xl space-y-2 text-xs">
+            <div className="p-3 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] space-y-2 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 flex items-center gap-1.5 font-medium">
-                  <ShieldAlert className="w-4 h-4 text-emerald-400" />
+                <span className="text-[#14213D] dark:text-slate-300 flex items-center gap-1.5 font-bold">
+                  <ShieldAlert className="w-4 h-4 text-[#1E7E34] dark:text-emerald-400" />
                   UIDAI e-KYC Gateway:
                 </span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                <span className="px-2 py-0.5 rounded-[3px] text-[10px] font-mono bg-[#E8F5E9] text-[#1E7E34] border border-[#C8E6C9] font-bold">
                   Ready
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
+              <p className="text-[11px] text-[#5A6A80] dark:text-slate-400 leading-relaxed">
                 Direct biometric and OTP e-KYC authentication for landholders under the Aadhaar Act 2016.
               </p>
 
               {/* Verification Mode Toggle */}
-              <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between">
+              <div className="mt-2 pt-2 border-t border-[#DCE2E8] dark:border-white/10 flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-bold text-white block">Instant Aadhaar Verification</span>
-                  <span className="text-[10px] text-emerald-400/90 block">One-time OTP authentication</span>
+                  <span className="text-xs font-bold text-[#14213D] dark:text-white block">Instant Aadhaar Verification</span>
+                  <span className="text-[10px] text-[#1E7E34] dark:text-emerald-400 block font-medium">One-time OTP authentication</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsDemoAadhaarMode(!isDemoAadhaarMode)}
-                  className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors ${
-                    isDemoAadhaarMode ? "bg-emerald-500 justify-end" : "bg-slate-700 justify-start"
+                  className={`w-11 h-5 flex items-center rounded-full p-0.5 transition-colors cursor-pointer ${
+                    isDemoAadhaarMode ? "bg-[#1E7E34] justify-end" : "bg-[#CBD5E1] dark:bg-white/20 justify-start"
                   }`}
                 >
-                  <div className="w-4 h-4 rounded-full bg-slate-950 shadow-md" />
+                  <div className="w-4 h-4 rounded-full bg-white shadow-xs" />
                 </button>
               </div>
 
               {isDemoAadhaarMode && (
-                <div className="bg-emerald-950/30 border border-emerald-500/40 rounded-lg p-2.5 text-[11px] text-emerald-300 font-mono">
+                <div className="bg-[#E8F5E9] dark:bg-emerald-950/30 border border-[#C8E6C9] dark:border-emerald-800/40 rounded-[3px] p-2 text-[11px] text-[#1E7E34] dark:text-emerald-300 font-mono">
                   ✓ Instant Aadhaar OTP verification active. Enter your 12-digit Aadhaar number below.
                 </div>
               )}
@@ -593,70 +593,55 @@ export default function RegisterParcelPage() {
             {!aadhaarVerificationRecord ? (
               <div className="space-y-3 text-xs">
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">
-                    Aadhaar Number (12 Digits) <span className="text-rose-400">*</span>
+                  <label className="block text-[#14213D] dark:text-slate-300 font-semibold mb-1">
+                    Aadhaar Number (12 Digits) <span className="text-rose-600">*</span>
                   </label>
                   <input
                     type="text"
-                    maxLength={14}
                     value={aadhaarNumber}
-                    onChange={(e) => {
-                      // Format with space every 4 digits: 1234 5678 9012
-                      const raw = e.target.value.replace(/\D/g, "").slice(0, 12);
-                      const formatted = raw.replace(/(\d{4})(?=\d)/g, "$1 ");
-                      setAadhaarNumber(formatted);
-                    }}
-                    placeholder="e.g. 5421 8901 2345"
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono placeholder-slate-600 tracking-wider focus:outline-none focus:border-amber-400"
+                    onChange={(e) => setAadhaarNumber(e.target.value.replace(/\D/g, "").slice(0, 12))}
+                    placeholder="XXXX XXXX XXXX"
+                    className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2 text-[#14213D] dark:text-white font-mono text-xs focus:outline-none focus:border-[#0B2E59]"
                   />
-                  <p className="text-[10px] text-slate-400 mt-1">
-                    Security Notice: Raw 12-digit Aadhaar numbers are never stored. Only masked representations (XXXX-XXXX-1234) and verification tokens are retained.
-                  </p>
                 </div>
 
-                {aadhaarOtpSent ? (
-                  <div className="space-y-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800">
-                    <label className="block text-slate-300 font-medium">
-                      Enter 6-Digit OTP received on linked mobile
+                {aadhaarOtpSent && (
+                  <div>
+                    <label className="block text-[#14213D] dark:text-slate-300 font-semibold mb-1">
+                      Enter 6-Digit Aadhaar OTP <span className="text-rose-600">*</span>
                     </label>
-                    <input
-                      type="text"
-                      maxLength={6}
-                      value={aadhaarOtp}
-                      onChange={(e) => setAadhaarOtp(e.target.value.replace(/\D/g, ""))}
-                      placeholder="e.g. 123456"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono text-center tracking-widest text-base focus:outline-none focus:border-amber-400"
-                    />
-                    <button
-                      type="button"
-                      disabled={isAadhaarVerifying || aadhaarOtp.length !== 6}
-                      onClick={handleVerifyAadhaarOtp}
-                      className="w-full py-2.5 rounded-xl font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50"
-                    >
-                      {isAadhaarVerifying ? (
-                        <>
-                          <RefreshCw className="w-4 h-4 animate-spin" />
-                          <span>Validating OTP...</span>
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle2 className="w-4 h-4" />
-                          <span>Verify OTP & Authenticate</span>
-                        </>
-                      )}
-                    </button>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={aadhaarOtp}
+                        onChange={(e) => setAadhaarOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                        placeholder="123456"
+                        className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2 text-[#14213D] dark:text-white font-mono text-xs focus:outline-none focus:border-[#0B2E59]"
+                      />
+                      <button
+                        type="button"
+                        disabled={isAadhaarVerifying || aadhaarOtp.length < 6}
+                        onClick={handleVerifyAadhaarOtp}
+                        className="py-2 px-4 rounded-[4px] bg-[#1E7E34] hover:bg-[#166527] text-white font-bold text-xs flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                      >
+                        {isAadhaarVerifying ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                        <span>Verify</span>
+                      </button>
+                    </div>
                   </div>
-                ) : (
+                )}
+
+                {!aadhaarOtpSent && (
                   <button
                     type="button"
-                    disabled={isAadhaarVerifying || aadhaarNumber.replace(/\s+/g, "").length !== 12}
+                    disabled={isAadhaarVerifying || aadhaarNumber.length < 12}
                     onClick={handleSendAadhaarOtp}
-                    className="w-full py-2.5 rounded-xl font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50"
+                    className="w-full py-2.5 px-4 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {isAadhaarVerifying ? (
                       <>
-                        <RefreshCw className="w-4 h-4 animate-spin" />
-                        <span>Sending OTP...</span>
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        <span>Connecting to UIDAI...</span>
                       </>
                     ) : (
                       <>
@@ -668,25 +653,25 @@ export default function RegisterParcelPage() {
                 )}
 
                 {aadhaarError && (
-                  <div className="p-3 bg-rose-950/40 border border-rose-800/80 rounded-xl text-xs text-rose-300 flex items-start gap-2">
-                    <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-rose-400" />
+                  <div className="p-3 bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/80 rounded-[4px] text-xs text-[#B32424] dark:text-rose-300 flex items-start gap-2">
+                    <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#B32424] dark:text-rose-400" />
                     <span>{aadhaarError}</span>
                   </div>
                 )}
               </div>
             ) : (
               /* Verified Banner */
-              <div className="p-4 bg-emerald-950/30 border border-emerald-500/40 rounded-xl space-y-2">
-                <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
-                  <CheckCircle2 className="w-5 h-5" />
+              <div className="p-3.5 bg-[#E8F5E9] dark:bg-emerald-950/30 border border-[#C8E6C9] dark:border-emerald-800/40 rounded-[4px] space-y-2">
+                <div className="flex items-center gap-2 text-[#1E7E34] dark:text-emerald-400 font-bold text-xs">
+                  <CheckCircle2 className="w-4 h-4" />
                   <span>Aadhaar Identity Authenticated</span>
                 </div>
-                <div className="text-xs text-slate-300 font-mono space-y-1 pl-7">
-                  <p>Legal Name: <span className="text-white font-bold">{aadhaarVerificationRecord.verified_name}</span></p>
-                  <p>Masked Identifier: <span className="text-white">{aadhaarVerificationRecord.masked_aadhaar}</span></p>
-                  <p>Audit Ref: <span className="text-slate-400">{aadhaarVerificationRecord.reference_id}</span></p>
+                <div className="text-xs text-[#14213D] dark:text-slate-300 font-mono space-y-0.5 pl-6">
+                  <p>Legal Name: <span className="font-bold">{aadhaarVerificationRecord.verified_name}</span></p>
+                  <p>Masked Identifier: <span>{aadhaarVerificationRecord.masked_aadhaar}</span></p>
+                  <p>Audit Ref: <span className="text-[#5A6A80] dark:text-slate-400">{aadhaarVerificationRecord.reference_id}</span></p>
                 </div>
-                <p className="text-[10px] text-emerald-400/80 pl-7 italic">
+                <p className="text-[10px] text-[#1E7E34] dark:text-emerald-400/80 pl-6 italic">
                   {aadhaarVerificationRecord.disclaimer}
                 </p>
               </div>
@@ -696,7 +681,7 @@ export default function RegisterParcelPage() {
               <button
                 type="button"
                 onClick={() => setCurrentStep(1)}
-                className="py-2.5 px-4 rounded-xl text-slate-300 border border-slate-700 hover:bg-slate-800 text-xs flex items-center gap-1.5"
+                className="py-2 px-3.5 rounded-[4px] text-[#5A6A80] dark:text-slate-300 border border-[#DCE2E8] dark:border-white/10 hover:bg-[#F8FAFC] text-xs flex items-center gap-1.5 cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back</span>
@@ -706,7 +691,7 @@ export default function RegisterParcelPage() {
                 type="button"
                 disabled={!aadhaarVerificationRecord}
                 onClick={() => setCurrentStep(3)}
-                className="flex-1 py-2.5 px-4 rounded-xl font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50"
+                className="flex-1 py-2 px-4 rounded-[4px] font-bold text-white bg-[#0B2E59] hover:bg-[#082242] transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50 cursor-pointer"
               >
                 <span>Continue to Official Documents</span>
                 <ArrowRight className="w-4 h-4" />
@@ -719,24 +704,24 @@ export default function RegisterParcelPage() {
         {/* STEP 3: OFFICIAL LAND DOCUMENTS */}
         {/* ============================================================ */}
         {currentStep === 3 && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
-            <div className="border-b border-slate-800 pb-3">
-              <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">3</span>
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-4">
+            <div className="border-b border-[#DCE2E8] dark:border-white/10 pb-3">
+              <h2 className="text-sm font-bold text-[#14213D] dark:text-white flex items-center gap-2">
+                <span className="w-5 h-5 rounded-[3px] bg-[#0B2E59] text-white flex items-center justify-center text-xs font-mono">3</span>
                 Upload Official Land / Ownership Documents
               </h2>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
                 Upload official statutory ownership proofs (Sale Deed, Jamabandi / 7-12 RoR, Mutation Certificate, or Tax Receipt).
               </p>
             </div>
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-300 font-medium mb-1">Select Document Category</label>
+                <label className="block text-[#14213D] dark:text-slate-300 font-semibold mb-1">Select Document Category</label>
                 <select
                   value={docTypeToUpload}
                   onChange={(e) => setDocTypeToUpload(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-amber-400"
+                  className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2 text-[#14213D] dark:text-white focus:outline-none focus:border-[#0B2E59]"
                 >
                   <option value="title_deed">Registered Title Deed / Sale Deed</option>
                   <option value="jamabandi">Record of Rights (Jamabandi / 7/12 / Khasra)</option>
@@ -747,7 +732,7 @@ export default function RegisterParcelPage() {
               </div>
 
               {/* Upload Dropzone */}
-              <div className="border-2 border-dashed border-slate-700 hover:border-amber-400/60 rounded-2xl p-4 text-center transition-colors bg-slate-950/50">
+              <div className="border-2 border-dashed border-[#CBD5E1] dark:border-white/20 hover:border-[#0B2E59] rounded-[4px] p-4 text-center transition-colors bg-[#F8FAFC] dark:bg-[#07080F]">
                 <input
                   type="file"
                   id="land-doc-upload"
@@ -758,61 +743,61 @@ export default function RegisterParcelPage() {
                 />
                 <label
                   htmlFor="land-doc-upload"
-                  className="cursor-pointer flex flex-col items-center justify-center gap-2 text-slate-400 hover:text-white"
+                  className="cursor-pointer flex flex-col items-center justify-center gap-1.5 text-[#5A6A80] hover:text-[#0B2E59] dark:hover:text-white"
                 >
-                  <div className="w-10 h-10 rounded-full bg-amber-500/10 text-amber-400 flex items-center justify-center">
-                    {isUploadingDoc ? <RefreshCw className="w-5 h-5 animate-spin" /> : <UploadCloud className="w-5 h-5" />}
+                  <div className="w-9 h-9 rounded-[4px] bg-sky-50 dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-400 flex items-center justify-center border border-sky-200 dark:border-sky-800/40">
+                    {isUploadingDoc ? <RefreshCw className="w-4 h-4 animate-spin" /> : <UploadCloud className="w-4 h-4" />}
                   </div>
                   <div>
-                    <span className="font-bold text-amber-400 block text-xs">
+                    <span className="font-bold text-[#0B2E59] dark:text-sky-400 block text-xs">
                       {isUploadingDoc ? "Uploading to Secure Storage..." : "Tap to Upload Document"}
                     </span>
-                    <span className="text-[10px] text-slate-500">PDF, JPG, PNG up to 50MB</span>
+                    <span className="text-[10px] text-[#5A6A80] dark:text-slate-500">PDF, JPG, PNG up to 50MB</span>
                   </div>
                 </label>
               </div>
 
               {docUploadError && (
-                <div className="p-3 bg-rose-950/40 border border-rose-800/80 rounded-xl text-xs text-rose-300 flex items-start gap-2">
-                  <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-rose-400" />
+                <div className="p-3 bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/80 rounded-[4px] text-xs text-[#B32424] dark:text-rose-300 flex items-start gap-2">
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#B32424] dark:text-rose-400" />
                   <span>{docUploadError}</span>
                 </div>
               )}
 
               {/* Uploaded Documents List */}
               <div className="space-y-2 pt-2">
-                <h3 className="text-slate-300 font-bold text-xs flex items-center justify-between">
+                <h3 className="text-[#14213D] dark:text-slate-300 font-bold text-xs flex items-center justify-between">
                   <span>Uploaded Documents ({uploadedDocs.length})</span>
-                  <span className="text-[10px] text-slate-500 font-normal">Minimum 1 document required</span>
+                  <span className="text-[10px] text-[#5A6A80] dark:text-slate-500 font-normal">Minimum 1 document required</span>
                 </h3>
 
                 {uploadedDocs.length === 0 ? (
-                  <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-xl text-center text-xs text-slate-500">
+                  <div className="p-3.5 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] text-center text-xs text-[#5A6A80] dark:text-slate-500">
                     No documents uploaded yet. Please upload at least one ownership document.
                   </div>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     {uploadedDocs.map((doc, idx) => (
                       <div
                         key={doc.id || idx}
-                        className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between text-xs"
+                        className="p-2.5 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] flex items-center justify-between text-xs"
                       >
-                        <div className="flex items-center gap-2.5 overflow-hidden">
-                          <FileText className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                        <div className="flex items-center gap-2 overflow-hidden">
+                          <FileText className="w-4 h-4 text-[#0B2E59] dark:text-amber-400 flex-shrink-0" />
                           <div className="overflow-hidden">
-                            <span className="font-medium text-white block truncate">{doc.file_name}</span>
-                            <span className="text-[10px] text-slate-400 block">{doc.title} • {(doc.file_size / 1024).toFixed(0)} KB</span>
+                            <span className="font-bold text-[#14213D] dark:text-white block truncate">{doc.file_name}</span>
+                            <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">{doc.title} • {(doc.file_size / 1024).toFixed(0)} KB</span>
                           </div>
                         </div>
 
                         <div className="flex items-center gap-2 flex-shrink-0">
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-blue-500/10 text-blue-400 border border-blue-500/30">
+                          <span className="px-2 py-0.5 rounded-[3px] text-[10px] font-mono bg-sky-50 dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-sky-200 dark:border-sky-800/40">
                             {doc.status}
                           </span>
                           <button
                             type="button"
                             onClick={() => setUploadedDocs(uploadedDocs.filter((_, i) => i !== idx))}
-                            className="text-slate-500 hover:text-rose-400 p-1"
+                            className="text-[#5A6A80] hover:text-rose-600 p-1 cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -828,7 +813,7 @@ export default function RegisterParcelPage() {
               <button
                 type="button"
                 onClick={() => setCurrentStep(2)}
-                className="py-2.5 px-4 rounded-xl text-slate-300 border border-slate-700 hover:bg-slate-800 text-xs flex items-center gap-1.5"
+                className="py-2 px-3.5 rounded-[4px] text-[#5A6A80] dark:text-slate-300 border border-[#DCE2E8] dark:border-white/10 hover:bg-[#F8FAFC] text-xs flex items-center gap-1.5 cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back</span>
@@ -838,7 +823,7 @@ export default function RegisterParcelPage() {
                 type="button"
                 disabled={uploadedDocs.length === 0}
                 onClick={() => setCurrentStep(4)}
-                className="flex-1 py-2.5 px-4 rounded-xl font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50"
+                className="flex-1 py-2 px-4 rounded-[4px] font-bold text-white bg-[#0B2E59] hover:bg-[#082242] transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50 cursor-pointer"
               >
                 <span>Continue to GPS Boundary Demarcation</span>
                 <ArrowRight className="w-4 h-4" />
@@ -851,24 +836,24 @@ export default function RegisterParcelPage() {
         {/* STEP 4: GPS COORDINATES DEMARCATION (Minimum 4 points) */}
         {/* ============================================================ */}
         {currentStep === 4 && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
-            <div className="border-b border-slate-800 pb-3">
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-4">
+            <div className="border-b border-[#DCE2E8] dark:border-white/10 pb-3">
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">4</span>
+                <h2 className="text-sm font-bold text-[#14213D] dark:text-white flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-[3px] bg-[#0B2E59] text-white flex items-center justify-center text-xs font-mono">4</span>
                   Demarcate Boundary Coordinates
                 </h2>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                <span className="px-2 py-0.5 rounded-[3px] text-[10px] font-mono bg-sky-50 dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-400 border border-sky-200 dark:border-sky-800/40 font-bold">
                   {points.length} Points Captured
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
                 Provide at least 4 GPS corner coordinates ($P_1, P_2, P_3, P_4 \dots$) representing the physical corners of the land.
               </p>
             </div>
 
             {/* Interactive Map */}
-            <div className="h-64 sm:h-72 w-full rounded-2xl overflow-hidden border border-slate-800 relative">
+            <div className="h-64 sm:h-72 w-full rounded-[4px] overflow-hidden border border-[#DCE2E8] dark:border-white/10 relative">
               <Map
                 ref={mapRef}
                 initialViewState={{
@@ -886,7 +871,7 @@ export default function RegisterParcelPage() {
                 {/* Point Markers */}
                 {points.map((pt, idx) => (
                   <Marker key={idx} longitude={pt.lng} latitude={pt.lat} anchor="center">
-                    <div className="w-7 h-7 rounded-full bg-amber-400 text-slate-950 font-bold font-mono text-xs flex items-center justify-center shadow-lg border-2 border-white ring-2 ring-amber-400/40">
+                    <div className="w-6 h-6 rounded-[3px] bg-[#0B2E59] text-white font-bold font-mono text-xs flex items-center justify-center shadow-md border-2 border-white">
                       P{pt.sequence || idx + 1}
                     </div>
                   </Marker>
@@ -899,16 +884,16 @@ export default function RegisterParcelPage() {
                       id="parcel-fill"
                       type="fill"
                       paint={{
-                        "fill-color": validation.valid ? "#f59e0b" : "#ef4444",
-                        "fill-opacity": 0.25
+                        "fill-color": validation.valid ? "#0B2E59" : "#ef4444",
+                        "fill-opacity": 0.2
                       }}
                     />
                     <Layer
                       id="parcel-line"
                       type="line"
                       paint={{
-                        "line-color": validation.valid ? "#f59e0b" : "#ef4444",
-                        "line-width": 3,
+                        "line-color": validation.valid ? "#0B2E59" : "#ef4444",
+                        "line-width": 2.5,
                         "line-dasharray": [2, 1]
                       }}
                     />
@@ -916,7 +901,7 @@ export default function RegisterParcelPage() {
                 )}
               </Map>
 
-              <div className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-800 text-[10px] text-slate-300">
+              <div className="absolute top-2 left-2 bg-white/90 dark:bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-[3px] border border-[#DCE2E8] dark:border-white/10 text-[10px] text-[#14213D] dark:text-slate-300">
                 Tap anywhere on map to add corner point
               </div>
             </div>
@@ -928,7 +913,7 @@ export default function RegisterParcelPage() {
                   type="button"
                   disabled={isCapturingGPS}
                   onClick={handleCaptureGPSCorner}
-                  className="py-2.5 px-3 rounded-xl font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 transition-colors flex items-center justify-center gap-1.5 text-xs disabled:opacity-50"
+                  className="py-2 px-3 rounded-[4px] font-bold text-white bg-[#0B2E59] hover:bg-[#082242] transition-colors flex items-center justify-center gap-1.5 text-xs disabled:opacity-50 cursor-pointer shadow-xs"
                 >
                   {isCapturingGPS ? (
                     <>
@@ -947,16 +932,16 @@ export default function RegisterParcelPage() {
                   type="button"
                   disabled={points.length === 0}
                   onClick={() => setPoints([])}
-                  className="py-2.5 px-3 rounded-xl font-medium text-slate-400 border border-slate-700 hover:bg-slate-800 transition-colors text-xs flex items-center justify-center gap-1.5 disabled:opacity-40"
+                  className="py-2 px-3 rounded-[4px] font-semibold text-rose-600 dark:text-rose-400 border border-[#DCE2E8] dark:border-white/10 hover:bg-[#F8FAFC] transition-colors text-xs flex items-center justify-center gap-1.5 disabled:opacity-40 cursor-pointer"
                 >
-                  <Trash2 className="w-3.5 h-3.5 text-rose-400" />
+                  <Trash2 className="w-3.5 h-3.5" />
                   <span>Reset Points</span>
                 </button>
               </div>
 
               {/* Manual Coordinate Entry Toggle */}
-              <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-2 text-xs">
-                <span className="text-slate-400 block font-medium">Or enter exact coordinates manually:</span>
+              <div className="bg-[#F8FAFC] dark:bg-[#07080F] p-3 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 space-y-2 text-xs">
+                <span className="text-[#5A6A80] dark:text-slate-400 block font-semibold">Or enter exact coordinates manually:</span>
                 <div className="grid grid-cols-3 gap-2">
                   <input
                     type="number"
@@ -964,7 +949,7 @@ export default function RegisterParcelPage() {
                     placeholder="Latitude"
                     value={manualLat}
                     onChange={(e) => setManualLat(e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white font-mono text-xs focus:outline-none focus:border-amber-400"
+                    className="bg-white dark:bg-[#0D121F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-2 py-1.5 text-[#14213D] dark:text-white font-mono text-xs focus:outline-none focus:border-[#0B2E59]"
                   />
                   <input
                     type="number"
@@ -972,12 +957,12 @@ export default function RegisterParcelPage() {
                     placeholder="Longitude"
                     value={manualLng}
                     onChange={(e) => setManualLng(e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white font-mono text-xs focus:outline-none focus:border-amber-400"
+                    className="bg-white dark:bg-[#0D121F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-2 py-1.5 text-[#14213D] dark:text-white font-mono text-xs focus:outline-none focus:border-[#0B2E59]"
                   />
                   <button
                     type="button"
                     onClick={handleAddManualPoint}
-                    className="bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold rounded-lg px-2 py-1.5 text-xs transition-colors"
+                    className="bg-[#0B2E59] hover:bg-[#082242] text-white font-bold rounded-[4px] px-2 py-1.5 text-xs transition-colors cursor-pointer"
                   >
                     Add Point
                   </button>
@@ -985,28 +970,28 @@ export default function RegisterParcelPage() {
               </div>
 
               {gpsError && (
-                <div className="p-3 bg-rose-950/40 border border-rose-800/80 rounded-xl text-xs text-rose-300 flex items-start gap-2">
-                  <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-rose-400" />
+                <div className="p-3 bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/80 rounded-[4px] text-xs text-[#B32424] dark:text-rose-300 flex items-start gap-2">
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#B32424] dark:text-rose-400" />
                   <span>{gpsError}</span>
                 </div>
               )}
             </div>
 
             {/* Validation & Area Feedback Card */}
-            <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-2 text-xs">
+            <div className="bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-3 space-y-2 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 font-medium">Boundary Status:</span>
+                <span className="text-[#5A6A80] dark:text-slate-400 font-semibold">Boundary Status:</span>
                 {points.length < 4 ? (
-                  <span className="text-amber-400 font-mono text-[11px]">
+                  <span className="text-[#B36B00] dark:text-amber-400 font-mono text-[11px] font-bold">
                     Need {4 - points.length} more corner(s) (min 4)
                   </span>
                 ) : validation.valid ? (
-                  <span className="text-emerald-400 font-mono text-[11px] flex items-center gap-1 font-bold">
+                  <span className="text-[#1E7E34] dark:text-emerald-400 font-mono text-[11px] flex items-center gap-1 font-bold">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     Valid Closed Polygon
                   </span>
                 ) : (
-                  <span className="text-rose-400 font-mono text-[11px] flex items-center gap-1 font-bold">
+                  <span className="text-rose-600 font-mono text-[11px] flex items-center gap-1 font-bold">
                     <AlertTriangle className="w-3.5 h-3.5" />
                     Geometry Error
                   </span>
@@ -1014,36 +999,36 @@ export default function RegisterParcelPage() {
               </div>
 
               {!validation.valid && points.length >= 4 && (
-                <div className="p-2.5 bg-rose-950/30 border border-rose-800/60 rounded-lg text-rose-300 text-[11px]">
+                <div className="p-2 bg-[#FFEBEE] dark:bg-rose-950/30 border border-[#FFCDD2] dark:border-rose-800/60 rounded-[4px] text-[#B32424] dark:text-rose-300 text-[11px]">
                   {validation.error}
                 </div>
               )}
 
               {/* Calculated Area Display */}
               {points.length >= 3 && (
-                <div className="pt-2 border-t border-slate-800 grid grid-cols-3 gap-2 text-center">
-                  <div className="bg-slate-900/90 p-2 rounded-lg">
-                    <span className="text-[10px] text-slate-500 block">Calculated Sq.M</span>
-                    <span className="font-mono font-bold text-amber-400 text-xs">
+                <div className="pt-2 border-t border-[#DCE2E8] dark:border-white/10 grid grid-cols-3 gap-2 text-center">
+                  <div className="bg-white dark:bg-[#0D121F] p-2 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+                    <span className="text-[10px] text-[#5A6A80] dark:text-slate-500 block">Calculated Sq.M</span>
+                    <span className="font-mono font-bold text-[#0B2E59] dark:text-sky-400 text-xs">
                       {calculatedArea.sqm.toLocaleString(undefined, { maximumFractionDigits: 1 })} m²
                     </span>
                   </div>
-                  <div className="bg-slate-900/90 p-2 rounded-lg">
-                    <span className="text-[10px] text-slate-500 block">Calculated Ha</span>
-                    <span className="font-mono font-bold text-white text-xs">
+                  <div className="bg-white dark:bg-[#0D121F] p-2 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+                    <span className="text-[10px] text-[#5A6A80] dark:text-slate-500 block">Calculated Ha</span>
+                    <span className="font-mono font-bold text-[#14213D] dark:text-white text-xs">
                       {calculatedArea.hectares.toFixed(4)} Ha
                     </span>
                   </div>
-                  <div className="bg-slate-900/90 p-2 rounded-lg">
-                    <span className="text-[10px] text-slate-500 block">Calculated Acres</span>
-                    <span className="font-mono font-bold text-white text-xs">
+                  <div className="bg-white dark:bg-[#0D121F] p-2 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+                    <span className="text-[10px] text-[#5A6A80] dark:text-slate-500 block">Calculated Acres</span>
+                    <span className="font-mono font-bold text-[#14213D] dark:text-white text-xs">
                       {calculatedArea.acres.toFixed(3)} Ac
                     </span>
                   </div>
                 </div>
               )}
 
-              <p className="text-[10px] text-slate-500 italic">
+              <p className="text-[10px] text-[#5A6A80] dark:text-slate-500 italic">
                 * Note: Area is a mathematical calculation derived from applicant coordinates, not an officially recorded government registry value.
               </p>
             </div>
@@ -1051,28 +1036,28 @@ export default function RegisterParcelPage() {
             {/* Points Table */}
             {points.length > 0 && (
               <div className="space-y-1.5 text-xs">
-                <span className="text-slate-400 font-medium block">Authoritative Coordinates List:</span>
+                <span className="text-[#5A6A80] dark:text-slate-400 font-semibold block">Authoritative Coordinates List:</span>
                 <div className="max-h-36 overflow-y-auto space-y-1 pr-1">
                   {points.map((pt, idx) => (
                     <div
                       key={idx}
-                      className="p-2 bg-slate-950/70 border border-slate-800 rounded-lg flex items-center justify-between text-xs font-mono"
+                      className="p-2 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] flex items-center justify-between text-xs font-mono"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-[10px] font-bold">
+                        <span className="w-5 h-5 rounded-[3px] bg-[#0B2E59] text-white flex items-center justify-center text-[10px] font-bold">
                           P{pt.sequence || idx + 1}
                         </span>
-                        <span className="text-white text-[11px]">
+                        <span className="text-[#14213D] dark:text-white text-[11px]">
                           {pt.lat.toFixed(6)}, {pt.lng.toFixed(6)}
                         </span>
                         {pt.accuracy && (
-                          <span className="text-[9px] text-slate-500">±{pt.accuracy}m</span>
+                          <span className="text-[9px] text-[#5A6A80] dark:text-slate-500">±{pt.accuracy}m</span>
                         )}
                       </div>
                       <button
                         type="button"
                         onClick={() => handleDeletePoint(idx)}
-                        className="text-slate-500 hover:text-rose-400 p-1"
+                        className="text-rose-600 hover:text-rose-700 p-1 cursor-pointer"
                       >
                         <Trash2 className="w-3 h-3" />
                       </button>
@@ -1086,7 +1071,7 @@ export default function RegisterParcelPage() {
               <button
                 type="button"
                 onClick={() => setCurrentStep(3)}
-                className="py-2.5 px-4 rounded-xl text-slate-300 border border-slate-700 hover:bg-slate-800 text-xs flex items-center gap-1.5"
+                className="py-2 px-3.5 rounded-[4px] text-[#5A6A80] dark:text-slate-300 border border-[#DCE2E8] dark:border-white/10 hover:bg-[#F8FAFC] text-xs flex items-center gap-1.5 cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back</span>
@@ -1096,7 +1081,7 @@ export default function RegisterParcelPage() {
                 type="button"
                 disabled={points.length < 4 || !validation.valid}
                 onClick={() => setCurrentStep(5)}
-                className="flex-1 py-2.5 px-4 rounded-xl font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50"
+                className="flex-1 py-2 px-4 rounded-[4px] font-bold text-white bg-[#0B2E59] hover:bg-[#082242] transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50 cursor-pointer"
               >
                 <span>Continue to Review & Confirmation</span>
                 <ArrowRight className="w-4 h-4" />
@@ -1109,77 +1094,77 @@ export default function RegisterParcelPage() {
         {/* STEP 5: REVIEW & FINAL CONFIRMATION */}
         {/* ============================================================ */}
         {currentStep === 5 && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
-            <div className="border-b border-slate-800 pb-3">
-              <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">5</span>
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-4">
+            <div className="border-b border-[#DCE2E8] dark:border-white/10 pb-3">
+              <h2 className="text-sm font-bold text-[#14213D] dark:text-white flex items-center gap-2">
+                <span className="w-5 h-5 rounded-[3px] bg-[#0B2E59] text-white flex items-center justify-center text-xs font-mono">5</span>
                 Review Registration Details
               </h2>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
                 Please verify all entered details before generating your permanent 14-digit Parcel ID.
               </p>
             </div>
 
             {/* Summary Review Card */}
-            <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-3 text-xs">
-              <div className="flex justify-between items-start border-b border-slate-800 pb-2">
+            <div className="bg-[#F8FAFC] dark:bg-[#07080F] p-3.5 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 space-y-3 text-xs">
+              <div className="flex justify-between items-start border-b border-[#DCE2E8] dark:border-white/10 pb-2">
                 <div>
-                  <span className="text-slate-500 block text-[10px]">VERIFIED OWNER</span>
-                  <span className="text-white font-bold text-sm">{legalName}</span>
+                  <span className="text-[#5A6A80] dark:text-slate-500 block text-[10px] font-bold">VERIFIED OWNER</span>
+                  <span className="text-[#14213D] dark:text-white font-bold text-sm">{legalName}</span>
                 </div>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                <span className="px-2 py-0.5 rounded-[3px] text-[10px] font-mono bg-[#E8F5E9] text-[#1E7E34] border border-[#C8E6C9] font-bold">
                   {aadhaarVerificationRecord?.status || "VERIFIED"}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-slate-300">
+              <div className="grid grid-cols-2 gap-2 text-[#14213D] dark:text-slate-300">
                 <div>
-                  <span className="text-slate-500 block text-[10px]">VILLAGE / SECTOR</span>
+                  <span className="text-[#5A6A80] dark:text-slate-500 block text-[10px] font-bold">VILLAGE / SECTOR</span>
                   <span>{contactVillage}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px]">LAND USE</span>
+                  <span className="text-[#5A6A80] dark:text-slate-500 block text-[10px] font-bold">LAND USE</span>
                   <span className="capitalize">{landUse}</span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-slate-300 border-t border-slate-800/60 pt-2">
+              <div className="grid grid-cols-2 gap-2 text-[#14213D] dark:text-slate-300 border-t border-[#DCE2E8] dark:border-white/10 pt-2">
                 <div>
-                  <span className="text-slate-500 block text-[10px]">DOCUMENTS ATTACHED</span>
+                  <span className="text-[#5A6A80] dark:text-slate-500 block text-[10px] font-bold">DOCUMENTS ATTACHED</span>
                   <span>{uploadedDocs.length} Official Document(s)</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px]">DEMARCATED CORNERS</span>
+                  <span className="text-[#5A6A80] dark:text-slate-500 block text-[10px] font-bold">DEMARCATED CORNERS</span>
                   <span className="font-mono">{points.length} GPS Points ($P_1..P_{points.length}$)</span>
                 </div>
               </div>
 
-              <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                <span className="text-[10px] text-slate-400 block">CALCULATED SURFACE AREA</span>
-                <span className="font-mono text-amber-400 font-bold text-xs">
+              <div className="bg-white dark:bg-[#0D121F] p-2.5 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+                <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block font-bold">CALCULATED SURFACE AREA</span>
+                <span className="font-mono text-[#0B2E59] dark:text-sky-400 font-bold text-xs">
                   {calculatedArea.sqm.toLocaleString(undefined, { maximumFractionDigits: 1 })} m² • {calculatedArea.hectares.toFixed(4)} Hectares ({calculatedArea.acres.toFixed(3)} Acres)
                 </span>
-                <span className="text-[9px] text-slate-500 block mt-0.5">Calculated Value — Not government recorded value</span>
+                <span className="text-[9px] text-[#5A6A80] dark:text-slate-500 block mt-0.5">Calculated Value — Not government recorded value</span>
               </div>
             </div>
 
             {/* Solemn Declaration Checkbox */}
-            <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex items-start gap-2.5">
+            <div className="bg-[#F8FAFC] dark:bg-[#07080F] p-3 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 flex items-start gap-2.5">
               <input
                 type="checkbox"
                 id="solemn-declaration"
                 checked={declarationChecked}
                 onChange={(e) => setDeclarationChecked(e.target.checked)}
-                className="mt-1 w-4 h-4 rounded border-slate-700 text-amber-400 focus:ring-amber-400 bg-slate-900 cursor-pointer"
+                className="mt-0.5 w-4 h-4 rounded border-[#CBD5E1] text-[#0B2E59] focus:ring-[#0B2E59] bg-white cursor-pointer"
               />
-              <label htmlFor="solemn-declaration" className="text-xs text-slate-300 cursor-pointer leading-relaxed">
+              <label htmlFor="solemn-declaration" className="text-xs text-[#14213D] dark:text-slate-300 cursor-pointer leading-relaxed">
                 I solemnly declare and confirm that the above information, identity credentials, uploaded official documents, and demarcated corner coordinates accurately represent my land parcel without encroachment or falsification.
               </label>
             </div>
 
             {submitError && (
-              <div className="p-3 bg-rose-950/40 border border-rose-800/80 rounded-xl text-xs text-rose-300 flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-rose-400" />
+              <div className="p-3 bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/80 rounded-[4px] text-xs text-[#B32424] dark:text-rose-300 flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#B32424] dark:text-rose-400" />
                 <span>{submitError}</span>
               </div>
             )}
@@ -1188,7 +1173,7 @@ export default function RegisterParcelPage() {
               <button
                 type="button"
                 onClick={() => setCurrentStep(4)}
-                className="py-3 px-4 rounded-xl text-slate-300 border border-slate-700 hover:bg-slate-800 text-xs flex items-center gap-1.5"
+                className="py-2.5 px-4 rounded-[4px] text-[#5A6A80] dark:text-slate-300 border border-[#DCE2E8] dark:border-white/10 hover:bg-[#F8FAFC] text-xs flex items-center gap-1.5 cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back</span>
@@ -1198,11 +1183,11 @@ export default function RegisterParcelPage() {
                 type="button"
                 disabled={isSubmitting || !declarationChecked}
                 onClick={handleSubmitRegistration}
-                className="flex-1 py-3 px-4 rounded-xl font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50 shadow-lg shadow-amber-400/20"
+                className="flex-1 py-2.5 px-4 rounded-[4px] font-bold text-white bg-[#0B2E59] hover:bg-[#082242] transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-50 shadow-xs cursor-pointer"
               >
                 {isSubmitting ? (
                   <>
-                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                     <span>Registering Parcel & Generating ID...</span>
                   </>
                 ) : (
@@ -1220,61 +1205,61 @@ export default function RegisterParcelPage() {
         {/* STEP 6: SUCCESSFUL REGISTRATION SCREEN */}
         {/* ============================================================ */}
         {currentStep === 6 && registeredParcelData && (
-          <div className="bg-slate-900 border border-emerald-500/30 rounded-2xl p-5 shadow-2xl space-y-5 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
-              <CheckCircle2 className="w-10 h-10" />
+          <div className="bg-white dark:bg-[#0D121F] border border-[#C8E6C9] dark:border-emerald-800/40 rounded-[4px] p-5 shadow-xs space-y-4 text-center">
+            <div className="w-12 h-12 rounded-[4px] bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-400 flex items-center justify-center mx-auto">
+              <CheckCircle2 className="w-7 h-7" />
             </div>
 
             <div>
-              <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 inline-block mb-2">
+              <span className="px-2.5 py-0.5 rounded-[3px] text-xs font-mono font-bold bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border border-[#C8E6C9] dark:border-emerald-800/40 inline-block mb-1.5">
                 Registration Completed & Verified
               </span>
-              <h2 className="text-xl font-bold text-white font-display">Parcel Registered Successfully</h2>
-              <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+              <h2 className="text-lg font-bold text-[#14213D] dark:text-white font-display">Parcel Registered Successfully</h2>
+              <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-0.5 max-w-sm mx-auto">
                 Your parcel has been registered in the official Land Records and is ready for grievance filing.
               </p>
             </div>
 
             {/* Prominent 14-Digit Numeric Parcel ID */}
-            <div className="bg-slate-950 p-4 rounded-2xl border-2 border-amber-400/50 shadow-inner space-y-1">
-              <span className="text-[10px] text-amber-400 font-bold uppercase tracking-widest block">
+            <div className="bg-[#F8FAFC] dark:bg-[#07080F] p-4 rounded-[4px] border border-[#CBD5E1] dark:border-white/15 shadow-inner space-y-1">
+              <span className="text-[10px] text-[#0B2E59] dark:text-sky-400 font-bold uppercase tracking-widest block">
                 Official 14-Digit Parcel ID
               </span>
-              <span className="font-mono text-2xl sm:text-3xl font-extrabold text-white tracking-wider block">
+              <span className="font-mono text-2xl font-extrabold text-[#14213D] dark:text-white tracking-wider block">
                 {registeredParcelData.parcel_id}
               </span>
-              <span className="text-[10px] text-slate-500 block">
+              <span className="text-[10px] text-[#5A6A80] dark:text-slate-500 block">
                 Permanently associated with owner: {registeredParcelData.owner_legal_name}
               </span>
             </div>
 
             {/* Key Summary */}
-            <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-left text-xs space-y-2">
+            <div className="bg-[#F8FAFC] dark:bg-[#07080F] p-3 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 text-left text-xs space-y-1.5">
               <div className="flex justify-between">
-                <span className="text-slate-400">Village:</span>
-                <span className="text-white font-medium">{registeredParcelData.village_name}</span>
+                <span className="text-[#5A6A80] dark:text-slate-400 font-semibold">Village:</span>
+                <span className="text-[#14213D] dark:text-white font-medium">{registeredParcelData.village_name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Boundary Points:</span>
-                <span className="text-white font-mono">{registeredParcelData.coordinates?.length} GPS Corners</span>
+                <span className="text-[#5A6A80] dark:text-slate-400 font-semibold">Boundary Points:</span>
+                <span className="text-[#14213D] dark:text-white font-mono">{registeredParcelData.coordinates?.length} GPS Corners</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Calculated Area:</span>
-                <span className="text-amber-400 font-mono font-bold">
+                <span className="text-[#5A6A80] dark:text-slate-400 font-semibold">Calculated Area:</span>
+                <span className="text-[#0B2E59] dark:text-sky-400 font-mono font-bold">
                   {registeredParcelData.calculated_area?.sqm?.toLocaleString()} m² ({registeredParcelData.calculated_area?.acres?.toFixed(3)} Ac)
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Documents:</span>
-                <span className="text-white">{registeredParcelData.documents?.length} Submitted</span>
+                <span className="text-[#5A6A80] dark:text-slate-400 font-semibold">Documents:</span>
+                <span className="text-[#14213D] dark:text-white">{registeredParcelData.documents?.length} Submitted</span>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="space-y-2 pt-2">
+            <div className="space-y-2 pt-1">
               <Link
                 href={`/landowner/parcels/${registeredParcelData.parcel_id}`}
-                className="w-full py-3 px-4 rounded-xl font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 transition-colors flex items-center justify-center gap-2 text-xs shadow-md"
+                className="w-full py-2.5 px-4 rounded-[4px] font-bold text-white bg-[#0B2E59] hover:bg-[#082242] transition-colors flex items-center justify-center gap-2 text-xs shadow-xs"
               >
                 <Eye className="w-4 h-4" />
                 <span>View Parcel Details</span>
@@ -1282,15 +1267,15 @@ export default function RegisterParcelPage() {
 
               <Link
                 href={`/landowner/complaints/new?parcel_id=${registeredParcelData.parcel_id}`}
-                className="w-full py-3 px-4 rounded-xl font-bold text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors flex items-center justify-center gap-2 text-xs"
+                className="w-full py-2.5 px-4 rounded-[4px] font-bold text-[#0B2E59] dark:text-sky-400 bg-white dark:bg-[#0D121F] hover:bg-[#F8FAFC] border border-[#DCE2E8] dark:border-white/10 transition-colors flex items-center justify-center gap-2 text-xs"
               >
-                <FileText className="w-4 h-4 text-emerald-400" />
-                <span>File Complaint Against This Parcel</span>
+                <FileText className="w-4 h-4 text-[#1E7E34] dark:text-emerald-400" />
+                <span>File Grievance Against This Parcel</span>
               </Link>
 
               <Link
                 href="/landowner/home"
-                className="w-full py-2.5 px-4 rounded-xl text-slate-400 hover:text-white transition-colors flex items-center justify-center gap-1 text-xs"
+                className="w-full py-2 px-4 rounded-[4px] text-[#5A6A80] hover:text-[#0B2E59] dark:text-slate-400 dark:hover:text-white transition-colors flex items-center justify-center gap-1 text-xs"
               >
                 <span>Return to Landowner Dashboard</span>
               </Link>

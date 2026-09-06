@@ -21,6 +21,7 @@ import {
   RefreshCw,
   AlertTriangle
 } from "lucide-react";
+import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { getFieldOfficers } from "@/lib/api";
 import { offlineStore } from "@/lib/offlineStore";
 
@@ -131,52 +132,55 @@ export default function FieldLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between p-4 selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-[#F4F6F8] dark:bg-[#07080F] text-[#14213D] dark:text-[#F0F4FF] flex flex-col justify-between p-4 transition-colors duration-200">
       <div className="w-full max-w-md mx-auto space-y-5 pt-4 pb-12">
+        <div className="flex items-center justify-end">
+          <ThemeToggle variant="icon" />
+        </div>
         
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-xl shadow-emerald-950/60 mb-1 border border-emerald-400/30">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-[4px] bg-[#0B2E59] text-white shadow-xs mb-1 border border-white/20">
             <Smartphone className="w-7 h-7" />
           </div>
-          <h1 className="text-2xl font-black font-display tracking-tight text-white">
+          <h1 className="text-2xl font-black font-display tracking-tight text-[#14213D] dark:text-white">
             BHUMI Field Ops
           </h1>
-          <p className="text-xs text-slate-400 max-w-xs mx-auto">
+          <p className="text-xs text-[#5A6A80] dark:text-slate-400 max-w-xs mx-auto">
             Mobile Cadastral Verification & Ground Issue Escalation Console
           </p>
         </div>
 
         {/* Success or Error feedback */}
         {successMsg && (
-          <div className="p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2.5 animate-fadeIn">
-            <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-emerald-400" />
+          <div className="p-3.5 rounded-[4px] bg-[#E8F5E9] dark:bg-emerald-950/20 border border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-200 text-xs flex items-center gap-2.5">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-[#1E7E34] dark:text-emerald-400" />
             <span className="font-medium">{successMsg}</span>
           </div>
         )}
 
         {errorMsg && (
-          <div className="p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2.5 animate-fadeIn">
-            <AlertTriangle className="w-4 h-4 flex-shrink-0 text-red-400" />
+          <div className="p-3.5 rounded-[4px] bg-[#FFEBEE] dark:bg-rose-950/20 border border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-200 text-xs flex items-center gap-2.5">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0 text-[#B32424] dark:text-rose-400" />
             <span>{errorMsg}</span>
           </div>
         )}
 
         {/* QUICK ACCESS LOGIN CARD */}
-        <div className="bg-gradient-to-br from-emerald-950/50 via-slate-900 to-slate-900 border-2 border-emerald-500/40 rounded-2xl p-4 shadow-xl shadow-emerald-950/30 space-y-3">
+        <div className="bg-white dark:bg-[#0D121F] border-2 border-[#0B2E59]/30 dark:border-white/15 rounded-[4px] p-4 shadow-xs space-y-3 transition-colors duration-200">
           <div className="flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/30">
-              <Zap className="w-3 h-3 text-emerald-400" /> Quick Access
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-[#1E7E34] dark:text-emerald-300 font-bold bg-[#E8F5E9] dark:bg-emerald-950/40 px-2 py-0.5 rounded-[3px] border border-[#C8E6C9] dark:border-emerald-500/40">
+              <Zap className="w-3 h-3 text-[#1E7E34] dark:text-emerald-400" /> Quick Access
             </span>
-            <span className="text-[10px] font-mono text-slate-400">Offline Ready</span>
+            <span className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400">Offline Ready</span>
           </div>
 
           <div className="space-y-1">
-            <h2 className="text-base font-bold text-white">
+            <h2 className="text-base font-bold text-[#14213D] dark:text-white">
               Field Officer Terminal
             </h2>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Login as <strong className="text-emerald-300">Ramesh Patel (Patwari / Revenue Lekhpal)</strong> to inspect, verify, or reject real landowner boundary demarcations.
+            <p className="text-xs text-[#5A6A80] dark:text-slate-300 leading-relaxed">
+              Login as <strong className="text-[#0B2E59] dark:text-sky-300">Ramesh Patel (Patwari / Revenue Lekhpal)</strong> to inspect, verify, or reject real landowner boundary demarcations.
             </p>
           </div>
 
@@ -184,7 +188,7 @@ export default function FieldLoginPage() {
             type="button"
             disabled={loading}
             onClick={handleInstantDemoLogin}
-            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs tracking-wider uppercase transition-all shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+            className="w-full py-3 px-4 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs tracking-wider uppercase transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
           >
             {loading ? (
               <>
@@ -193,7 +197,7 @@ export default function FieldLoginPage() {
               </>
             ) : (
               <>
-                <Sparkles className="w-4 h-4 text-emerald-200" />
+                <Sparkles className="w-4 h-4 text-white/80" />
                 <span>Launch Field Console</span>
                 <ArrowRight className="w-4 h-4" />
               </>
@@ -202,14 +206,14 @@ export default function FieldLoginPage() {
         </div>
 
         {/* Tab switcher: Quick Profiles vs ID + PIN Form */}
-        <div className="flex rounded-xl bg-slate-900 p-1 border border-slate-800 text-xs font-semibold">
+        <div className="flex rounded-[4px] bg-white dark:bg-[#0D121F] p-1 border border-[#DCE2E8] dark:border-white/10 text-xs font-semibold">
           <button
             type="button"
             onClick={() => setLoginMode("DEMO")}
-            className={`flex-1 py-2 rounded-lg transition-all text-center ${
+            className={`flex-1 py-2 rounded-[3px] transition-all text-center ${
               loginMode === "DEMO"
-                ? "bg-slate-800 text-white shadow-sm font-bold"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[#0B2E59] text-white shadow-xs font-bold"
+                : "text-[#5A6A80] dark:text-slate-400 hover:text-[#14213D] dark:hover:text-white"
             }`}
           >
             Designated Officers ({officers.length})
@@ -217,10 +221,10 @@ export default function FieldLoginPage() {
           <button
             type="button"
             onClick={() => setLoginMode("CREDENTIALS")}
-            className={`flex-1 py-2 rounded-lg transition-all text-center ${
+            className={`flex-1 py-2 rounded-[3px] transition-all text-center ${
               loginMode === "CREDENTIALS"
-                ? "bg-slate-800 text-white shadow-sm font-bold"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[#0B2E59] text-white shadow-xs font-bold"
+                : "text-[#5A6A80] dark:text-slate-400 hover:text-[#14213D] dark:hover:text-white"
             }`}
           >
             Officer ID & PIN
@@ -230,9 +234,9 @@ export default function FieldLoginPage() {
         {/* MODE 1: SELECT FROM DESIGNATED PROFILES */}
         {loginMode === "DEMO" && (
           <div className="space-y-2.5">
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-400 px-1">
+            <div className="flex items-center justify-between text-xs font-semibold text-[#5A6A80] dark:text-slate-400 px-1">
               <span>Select Operational Role</span>
-              <span className="text-[10px] font-mono text-emerald-400">1-Tap Switch</span>
+              <span className="text-[10px] font-mono text-[#0B2E59] dark:text-sky-400">1-Tap Switch</span>
             </div>
 
             <div className="space-y-2">
@@ -242,33 +246,33 @@ export default function FieldLoginPage() {
                   type="button"
                   disabled={loading}
                   onClick={() => loginAsOfficer(officer)}
-                  className="w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900/90 hover:bg-slate-800/90 hover:border-emerald-500/50 transition-all flex items-center justify-between gap-3 group cursor-pointer"
+                  className="w-full text-left p-3.5 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 bg-white dark:bg-[#0D121F] hover:bg-[#F8FAFC] dark:hover:bg-[#141B2D] hover:border-[#0B2E59] transition-all flex items-center justify-between gap-3 group cursor-pointer shadow-xs"
                 >
                   <div className="space-y-1 overflow-hidden">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-sm text-white group-hover:text-emerald-300 transition-colors">
+                      <span className="font-bold text-sm text-[#14213D] dark:text-white group-hover:text-[#0B2E59] dark:group-hover:text-sky-300 transition-colors">
                         {officer.name}
                       </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-950 border border-slate-700 text-slate-300">
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-[2px] bg-[#F8FAFC] dark:bg-slate-950 border border-[#DCE2E8] dark:border-slate-700 text-[#5A6A80] dark:text-slate-300 font-bold">
                         {officer.officer_id}
                       </span>
                     </div>
 
-                    <div className="text-xs text-emerald-400 font-medium truncate">
+                    <div className="text-xs text-[#0B2E59] dark:text-sky-400 font-medium truncate">
                       {officer.designation}
                     </div>
 
-                    <div className="text-[10px] text-slate-400 flex items-center gap-1.5 truncate">
-                      <MapPin className="w-3 h-3 text-slate-500 flex-shrink-0" />
+                    <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 flex items-center gap-1.5 truncate">
+                      <MapPin className="w-3 h-3 text-slate-400 flex-shrink-0" />
                       <span>{officer.assigned_villages.join(", ")}</span>
                     </div>
                   </div>
 
                   <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300">
+                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-[3px] bg-[#EBF3FC] dark:bg-sky-950/40 border border-[#DCE2E8] dark:border-sky-800/40 text-[#0B2E59] dark:text-sky-300">
                       {officer.pending_tasks_count} Cases
                     </span>
-                    <div className="w-6 h-6 rounded-md bg-slate-800 group-hover:bg-emerald-600 text-slate-400 group-hover:text-white flex items-center justify-center transition-all">
+                    <div className="w-6 h-6 rounded-[3px] bg-[#F8FAFC] dark:bg-slate-800 group-hover:bg-[#0B2E59] text-[#5A6A80] dark:text-slate-400 group-hover:text-white flex items-center justify-center transition-all">
                       <ChevronRight className="w-3.5 h-3.5" />
                     </div>
                   </div>
@@ -282,19 +286,19 @@ export default function FieldLoginPage() {
         {/* MODE 2: MANUAL OFFICER ID + PIN FORM WITH QUICK-FILL                      */}
         {/* ========================================================================= */}
         {loginMode === "CREDENTIALS" && (
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-xs space-y-4 transition-colors duration-200">
             <div className="space-y-1">
-              <h3 className="text-sm font-bold text-white">
+              <h3 className="text-sm font-bold text-[#14213D] dark:text-white">
                 Officer Terminal Authentication
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#5A6A80] dark:text-slate-400">
                 Enter your assigned Revenue Department ID and secure PIN.
               </p>
             </div>
 
             <form onSubmit={handleFormLogin} className="space-y-3.5 text-xs">
               <div>
-                <label className="block text-slate-300 font-semibold mb-1 text-[11px] uppercase tracking-wider">
+                <label className="block text-[#14213D] dark:text-slate-300 font-bold mb-1 text-[11px] uppercase tracking-wider">
                   Field Officer ID
                 </label>
                 <input
@@ -303,12 +307,12 @@ export default function FieldLoginPage() {
                   value={officerId}
                   onChange={(e) => setOfficerId(e.target.value)}
                   placeholder="e.g. OFF-001 or OF001"
-                  className="w-full px-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white font-mono placeholder-slate-600 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white font-mono placeholder-slate-400 focus:outline-none focus:border-[#0B2E59]"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1 text-[11px] uppercase tracking-wider">
+                <label className="block text-[#14213D] dark:text-slate-300 font-bold mb-1 text-[11px] uppercase tracking-wider">
                   Passcode / Security PIN
                 </label>
                 <input
@@ -317,14 +321,14 @@ export default function FieldLoginPage() {
                   value={pinCode}
                   onChange={(e) => setPinCode(e.target.value)}
                   placeholder="4-digit PIN (e.g. 1234)"
-                  className="w-full px-3 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white font-mono placeholder-slate-600 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white font-mono placeholder-slate-400 focus:outline-none focus:border-[#0B2E59]"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-60 cursor-pointer"
+                className="w-full py-2.5 px-4 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xs disabled:opacity-60 cursor-pointer"
               >
                 {loading ? (
                   <>
@@ -340,13 +344,13 @@ export default function FieldLoginPage() {
               </button>
             </form>
 
-            <div className="pt-2 border-t border-slate-800 text-center">
+            <div className="pt-2 border-t border-[#DCE2E8] dark:border-white/10 text-center">
               <button
                 type="button"
                 onClick={() => handleAutoFillDemo("OFF-001")}
-                className="text-[11px] font-mono text-slate-400 hover:text-emerald-400 transition-colors inline-flex items-center gap-1.5"
+                className="text-[11px] font-mono text-[#5A6A80] hover:text-[#0B2E59] dark:hover:text-sky-400 transition-colors inline-flex items-center gap-1.5"
               >
-                <KeyRound className="w-3 h-3 text-emerald-400" />
+                <KeyRound className="w-3 h-3 text-[#0B2E59] dark:text-sky-400" />
                 <span>[ Load Officer Credentials (OFF-001 / 1234) ]</span>
               </button>
             </div>
@@ -356,20 +360,20 @@ export default function FieldLoginPage() {
         {/* Link to Admin Login & Landowner Portal */}
         <div className="pt-3 text-center space-y-2">
           <div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-[#5A6A80] dark:text-slate-400">
               Are you an affected landowner or project-impacted citizen?
             </p>
             <Link
               href="/landowner/login"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:underline transition-colors mt-0.5"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0B2E59] dark:text-sky-400 hover:underline transition-colors mt-0.5"
             >
-              <UserCheck className="w-3.5 h-3.5 text-amber-400" />
+              <UserCheck className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
               <span>Go to Landowner / Citizen Grievance Portal →</span>
             </Link>
           </div>
 
           <div className="pt-1">
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-[#5A6A80] dark:text-slate-400">
               Are you a CALA Director or State Administrator?
             </p>
             <button
@@ -378,9 +382,9 @@ export default function FieldLoginPage() {
                 document.cookie = "bhumi_officer_session=officer%40bhumi.gov.in; path=/; max-age=86400; SameSite=Lax";
                 window.location.href = "/";
               }}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:underline transition-colors cursor-pointer mt-0.5"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0B2E59] dark:text-sky-400 hover:underline transition-colors cursor-pointer mt-0.5"
             >
-              <Monitor className="w-3.5 h-3.5" />
+              <Monitor className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
               <span>Go to Desktop Admin Command Console →</span>
             </button>
           </div>
@@ -388,7 +392,7 @@ export default function FieldLoginPage() {
 
       </div>
 
-      <div className="text-center text-[10px] font-mono text-slate-500 py-3 border-t border-slate-900">
+      <div className="text-center text-[10px] font-mono text-[#5A6A80] dark:text-slate-500 py-3 border-t border-[#DCE2E8] dark:border-white/10">
         BHUMI · PostGIS & NetworkX Causal Intelligence Engine
       </div>
     </div>

@@ -17,8 +17,8 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const THEME_STORAGE_KEY = 'bhumi-theme';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('dark');
-  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>('dark');
+  const [theme, setThemeState] = useState<Theme>('light');
+  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>('light');
   const [mounted, setMounted] = useState(false);
 
   // Initialize theme from localStorage on client mount
@@ -28,10 +28,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system')) {
         setThemeState(savedTheme);
       } else {
-        setThemeState('dark'); // Default to dark mode
+        setThemeState('light'); // Default to light government mode
       }
     } catch {
-      setThemeState('dark');
+      setThemeState('light');
     }
     setMounted(true);
   }, []);
@@ -106,8 +106,8 @@ export function useTheme(): ThemeContextType {
   const context = useContext(ThemeContext);
   if (!context) {
     return {
-      theme: 'dark',
-      resolvedTheme: 'dark',
+      theme: 'light',
+      resolvedTheme: 'light',
       setTheme: () => {},
       toggleTheme: () => {},
     };

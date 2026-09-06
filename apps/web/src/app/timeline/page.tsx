@@ -48,11 +48,11 @@ const MOCK_CASES = MOCK_PARCELS.map((p, idx) => {
   };
 });
 
-const SEVERITY_STYLE: Record<string, { bg: string; color: string; border: string }> = {
-  critical: { bg: 'rgba(244,63,94,0.12)', color: '#f43f5e', border: 'rgba(244,63,94,0.3)' },
-  high: { bg: 'rgba(249,115,22,0.12)', color: '#f97316', border: 'rgba(249,115,22,0.3)' },
-  medium: { bg: 'rgba(245,158,11,0.12)', color: '#f59e0b', border: 'rgba(245,158,11,0.3)' },
-  low: { bg: 'rgba(16,185,129,0.12)', color: '#10b981', border: 'rgba(16,185,129,0.3)' },
+const SEVERITY_STYLE: Record<string, { badgeClass: string }> = {
+  critical: { badgeClass: 'bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-400 border-[#FFCDD2] dark:border-rose-800/50' },
+  high: { badgeClass: 'bg-[#FFF3E0] dark:bg-orange-950/40 text-[#C2410C] dark:text-orange-400 border-[#FFE0B2] dark:border-orange-800/50' },
+  medium: { badgeClass: 'bg-[#FFF8E1] dark:bg-amber-950/40 text-[#B36B00] dark:text-amber-400 border-[#FFE082] dark:border-amber-800/50' },
+  low: { badgeClass: 'bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border-[#C8E6C9] dark:border-emerald-800/50' },
 };
 
 const STAGE_STYLE: Record<string, { bg: string; color: string }> = {
@@ -71,53 +71,68 @@ export default function TimelinePage() {
   const avgDaysInStage = totalCases > 0 ? Math.round(MOCK_CASES.reduce((acc, c) => acc + c.days_in_stage, 0) / totalCases) : 0;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="space-y-6">
       {/* Header */}
       <div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-          <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-[#0B2E59] text-white uppercase">
             RFCTLARR 2013 Compliance
           </span>
         </div>
-        <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+        <h1 className="text-xl md:text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF]">
           Acquisition Timeline Pipeline
         </h1>
-        <p style={{ fontSize: 12, color: '#4a5568', marginTop: 6 }}>
-          Stage-wise funnel analysis · Statutory time-limit grid · Lapse risk monitoring across all corridors
+        <p className="text-xs text-[#555555] dark:text-slate-400 mt-1">
+          Stage-wise funnel analysis &bull; Statutory time-limit grid &bull; Lapse risk monitoring across all corridors
         </p>
       </div>
 
       {/* KPI row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 14 }}>
-        {[
-          { label: 'Total Cases', val: totalCases, color: '#6366f1', bg: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.22)' },
-          { label: 'Active Cases', val: activeCases, color: '#10b981', bg: 'rgba(16,185,129,0.1)', border: 'rgba(16,185,129,0.22)' },
-          { label: 'Lapsed Cases', val: lapsedCases, color: '#f43f5e', bg: 'rgba(244,63,94,0.1)', border: 'rgba(244,63,94,0.22)' },
-          { label: 'Avg Days in Stage', val: avgDaysInStage, color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.22)' },
-        ].map((s) => (
-          <div key={s.label} style={{ borderRadius: 13, padding: '16px 18px', background: s.bg, border: `1px solid ${s.border}` }}>
-            <div style={{ fontSize: 10, color: '#6b7a94', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>{s.label}</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 34, fontWeight: 800, color: s.color, lineHeight: 1.1, marginTop: 4 }}>{s.val}</div>
-          </div>
-        ))}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Total Cases</div>
+          <div className="text-2xl font-bold text-[#0B2E59] dark:text-sky-400 mt-1">{totalCases}</div>
+          <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Statutory pipeline cases</div>
+        </div>
+
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Active Cases</div>
+          <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 mt-1">{activeCases}</div>
+          <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Proceeding within limit</div>
+        </div>
+
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Lapsed Cases</div>
+          <div className="text-2xl font-bold text-[#B32424] dark:text-rose-400 mt-1">{lapsedCases}</div>
+          <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Statutory breach alert</div>
+        </div>
+
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Avg Days in Stage</div>
+          <div className="text-2xl font-bold text-[#B36B00] dark:text-amber-400 mt-1">{avgDaysInStage}d</div>
+          <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Turnaround duration</div>
+        </div>
       </div>
 
       {/* Pipeline Funnel */}
-      <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 4 }}>Stage Funnel</div>
-        <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginBottom: 20 }}>Cases per RFCTLARR Stage</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-sm">
+        <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Stage Funnel</div>
+        <div className="text-sm font-bold text-[#14213D] dark:text-white mt-0.5 mb-4">Cases per RFCTLARR Stage</div>
+        <div className="space-y-3">
           {pipelineStages.map((s) => (
             <div key={s.stage}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
-                <span style={{ fontSize: 12, fontWeight: 600, color: '#c4cfe4' }}>{s.stage}</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#4a5568' }}>Limit: {s.limit}</span>
-                  <span style={{ fontFamily: 'Sora, sans-serif', fontSize: 18, fontWeight: 800, color: s.color }}>{s.cases}</span>
+              <div className="flex items-center justify-between mb-1 text-xs">
+                <span className="font-semibold text-[#14213D] dark:text-slate-200">{s.stage}</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-[11px] font-mono text-[#64748B] dark:text-slate-400">Limit: {s.limit}</span>
+                  <span className="font-mono font-bold text-sm text-[#0B2E59] dark:text-sky-400">{s.cases}</span>
                 </div>
               </div>
-              <div style={{ width: '100%', height: 8, background: 'rgba(255,255,255,0.04)', borderRadius: 99, overflow: 'hidden' }}>
-                <div style={{ width: `${s.pct}%`, height: '100%', background: s.color, borderRadius: 99, opacity: 0.85 }} />
+              <div className="w-full h-2 bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{ width: `${s.pct}%`, backgroundColor: '#0B5FA5' }}
+                />
               </div>
             </div>
           ))}
@@ -125,29 +140,31 @@ export default function TimelinePage() {
       </div>
 
       {/* Statutory Time Limits Grid */}
-      <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 4 }}>Statutory Framework</div>
-        <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginBottom: 16 }}>RFCTLARR Time Limit Reference</div>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] shadow-sm overflow-hidden">
+        <div className="px-5 py-3.5 border-b border-[#DCE2E8] dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02]">
+          <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Statutory Framework</div>
+          <div className="text-sm font-bold text-[#14213D] dark:text-white mt-0.5">RFCTLARR Time Limit Reference</div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs text-left">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+              <tr className="bg-[#F1F4F7] dark:bg-white/5 border-b border-[#DCE2E8] dark:border-white/10 text-[#555555] dark:text-slate-400 uppercase font-semibold text-[11px] tracking-wider">
                 {['Section', 'Trigger Event', 'Time Limit', 'Consequence on Lapse', 'Severity'].map(h => (
-                  <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap' }}>{h}</th>
+                  <th key={h} className="px-4 py-2.5 whitespace-nowrap font-semibold">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-[#DCE2E8] dark:divide-white/10">
               {RFCTLARR_LIMITS.map((r) => {
-                const sev = SEVERITY_STYLE[r.severity];
+                const sev = SEVERITY_STYLE[r.severity] || SEVERITY_STYLE.medium;
                 return (
-                  <tr key={r.section} className="tr-hover" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td style={{ padding: '11px 14px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#818cf8' }}>{r.section}</td>
-                    <td style={{ padding: '11px 14px', color: '#8899b4' }}>{r.trigger}</td>
-                    <td style={{ padding: '11px 14px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#c4cfe4' }}>{r.limit}</td>
-                    <td style={{ padding: '11px 14px', color: '#6b7a94', fontSize: 11 }}>{r.consequence}</td>
-                    <td style={{ padding: '11px 14px' }}>
-                      <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: sev.bg, color: sev.color, border: `1px solid ${sev.border}`, textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>
+                  <tr key={r.section} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                    <td className="px-4 py-3 font-mono font-bold text-[#0B5FA5] dark:text-sky-400">{r.section}</td>
+                    <td className="px-4 py-3 font-medium text-[#14213D] dark:text-white">{r.trigger}</td>
+                    <td className="px-4 py-3 font-mono font-bold text-[#333333] dark:text-slate-200">{r.limit}</td>
+                    <td className="px-4 py-3 text-[#555555] dark:text-slate-400">{r.consequence}</td>
+                    <td className="px-4 py-3">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[3px] border uppercase font-mono ${sev.badgeClass}`}>
                         {r.severity}
                       </span>
                     </td>
@@ -160,61 +177,61 @@ export default function TimelinePage() {
       </div>
 
       {/* Cases Table */}
-      <div className="glass" style={{ borderRadius: 14, padding: 0, overflow: 'hidden' }}>
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Acquisition Cases</div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Filterable Case Register</div>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] shadow-sm overflow-hidden">
+        <div className="px-5 py-3.5 border-b border-[#DCE2E8] dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02]">
+          <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Acquisition Cases</div>
+          <div className="text-sm font-bold text-[#14213D] dark:text-white mt-0.5">Filterable Case Register</div>
         </div>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs text-left">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+              <tr className="bg-[#F1F4F7] dark:bg-white/5 border-b border-[#DCE2E8] dark:border-white/10 text-[#555555] dark:text-slate-400 uppercase font-semibold text-[11px] tracking-wider">
                 {['Survey No.', 'Project', 'Stage', 'Days in Stage', 'Owner', 'Lapse Risk', ''].map(h => (
-                  <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap' }}>{h}</th>
+                  <th key={h} className="px-4 py-2.5 whitespace-nowrap font-semibold">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-[#DCE2E8] dark:divide-white/10">
               {MOCK_CASES.length === 0 ? (
                 <tr>
-                  <td colSpan={7} style={{ padding: '40px 16px', textAlign: 'center', color: '#6b7a94', fontSize: 13 }}>
+                  <td colSpan={7} className="py-10 text-center text-[#64748B] text-xs">
                     No statutory acquisition cases registered. Awaiting operational data ingestion.
                   </td>
                 </tr>
               ) : (
                 MOCK_CASES.map((c) => {
-                  const stageStyle = STAGE_STYLE[c.stage] || { bg: 'rgba(99,102,241,0.1)', color: '#818cf8' };
                   const proj = NATIONAL_PROJECTS.find(pr => pr.name === c.project);
                   const projHref = proj ? `/projects/${proj.id}` : '/projects';
                   return (
-                    <tr key={c.id} className="tr-hover" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                      <td style={{ padding: '11px 16px' }}>
-                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#818cf8' }}>{c.survey_no}</span>
+                    <tr key={c.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                      <td className="px-4 py-3 font-mono font-bold text-[#0B5FA5] dark:text-sky-400">
+                        {c.survey_no}
                       </td>
-                      <td style={{ padding: '11px 16px', color: '#8899b4', fontSize: 11 }}>{c.project}</td>
-                      <td style={{ padding: '11px 16px' }}>
-                        <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, background: stageStyle.bg, color: stageStyle.color, fontFamily: 'JetBrains Mono, monospace', whiteSpace: 'nowrap' }}>
+                      <td className="px-4 py-3 text-[#333333] dark:text-slate-300 font-medium">{c.project}</td>
+                      <td className="px-4 py-3">
+                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-slate-100 dark:bg-white/10 text-[#0B2E59] dark:text-sky-300 border border-slate-200 dark:border-white/10">
                           {c.stage.replace(/_/g, ' ')}
                         </span>
                       </td>
-                      <td style={{ padding: '11px 16px' }}>
-                        <span style={{ fontFamily: 'Sora, sans-serif', fontSize: 16, fontWeight: 700, color: c.days_in_stage > 300 ? '#f43f5e' : c.days_in_stage > 100 ? '#f59e0b' : '#10b981' }}>
+                      <td className="px-4 py-3 font-mono font-bold">
+                        <span className={c.days_in_stage > 300 ? 'text-[#B32424] dark:text-rose-400' : c.days_in_stage > 100 ? 'text-[#B36B00] dark:text-amber-400' : 'text-[#1E7E34] dark:text-emerald-400'}>
                           {c.days_in_stage}d
                         </span>
                       </td>
-                      <td style={{ padding: '11px 16px', color: '#6b7a94', fontSize: 11 }}>{c.owner}</td>
-                      <td style={{ padding: '11px 16px' }}>
+                      <td className="px-4 py-3 text-[#555555] dark:text-slate-400">{c.owner}</td>
+                      <td className="px-4 py-3">
                         {c.lapsed ? (
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, background: 'rgba(244,63,94,0.15)', color: '#f43f5e', border: '1px solid rgba(244,63,94,0.3)', textTransform: 'uppercase' }}>
-                            <AlertTriangle style={{ width: 9, height: 9 }} /> LAPSED
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[3px] bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-400 border border-[#FFCDD2] dark:border-rose-800/50 uppercase">
+                            <AlertTriangle className="w-2.5 h-2.5" /> LAPSED
                           </span>
                         ) : (
-                          <span style={{ fontSize: 9, color: '#3a4258', fontFamily: 'JetBrains Mono, monospace' }}>—</span>
+                          <span className="text-[#64748B] dark:text-slate-500 font-mono text-[11px]">—</span>
                         )}
                       </td>
-                      <td style={{ padding: '11px 16px' }}>
-                        <Link href={projHref} style={{ fontSize: 11, fontWeight: 600, color: '#6b7a94', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
-                          Corridor <ArrowRight style={{ width: 11, height: 11 }} />
+                      <td className="px-4 py-3">
+                        <Link href={projHref} className="font-bold text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1">
+                          <span>Corridor</span>
+                          <ArrowRight className="w-3 h-3" />
                         </Link>
                       </td>
                     </tr>

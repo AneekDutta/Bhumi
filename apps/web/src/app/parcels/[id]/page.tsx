@@ -77,16 +77,16 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
   const estimatedValuation = (activeParcel.area_hectares * 1.85).toFixed(2);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="flex flex-col gap-6">
       {/* Breadcrumb */}
-      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#4a5568', fontFamily: 'JetBrains Mono, monospace' }}>
-        <Link href="/" style={{ color: '#6b7a94', textDecoration: 'none' }}>Dashboard</Link>
+      <nav className="flex items-center gap-2 text-xs text-[#5A6A80] dark:text-slate-400 font-mono">
+        <Link href="/" className="hover:text-[#0B2E59] dark:hover:text-sky-300">Dashboard</Link>
         <span>/</span>
-        <Link href="/projects" style={{ color: '#6b7a94', textDecoration: 'none' }}>Corridors</Link>
+        <Link href="/projects" className="hover:text-[#0B2E59] dark:hover:text-sky-300">Corridors</Link>
         <span>/</span>
-        <Link href={`/projects/${activeParcel.project_id || 'P-NH927A'}`} style={{ color: '#6b7a94', textDecoration: 'none' }}>Corridor</Link>
+        <Link href={`/projects/${activeParcel.project_id || 'P-NH927A'}`} className="hover:text-[#0B2E59] dark:hover:text-sky-300">Corridor</Link>
         <span>/</span>
-        <span style={{ color: '#c4cfe4' }}>Survey No. {activeParcel.survey_no || activeParcel.survey_number}</span>
+        <span className="text-[#14213D] dark:text-[#F0F4FF] font-semibold">Survey No. {activeParcel.survey_no || activeParcel.survey_number}</span>
       </nav>
 
       {/* Provenance Matrix Banner */}
@@ -94,146 +94,156 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
 
       {/* Section 13 MODEL-DERIVED Recommended Action */}
       {activeParcel.recommended_action && (
-        <div style={{
-          padding: '18px 22px',
-          borderRadius: 14,
-          background: 'linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(99,102,241,0.12) 100%)',
-          border: '1px solid rgba(16,185,129,0.35)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 6
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Sparkles style={{ width: 16, height: 16, color: '#34d399' }} />
-              <span style={{ fontSize: 11, fontWeight: 800, color: '#34d399', fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.06em' }}>
+        <div className="bg-white dark:bg-[#0D121F] border border-[#0B2E59]/30 dark:border-[#0B2E59]/60 border-l-4 border-l-[#0B2E59] rounded-[4px] p-4 shadow-xs flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
+              <span className="text-[11px] font-bold text-[#0B2E59] dark:text-sky-300 font-mono uppercase tracking-wider">
                 MODEL-DERIVED RECOMMENDED ACTION (SECTION 13)
               </span>
             </div>
             <ProvenanceBadge sourceType="MODEL_DERIVED" size="xs" />
           </div>
-          <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#f8fafc', lineHeight: 1.5 }}>
+          <p className="m-0 text-xs font-semibold text-[#14213D] dark:text-[#F0F4FF] leading-relaxed">
             {activeParcel.recommended_action}
           </p>
         </div>
       )}
 
-      {/* Hero */}
-      <div style={{
-        borderRadius: 16, padding: '24px 28px',
-        background: 'linear-gradient(135deg, rgba(245,158,11,0.1) 0%, rgba(8,9,20,0) 60%)',
-        border: `1px solid ${isLapsed ? 'rgba(244,63,94,0.4)' : 'rgba(245,158,11,0.25)'}`,
-        position: 'relative', overflow: 'hidden'
-      }}>
-        <div style={{ position: 'absolute', top: 0, right: 0, width: 300, height: 300, borderRadius: '50%', background: isLapsed ? 'rgba(244,63,94,0.06)' : 'rgba(245,158,11,0.06)', filter: 'blur(80px)', pointerEvents: 'none' }} />
-        <div style={{ position: 'relative' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-            <div style={{ flex: 1 }}>
-              <RealtimeParcelHeader
-                parcelId={activeParcel.id || activeParcel.parcel_id}
-                surveyNo={parcel.survey_no || activeParcel.survey_number}
-                villageName={parcel.village_name || activeParcel.village_name || 'Kanhera Kalan'}
-                statutoryAct={acqCase?.statutory_act || 'RFCTLARR Act 2013'}
-                initialStatus={activeParcel.acquisition_status || parcel.status || 'UNRESOLVED'}
-                isLapsed={isLapsed}
-                sourceType={activeParcel.source_type || 'SYNTHETIC'}
-              />
-            </div>
-            <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
-              <Link href={`/projects/${parcel.project_id || activeParcel.project_id || 'P-NH927A'}/spatial`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <MapPin style={{ width: 13, height: 13 }} /> GIS View
-              </Link>
-              <Link href={`/projects/${parcel.project_id || activeParcel.project_id || 'P-NH927A'}/impact`} style={{ padding: '9px 16px', borderRadius: 9, fontSize: 12, fontWeight: 700, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Scale style={{ width: 13, height: 13 }} /> CPM Path
-              </Link>
-            </div>
+      {/* Hero Dossier Card */}
+      <div className={`bg-white dark:bg-[#0D121F] border ${isLapsed ? 'border-[#FFCDD2] dark:border-rose-800/50' : 'border-[#DCE2E8] dark:border-white/10'} rounded-[4px] p-5 shadow-xs relative overflow-hidden`}>
+        <div className="flex items-start justify-between flex-wrap gap-4">
+          <div className="flex-1 min-w-[280px]">
+            <RealtimeParcelHeader
+              parcelId={activeParcel.id || activeParcel.parcel_id}
+              surveyNo={parcel.survey_no || activeParcel.survey_number}
+              villageName={parcel.village_name || activeParcel.village_name || 'Kanhera Kalan'}
+              statutoryAct={acqCase?.statutory_act || 'RFCTLARR Act 2013'}
+              initialStatus={activeParcel.acquisition_status || parcel.status || 'UNRESOLVED'}
+              isLapsed={isLapsed}
+              sourceType={activeParcel.source_type || 'SYNTHETIC'}
+            />
+          </div>
+          <div className="flex items-center gap-2 pt-1">
+            <Link
+              href={`/projects/${parcel.project_id || activeParcel.project_id || 'P-NH927A'}/spatial`}
+              className="px-3.5 py-1.5 rounded-[4px] text-xs font-bold bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-300 border border-[#C8E6C9] dark:border-emerald-800/40 flex items-center gap-1.5 hover:bg-[#C8E6C9]/50 transition-colors shadow-xs"
+            >
+              <MapPin className="w-3.5 h-3.5" /> GIS View
+            </Link>
+            <Link
+              href={`/projects/${parcel.project_id || activeParcel.project_id || 'P-NH927A'}/impact`}
+              className="px-3.5 py-1.5 rounded-[4px] text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40 flex items-center gap-1.5 hover:bg-[#B8D5ED]/50 transition-colors shadow-xs"
+            >
+              <Scale className="w-3.5 h-3.5" /> CPM Path
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Lapse / Compliance Banner */}
       {isLapsed ? (
-        <div style={{ borderRadius: 12, padding: '16px 20px', background: 'rgba(244,63,94,0.08)', border: '2px solid rgba(244,63,94,0.4)', display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-          <div style={{ padding: '8px', borderRadius: 8, background: 'rgba(244,63,94,0.2)', flexShrink: 0 }}>
-            <AlertTriangle style={{ width: 18, height: 18, color: '#f43f5e' }} />
+        <div className="rounded-[4px] p-4 bg-[#FFEBEE] dark:bg-rose-950/30 border border-[#FFCDD2] dark:border-rose-800/40 flex items-start gap-3 shadow-xs">
+          <div className="p-2 rounded-[4px] bg-[#B32424]/10 dark:bg-rose-900/30 shrink-0">
+            <AlertTriangle className="w-4 h-4 text-[#B32424] dark:text-rose-400" />
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#f43f5e', marginBottom: 4 }}>
+          <div className="flex-1">
+            <div className="text-xs font-bold text-[#B32424] dark:text-rose-300 mb-1">
               CRITICAL STATUTORY LAPSE: RFCTLARR Act 2013 Section 19(7)
             </div>
-            <p style={{ fontSize: 12, color: '#8899b4', margin: 0, lineHeight: 1.6 }}>
+            <p className="text-xs text-[#5A6A80] dark:text-slate-300 m-0 leading-relaxed">
               Section 19(1) declaration was not published within 12 months of the Preliminary Notification under Section 11(1).
-              Under Section 19(7), the entire acquisition proceeding has <strong style={{ color: '#f43f5e' }}>lapsed by operation of law</strong>,
-              introducing a <strong style={{ color: '#f43f5e' }}>+{deadlineInfo?.recovery_days || 20}-day zero-float delay</strong> to Corridor Commissioning.
+              Under Section 19(7), the entire acquisition proceeding has <strong className="text-[#B32424] dark:text-rose-400">lapsed by operation of law</strong>,
+              introducing a <strong className="text-[#B32424] dark:text-rose-400">+{deadlineInfo?.recovery_days || 20}-day zero-float delay</strong> to Corridor Commissioning.
             </p>
-            <div style={{ display: 'flex', gap: 16, marginTop: 10, fontSize: 11, color: '#6b7a94' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                <Calendar style={{ width: 12, height: 12 }} />
-                Deadline: <strong style={{ fontFamily: 'JetBrains Mono, monospace', color: '#f43f5e', marginLeft: 4 }}>
+            <div className="flex flex-wrap gap-4 mt-2.5 text-[11px] text-[#5A6A80] dark:text-slate-400">
+              <span className="flex items-center gap-1.5">
+                <Calendar className="w-3 h-3" />
+                Deadline: <strong className="font-mono text-[#B32424] dark:text-rose-300 ml-1">
                   {deadlineInfo?.deadline ? new Date(deadlineInfo.deadline).toLocaleDateString() : '15 Jul 2025'}
                 </strong>
               </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                <ShieldCheck style={{ width: 12, height: 12 }} />
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="w-3 h-3 text-[#1E7E34]" />
                 Remedy: Re-issue Sec 11 Notification or State Extension Gazette
               </span>
             </div>
           </div>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 800, color: '#f43f5e', whiteSpace: 'nowrap' }}>
+          <span className="font-mono text-xs font-bold text-[#B32424] dark:text-rose-300 shrink-0 bg-white dark:bg-rose-950/60 px-2 py-1 rounded-[3px] border border-[#FFCDD2] dark:border-rose-800/40">
             {Math.abs(daysRemaining)}d Elapsed
           </span>
         </div>
       ) : (
-        <div style={{ borderRadius: 12, padding: '12px 18px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <CheckCircle2 style={{ width: 15, height: 15, color: '#10b981', flexShrink: 0 }} />
-            <span style={{ fontSize: 12, color: '#8899b4' }}>
+        <div className="rounded-[4px] p-3 bg-[#E8F5E9] dark:bg-emerald-950/30 border border-[#C8E6C9] dark:border-emerald-800/40 flex items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-[#1E7E34] dark:text-emerald-400 shrink-0" />
+            <span className="text-xs text-[#1E7E34] dark:text-emerald-300">
               Statutory timeline compliant · Section 19(7) declaration window open with
-              <strong style={{ fontFamily: 'JetBrains Mono, monospace', color: '#10b981', marginLeft: 4 }}>{daysRemaining} days</strong> remaining.
+              <strong className="font-mono font-bold ml-1">{daysRemaining} days</strong> remaining.
             </span>
           </div>
-          <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 5, background: 'rgba(16,185,129,0.15)', color: '#10b981', border: '1px solid rgba(16,185,129,0.3)' }}>ON TRACK</span>
+          <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-[3px] bg-white dark:bg-emerald-900/60 text-[#1E7E34] dark:text-emerald-300 border border-[#C8E6C9] dark:border-emerald-800/40">
+            ON TRACK
+          </span>
         </div>
       )}
 
       {/* RFCTLARR Stage Stepper */}
-      <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-xs">
+        <div className="flex items-center justify-between mb-5">
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>RFCTLARR 2013 Lifecycle</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Statutory Stage Progression</div>
+            <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-semibold">
+              RFCTLARR 2013 Lifecycle
+            </div>
+            <div className="text-sm font-bold text-[#14213D] dark:text-[#F0F4FF] mt-0.5">
+              Statutory Stage Progression
+            </div>
           </div>
-          <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', padding: '4px 10px', borderRadius: 6, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', color: '#818cf8' }}>
+          <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/50 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40">
             Stage {currentStageIndex + 1} of 7
           </span>
         </div>
 
-        <div style={{ overflowX: 'auto', paddingBottom: 8 }}>
-          <div style={{ minWidth: 700, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', position: 'relative' }}>
+        <div className="overflow-x-auto pb-2">
+          <div className="min-w-[650px] flex items-start justify-between relative px-2">
             {/* connector track */}
-            <div style={{ position: 'absolute', top: 16, left: 24, right: 24, height: 2, background: 'rgba(255,255,255,0.06)' }} />
-            <div style={{ position: 'absolute', top: 16, left: 24, height: 2, width: `${(currentStageIndex / (RFCTLARR_STAGES.length - 1)) * 92}%`, background: 'linear-gradient(90deg,#10b981,#6366f1)', transition: 'width 0.5s' }} />
+            <div className="absolute top-4 left-6 right-6 h-0.5 bg-[#E2E8F0] dark:bg-white/10" />
+            <div
+              className="absolute top-4 left-6 h-0.5 bg-[#0B2E59] dark:bg-sky-500 transition-all duration-500"
+              style={{ width: `${(currentStageIndex / (RFCTLARR_STAGES.length - 1)) * 94}%` }}
+            />
             {RFCTLARR_STAGES.map((step, idx) => {
               const isPast = idx < currentStageIndex;
               const isCurrent = idx === currentStageIndex;
               return (
-                <div key={step.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '14%', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-                  <div style={{
-                    width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 12, fontWeight: 700, flexShrink: 0,
-                    background: isPast ? '#10b981' : isCurrent ? (isLapsed ? '#f43f5e' : '#6366f1') : 'rgba(255,255,255,0.06)',
-                    border: `2px solid ${isPast ? '#10b981' : isCurrent ? (isLapsed ? '#f43f5e' : '#818cf8') : 'rgba(255,255,255,0.1)'}`,
-                    color: (isPast || isCurrent) ? '#fff' : '#3a4258',
-                    boxShadow: isCurrent ? `0 0 16px ${isLapsed ? 'rgba(244,63,94,0.5)' : 'rgba(99,102,241,0.5)'}` : 'none'
-                  }}>
-                    {isPast ? <CheckCircle2 style={{ width: 14, height: 14 }} /> : isCurrent && isLapsed ? <AlertTriangle style={{ width: 14, height: 14 }} /> : step.id}
+                <div key={step.id} className="flex flex-col items-center w-[14%] text-center relative z-10">
+                  <div className={`w-8 h-8 rounded-[4px] flex items-center justify-center text-xs font-bold shrink-0 border transition-all ${
+                    isPast
+                      ? 'bg-[#1E7E34] text-white border-[#1E7E34]'
+                      : isCurrent
+                        ? isLapsed
+                          ? 'bg-[#B32424] text-white border-[#B32424] ring-2 ring-[#B32424]/30'
+                          : 'bg-[#0B2E59] text-white border-[#0B2E59] ring-2 ring-[#0B2E59]/30'
+                        : 'bg-[#F8FAFC] dark:bg-[#151D2A] text-[#5A6A80] dark:text-slate-400 border-[#DCE2E8] dark:border-white/10'
+                  }`}>
+                    {isPast ? <CheckCircle2 className="w-4 h-4" /> : isCurrent && isLapsed ? <AlertTriangle className="w-4 h-4" /> : step.id}
                   </div>
-                  <div style={{ marginTop: 8, fontSize: 10, fontWeight: 700, color: isCurrent ? (isLapsed ? '#f43f5e' : '#818cf8') : isPast ? '#10b981' : '#3a4258', lineHeight: 1.3 }}>
+                  <div className={`mt-2 text-[11px] font-bold leading-snug ${
+                    isCurrent
+                      ? isLapsed ? 'text-[#B32424] dark:text-rose-400' : 'text-[#0B2E59] dark:text-sky-300'
+                      : isPast
+                        ? 'text-[#1E7E34] dark:text-emerald-400'
+                        : 'text-[#5A6A80] dark:text-slate-400'
+                  }`}>
                     {step.label}
                   </div>
-                  <div style={{ fontSize: 9, color: '#2d3748', marginTop: 2, lineHeight: 1.2 }}>{step.desc}</div>
+                  <div className="text-[9px] text-[#5A6A80] dark:text-slate-400 mt-0.5 line-clamp-1">{step.desc}</div>
                   {isCurrent && (
-                    <span style={{ marginTop: 4, fontSize: 8, fontWeight: 700, padding: '1px 5px', borderRadius: 3, background: isLapsed ? 'rgba(244,63,94,0.2)' : 'rgba(99,102,241,0.2)', color: isLapsed ? '#f43f5e' : '#818cf8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    <span className={`mt-1 text-[8px] font-mono font-bold px-1.5 py-0.5 rounded-[2px] uppercase ${
+                      isLapsed
+                        ? 'bg-[#FFEBEE] text-[#B32424] border border-[#FFCDD2]'
+                        : 'bg-[#E6F0FA] text-[#0B2E59] border border-[#B8D5ED]'
+                    }`}>
                       Current
                     </span>
                   )}
@@ -245,142 +255,148 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
       </div>
 
       {/* Cadastral Profile & Statutory Clock */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16, alignItems: 'start' }}>
-        {/* Cadastral Details */}
-        <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-          <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Cadastral Land Record Profile</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+        {/* Cadastral Details (2 Cols) */}
+        <div className="lg:col-span-2 bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-xs">
+          <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-semibold mb-4">
+            Cadastral Land Record Profile
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               { label: 'Survey & Subdivision No.', val: parcel.survey_no, mono: true },
               { label: 'Total Registered Area', val: `${parcel.area_hectares} Ha`, sub: `${acres} Acres · ${sqMeters} sq.m`, mono: true },
               { label: 'Revenue Classification', val: parcel.classification || 'Agricultural', sub: 'Verified Land Record' },
               { label: 'Title Holder(s)', val: parcel.owner_name || 'Owner of Record', sub: 'Title Record' },
               { label: 'Cadastral Location', val: parcel.village_name || 'Alignment Corridor', sub: 'Corridor Alignment Record', mono: true },
-              { label: 'Statutory Valuation (Est.)', val: `₹${estimatedValuation} Cr`, sub: 'Market Factor 2.0 + 100% Solatium', color: '#10b981' },
+              { label: 'Statutory Valuation (Est.)', val: `₹${estimatedValuation} Cr`, sub: 'Market Factor 2.0 + 100% Solatium', colorClass: 'text-[#1E7E34] dark:text-emerald-400' },
             ].map((item) => (
-              <div key={item.label} style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 9, border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>{item.label}</div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: item.color || '#c4cfe4', fontFamily: item.mono ? 'JetBrains Mono, monospace' : undefined }}>{item.val}</div>
-                {item.sub && <div style={{ fontSize: 10, color: '#4a5568', marginTop: 2 }}>{item.sub}</div>}
+              <div key={item.label} className="p-3 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px]">
+                <div className="text-[9px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider mb-1">{item.label}</div>
+                <div className={`text-sm font-bold ${item.colorClass || 'text-[#14213D] dark:text-[#F0F4FF]'} ${item.mono ? 'font-mono' : ''}`}>
+                  {item.val}
+                </div>
+                {item.sub && <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 mt-0.5">{item.sub}</div>}
               </div>
             ))}
           </div>
 
-          <div style={{ marginTop: 14, padding: '12px 14px', background: 'rgba(99,102,241,0.07)', borderRadius: 9, border: '1px solid rgba(99,102,241,0.18)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, color: '#818cf8', marginBottom: 4 }}>
-              <Building2 style={{ width: 13, height: 13 }} /> CALA Jurisdiction
+          <div className="mt-3.5 p-3 bg-[#E6F0FA]/60 dark:bg-sky-950/20 border border-[#B8D5ED] dark:border-sky-900/30 rounded-[4px]">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-[#0B2E59] dark:text-sky-300 mb-1">
+              <Building2 className="w-3.5 h-3.5" /> CALA Jurisdiction
             </div>
-            <p style={{ fontSize: 11, color: '#6b7a94', margin: 0 }}>
+            <p className="text-xs text-[#5A6A80] dark:text-slate-400 m-0">
               Special Land Acquisition Officer (SLAO) / Competent Authority Land Acquisition Office ·
-              <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#8899b4', marginLeft: 4 }}>CALA-{parcel.project_id.substring(0, 8).toUpperCase()}-RECORD</span>
+              <span className="font-mono text-[#14213D] dark:text-[#F0F4FF] ml-1 font-semibold">CALA-{parcel.project_id.substring(0, 8).toUpperCase()}-RECORD</span>
             </p>
           </div>
         </div>
 
-        {/* Statutory Clock */}
-        <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-          <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Statutory Clock & Authority</div>
+        {/* Statutory Clock (1 Col) */}
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-xs flex flex-col gap-3">
+          <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-semibold">
+            Statutory Clock & Authority
+          </div>
 
           {deadlineInfo ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{ padding: '14px', borderRadius: 10, background: isLapsed ? 'rgba(244,63,94,0.1)' : 'rgba(16,185,129,0.08)', border: `1px solid ${isLapsed ? 'rgba(244,63,94,0.3)' : 'rgba(16,185,129,0.25)'}` }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#6b7a94', marginBottom: 8 }}>
-                  <span>RFCTLARR Limitation Rule</span>
-                  <span style={{ padding: '2px 7px', borderRadius: 3, background: isLapsed ? '#f43f5e' : '#10b981', color: '#fff' }}>{deadlineInfo.status}</span>
+            <div className="flex flex-col gap-3">
+              <div className={`p-3 rounded-[4px] border ${isLapsed ? 'bg-[#FFEBEE] dark:bg-rose-950/30 border-[#FFCDD2] dark:border-rose-800/40' : 'bg-[#E8F5E9] dark:bg-emerald-950/30 border-[#C8E6C9] dark:border-emerald-800/40'}`}>
+                <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider mb-2">
+                  <span className="text-[#5A6A80] dark:text-slate-400 font-mono">RFCTLARR Limitation Rule</span>
+                  <span className={`px-1.5 py-0.5 rounded-[2px] font-mono ${isLapsed ? 'bg-[#B32424] text-white' : 'bg-[#1E7E34] text-white'}`}>
+                    {deadlineInfo.status}
+                  </span>
                 </div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#c4cfe4', marginBottom: 10 }}>
+                <div className="text-xs font-semibold text-[#14213D] dark:text-[#F0F4FF] mb-2.5">
                   {deadlineInfo.rule || 'Sec 19(7) 12-Month Declaration Rule'}
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <div style={{ fontSize: 9, color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace' }}>Statutory Expiry</div>
-                    <div style={{ fontSize: 13, fontWeight: 700, fontFamily: 'JetBrains Mono, monospace', color: '#c4cfe4' }}>
+                    <div className="text-[9px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono">Statutory Expiry</div>
+                    <div className="text-xs font-bold font-mono text-[#14213D] dark:text-[#F0F4FF]">
                       {deadlineInfo.deadline ? new Date(deadlineInfo.deadline).toLocaleDateString() : 'Awaiting Gazette Date'}
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 9, color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'JetBrains Mono, monospace' }}>Day Count</div>
-                    <div style={{ fontSize: 20, fontWeight: 800, fontFamily: 'Sora, sans-serif', color: isLapsed ? '#f43f5e' : '#10b981' }}>
+                    <div className="text-[9px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono">Day Count</div>
+                    <div className={`text-base font-bold font-mono ${isLapsed ? 'text-[#B32424] dark:text-rose-400' : 'text-[#1E7E34] dark:text-emerald-400'}`}>
                       {daysRemaining}d
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 9, border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="p-3 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px]">
                 {[
-                  { label: 'CPM Downstream Impact', val: parcel.blocker ? `+${parcel.blocker.assumed_resolution_days} Days Delay` : (isLapsed ? '+20 Days Delay' : '0 Days Delay'), color: isLapsed || parcel.blocker ? '#f43f5e' : '#10b981' },
-                  { label: 'Blocked Activity', val: parcel.blocker ? parcel.blocker.type : (isLapsed ? 'Site Possession' : 'None'), color: '#c4cfe4' },
-                  { label: 'Critical Float', val: isLapsed ? '0 Days (Critical Path)' : 'Within Float Thresholds', color: isLapsed ? '#f43f5e' : '#10b981' },
-                ].map((r) => (
-                  <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <span style={{ fontSize: 11, color: '#6b7a94' }}>{r.label}</span>
-                    <span style={{ fontSize: 11, fontWeight: 700, color: r.color, fontFamily: 'JetBrains Mono, monospace' }}>{r.val}</span>
+                  { label: 'CPM Downstream Impact', val: parcel.blocker ? `+${parcel.blocker.assumed_resolution_days} Days Delay` : (isLapsed ? '+20 Days Delay' : '0 Days Delay'), colorClass: isLapsed || parcel.blocker ? 'text-[#B32424] dark:text-rose-400' : 'text-[#1E7E34] dark:text-emerald-400' },
+                  { label: 'Blocked Activity', val: parcel.blocker ? parcel.blocker.type : (isLapsed ? 'Site Possession' : 'None'), colorClass: 'text-[#14213D] dark:text-[#F0F4FF]' },
+                  { label: 'Critical Float', val: isLapsed ? '0 Days (Critical Path)' : 'Within Float Thresholds', colorClass: isLapsed ? 'text-[#B32424] dark:text-rose-400' : 'text-[#1E7E34] dark:text-emerald-400' },
+                ].map((r, i) => (
+                  <div key={r.label} className={`flex justify-between items-center py-1.5 ${i !== 2 ? 'border-b border-[#DCE2E8]/60 dark:border-white/5' : ''}`}>
+                    <span className="text-[11px] text-[#5A6A80] dark:text-slate-400">{r.label}</span>
+                    <span className={`text-[11px] font-bold font-mono ${r.colorClass}`}>{r.val}</span>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <p style={{ fontSize: 12, color: '#4a5568' }}>No limitation clock data available.</p>
+            <p className="text-xs text-[#5A6A80] dark:text-slate-400">No limitation clock data available.</p>
           )}
 
-          <Link href={`/projects/${parcel.project_id}/impact`} style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-            marginTop: 14, padding: '10px', borderRadius: 9, fontSize: 12, fontWeight: 700,
-            background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)',
-            color: '#818cf8', textDecoration: 'none'
-          }}>
-            Simulate Remediation <ArrowRight style={{ width: 13, height: 13 }} />
+          <Link
+            href={`/projects/${parcel.project_id}/impact`}
+            className="flex items-center justify-center gap-1.5 mt-2 p-2 rounded-[4px] text-xs font-bold bg-[#0B2E59] hover:bg-[#082242] text-white shadow-xs transition-colors"
+          >
+            Simulate Remediation <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>
 
       {/* Section 26-30 RFCTLARR Act Statutory Compensation Breakdown */}
       {activeParcel.compensation && (
-        <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-xs">
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+              <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-semibold">
                 RFCTLARR Act 2013 Statutory Math
               </div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Coins style={{ width: 16, height: 16, color: '#fbbf24' }} /> Sections 26–30 Award Determination
+              <div className="text-sm font-bold text-[#14213D] dark:text-[#F0F4FF] mt-0.5 flex items-center gap-2">
+                <Coins className="w-4 h-4 text-[#B36B00] dark:text-amber-400" /> Sections 26–30 Award Determination
               </div>
             </div>
             <ProvenanceBadge sourceType={activeParcel.compensation.source_type || 'MODEL_DERIVED'} size="xs" />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
-            <div style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 9, border: '1px solid rgba(255,255,255,0.06)' }}>
-              <div style={{ fontSize: 9, color: '#6b7a94', fontFamily: 'JetBrains Mono, monospace' }}>BASE MARKET VALUE (SEC 26)</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: '#c4cfe4', marginTop: 4, fontFamily: 'JetBrains Mono, monospace' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="p-3 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px]">
+              <div className="text-[9px] text-[#5A6A80] dark:text-slate-400 font-mono">BASE MARKET VALUE (SEC 26)</div>
+              <div className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] mt-1 font-mono">
                 ₹{(activeParcel.compensation.market_value_base || 0).toLocaleString()}
               </div>
-              <div style={{ fontSize: 10, color: '#4a5568', marginTop: 2 }}>Circle rate x 1.5x rural factor</div>
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Circle rate x 1.5x rural factor</div>
             </div>
 
-            <div style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 9, border: '1px solid rgba(255,255,255,0.06)' }}>
-              <div style={{ fontSize: 9, color: '#6b7a94', fontFamily: 'JetBrains Mono, monospace' }}>100% SOLATIUM (SEC 30(1))</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: '#fbbf24', marginTop: 4, fontFamily: 'JetBrains Mono, monospace' }}>
+            <div className="p-3 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px]">
+              <div className="text-[9px] text-[#5A6A80] dark:text-slate-400 font-mono">100% SOLATIUM (SEC 30(1))</div>
+              <div className="text-base font-bold text-[#B36B00] dark:text-amber-400 mt-1 font-mono">
                 ₹{(activeParcel.compensation.solatium_amount || 0).toLocaleString()}
               </div>
-              <div style={{ fontSize: 10, color: '#4a5568', marginTop: 2 }}>100% mandatory solatium</div>
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 mt-0.5">100% mandatory solatium</div>
             </div>
 
-            <div style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 9, border: '1px solid rgba(255,255,255,0.06)' }}>
-              <div style={{ fontSize: 9, color: '#6b7a94', fontFamily: 'JetBrains Mono, monospace' }}>12% INTEREST (SEC 30(3))</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: '#38bdf8', marginTop: 4, fontFamily: 'JetBrains Mono, monospace' }}>
+            <div className="p-3 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px]">
+              <div className="text-[9px] text-[#5A6A80] dark:text-slate-400 font-mono">12% INTEREST (SEC 30(3))</div>
+              <div className="text-base font-bold text-[#0B2E59] dark:text-sky-300 mt-1 font-mono">
                 ₹{(activeParcel.compensation.interest_12pct_amount || 0).toLocaleString()}
               </div>
-              <div style={{ fontSize: 10, color: '#4a5568', marginTop: 2 }}>Accrued from Sec 11 notification</div>
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Accrued from Sec 11 notification</div>
             </div>
 
-            <div style={{ padding: '12px 14px', background: 'rgba(16,185,129,0.1)', borderRadius: 9, border: '1px solid rgba(16,185,129,0.3)' }}>
-              <div style={{ fontSize: 9, color: '#34d399', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}>TOTAL STATUTORY AWARD</div>
-              <div style={{ fontSize: 18, fontWeight: 800, color: '#34d399', marginTop: 4, fontFamily: 'JetBrains Mono, monospace' }}>
+            <div className="p-3 bg-[#E8F5E9] dark:bg-emerald-950/30 border border-[#C8E6C9] dark:border-emerald-800/40 rounded-[4px]">
+              <div className="text-[9px] text-[#1E7E34] dark:text-emerald-400 font-mono font-bold">TOTAL STATUTORY AWARD</div>
+              <div className="text-base font-bold text-[#1E7E34] dark:text-emerald-300 mt-1 font-mono">
                 ₹{(activeParcel.compensation.total_compensation || 0).toLocaleString()}
               </div>
-              <div style={{ fontSize: 10, color: '#a7f3d0', marginTop: 2, textTransform: 'uppercase' }}>
+              <div className="text-[10px] text-[#1E7E34] dark:text-emerald-400 mt-0.5 uppercase font-medium">
                 Status: {activeParcel.compensation.compensation_status || 'Pending'}
               </div>
             </div>
@@ -389,59 +405,63 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
       )}
 
       {/* Audit Trail */}
-      <div className="glass" style={{ borderRadius: 14, padding: '20px 24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-xs">
+        <div className="flex items-center justify-between mb-5">
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Immutable Statutory Audit Trail</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>Cryptographic CALA Ledger</div>
+            <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-semibold">
+              Immutable Statutory Audit Trail
+            </div>
+            <div className="text-sm font-bold text-[#14213D] dark:text-[#F0F4FF] mt-0.5">
+              Cryptographic CALA Ledger
+            </div>
           </div>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '4px 10px', borderRadius: 6, background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981' }}>
-            <Hash style={{ width: 10, height: 10 }} /> SHA-256 Verified
+          <span className="flex items-center gap-1.5 text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-300 border border-[#C8E6C9] dark:border-emerald-800/40">
+            <Hash className="w-3 h-3" /> SHA-256 Verified
           </span>
         </div>
 
-        <div style={{ position: 'relative', paddingLeft: 24 }}>
-          <div style={{ position: 'absolute', left: 8, top: 4, bottom: 4, width: 2, background: 'rgba(255,255,255,0.06)', borderRadius: 2 }} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div className="relative pl-6">
+          <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-[#DCE2E8] dark:bg-white/10" />
+          <div className="flex flex-col gap-3">
             {auditLogs.map((log: any, index: number) => (
-              <div key={log.id || index} style={{ position: 'relative' }}>
-                <div style={{ position: 'absolute', left: -20, top: 12, width: 12, height: 12, borderRadius: '50%', background: '#6366f1', border: '2px solid rgba(99,102,241,0.4)', boxShadow: '0 0 8px rgba(99,102,241,0.4)' }} />
-                <div style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6, flexWrap: 'wrap', gap: 6 }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: '#c4cfe4' }}>
+              <div key={log.id || index} className="relative">
+                <div className="absolute -left-[19px] top-3 w-2.5 h-2.5 rounded-full bg-[#0B2E59] border-2 border-white dark:border-[#0D121F] shadow-xs" />
+                <div className="p-3.5 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px]">
+                  <div className="flex items-center justify-between mb-1.5 flex-wrap gap-2">
+                    <span className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] flex items-center gap-2">
                       {log.action}
                       {log.state_after?.stage && (
-                        <span style={{ marginLeft: 8, fontSize: 9, fontFamily: 'JetBrains Mono, monospace', padding: '2px 6px', borderRadius: 3, background: 'rgba(99,102,241,0.15)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.25)' }}>
+                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-[2px] bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40">
                           {log.state_after.stage}
                         </span>
                       )}
                     </span>
-                    <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#4a5568' }}>
+                    <span className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400">
                       {new Date(log.created_at).toLocaleString()}
                     </span>
                   </div>
-                  <p style={{ fontSize: 11, color: '#6b7a94', margin: '0 0 6px' }}>
-                    Authorized: <strong style={{ color: '#8899b4' }}>{log.actor_role}</strong> ({log.actor_id})
+                  <p className="text-xs text-[#5A6A80] dark:text-slate-400 m-0 mb-1">
+                    Authorized: <strong className="text-[#14213D] dark:text-slate-200">{log.actor_role}</strong> ({log.actor_id})
                   </p>
                   {log.state_after?.gazette_no && (
-                    <p style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#4a5568', margin: '0 0 4px' }}>
-                      Gazette: <span style={{ color: '#8899b4' }}>{log.state_after.gazette_no}</span>
+                    <p className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 m-0 mb-1">
+                      Gazette: <span className="text-[#14213D] dark:text-slate-200 font-semibold">{log.state_after.gazette_no}</span>
                     </p>
                   )}
                   {log.state_after?.alert && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#f43f5e' }}>
-                      <AlertCircle style={{ width: 11, height: 11, flexShrink: 0 }} /> {log.state_after.alert}
+                    <div className="flex items-center gap-1.5 text-xs text-[#B32424] dark:text-rose-400 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {log.state_after.alert}
                     </div>
                   )}
-                  <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.04)', display: 'flex', justifyContent: 'space-between', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#2d3748' }}>
+                  <div className="mt-2 pt-2 border-t border-[#DCE2E8]/60 dark:border-white/5 flex justify-between items-center text-[9px] font-mono text-[#5A6A80] dark:text-slate-400">
                     <span>Sig: 0x{(index * 1337 + 42091).toString(16)}...{(index * 9876 + 12345).toString(16)}</span>
-                    <span style={{ color: '#10b981', fontFamily: 'Inter, sans-serif' }}>Verified Officer Credential</span>
+                    <span className="text-[#1E7E34] dark:text-emerald-400 font-semibold">Verified Officer Credential</span>
                   </div>
                 </div>
               </div>
             ))}
             {auditLogs.length === 0 && (
-              <div style={{ padding: '32px 24px', textAlign: 'center', color: '#4a5568', fontSize: 12 }}>
+              <div className="p-8 text-center text-[#5A6A80] dark:text-slate-400 text-xs">
                 No statutory audit records registered for this survey parcel.
               </div>
             )}
@@ -456,9 +476,13 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
       <LandownerGrievanceReviewCard parcelId={parcel.id} projectId={parcel.project_id} />
 
       {/* Document Register */}
-      <div>
-        <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 4 }}>Cadastral Document Register</div>
-        <div style={{ fontSize: 18, fontWeight: 700, color: '#c4cfe4', marginBottom: 16 }}>Statutory Gazette & Awards Archive</div>
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-xs">
+        <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-semibold mb-1">
+          Cadastral Document Register
+        </div>
+        <div className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] mb-4">
+          Statutory Gazette & Awards Archive
+        </div>
         <DocumentRegister parcelId={parcel.id} projectId={parcel.project_id} />
       </div>
     </div>

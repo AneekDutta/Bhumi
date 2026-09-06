@@ -106,41 +106,20 @@ export function WhatIfWorkbench({
   const activeIntervention = INTERVENTIONS.find((i) => i.id === selectedIntervention);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 20,
-        padding: 24,
-        borderRadius: 16,
-        background: 'rgba(15, 23, 42, 0.5)',
-        border: '1px solid rgba(255, 255, 255, 0.1)'
-      }}
-    >
+    <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-xs flex flex-col gap-5">
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+      <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <span
-              style={{
-                fontSize: 10,
-                fontWeight: 800,
-                fontFamily: 'JetBrains Mono, monospace',
-                padding: '2px 8px',
-                borderRadius: 4,
-                background: 'rgba(99,102,241,0.15)',
-                color: '#818cf8',
-                border: '1px solid rgba(99,102,241,0.3)'
-              }}
-            >
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-[#0B2E59] text-white uppercase">
               SECTION 12 CPM SIMULATOR
             </span>
             <ProvenanceBadge sourceType="MODEL_DERIVED" size="xs" />
           </div>
-          <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 20, fontWeight: 800, color: '#f8fafc', margin: 0 }}>
+          <h2 className="text-base md:text-lg font-bold text-[#14213D] dark:text-[#F0F4FF] m-0">
             What-If Intervention Workbench
           </h2>
-          <p style={{ fontSize: 12, color: '#64748b', margin: '4px 0 0 0' }}>
+          <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
             Deterministically evaluates schedule recovery using CPM before-vs-after graph state mutations.
           </p>
         </div>
@@ -148,56 +127,42 @@ export function WhatIfWorkbench({
         {simResult && (
           <button
             onClick={handleReset}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              padding: '8px 14px',
-              borderRadius: 8,
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              color: '#94a3b8',
-              fontSize: 12,
-              cursor: 'pointer'
-            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 bg-white dark:bg-white/5 text-[#5A6A80] dark:text-slate-300 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-xs font-semibold cursor-pointer transition-colors"
           >
-            <RotateCcw style={{ width: 13, height: 13 }} /> Reset Simulation
+            <RotateCcw className="w-3.5 h-3.5" /> Reset Simulation
           </button>
         )}
       </div>
 
       {/* Intervention Controls Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14 }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Intervention Type Selector */}
         <div>
-          <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#94a3b8', marginBottom: 6, fontFamily: 'JetBrains Mono, monospace' }}>
+          <label className="block text-[10px] font-bold text-[#5A6A80] dark:text-slate-400 mb-1.5 font-mono uppercase tracking-wider">
             SELECT INTERVENTION POLICY
           </label>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div className="flex flex-col gap-2">
             {INTERVENTIONS.map((inv) => {
               const active = inv.id === selectedIntervention;
               return (
                 <div
                   key={inv.id}
                   onClick={() => setSelectedIntervention(inv.id)}
-                  style={{
-                    padding: '10px 14px',
-                    borderRadius: 8,
-                    cursor: 'pointer',
-                    background: active ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.02)',
-                    border: `1px solid ${active ? 'rgba(99,102,241,0.4)' : 'rgba(255,255,255,0.06)'}`,
-                    transition: 'all 0.15s ease'
-                  }}
+                  className={`p-3 rounded-[4px] cursor-pointer transition-all ${
+                    active
+                      ? 'bg-[#E8F1FA] dark:bg-[#0B2E59]/30 border border-[#0B2E59] dark:border-sky-500 shadow-xs'
+                      : 'bg-[#F8FAFC] dark:bg-white/[0.02] border border-[#DCE2E8] dark:border-white/10 hover:bg-[#E2E8F0]/50 dark:hover:bg-white/5'
+                  }`}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: active ? '#818cf8' : '#e2e8f0' }}>
+                  <div className="flex justify-between items-center">
+                    <span className={`text-xs font-bold ${active ? 'text-[#0B2E59] dark:text-sky-300' : 'text-[#14213D] dark:text-[#F0F4FF]'}`}>
                       {inv.name}
                     </span>
-                    <span style={{ fontSize: 10, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+                    <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono font-bold">
                       ~{inv.defaultDays}d
                     </span>
                   </div>
-                  <p style={{ margin: '4px 0 0 0', fontSize: 11, color: '#94a3b8', lineHeight: 1.35 }}>
+                  <p className="m-0 mt-1 text-[11px] text-[#5A6A80] dark:text-slate-400 leading-relaxed">
                     {inv.desc}
                   </p>
                 </div>
@@ -207,24 +172,15 @@ export function WhatIfWorkbench({
         </div>
 
         {/* Target Entity Selection & Cost Estimation */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="flex flex-col gap-3.5">
           <div>
-            <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#94a3b8', marginBottom: 6, fontFamily: 'JetBrains Mono, monospace' }}>
+            <label className="block text-[10px] font-bold text-[#5A6A80] dark:text-slate-400 mb-1.5 font-mono uppercase tracking-wider">
               TARGET BOTTLENECK PARCEL
             </label>
             <select
               value={targetParcelId}
               onChange={(e) => setTargetParcelId(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                borderRadius: 8,
-                background: '#0d1322',
-                border: '1px solid rgba(255,255,255,0.15)',
-                color: '#e2e8f0',
-                fontSize: 12,
-                fontFamily: 'JetBrains Mono, monospace'
-              }}
+              className="w-full p-2.5 rounded-[4px] bg-white dark:bg-[#0a0f1d] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white text-xs font-mono font-semibold outline-none focus:border-[#0B2E59]"
             >
               {bottlenecks.length > 0 ? (
                 bottlenecks.map((b) => (
@@ -243,18 +199,18 @@ export function WhatIfWorkbench({
           </div>
 
           {/* Intervention Policy Parameters */}
-          <div style={{ padding: 14, borderRadius: 10, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#c4cfe4', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Users style={{ width: 13, height: 13, color: '#38bdf8' }} /> Resource Deployment Estimates
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+            <div className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] mb-2 flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" /> Resource Deployment Estimates
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 11, color: '#94a3b8' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="flex flex-col gap-1.5 text-xs text-[#5A6A80] dark:text-slate-400">
+              <div className="flex justify-between">
                 <span>Administrative Effort:</span>
-                <span style={{ color: '#e2e8f0', fontWeight: 600 }}>{activeIntervention?.defaultDays} Officer-Days</span>
+                <span className="text-[#14213D] dark:text-[#F0F4FF] font-semibold">{activeIntervention?.defaultDays} Officer-Days</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className="flex justify-between">
                 <span>Budget Allocation:</span>
-                <span style={{ color: '#34d399', fontWeight: 600 }}>{activeIntervention?.cost}</span>
+                <span className="text-[#1E7E34] dark:text-emerald-400 font-semibold">{activeIntervention?.cost}</span>
               </div>
             </div>
           </div>
@@ -263,95 +219,69 @@ export function WhatIfWorkbench({
           <button
             onClick={handleSimulate}
             disabled={simulating}
-            style={{
-              padding: '12px 18px',
-              borderRadius: 10,
-              background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              color: '#ffffff',
-              fontSize: 13,
-              fontWeight: 800,
-              cursor: simulating ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              boxShadow: '0 4px 20px rgba(79, 70, 229, 0.4)',
-              opacity: simulating ? 0.6 : 1
-            }}
+            className="p-3 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 shadow-xs transition-colors"
           >
-            <Play style={{ width: 14, height: 14 }} />
-            {simulating ? 'Computing CPM Schedule Delta...' : 'Run What-If Simulation'}
+            <Play className="w-3.5 h-3.5" />
+            <span>{simulating ? 'Computing CPM Schedule Delta...' : 'Run What-If Simulation'}</span>
           </button>
         </div>
       </div>
 
       {error && (
-        <div style={{ padding: '12px 16px', borderRadius: 8, background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.3)', color: '#f43f5e', fontSize: 12 }}>
+        <div className="p-3 rounded-[4px] bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-300 text-xs font-semibold">
           {error}
         </div>
       )}
 
       {/* Simulation Result Comparison (Section 12 Before vs After) */}
       {simResult && (
-        <div
-          style={{
-            marginTop: 10,
-            padding: 20,
-            borderRadius: 14,
-            background: 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(99,102,241,0.08) 100%)',
-            border: '1px solid rgba(16,185,129,0.35)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 16
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Sparkles style={{ width: 18, height: 18, color: '#34d399' }} />
-              <span style={{ fontSize: 14, fontWeight: 800, color: '#34d399', fontFamily: 'Sora, sans-serif' }}>
+        <div className="mt-2 p-4 rounded-[4px] bg-[#E8F5E9]/50 dark:bg-emerald-950/20 border border-[#C8E6C9] dark:border-emerald-800/40 flex flex-col gap-3 shadow-xs">
+          <div className="flex justify-between items-center flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[#1E7E34] dark:text-emerald-400" />
+              <span className="text-xs font-bold text-[#1E7E34] dark:text-emerald-300 uppercase tracking-wider font-mono">
                 Deterministic Schedule Delta Output
               </span>
             </div>
             <ProvenanceBadge sourceType="MODEL_DERIVED" size="sm" />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
-            <div style={{ padding: 14, borderRadius: 10, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div style={{ fontSize: 10, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>BEFORE INTERVENTION</div>
-              <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 16, fontWeight: 800, color: '#f43f5e', marginTop: 4 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="p-3 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10">
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono uppercase">BEFORE INTERVENTION</div>
+              <div className="text-base font-bold font-mono text-[#B32424] dark:text-rose-400 mt-1">
                 {simResult.before?.project_finish || '2028-11-15'}
               </div>
-              <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>
+              <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">
                 +{simResult.before?.project_delay_days || 229}d Corridor Delay
               </div>
             </div>
 
-            <div style={{ padding: 14, borderRadius: 10, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div style={{ fontSize: 10, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>AFTER INTERVENTION</div>
-              <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 16, fontWeight: 800, color: '#34d399', marginTop: 4 }}>
+            <div className="p-3 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10">
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono uppercase">AFTER INTERVENTION</div>
+              <div className="text-base font-bold font-mono text-[#1E7E34] dark:text-emerald-400 mt-1">
                 {simResult.after?.project_finish || '2028-09-30'}
               </div>
-              <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>
+              <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">
                 +{simResult.after?.project_delay_days || 184}d Corridor Delay
               </div>
             </div>
 
-            <div style={{ padding: 14, borderRadius: 10, background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.4)' }}>
-              <div style={{ fontSize: 10, color: '#34d399', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace' }}>DAYS RECOVERED</div>
-              <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#34d399', marginTop: 2 }}>
+            <div className="p-3 rounded-[4px] bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/40">
+              <div className="text-[10px] text-[#1E7E34] dark:text-emerald-400 font-mono font-bold uppercase">DAYS RECOVERED</div>
+              <div className="text-xl font-bold font-mono text-[#1E7E34] dark:text-emerald-300 mt-0.5">
                 -{simResult.delay_reduction_days || 45} Days
               </div>
-              <div style={{ fontSize: 11, color: '#a7f3d0', marginTop: 2 }}>
+              <div className="text-[11px] text-[#1E7E34] dark:text-emerald-300 mt-0.5 font-medium">
                 Critical chain float liberated
               </div>
             </div>
           </div>
 
-          <div style={{ fontSize: 12, color: '#cbd5e1', lineHeight: 1.5, background: 'rgba(0,0,0,0.2)', padding: 12, borderRadius: 8 }}>
-            <strong>Policy Feasibility:</strong> {simResult.preconditions_met ? 'All statutory preconditions satisfied.' : 'Precondition alerts identified.'}{' '}
+          <div className="text-xs text-[#14213D] dark:text-slate-200 leading-relaxed bg-white dark:bg-[#0D121F] p-3 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+            <strong className="text-[#0B2E59] dark:text-sky-300">Policy Feasibility:</strong> {simResult.preconditions_met ? 'All statutory preconditions satisfied.' : 'Precondition alerts identified.'}{' '}
             Total deployment cost:{' '}
-            <span style={{ color: '#38bdf8', fontWeight: 700 }}>
+            <span className="font-mono font-bold text-[#1E7E34] dark:text-emerald-400">
               ₹{simResult.cost_estimate_units?.cost_inr?.toLocaleString() || '45,000'} ({simResult.cost_estimate_units?.officer_days || 14} officer-days)
             </span>
             .

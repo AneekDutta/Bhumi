@@ -65,49 +65,41 @@ export default async function NationalDashboardPage() {
   const mockBottlenecks = mockProjects.reduce((s, p) => s + p.statistics.unresolved_bottlenecks, 0);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
+    <div className="space-y-6">
 
       {/* Main Top Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+      <div className="flex items-center justify-between flex-wrap gap-4 border-b border-[#DCE2E8] dark:border-white/10 pb-4">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              fontSize: 11, fontFamily: 'JetBrains Mono, monospace', fontWeight: 700,
-              letterSpacing: '0.06em', textTransform: 'uppercase',
-              padding: '3px 10px', borderRadius: 6,
-              background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981'
-            }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#10b981', display: 'inline-block', animation: 'pulse 2s infinite' }} />
-              LIVE CONSOLE
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/50 text-[#0B5FA5] dark:text-sky-400 border border-[#BDD7EE] dark:border-sky-800">
+              <span className="w-2 h-2 rounded-full bg-[#0B5FA5] dark:bg-sky-400 inline-block" />
+              MoRTH / CALA Command Operations
             </span>
-            <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#64748b' }}>
-              Institutional Operations &middot; CALA Administration
+            <span className="text-xs text-[#64748B] dark:text-slate-400 font-mono">
+              · Live Statutory Stream
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 28, fontWeight: 800, color: '#e2e8f0', margin: 0, lineHeight: 1.2 }}>
+          <h1 className="text-2xl font-extrabold text-[#14213D] dark:text-[#F0F4FF] m-0 leading-tight">
             National Land Acquisition Operations
           </h1>
-          <p style={{ marginTop: 6, fontSize: 13, color: '#64748b', lineHeight: 1.5 }}>
-            National Infrastructure Corridors and Citizen Landowner Cases.
+          <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">
+            National Infrastructure Corridors and Citizen Landowner Cases under RFCTLARR Act 2013 &amp; NH Act 1956.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: 10 }}>
-          <Link href="/projects/gis" style={{
-            padding: '8px 16px', borderRadius: 8, fontSize: 12, fontWeight: 700,
-            background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)',
-            color: '#fcd34d', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6
-          }}>
-            <Navigation style={{ width: 14, height: 14 }} />
+        <div className="flex items-center gap-2">
+          <Link
+            href="/projects/gis"
+            className="px-3.5 py-2 rounded-[4px] text-xs font-bold bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-[#0B2E59] dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors flex items-center gap-1.5 shadow-sm"
+          >
+            <Navigation className="w-3.5 h-3.5 text-[#0B5FA5] dark:text-sky-400" />
             <span>Project Spatial Map</span>
           </Link>
-          <Link href="/landowner-gis" style={{
-            padding: '8px 16px', borderRadius: 8, fontSize: 12, fontWeight: 700,
-            background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)',
-            color: '#34d399', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6
-          }}>
-            <Navigation style={{ width: 14, height: 14 }} />
+          <Link
+            href="/landowner-gis"
+            className="px-3.5 py-2 rounded-[4px] text-xs font-bold bg-[#0B2E59] hover:bg-[#123C6B] text-white transition-colors flex items-center gap-1.5 shadow-sm"
+          >
+            <Navigation className="w-3.5 h-3.5 text-amber-300" />
             <span>Land Parcel Map</span>
           </Link>
         </div>
@@ -116,144 +108,110 @@ export default async function NationalDashboardPage() {
       {/* ========================================================================= */}
       {/* SECTION A: GOVERNMENT INFRASTRUCTURE PROJECT PORTFOLIO */}
       {/* ========================================================================= */}
-      <section style={{
-        borderRadius: 16,
-        padding: 24,
-        background: 'rgba(245,158,11,0.02)',
-        border: '1px solid rgba(245,158,11,0.2)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 20
-      }}>
+      <section className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-sm space-y-4 transition-colors">
         {/* Section A Tag & Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{
-              fontSize: 10,
-              fontFamily: 'JetBrains Mono, monospace',
-              fontWeight: 800,
-              padding: '3px 9px',
-              borderRadius: 5,
-              background: '#f59e0b',
-              color: '#000',
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em'
-            }}>
+        <div className="flex items-center justify-between flex-wrap gap-3 border-b border-[#DCE2E8] dark:border-white/10 pb-3">
+          <div className="flex items-center gap-2.5">
+            <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-[3px] bg-[#0B2E59] text-white uppercase tracking-wider">
               SECTION A &bull; NATIONAL INFRASTRUCTURE PROJECTS
             </span>
-            <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 18, fontWeight: 800, color: '#fcd34d', margin: 0 }}>
+            <h2 className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] m-0">
               Government Infrastructure Project Portfolio
             </h2>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-[#64748B] dark:text-slate-400 font-mono">
               6 Strategic National Corridors
             </span>
             <Link
               href="/projects"
-              style={{
-                fontSize: 11,
-                color: '#f59e0b',
-                fontWeight: 700,
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4
-              }}
+              className="text-xs text-[#0B5FA5] dark:text-sky-400 font-bold hover:underline flex items-center gap-1"
             >
               <span>View Full Directory</span>
-              <ArrowRight style={{ width: 12, height: 12 }} />
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
 
-        <p style={{ fontSize: 12, color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
+        <p className="text-xs text-[#64748B] dark:text-slate-400 m-0 leading-relaxed">
           Multi-sector linear corridor footprints representing Highways, Railways, Industrial Corridors, Irrigation, Renewable Energy, and Urban Development. Isolated from citizen-submitted records.
         </p>
 
         {/* Section A Portfolio KPI Strip */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(245,158,11,0.15)' }}>
-            <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Total Length</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 800, color: '#fcd34d', marginTop: 4 }}>
-              {mockTotalLength.toFixed(1)} <span style={{ fontSize: 12, fontWeight: 500 }}>km</span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+            <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Total Length</div>
+            <div className="text-2xl font-extrabold text-[#14213D] dark:text-[#F0F4FF] mt-1">
+              {mockTotalLength.toFixed(1)} <span className="text-xs font-medium text-[#64748B]">km</span>
             </div>
-            <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Highways &amp; Railways</div>
+            <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Highways &amp; Railways</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(245,158,11,0.15)' }}>
-            <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Planned Acquisition</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
-              {mockTotalPlannedAcq.toLocaleString()} <span style={{ fontSize: 12, fontWeight: 500 }}>Ha</span>
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+            <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Planned Acquisition</div>
+            <div className="text-2xl font-extrabold text-[#0B5FA5] dark:text-sky-400 mt-1">
+              {mockTotalPlannedAcq.toLocaleString()} <span className="text-xs font-medium text-[#64748B]">Ha</span>
             </div>
-            <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Projected corridor land</div>
+            <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Projected corridor land</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(245,158,11,0.15)' }}>
-            <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Acquired to Date</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 800, color: '#10b981', marginTop: 4 }}>
-              {mockTotalAcquired.toLocaleString()} <span style={{ fontSize: 12, fontWeight: 500 }}>Ha</span>
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+            <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Acquired to Date</div>
+            <div className="text-2xl font-extrabold text-[#1E7E34] dark:text-emerald-400 mt-1">
+              {mockTotalAcquired.toLocaleString()} <span className="text-xs font-medium text-[#64748B]">Ha</span>
             </div>
-            <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>{mockAvgProgress}% Portfolio throughput</div>
+            <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">{mockAvgProgress}% Portfolio throughput</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(245,158,11,0.15)' }}>
-            <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Corridor Bottlenecks</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 800, color: '#f59e0b', marginTop: 4 }}>
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+            <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Corridor Bottlenecks</div>
+            <div className="text-2xl font-extrabold text-[#B36B00] dark:text-amber-400 mt-1">
               {mockBottlenecks}
             </div>
-            <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Simulated risk clusters</div>
+            <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Simulated risk clusters</div>
           </div>
         </div>
 
         {/* Corridor Preview Cards Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 12 }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
           {mockProjects.slice(0, 3).map(p => (
             <div
               key={p.id}
-              style={{
-                borderRadius: 10,
-                padding: '14px 16px',
-                background: 'rgba(15,23,42,0.6)',
-                border: '1px solid rgba(255,255,255,0.06)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                gap: 10
-              }}
+              className="p-3.5 rounded-[4px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 flex flex-col justify-between gap-2.5 transition-colors"
             >
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                  <span style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#818cf8', fontWeight: 700 }}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[10px] font-mono font-bold text-[#0B5FA5] dark:text-sky-400">
                     {p.code} &middot; {p.sector}
                   </span>
-                  <span style={{
-                    fontSize: 9, fontFamily: 'JetBrains Mono, monospace', fontWeight: 700,
-                    padding: '1px 5px', borderRadius: 3,
-                    background: p.status === 'DELAYED' ? 'rgba(245,158,11,0.2)' : p.status === 'CRITICAL_BLOCKER' ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)',
-                    color: p.status === 'DELAYED' ? '#f59e0b' : p.status === 'CRITICAL_BLOCKER' ? '#ef4444' : '#10b981'
-                  }}>
+                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] border ${
+                    p.status === 'DELAYED'
+                      ? 'bg-[#FFF8E6] text-[#B36B00] border-[#FFE29A] dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800'
+                      : p.status === 'CRITICAL_BLOCKER'
+                      ? 'bg-[#FDF0F0] text-[#B32424] border-[#F8C8C8] dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800'
+                      : 'bg-[#EBF7EE] text-[#1E7E34] border-[#BEE3C8] dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800'
+                  }`}>
                     {p.status.replace('_', ' ')}
                   </span>
                 </div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0', lineHeight: 1.3 }}>
+                <div className="text-sm font-bold text-[#14213D] dark:text-[#F0F4FF] leading-snug">
                   {p.name}
                 </div>
-                <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
+                <div className="text-xs text-[#64748B] dark:text-slate-400 mt-1">
                   {p.state} &middot; {p.acquisition_progress_pct}% Acquired
                 </div>
               </div>
 
-              <div style={{ paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.04)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: 10, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+              <div className="pt-2 border-t border-[#DCE2E8] dark:border-white/10 flex items-center justify-between">
+                <span className="text-[11px] text-[#64748B] dark:text-slate-400 font-mono">
                   Target: {p.timeline_target}
                 </span>
                 <Link
                   href={`/projects/gis?id=${p.id}`}
-                  style={{ fontSize: 11, fontWeight: 700, color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 3 }}
+                  className="text-xs font-bold text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1"
                 >
                   <span>Corridor GIS</span>
-                  <ArrowRight style={{ width: 11, height: 11 }} />
+                  <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
             </div>
@@ -264,145 +222,114 @@ export default async function NationalDashboardPage() {
       {/* ========================================================================= */}
       {/* SECTION B: CITIZEN LANDOWNER GRIEVANCES & ACQUISITION DIRECTIVES */}
       {/* ========================================================================= */}
-      <section style={{
-        borderRadius: 16,
-        padding: 24,
-        background: 'rgba(16,185,129,0.02)',
-        border: '1px solid rgba(16,185,129,0.25)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 22
-      }}>
+      <section className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-sm space-y-4 transition-colors">
         {/* Section B Tag & Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{
-              fontSize: 10,
-              fontFamily: 'JetBrains Mono, monospace',
-              fontWeight: 800,
-              padding: '3px 9px',
-              borderRadius: 5,
-              background: '#10b981',
-              color: '#000',
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em'
-            }}>
-              SECTION B &bull; LANDOWNER CASES &amp; ACQUISITION DIRECTIVES
+        <div className="flex items-center justify-between flex-wrap gap-3 border-b border-[#DCE2E8] dark:border-white/10 pb-3">
+          <div className="flex items-center gap-2.5">
+            <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-[3px] bg-[#128807] text-white uppercase tracking-wider">
+              SECTION B &bull; LANDOWNER CASES &amp; DIRECTIVES
             </span>
-            <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 18, fontWeight: 800, color: '#6ee7b7', margin: 0 }}>
+            <h2 className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] m-0">
               Landowner Grievances &amp; Cadastral Acquisition Cases
             </h2>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-[#64748B] dark:text-slate-400 font-mono">
               Field Officer: Ramesh Patel (OFF-001)
             </span>
             <Link
               href="/landowner-cases"
-              style={{
-                fontSize: 11,
-                color: '#34d399',
-                fontWeight: 700,
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4
-              }}
+              className="text-xs text-[#0B5FA5] dark:text-sky-400 font-bold hover:underline flex items-center gap-1"
             >
               <span>View Full Cases Queue</span>
-              <ArrowRight style={{ width: 12, height: 12 }} />
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
 
-        <p style={{ fontSize: 12, color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
+        <p className="text-xs text-[#64748B] dark:text-slate-400 m-0 leading-relaxed">
           Sole source of truth for citizen cases. Originates strictly from citizen parcel registrations (4+ GPS coordinates) &rarr; landowner complaints &rarr; Field Officer ground verification &rarr; Admin statutory determination.
         </p>
 
         {/* Real KPIs Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 12 }}>
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(16,185,129,0.2)' }}>
-            <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Registered Parcels</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#10b981', marginTop: 4 }}>
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+            <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Registered Parcels</div>
+            <div className="text-2xl font-extrabold text-[#1E7E34] dark:text-emerald-400 mt-1">
               {totalParcels}
             </div>
-            <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>{stats.area_proposed_acres || 0} Acres Proposed</div>
+            <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">{stats.area_proposed_acres || 0} Acres Proposed</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(245,158,11,0.2)' }}>
-            <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Pending Inspection</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#f59e0b', marginTop: 4 }}>
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+            <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Pending Inspection</div>
+            <div className="text-2xl font-extrabold text-[#B36B00] dark:text-amber-400 mt-1">
               {pendingVerification}
             </div>
-            <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Ramesh Patel (OFF-001)</div>
+            <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Ramesh Patel (OFF-001)</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(99,102,241,0.2)' }}>
-            <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Verified Cases</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#818cf8', marginTop: 4 }}>
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+            <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Verified Cases</div>
+            <div className="text-2xl font-extrabold text-[#0B5FA5] dark:text-sky-400 mt-1">
               {verifiedCount}
             </div>
-            <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Passed ground check</div>
+            <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Passed ground check</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(56,189,248,0.2)' }}>
-            <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Active Orders</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+            <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Active Orders</div>
+            <div className="text-2xl font-extrabold text-[#0B5FA5] dark:text-sky-400 mt-1">
               {implementationInitiated}
             </div>
-            <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Admin implementation</div>
+            <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Admin implementation</div>
           </div>
 
-          <div style={{ borderRadius: 10, padding: '14px 16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(16,185,129,0.2)' }}>
-            <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Completed Awards</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#34d399', marginTop: 4 }}>
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+            <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Completed Awards</div>
+            <div className="text-2xl font-extrabold text-[#1E7E34] dark:text-emerald-400 mt-1">
               {implementationCompleted}
             </div>
-            <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>Disbursed awards</div>
+            <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Disbursed awards</div>
           </div>
         </div>
 
         {/* Statutory Aggregations Strip */}
-        <div style={{
-          padding: '16px 20px',
-          borderRadius: 12,
-          background: 'rgba(0,0,0,0.35)',
-          border: '1px solid rgba(255,255,255,0.06)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Scale style={{ width: 14, height: 14, color: '#10b981' }} />
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#e2e8f0', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'JetBrains Mono, monospace' }}>
+        <div className="p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 space-y-3">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <Scale className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400" />
+              <span className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] uppercase tracking-wide font-mono">
                 RFCTLARR 2013 Statutory First Schedule Aggregations
               </span>
             </div>
-            <span style={{ fontSize: 10, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+            <span className="text-[11px] text-[#64748B] dark:text-slate-400 font-mono">
               Official Statutory Reconciliation
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div>
-              <span style={{ fontSize: 9, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Compensation Assessed</span>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#818cf8', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono">Compensation Assessed</span>
+              <div className="text-base font-extrabold text-[#0B5FA5] dark:text-sky-400 font-mono mt-0.5">
                 ₹{(stats.compensation_assessed_inr || 0).toLocaleString()}
               </div>
             </div>
             <div>
-              <span style={{ fontSize: 9, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Compensation Paid</span>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#10b981', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono">Compensation Paid</span>
+              <div className="text-base font-extrabold text-[#1E7E34] dark:text-emerald-400 font-mono mt-0.5">
                 ₹{(stats.compensation_paid_inr || 0).toLocaleString()}
               </div>
             </div>
             <div>
-              <span style={{ fontSize: 9, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Affected Families</span>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#e2e8f0', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono">Affected Families</span>
+              <div className="text-base font-extrabold text-[#14213D] dark:text-[#F0F4FF] font-mono mt-0.5">
                 {stats.affected_families_count || 0}
               </div>
             </div>
             <div>
-              <span style={{ fontSize: 9, color: '#64748b', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Possession Complete</span>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#38bdf8', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono">Possession Complete</span>
+              <div className="text-base font-extrabold text-[#0B5FA5] dark:text-sky-400 font-mono mt-0.5">
                 {stats.possession_complete_count || 0} / {totalParcels || 0}
               </div>
             </div>

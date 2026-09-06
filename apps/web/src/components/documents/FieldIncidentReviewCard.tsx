@@ -85,69 +85,51 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
   };
 
   return (
-    <div className="glass" style={{ borderRadius: 14, padding: "20px 24px", marginBottom: 24 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+    <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 mb-6 shadow-xs">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div>
-          <div style={{ fontSize: 11, fontFamily: "JetBrains Mono, monospace", color: "#3a4258", letterSpacing: "0.07em", textTransform: "uppercase" }}>
+          <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-semibold">
             Field Operations & Ground Verification
           </div>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: "#c4cfe4", marginTop: 2 }}>
+          <h2 className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] mt-0.5">
             Reported Field Incidents & CPM Bottlenecks
           </h2>
         </div>
         <button
           onClick={loadIncidents}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            fontSize: 11,
-            padding: "5px 10px",
-            borderRadius: 6,
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            color: "#8899b4",
-            cursor: "pointer"
-          }}
+          className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 bg-white dark:bg-[#07080F] text-[#5A6A80] dark:text-slate-300 hover:bg-[#F8FAFC] dark:hover:bg-white/5 transition-colors cursor-pointer"
         >
-          <RefreshCw style={{ width: 12, height: 12 }} /> Refresh Records
+          <RefreshCw className="w-3 h-3" /> Refresh Records
         </button>
       </div>
 
       {feedback && (
         <div
-          style={{
-            marginBottom: 16,
-            padding: "10px 14px",
-            borderRadius: 8,
-            fontSize: 12,
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            background: feedback.type === "success" ? "rgba(16,185,129,0.12)" : "rgba(244,63,94,0.12)",
-            border: `1px solid ${feedback.type === "success" ? "rgba(16,185,129,0.3)" : "rgba(244,63,94,0.3)"}`,
-            color: feedback.type === "success" ? "#34d399" : "#f43f5e"
-          }}
+          className={`mb-4 p-3 rounded-[4px] text-xs font-semibold flex items-center gap-2 border ${
+            feedback.type === "success"
+              ? "bg-[#E8F5E9] dark:bg-emerald-950/30 border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300"
+              : "bg-[#FFEBEE] dark:bg-rose-950/30 border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-300"
+          }`}
         >
-          {feedback.type === "success" ? <CheckCircle2 style={{ width: 14, height: 14 }} /> : <AlertTriangle style={{ width: 14, height: 14 }} />}
+          {feedback.type === "success" ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertTriangle className="w-4 h-4 shrink-0" />}
           <span>{feedback.message}</span>
         </div>
       )}
 
       {loading ? (
-        <div style={{ padding: "24px 0", textAlign: "center", color: "#6b7a94", fontSize: 12 }}>
+        <div className="py-6 text-center text-[#5A6A80] dark:text-slate-400 text-xs">
           Loading field ground verifications...
         </div>
       ) : incidents.length === 0 ? (
-        <div style={{ padding: "24px 16px", textAlign: "center", background: "rgba(255,255,255,0.02)", borderRadius: 10, border: "1px solid rgba(255,255,255,0.05)" }}>
-          <CheckCircle2 style={{ width: 22, height: 22, color: "#10b981", margin: "0 auto 8px" }} />
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#c4cfe4" }}>No Ground Blockers Reported</div>
-          <div style={{ fontSize: 11, color: "#6b7a94", marginTop: 4 }}>
+        <div className="p-6 text-center bg-[#F8FAFC] dark:bg-[#07080F] rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+          <CheckCircle2 className="w-5 h-5 text-[#1E7E34] mx-auto mb-2" />
+          <div className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF]">No Ground Blockers Reported</div>
+          <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">
             No unresolved boundary discrepancies, ownership disputes, or physical access impediments logged by field officers for this parcel.
           </div>
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div className="flex flex-col gap-3">
           {incidents.map((inc) => {
             const isResolved = inc.status === "resolved";
             const isEditing = resolvingId === inc.verification_id;
@@ -155,108 +137,82 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
             return (
               <div
                 key={inc.verification_id}
-                style={{
-                  borderRadius: 12,
-                  padding: "16px 18px",
-                  background: isResolved ? "rgba(16,185,129,0.04)" : "rgba(244,63,94,0.06)",
-                  border: `1px solid ${isResolved ? "rgba(16,185,129,0.25)" : "rgba(244,63,94,0.3)"}`,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 12
-                }}
+                className={`rounded-[4px] p-4 border flex flex-col gap-3 ${
+                  isResolved
+                    ? "bg-[#E8F5E9]/30 dark:bg-emerald-950/20 border-[#C8E6C9] dark:border-emerald-800/40"
+                    : "bg-[#FFEBEE]/30 dark:bg-rose-950/20 border-[#FFCDD2] dark:border-rose-800/40"
+                }`}
               >
                 {/* Header Row */}
-                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div className="flex items-start justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2.5">
                     <div
-                      style={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: 8,
-                        background: isResolved ? "rgba(16,185,129,0.2)" : "rgba(244,63,94,0.2)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: isResolved ? "#10b981" : "#f43f5e"
-                      }}
+                      className={`w-8 h-8 rounded-[4px] flex items-center justify-center shrink-0 ${
+                        isResolved
+                          ? "bg-[#E8F5E9] dark:bg-emerald-900/40 text-[#1E7E34] dark:text-emerald-300"
+                          : "bg-[#FFEBEE] dark:bg-rose-900/40 text-[#B32424] dark:text-rose-300"
+                      }`}
                     >
-                      {isResolved ? <ShieldCheck style={{ width: 18, height: 18 }} /> : <AlertTriangle style={{ width: 18, height: 18 }} />}
+                      {isResolved ? <ShieldCheck className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
                     </div>
                     <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "#fff", textTransform: "capitalize" }}>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] capitalize">
                           {(inc.issue_type || "Ground Incident").replace(/_/g, " ")}
                         </span>
                         <span
-                          style={{
-                            fontSize: 9,
-                            fontFamily: "JetBrains Mono, monospace",
-                            padding: "2px 6px",
-                            borderRadius: 4,
-                            background: isResolved ? "rgba(16,185,129,0.2)" : "rgba(244,63,94,0.2)",
-                            color: isResolved ? "#34d399" : "#f43f5e",
-                            fontWeight: 700,
-                            textTransform: "uppercase"
-                          }}
+                          className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-[2px] uppercase ${
+                            isResolved
+                              ? "bg-[#E8F5E9] dark:bg-emerald-950/50 text-[#1E7E34] dark:text-emerald-300 border border-[#C8E6C9] dark:border-emerald-800/40"
+                              : "bg-[#FFEBEE] dark:bg-rose-950/50 text-[#B32424] dark:text-rose-300 border border-[#FFCDD2] dark:border-rose-800/40"
+                          }`}
                         >
                           {inc.status}
                         </span>
                       </div>
-                      <div style={{ fontSize: 11, color: "#6b7a94", marginTop: 2 }}>
-                        Ref: <span style={{ fontFamily: "JetBrains Mono, monospace", color: "#8899b4" }}>{inc.verification_id}</span> · Survey {inc.survey_number || parcelId}
+                      <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">
+                        Ref: <span className="font-mono text-[#14213D] dark:text-slate-300 font-semibold">{inc.verification_id}</span> · Survey {inc.survey_number || parcelId}
                       </div>
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <span
-                      style={{
-                        fontSize: 9,
-                        fontFamily: "JetBrains Mono, monospace",
-                        padding: "2px 6px",
-                        borderRadius: 4,
-                        background: "rgba(255,255,255,0.06)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                        color: "#94a3b8"
-                      }}
-                    >
-                      {inc.source_type || "OFFICIAL RECORD"}
-                    </span>
-                  </div>
+                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-[#F8FAFC] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-400 uppercase">
+                    {inc.source_type || "OFFICIAL RECORD"}
+                  </span>
                 </div>
 
                 {/* Observations and Details */}
-                <div style={{ background: "rgba(0,0,0,0.2)", borderRadius: 8, padding: "10px 12px", fontSize: 12, lineHeight: 1.5 }}>
-                  <p style={{ color: "#c4cfe4", margin: "0 0 6px" }}>
-                    <strong style={{ color: "#e2e8f0" }}>Field Notes: </strong>
+                <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-3 text-xs leading-relaxed">
+                  <p className="text-[#14213D] dark:text-[#F0F4FF] m-0 mb-1">
+                    <strong className="text-[#0B2E59] dark:text-sky-300">Field Notes: </strong>
                     {inc.observations || inc.remarks || "Incident recorded during site visit."}
                   </p>
                   {inc.remarks && inc.remarks !== inc.observations && (
-                    <p style={{ color: "#94a3b8", margin: 0, fontSize: 11 }}>
-                      <strong style={{ color: "#64748b" }}>Remarks: </strong> {inc.remarks}
+                    <p className="text-[#5A6A80] dark:text-slate-400 m-0 text-[11px]">
+                      <strong>Remarks: </strong> {inc.remarks}
                     </p>
                   )}
                 </div>
 
                 {/* Meta details: Officer, GPS, Time */}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 16, fontSize: 11, color: "#6b7a94" }}>
+                <div className="flex flex-wrap gap-4 text-xs text-[#5A6A80] dark:text-slate-400">
                   <span>
-                    Reported by: <strong style={{ color: "#8899b4" }}>{inc.officer_name || "Field Officer"}</strong> ({inc.officer_id || "OF001"})
+                    Reported by: <strong className="text-[#14213D] dark:text-slate-200">{inc.officer_name || "Field Officer"}</strong> ({inc.officer_id || "OF001"})
                   </span>
 
                   {inc.gps_lat && inc.gps_lng && (
-                    <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <MapPin style={{ width: 11, height: 11, color: "#38bdf8" }} />
-                      <span style={{ fontFamily: "JetBrains Mono, monospace", color: "#38bdf8" }}>
+                    <span className="flex items-center gap-1 text-[#0B2E59] dark:text-sky-400">
+                      <MapPin className="w-3 h-3" />
+                      <span className="font-mono">
                         {inc.gps_lat.toFixed(4)}, {inc.gps_lng.toFixed(4)}
                       </span>
-                      {inc.gps_accuracy && <span>(±{inc.gps_accuracy}m)</span>}
+                      {inc.gps_accuracy && <span className="text-[#5A6A80] dark:text-slate-400">(±{inc.gps_accuracy}m)</span>}
                     </span>
                   )}
 
                   {inc.verified_at && (
-                    <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <Clock style={{ width: 11, height: 11 }} />
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
                       <span>{new Date(inc.verified_at).toLocaleString()}</span>
                     </span>
                   )}
@@ -264,17 +220,17 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
 
                 {/* Existing Admin Resolution if present */}
                 {inc.admin_resolution && (
-                  <div style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: 8, padding: "10px 12px", fontSize: 11 }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                      <span style={{ fontWeight: 700, color: "#34d399", textTransform: "uppercase" }}>
+                  <div className="bg-[#E8F5E9]/60 dark:bg-emerald-950/30 border border-[#C8E6C9] dark:border-emerald-800/40 rounded-[4px] p-3 text-xs">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-[#1E7E34] dark:text-emerald-300 uppercase">
                         Administrative Order: {inc.admin_resolution.action}
                       </span>
-                      <span style={{ color: "#6b7a94", fontFamily: "JetBrains Mono, monospace" }}>
+                      <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono">
                         {new Date(inc.admin_resolution.resolved_at).toLocaleString()}
                       </span>
                     </div>
-                    <div style={{ color: "#c4cfe4" }}>{inc.admin_resolution.comments}</div>
-                    <div style={{ color: "#6b7a94", marginTop: 4 }}>Authority: {inc.admin_resolution.resolved_by}</div>
+                    <div className="text-[#14213D] dark:text-slate-200">{inc.admin_resolution.comments}</div>
+                    <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">Authority: {inc.admin_resolution.resolved_by}</div>
                   </div>
                 )}
 
@@ -288,81 +244,54 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                           setAction("RESOLVE");
                           setComment("");
                         }}
-                        style={{
-                          padding: "8px 14px",
-                          borderRadius: 8,
-                          background: "#6366f1",
-                          color: "#fff",
-                          border: "none",
-                          fontSize: 12,
-                          fontWeight: 600,
-                          cursor: "pointer",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 6
-                        }}
+                        className="px-3.5 py-1.5 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
                       >
-                        <ShieldCheck style={{ width: 14, height: 14 }} /> Adjudicate / Resolve Blocker
+                        <ShieldCheck className="w-3.5 h-3.5" /> Adjudicate / Resolve Blocker
                       </button>
                     ) : (
-                      <div style={{ background: "rgba(0,0,0,0.3)", borderRadius: 10, padding: 14, border: "1px solid rgba(255,255,255,0.08)", display: "flex", flexDirection: "column", gap: 10 }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>
+                      <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-3.5 flex flex-col gap-3">
+                        <div className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF]">
                           Administrative Action for {inc.verification_id}
                         </div>
 
-                        <div style={{ display: "flex", gap: 8 }}>
+                        <div className="flex flex-wrap gap-2">
                           <button
                             type="button"
                             onClick={() => setAction("RESOLVE")}
-                            style={{
-                              padding: "6px 12px",
-                              borderRadius: 6,
-                              fontSize: 11,
-                              fontWeight: 600,
-                              cursor: "pointer",
-                              background: action === "RESOLVE" ? "rgba(16,185,129,0.25)" : "rgba(255,255,255,0.05)",
-                              border: `1px solid ${action === "RESOLVE" ? "#10b981" : "rgba(255,255,255,0.1)"}`,
-                              color: action === "RESOLVE" ? "#34d399" : "#8899b4"
-                            }}
+                            className={`px-3 py-1.5 rounded-[4px] text-xs font-bold transition-colors cursor-pointer ${
+                              action === "RESOLVE"
+                                ? "bg-[#1E7E34] text-white"
+                                : "bg-[#F8FAFC] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-300 hover:bg-[#E2E8F0]/50"
+                            }`}
                           >
                             Resolve Blocker (Unblocks CPM)
                           </button>
                           <button
                             type="button"
                             onClick={() => setAction("ESCALATE")}
-                            style={{
-                              padding: "6px 12px",
-                              borderRadius: 6,
-                              fontSize: 11,
-                              fontWeight: 600,
-                              cursor: "pointer",
-                              background: action === "ESCALATE" ? "rgba(234,179,8,0.25)" : "rgba(255,255,255,0.05)",
-                              border: `1px solid ${action === "ESCALATE" ? "#eab308" : "rgba(255,255,255,0.1)"}`,
-                              color: action === "ESCALATE" ? "#facc15" : "#8899b4"
-                            }}
+                            className={`px-3 py-1.5 rounded-[4px] text-xs font-bold transition-colors cursor-pointer ${
+                              action === "ESCALATE"
+                                ? "bg-[#B36B00] text-white"
+                                : "bg-[#F8FAFC] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-300 hover:bg-[#E2E8F0]/50"
+                            }`}
                           >
                             Escalate to Collector
                           </button>
                           <button
                             type="button"
                             onClick={() => setAction("REJECT")}
-                            style={{
-                              padding: "6px 12px",
-                              borderRadius: 6,
-                              fontSize: 11,
-                              fontWeight: 600,
-                              cursor: "pointer",
-                              background: action === "REJECT" ? "rgba(244,63,94,0.25)" : "rgba(255,255,255,0.05)",
-                              border: `1px solid ${action === "REJECT" ? "#f43f5e" : "rgba(255,255,255,0.1)"}`,
-                              color: action === "REJECT" ? "#f43f5e" : "#8899b4"
-                            }}
+                            className={`px-3 py-1.5 rounded-[4px] text-xs font-bold transition-colors cursor-pointer ${
+                              action === "REJECT"
+                                ? "bg-[#B32424] text-white"
+                                : "bg-[#F8FAFC] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-300 hover:bg-[#E2E8F0]/50"
+                            }`}
                           >
                             Reject (Non-blocking)
                           </button>
                         </div>
 
                         <div>
-                          <label style={{ display: "block", fontSize: 11, color: "#8899b4", marginBottom: 4 }}>
+                          <label className="block text-xs font-semibold text-[#5A6A80] dark:text-slate-400 mb-1">
                             Administrative Resolution Order / Settlement Notes *
                           </label>
                           <textarea
@@ -370,33 +299,16 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             placeholder="Enter joint survey order number, settlement terms, or demarcation reference..."
-                            style={{
-                              width: "100%",
-                              background: "rgba(15,23,42,0.8)",
-                              border: "1px solid rgba(255,255,255,0.12)",
-                              borderRadius: 6,
-                              padding: "8px 10px",
-                              color: "#fff",
-                              fontSize: 12,
-                              resize: "none"
-                            }}
+                            className="w-full bg-[#F8FAFC] dark:bg-[#0D121F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] p-2 text-xs text-[#14213D] dark:text-white outline-none focus:border-[#0B2E59] resize-none"
                           />
                         </div>
 
-                        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                        <div className="flex gap-2 justify-end">
                           <button
                             type="button"
                             disabled={submitting}
                             onClick={() => setResolvingId(null)}
-                            style={{
-                              padding: "6px 12px",
-                              borderRadius: 6,
-                              background: "transparent",
-                              border: "1px solid rgba(255,255,255,0.1)",
-                              color: "#8899b4",
-                              fontSize: 11,
-                              cursor: "pointer"
-                            }}
+                            className="px-3 py-1.5 rounded-[4px] bg-white dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-300 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/10 cursor-pointer"
                           >
                             Cancel
                           </button>
@@ -404,21 +316,9 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                             type="button"
                             disabled={submitting}
                             onClick={() => handleResolve(inc.verification_id)}
-                            style={{
-                              padding: "6px 14px",
-                              borderRadius: 6,
-                              background: "#10b981",
-                              color: "#fff",
-                              border: "none",
-                              fontSize: 11,
-                              fontWeight: 700,
-                              cursor: submitting ? "not-allowed" : "pointer",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: 5
-                            }}
+                            className="px-3.5 py-1.5 rounded-[4px] bg-[#1E7E34] hover:bg-[#166527] text-white text-xs font-bold cursor-pointer disabled:opacity-50 inline-flex items-center gap-1.5 shadow-xs"
                           >
-                            <Send style={{ width: 11, height: 11 }} />
+                            <Send className="w-3 h-3" />
                             {submitting ? "Processing..." : "Commit Administrative Order"}
                           </button>
                         </div>

@@ -198,9 +198,9 @@ export default function FieldComplaintDetailPage() {
   if (loading) {
     return (
       <FieldShell title="Review Grievance">
-        <div className="py-20 text-center text-xs text-slate-400 space-y-2">
-          <RefreshCw className="w-6 h-6 animate-spin mx-auto text-emerald-400" />
-          <span>Loading grievance data...</span>
+        <div className="py-20 text-center text-xs text-[#64748B] dark:text-slate-400 space-y-2">
+          <RefreshCw className="w-6 h-6 animate-spin mx-auto text-[#0B2E59] dark:text-sky-400" />
+          <span>Loading grievance record...</span>
         </div>
       </FieldShell>
     );
@@ -210,9 +210,9 @@ export default function FieldComplaintDetailPage() {
     return (
       <FieldShell title="Review Grievance">
         <div className="p-4 text-center py-20 space-y-3">
-          <AlertTriangle className="w-8 h-8 text-amber-400 mx-auto" />
-          <h2 className="text-sm font-bold text-white">Grievance Not Found</h2>
-          <Link href="/field/complaints" className="inline-block px-4 py-2 rounded-xl bg-slate-800 text-emerald-400 text-xs font-semibold">
+          <AlertTriangle className="w-8 h-8 text-[#B36B00] dark:text-amber-400 mx-auto" />
+          <h2 className="text-sm font-bold text-[#14213D] dark:text-white">Grievance Record Not Found</h2>
+          <Link href="/field/complaints" className="inline-block px-4 py-2 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-semibold shadow-xs">
             &larr; Return to Grievance Queue
           </Link>
         </div>
@@ -230,23 +230,23 @@ export default function FieldComplaintDetailPage() {
 
   return (
     <FieldShell title={`Review #${complaint.complaint_id || complaint.id}`} showBack>
-      <div className="p-4 space-y-5 max-w-lg mx-auto pb-24">
+      <div className="p-4 space-y-4 max-w-lg mx-auto pb-24">
         
         {/* Top Breadcrumb */}
         <div className="flex items-center justify-between">
           <Link
             href="/field/complaints"
-            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-[#64748B] hover:text-[#0B2E59] dark:text-slate-400 dark:hover:text-white transition-colors font-medium"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Queue</span>
           </Link>
-          <span className={`text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-full border ${
+          <span className={`text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-[3px] border ${
             isVerified
-              ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/40"
+              ? "bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-300 border-[#C8E6C9] dark:border-emerald-800/40"
               : isRejected
-              ? "bg-red-500/15 text-red-300 border-red-500/40"
-              : "bg-amber-500/15 text-amber-300 border-amber-500/40"
+              ? "bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-300 border-[#FFCDD2] dark:border-rose-800/40"
+              : "bg-[#FFF8E1] dark:bg-amber-950/40 text-[#B36B00] dark:text-amber-300 border-[#FFE082] dark:border-amber-800/40"
           }`}>
             {status}
           </span>
@@ -254,10 +254,10 @@ export default function FieldComplaintDetailPage() {
 
         {/* Feedback Banner */}
         {feedback && (
-          <div className={`p-3.5 rounded-xl text-xs flex items-center gap-2.5 ${
+          <div className={`p-3 rounded-[4px] text-xs flex items-center gap-2.5 border ${
             feedback.type === "success" 
-              ? "bg-emerald-500/15 border border-emerald-500/40 text-emerald-200" 
-              : "bg-red-500/15 border border-red-500/40 text-red-200"
+              ? "bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300" 
+              : "bg-[#FFEBEE] dark:bg-rose-950/40 border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-300"
           }`}>
             {feedback.type === "success" ? <CheckCircle2 className="w-4 h-4 flex-shrink-0" /> : <AlertTriangle className="w-4 h-4 flex-shrink-0" />}
             <span>{feedback.message}</span>
@@ -265,68 +265,68 @@ export default function FieldComplaintDetailPage() {
         )}
 
         {/* SECTION 1: CITIZEN CLAIM OVERVIEW */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-xl">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-3 shadow-xs">
           <div className="flex items-start justify-between">
             <div className="space-y-1">
-              <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-bold block">
+              <span className="text-[10px] font-mono text-[#0B2E59] dark:text-sky-400 uppercase tracking-wider font-bold block">
                 Official Registered Land Parcel Grievance
               </span>
-              <h1 className="text-base font-bold text-white">
+              <h1 className="text-base font-bold text-[#14213D] dark:text-white">
                 {complaint.complaint_type}
               </h1>
             </div>
 
-            <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+            <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B5FA5] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40">
               #{parcelId}
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-xs font-mono bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <div className="grid grid-cols-2 gap-2 text-xs font-mono bg-[#F8FAFC] dark:bg-[#07080F] p-3 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
             <div>
-              <span className="text-[10px] text-slate-500 uppercase block">Landowner Legal Name:</span>
-              <span className="text-white font-bold">{ownerLegalName}</span>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase block font-semibold">Landowner Legal Name:</span>
+              <span className="text-[#14213D] dark:text-white font-bold">{ownerLegalName}</span>
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 uppercase block">14-Digit Parcel ID:</span>
-              <span className="text-indigo-300 font-bold">{parcelId}</span>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase block font-semibold">14-Digit Parcel ID:</span>
+              <span className="text-[#0B5FA5] dark:text-sky-300 font-bold">{parcelId}</span>
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 uppercase block">Sector / Village:</span>
-              <span className="text-slate-300">{complaint.contact_village || parcel?.village_name || "Corridor Sector"}</span>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase block font-semibold">Sector / Village:</span>
+              <span className="text-[#333333] dark:text-slate-300">{complaint.contact_village || parcel?.village_name || "Corridor Sector"}</span>
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 uppercase block">Date Lodged:</span>
-              <span className="text-slate-300">{new Date(complaint.submitted_at || Date.now()).toLocaleDateString()}</span>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase block font-semibold">Date Lodged:</span>
+              <span className="text-[#333333] dark:text-slate-300">{new Date(complaint.submitted_at || Date.now()).toLocaleDateString()}</span>
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-            <span className="text-[10px] font-mono uppercase text-slate-400 block">Citizen Grievance Statement:</span>
-            <p className="text-xs text-slate-200 leading-relaxed">{complaint.description}</p>
+          <div className="p-3 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 space-y-1">
+            <span className="text-[10px] font-mono uppercase text-[#64748B] dark:text-slate-400 font-bold block">Citizen Grievance Statement:</span>
+            <p className="text-xs text-[#333333] dark:text-slate-200 leading-relaxed">{complaint.description}</p>
           </div>
         </div>
 
         {/* SECTION 2: BOUNDARY POLYGON (MARKED DURING PARCEL REGISTRATION) */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-3 shadow-xs">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Compass className="w-4 h-4 text-emerald-400" />
-              <h2 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+              <Compass className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
+              <h2 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wider font-mono">
                 Registered Parcel Demarcation
               </h2>
             </div>
-            <span className="text-[10px] font-mono text-slate-400">
+            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400">
               {boundaryPoints.length} Corner Points
             </span>
           </div>
 
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-[#64748B] dark:text-slate-300">
             Exact GPS polygon marked during parcel registration. Verify this boundary against physical boundary pillars on ground.
           </p>
 
           {/* Interactive Map */}
           {boundaryPoints.length >= 3 && (
-            <div className="h-56 w-full rounded-xl overflow-hidden border border-slate-800 relative shadow-inner">
+            <div className="h-56 w-full rounded-[4px] overflow-hidden border border-[#DCE2E8] dark:border-white/10 relative shadow-inner">
               <Map
                 initialViewState={{
                   longitude: mapCenter.lng,
@@ -344,7 +344,7 @@ export default function FieldComplaintDetailPage() {
                       id="parcel-fill"
                       type="fill"
                       paint={{
-                        "fill-color": isVerified ? "#10b981" : isRejected ? "#ef4444" : "#f59e0b",
+                        "fill-color": isVerified ? "#1E7E34" : isRejected ? "#B32424" : "#B36B00",
                         "fill-opacity": 0.25
                       }}
                     />
@@ -352,7 +352,7 @@ export default function FieldComplaintDetailPage() {
                       id="parcel-outline"
                       type="line"
                       paint={{
-                        "line-color": isVerified ? "#10b981" : isRejected ? "#ef4444" : "#f59e0b",
+                        "line-color": isVerified ? "#1E7E34" : isRejected ? "#B32424" : "#B36B00",
                         "line-width": 3
                       }}
                     />
@@ -361,7 +361,7 @@ export default function FieldComplaintDetailPage() {
 
                 {boundaryPoints.map((pt, idx) => (
                   <Marker key={idx} longitude={pt.lng} latitude={pt.lat} anchor="center">
-                    <div className="w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-[9px] font-bold text-slate-900 font-mono shadow-md">
+                    <div className="w-5 h-5 rounded-full bg-[#1E7E34] border-2 border-white flex items-center justify-center text-[9px] font-bold text-white font-mono shadow-md">
                       {idx + 1}
                     </div>
                   </Marker>
@@ -373,14 +373,14 @@ export default function FieldComplaintDetailPage() {
           {/* Coordinates Table */}
           {boundaryPoints.length > 0 && (
             <div className="space-y-1 text-xs font-mono">
-              <div className="grid grid-cols-3 text-[10px] uppercase text-slate-500 px-2 py-1 bg-slate-950 rounded-lg">
+              <div className="grid grid-cols-3 text-[10px] uppercase text-[#64748B] dark:text-slate-400 px-2 py-1 bg-[#F1F4F7] dark:bg-[#07080F] rounded-[3px] font-bold">
                 <span>Point</span>
                 <span>Latitude</span>
                 <span>Longitude</span>
               </div>
               {boundaryPoints.map((pt, idx) => (
-                <div key={idx} className="grid grid-cols-3 text-slate-300 px-2 py-1 rounded bg-slate-950/60 border border-slate-800/80">
-                  <span className="text-emerald-400 font-bold">P{idx + 1}</span>
+                <div key={idx} className="grid grid-cols-3 text-[#14213D] dark:text-slate-300 px-2 py-1 rounded-[3px] bg-[#F8FAFC] dark:bg-[#07080F]/60 border border-[#DCE2E8] dark:border-white/10">
+                  <span className="text-[#0B2E59] dark:text-sky-400 font-bold">P{idx + 1}</span>
                   <span>{pt.lat.toFixed(6)}°</span>
                   <span>{pt.lng.toFixed(6)}°</span>
                 </div>
@@ -390,9 +390,9 @@ export default function FieldComplaintDetailPage() {
 
           {/* Declared / Calculated Area */}
           {(parcel?.calculated_area || complaint.landowner_declared_area) && (
-            <div className="p-2.5 rounded-xl bg-slate-950 border border-emerald-500/30 text-xs font-mono flex items-center justify-between">
-              <span className="text-slate-400">Calculated Area:</span>
-              <span className="text-emerald-400 font-bold">
+            <div className="p-2.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 text-xs font-mono flex items-center justify-between">
+              <span className="text-[#64748B] dark:text-slate-400">Calculated Area:</span>
+              <span className="text-[#1E7E34] dark:text-emerald-400 font-bold">
                 {parcel?.calculated_area?.acres || complaint.landowner_declared_area?.acres || 0} Acres ({parcel?.calculated_area?.sqm || complaint.landowner_declared_area?.sqm || 0} m²)
               </span>
             </div>
@@ -400,33 +400,33 @@ export default function FieldComplaintDetailPage() {
         </div>
 
         {/* SECTION 3: SUBMITTED OFFICIAL DOCUMENTS */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-3 shadow-xs">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-indigo-400" />
-              <h2 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
-                Ownership & Supporting Documents
+              <FileText className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400" />
+              <h2 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wider font-mono">
+                Ownership &amp; Supporting Documents
               </h2>
             </div>
-            <span className="text-[10px] font-mono text-slate-400">
+            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400">
               {documents.length} File(s)
             </span>
           </div>
 
           {documents.length === 0 ? (
-            <p className="text-xs text-slate-500 italic">No document files attached.</p>
+            <p className="text-xs text-[#64748B] dark:text-slate-500 italic">No document files attached.</p>
           ) : (
             <div className="space-y-2">
               {documents.map((doc: any, idx: number) => (
                 <div
                   key={idx}
-                  className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs"
+                  className="p-3 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 flex items-center justify-between text-xs"
                 >
                   <div className="truncate pr-2">
-                    <span className="text-white font-medium block truncate">
+                    <span className="text-[#14213D] dark:text-white font-medium block truncate">
                       {doc.file_name || `Document ${idx + 1}`}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-mono">
+                    <span className="text-[10px] text-[#64748B] dark:text-slate-400 font-mono">
                       {doc.classification || "Official Land Document"} · {doc.file_size ? `${(doc.file_size / 1024).toFixed(1)} KB` : "Stored"}
                     </span>
                   </div>
@@ -436,7 +436,7 @@ export default function FieldComplaintDetailPage() {
                       href={doc.public_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 font-semibold text-[11px] flex items-center gap-1 flex-shrink-0 transition-colors"
+                      className="px-3 py-1.5 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white font-semibold text-[11px] flex items-center gap-1 flex-shrink-0 transition-colors shadow-xs"
                     >
                       <span>Inspect</span>
                       <ExternalLink className="w-3 h-3" />
@@ -466,67 +466,67 @@ export default function FieldComplaintDetailPage() {
           if (isDecided) {
             return (
               /* READ-ONLY FINAL GROUND DETERMINATION RECORD */
-              <div className={`p-4 rounded-2xl border space-y-3 ${
+              <div className={`p-4 rounded-[4px] border space-y-3 bg-white dark:bg-[#0D121F] shadow-xs ${
                 isApproved 
-                  ? "bg-emerald-950/40 border-emerald-500/50 shadow-lg shadow-emerald-950/20" 
-                  : "bg-rose-950/40 border-rose-500/50 shadow-lg shadow-rose-950/20"
+                  ? "border-[#C8E6C9] dark:border-emerald-800/40" 
+                  : "border-[#FFCDD2] dark:border-rose-800/40"
               }`}>
-                <div className="flex items-center justify-between border-b pb-2 border-white/10">
+                <div className="flex items-center justify-between border-b pb-2 border-[#DCE2E8] dark:border-white/10">
                   <div className="flex items-center gap-2">
                     {isApproved ? (
-                      <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                      <CheckCircle2 className="w-5 h-5 text-[#1E7E34] dark:text-emerald-400" />
                     ) : (
-                      <XCircle className="w-5 h-5 text-rose-400" />
+                      <XCircle className="w-5 h-5 text-[#B32424] dark:text-rose-400" />
                     )}
                     <span className={`text-xs font-bold uppercase tracking-wider font-mono ${
-                      isApproved ? "text-emerald-300" : "text-rose-300"
+                      isApproved ? "text-[#1E7E34] dark:text-emerald-300" : "text-[#B32424] dark:text-rose-300"
                     }`}>
                       {isApproved ? "FIELD VERIFIED" : "FIELD DECLINED"}
                     </span>
                   </div>
-                  <span className="flex items-center gap-1 text-[10px] font-mono uppercase bg-slate-900 px-2.5 py-0.5 rounded border border-slate-700 text-slate-300">
-                    <Lock className="w-3 h-3 text-amber-400" /> Final &amp; Locked
+                  <span className="flex items-center gap-1 text-[10px] font-mono uppercase bg-[#F8FAFC] dark:bg-[#07080F] px-2 py-0.5 rounded-[3px] border border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-300">
+                    <Lock className="w-3 h-3 text-[#B36B00] dark:text-amber-400" /> Final &amp; Locked
                   </span>
                 </div>
 
-                <div className="space-y-1.5 text-xs text-slate-200">
-                  <div className="text-[11px] text-slate-400 font-mono">
-                    Statutory Decision: <strong className="text-white">{isApproved ? "APPROVED (Ground Cadastral Claim Validated)" : "DECLINED (Ground Claim Disallowed)"}</strong>
+                <div className="space-y-1.5 text-xs text-[#333333] dark:text-slate-200">
+                  <div className="text-[11px] text-[#64748B] dark:text-slate-400 font-mono">
+                    Statutory Decision: <strong className="text-[#14213D] dark:text-white">{isApproved ? "APPROVED (Ground Cadastral Claim Validated)" : "DECLINED (Ground Claim Disallowed)"}</strong>
                   </div>
-                  <div className="text-[11px] text-slate-400 font-mono">
-                    Designated Field Officer: <strong className="text-white">
+                  <div className="text-[11px] text-[#64748B] dark:text-slate-400 font-mono">
+                    Designated Field Officer: <strong className="text-[#14213D] dark:text-white">
                       {complaint.field_verification?.officer_name || complaint.rejection?.officer_name || officer?.name || "Ramesh Patel"} 
                       {" "}({complaint.field_verification?.officer_id || complaint.rejection?.officer_id || "OFF-001"})
                     </strong>
                   </div>
-                  <div className="text-[11px] text-slate-400 font-mono">
-                    Decision Date &amp; Time: <strong className="text-white">
+                  <div className="text-[11px] text-[#64748B] dark:text-slate-400 font-mono">
+                    Decision Date &amp; Time: <strong className="text-[#14213D] dark:text-white">
                       {new Date(complaint.field_verification?.verified_at || complaint.rejection?.rejected_at || complaint.updated_at || Date.now()).toLocaleString("en-IN")}
                     </strong>
                   </div>
-                  <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1 mt-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block font-mono">
+                  <div className="p-3 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 space-y-1 mt-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400 block font-mono">
                       Official Inspection Remarks:
                     </span>
-                    <p className="text-xs text-slate-200 italic">
+                    <p className="text-xs text-[#333333] dark:text-slate-200 italic">
                       &ldquo;{complaint.field_verification?.notes || complaint.rejection?.reason || "Field boundary demarcation and ownership verification completed on site."}&rdquo;
                     </p>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
+                <div className="pt-2 border-t border-[#DCE2E8] dark:border-white/10 flex items-center justify-between text-[11px]">
                   {isApproved ? (
-                    <span className="text-emerald-300 font-semibold flex items-center gap-1">
+                    <span className="text-[#1E7E34] dark:text-emerald-300 font-semibold flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       Forwarded to CALA Admin Implementation Queue
                     </span>
                   ) : (
-                    <span className="text-rose-300 font-semibold flex items-center gap-1">
+                    <span className="text-[#B32424] dark:text-rose-300 font-semibold flex items-center gap-1">
                       <XCircle className="w-3.5 h-3.5" />
                       Case permanently halted. Not submitted to Admin.
                     </span>
                   )}
-                  <span className="text-[10px] text-slate-400 font-mono">Read-Only</span>
+                  <span className="text-[10px] text-[#64748B] dark:text-slate-400 font-mono">Read-Only</span>
                 </div>
               </div>
             );
@@ -534,10 +534,10 @@ export default function FieldComplaintDetailPage() {
 
           // Case is still pending decision
           return (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-4">
-              <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <h2 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+            <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-4 shadow-xs">
+              <div className="flex items-center gap-2 border-b border-[#DCE2E8] dark:border-white/10 pb-2">
+                <ShieldCheck className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
+                <h2 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wider font-mono">
                   Field Officer Ground Determination
                 </h2>
               </div>
@@ -545,7 +545,7 @@ export default function FieldComplaintDetailPage() {
               {/* Action 1: Verify Complaint Form */}
               <form onSubmit={handleVerifyComplaint} className="space-y-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[11px] font-bold text-[#14213D] dark:text-slate-300 uppercase tracking-wider mb-1.5">
                     Field Verification Notes &amp; On-Site Findings
                   </label>
                   <textarea
@@ -553,14 +553,14 @@ export default function FieldComplaintDetailPage() {
                     onChange={(e) => setVerificationNotes(e.target.value)}
                     placeholder="Enter physical inspection findings, boundary pillar verification, or title reconciliation notes..."
                     rows={3}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans"
+                    className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] p-2.5 text-xs text-[#14213D] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#0B2E59] font-sans"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={verifying}
-                  className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-950/50"
+                  className="w-full py-2.5 px-4 rounded-[4px] bg-[#1E7E34] hover:bg-[#166527] text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs disabled:opacity-60"
                 >
                   {verifying ? <RefreshCw className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                   <span>Approve &amp; Mark Field Verified (Final)</span>
@@ -568,24 +568,24 @@ export default function FieldComplaintDetailPage() {
               </form>
 
               {/* Action 2: Reject Complaint Trigger */}
-              <div className="border-t border-slate-800 pt-3">
+              <div className="border-t border-[#DCE2E8] dark:border-white/10 pt-3">
                 {!showRejectForm ? (
                   <button
                     type="button"
                     onClick={() => setShowRejectForm(true)}
-                    className="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-rose-950/30 border border-rose-500/30 text-rose-400 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-2 px-4 rounded-[4px] bg-white dark:bg-[#0D121F] hover:bg-[#FFEBEE] dark:hover:bg-rose-950/30 border border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-400 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                   >
                     <XCircle className="w-4 h-4" />
                     <span>Decline / Reject Complaint (Final)</span>
                   </button>
                 ) : (
-                  <form onSubmit={handleRejectComplaint} className="space-y-3 p-3 rounded-xl bg-rose-950/20 border border-rose-500/30">
+                  <form onSubmit={handleRejectComplaint} className="space-y-3 p-3 rounded-[4px] bg-[#FFEBEE]/40 dark:bg-rose-950/20 border border-[#FFCDD2] dark:border-rose-800/40">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-rose-400">Record Rejection Reason:</span>
+                      <span className="text-xs font-bold text-[#B32424] dark:text-rose-400">Record Rejection Reason:</span>
                       <button
                         type="button"
                         onClick={() => setShowRejectForm(false)}
-                        className="text-[10px] text-slate-400 hover:text-white"
+                        className="text-[10px] text-[#64748B] hover:text-[#14213D] dark:text-slate-400 dark:hover:text-white"
                       >
                         Cancel
                       </button>
@@ -597,13 +597,13 @@ export default function FieldComplaintDetailPage() {
                       placeholder="Provide specific statutory reason for rejection (e.g., ground demarcation overlaps with public right-of-way, document forged, boundary conflict)..."
                       rows={2}
                       required
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 font-sans"
+                      className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] p-2.5 text-xs text-[#14213D] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#B32424] font-sans"
                     />
 
                     <button
                       type="submit"
                       disabled={rejecting}
-                      className="w-full py-2 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                      className="w-full py-2 px-4 rounded-[4px] bg-[#B32424] hover:bg-[#8B1A1A] text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs disabled:opacity-60"
                     >
                       {rejecting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
                       <span>Confirm Decline &amp; Permanently Halt Case</span>
@@ -616,39 +616,39 @@ export default function FieldComplaintDetailPage() {
         })()}
 
         {/* SECTION 6: STATUTORY AUDIT TRAIL TIMELINE */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-          <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
-            <Clock className="w-4 h-4 text-indigo-400" />
-            <h2 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-3 shadow-xs">
+          <div className="flex items-center gap-2 border-b border-[#DCE2E8] dark:border-white/10 pb-2">
+            <Clock className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
+            <h2 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wider font-mono">
               Statutory Audit Trail &amp; Decision History
             </h2>
           </div>
 
-          <div className="space-y-3 pl-4 border-l-2 border-slate-800 text-xs">
+          <div className="space-y-3 pl-4 border-l-2 border-[#DCE2E8] dark:border-white/15 text-xs">
             {auditTrail.length > 0 ? (
               auditTrail.map((log: any, idx: number) => (
                 <div key={log.id || idx} className="relative space-y-0.5">
-                  <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-indigo-500 border-2 border-slate-900" />
+                  <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#0B2E59] dark:bg-sky-500 border-2 border-white dark:border-[#0D121F]" />
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-white font-mono text-[11px]">
+                    <span className="font-bold text-[#14213D] dark:text-white font-mono text-[11px]">
                       {log.action.replace(/_/g, " ")}
                     </span>
-                    <span className="text-[10px] font-mono text-slate-400">
+                    <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400">
                       {new Date(log.created_at).toLocaleString("en-IN")}
                     </span>
                   </div>
-                  <div className="text-[11px] text-slate-300">
-                    Actor: <span className="text-indigo-300 font-semibold">{log.actor_role}</span> ({log.actor_id})
+                  <div className="text-[11px] text-[#64748B] dark:text-slate-300">
+                    Actor: <span className="text-[#0B5FA5] dark:text-sky-300 font-semibold">{log.actor_role}</span> ({log.actor_id})
                   </div>
                   {log.state_after?.status && (
-                    <div className="text-[10px] font-mono text-emerald-400">
+                    <div className="text-[10px] font-mono text-[#1E7E34] dark:text-emerald-400">
                       Status: {log.state_after.status}
                     </div>
                   )}
                 </div>
               ))
             ) : (
-              <div className="text-[11px] text-slate-500 italic">
+              <div className="text-[11px] text-[#64748B] dark:text-slate-500 italic">
                 Awaiting further statutory events. Initial lodging recorded.
               </div>
             )}

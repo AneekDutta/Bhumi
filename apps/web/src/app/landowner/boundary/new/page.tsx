@@ -383,37 +383,37 @@ export default function MarkBoundaryPage() {
         <div className="flex items-center justify-between">
           <Link
             href="/landowner/home"
-            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-[#0B2E59] dark:text-sky-400 hover:underline transition-colors font-semibold"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to My Land</span>
           </Link>
 
-          <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/30">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-[#B36B00] dark:text-amber-400 font-bold bg-[#FFF8E1] dark:bg-amber-950/40 px-2.5 py-0.5 rounded-[3px] border border-[#FFE082] dark:border-amber-800/50">
             CLAIMED / UNVERIFIED
           </span>
         </div>
 
         {/* Page Title & Instructions */}
         <div className="space-y-1">
-          <h1 className="text-xl font-bold text-white font-display">
+          <h1 className="text-xl font-bold text-[#14213D] dark:text-white font-display">
             MARK LAND BOUNDARY
           </h1>
-          <p className="text-xs text-slate-300 leading-relaxed">
+          <p className="text-xs text-[#5A6A80] dark:text-slate-300 leading-relaxed">
             Capture at least 4 GPS points around the approximate corners of your land. Walk to each corner of your plot and record the position using your device GPS.
           </p>
         </div>
 
         {/* Operating GPS Mode Switcher: Device Satellite GPS vs Assisted Location */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-3 shadow-xs">
           <div className="flex items-center justify-between">
-            <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+            <label className="text-[11px] font-bold text-[#14213D] dark:text-slate-300 uppercase tracking-wider">
               Operating GPS Mode
             </label>
-            <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
+            <span className={`text-[10px] font-mono px-2 py-0.5 rounded-[3px] font-bold uppercase border ${
               isDemoMode 
-                ? "bg-purple-500/20 text-purple-300 border border-purple-500/40" 
-                : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+                ? "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-500/40" 
+                : "bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-300 border-[#C8E6C9] dark:border-emerald-500/40"
             }`}>
               {isDemoMode ? "ASSISTED GPS" : "DEVICE SATELLITE GPS"}
             </span>
@@ -423,10 +423,10 @@ export default function MarkBoundaryPage() {
             <button
               type="button"
               onClick={() => setIsDemoMode(false)}
-              className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              className={`py-2 px-3 rounded-[4px] text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 !isDemoMode
-                  ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/40"
-                  : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-white"
+                  ? "bg-[#0B2E59] text-white shadow-xs"
+                  : "bg-white dark:bg-[#07080F] text-[#5A6A80] dark:text-slate-400 border border-[#DCE2E8] dark:border-white/10 hover:text-[#14213D]"
               }`}
             >
               <Compass className="w-3.5 h-3.5" />
@@ -436,10 +436,10 @@ export default function MarkBoundaryPage() {
             <button
               type="button"
               onClick={() => setIsDemoMode(true)}
-              className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              className={`py-2 px-3 rounded-[4px] text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 isDemoMode
-                  ? "bg-purple-600 text-white shadow-md shadow-purple-950/40"
-                  : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-white"
+                  ? "bg-[#0B2E59] text-white shadow-xs"
+                  : "bg-white dark:bg-[#07080F] text-[#5A6A80] dark:text-slate-400 border border-[#DCE2E8] dark:border-white/10 hover:text-[#14213D]"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -448,31 +448,31 @@ export default function MarkBoundaryPage() {
           </div>
 
           {isDemoMode ? (
-            <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-200 text-xs space-y-1">
-              <div className="flex items-center gap-1.5 font-bold text-[11px] uppercase tracking-wider text-purple-300">
-                <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+            <div className="p-2.5 rounded-[4px] bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-500/30 text-purple-900 dark:text-purple-200 text-xs space-y-1">
+              <div className="flex items-center gap-1.5 font-bold text-[11px] uppercase tracking-wider text-purple-800 dark:text-purple-300">
+                <ShieldCheck className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                 <span>ASSISTED COORDINATES ACTIVE</span>
               </div>
-              <p className="text-[11px] leading-relaxed text-purple-200/90">
+              <p className="text-[11px] leading-relaxed text-purple-700 dark:text-purple-200/90">
                 Assisted coordinate input for areas with low satellite reception. Location accuracy is calibrated within ±12m to ±15m range.
               </p>
             </div>
           ) : (
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-[#5A6A80] dark:text-slate-400">
               Standard Mode: Uses device satellite GPS hardware accuracy directly.
             </p>
           )}
         </div>
 
         {/* Parcel Selector */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-          <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider">
-            Select Impacted Parcel <span className="text-amber-400">*</span>
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-3 shadow-xs">
+          <label className="block text-[11px] font-bold text-[#14213D] dark:text-slate-300 uppercase tracking-wider">
+            Select Impacted Parcel <span className="text-red-500">*</span>
           </label>
           <select
             value={selectedParcelId}
             onChange={(e) => setSelectedParcelId(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500 font-mono"
+            className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2.5 text-xs text-[#14213D] dark:text-white focus:outline-none focus:border-[#0B2E59] font-mono"
           >
             <option value="unregistered">Unregistered Land Claim (No Official Parcel Linked)</option>
             {parcels.map((p) => {
@@ -486,23 +486,23 @@ export default function MarkBoundaryPage() {
             })}
           </select>
           {selectedParcelId === "unregistered" ? (
-            <div className="text-[11px] font-mono text-amber-300 bg-amber-500/10 p-2 rounded-lg border border-amber-500/30">
+            <div className="text-[11px] font-mono text-[#B36B00] dark:text-amber-300 bg-[#FFF8E1] dark:bg-amber-500/10 p-2 rounded-[4px] border border-[#FFE082] dark:border-amber-500/30">
               Unregistered Land Claim: No pre-existing registered land parcel required. This spatial polygon will serve as your initial claimed boundary.
             </div>
           ) : activeParcel ? (
-            <div className="text-[11px] font-mono text-slate-400 flex items-center justify-between pt-1">
+            <div className="text-[11px] font-mono text-[#5A6A80] dark:text-slate-400 flex items-center justify-between pt-1">
               <span>Official Extent: {activeParcel.area_hectares || (activeParcel.area_sqm ? (activeParcel.area_sqm / 10000).toFixed(2) : "-")} Ha</span>
-              <span className="text-emerald-400 font-semibold">{activeParcel.classification || "Agricultural"}</span>
+              <span className="text-[#1E7E34] dark:text-emerald-400 font-semibold">{activeParcel.classification || "Agricultural"}</span>
             </div>
           ) : null}
         </div>
 
         {/* Global Error Banner */}
         {gpsError && (
-          <div className="p-3.5 rounded-xl bg-red-500/15 border border-red-500/40 text-red-200 text-xs flex items-start gap-2.5 animate-fadeIn">
-            <AlertTriangle className="w-4 h-4 flex-shrink-0 text-red-400 mt-0.5" />
+          <div className="p-3.5 rounded-[4px] bg-[#FFEBEE] dark:bg-rose-950/20 border border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-200 text-xs flex items-start gap-2.5">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0 text-[#B32424] dark:text-rose-400 mt-0.5" />
             <div className="space-y-1">
-              <span className="font-bold text-red-300 block uppercase tracking-wider text-[10px]">Location Status</span>
+              <span className="font-bold text-[#B32424] dark:text-rose-300 block uppercase tracking-wider text-[10px]">Location Status</span>
               <p className="leading-relaxed">{gpsError}</p>
             </div>
           </div>
@@ -510,24 +510,24 @@ export default function MarkBoundaryPage() {
 
         {/* Accuracy Warning Banner */}
         {accuracyWarning && (
-          <div className="p-3 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-200 text-xs flex items-start gap-2 animate-fadeIn">
-            <ShieldAlert className="w-4 h-4 flex-shrink-0 text-amber-400 mt-0.5" />
+          <div className="p-3 rounded-[4px] bg-[#FFF8E1] dark:bg-amber-950/20 border border-[#FFE082] dark:border-amber-800/40 text-[#B36B00] dark:text-amber-200 text-xs flex items-start gap-2">
+            <ShieldAlert className="w-4 h-4 flex-shrink-0 text-[#B36B00] dark:text-amber-400 mt-0.5" />
             <span>{accuracyWarning}</span>
           </div>
         )}
 
         {/* Submit Error */}
         {submitError && (
-          <div className="p-3.5 rounded-xl bg-red-500/15 border border-red-500/40 text-red-200 text-xs flex items-center gap-2 animate-fadeIn">
-            <AlertTriangle className="w-4 h-4 flex-shrink-0 text-red-400" />
+          <div className="p-3.5 rounded-[4px] bg-[#FFEBEE] dark:bg-rose-950/20 border border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-200 text-xs flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0 text-[#B32424] dark:text-rose-400" />
             <span>{submitError}</span>
           </div>
         )}
 
         {/* Submit Success */}
         {submitSuccess && (
-          <div className="p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-200 text-xs flex items-center gap-2 animate-fadeIn">
-            <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-emerald-400" />
+          <div className="p-3.5 rounded-[4px] bg-[#E8F5E9] dark:bg-emerald-950/20 border border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-200 text-xs flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-[#1E7E34] dark:text-emerald-400" />
             <span>{submitSuccess}</span>
           </div>
         )}
@@ -538,7 +538,7 @@ export default function MarkBoundaryPage() {
             type="button"
             disabled={capturing || submitting}
             onClick={() => handleCapturePoint()}
-            className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xl shadow-amber-950/40 disabled:opacity-60 cursor-pointer"
+            className="w-full py-3 px-4 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xs disabled:opacity-60 cursor-pointer"
           >
             {capturing && recapturingIndex === null ? (
               <>
@@ -547,7 +547,7 @@ export default function MarkBoundaryPage() {
               </>
             ) : (
               <>
-                <Crosshair className="w-4 h-4 text-amber-200" />
+                <Crosshair className="w-4 h-4 text-white/80" />
                 <span>
                   {points.length === 0
                     ? "Capture Corner Point 1 (Use My Location)"
@@ -557,7 +557,7 @@ export default function MarkBoundaryPage() {
             )}
           </button>
 
-          <p className="text-[10px] text-slate-400 text-center">
+          <p className="text-[10px] text-[#5A6A80] dark:text-slate-400 text-center">
             {points.length < 4
               ? `Captured ${points.length} of 4 minimum required points. Walk to corner ${points.length + 1} and tap to record.`
               : `Minimum 4 points recorded. You may add more corners for irregular boundaries or review below.`}
@@ -565,23 +565,23 @@ export default function MarkBoundaryPage() {
         </div>
 
         {/* Interactive Map Display */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-3 space-y-2">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-3 space-y-2 shadow-xs">
           <div className="flex items-center justify-between text-xs px-1">
-            <span className="font-bold text-white flex items-center gap-1.5">
-              <Compass className="w-4 h-4 text-amber-400" />
+            <span className="font-bold text-[#14213D] dark:text-white flex items-center gap-1.5">
+              <Compass className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
               <span>Spatial Boundary Preview</span>
             </span>
-            <span className="text-[10px] font-mono text-slate-400">
+            <span className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400">
               {isPolygonReady ? "Closed Polygon" : `${points.length} Vertices`}
             </span>
           </div>
 
-          <div className="h-[340px] sm:h-[400px] w-full rounded-xl overflow-hidden border border-slate-700/80 relative bg-slate-950">
+          <div className="h-[340px] sm:h-[400px] w-full rounded-[4px] overflow-hidden border border-[#DCE2E8] dark:border-white/10 relative bg-[#F8FAFC] dark:bg-slate-950">
             {points.length === 0 && !deviceLocation ? (
-              <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-slate-400 space-y-2">
-                <MapPin className="w-8 h-8 text-amber-500/60 animate-bounce" />
-                <span className="text-xs font-bold text-slate-300">No GPS Points Captured Yet</span>
-                <p className="text-[11px] text-slate-500 max-w-xs">
+              <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-[#5A6A80] dark:text-slate-400 space-y-2">
+                <MapPin className="w-8 h-8 text-[#0B2E59] dark:text-sky-400 animate-bounce" />
+                <span className="text-xs font-bold text-[#14213D] dark:text-slate-300">No GPS Points Captured Yet</span>
+                <p className="text-[11px] text-[#5A6A80] dark:text-slate-500 max-w-xs">
                   Tap &ldquo;Capture Corner Point 1&rdquo; to acquire your current location and display your position on the map.
                 </p>
               </div>
@@ -607,7 +607,7 @@ export default function MarkBoundaryPage() {
                       id="landowner-boundary-fill"
                       type="fill"
                       paint={{
-                        "fill-color": "#f59e0b",
+                        "fill-color": "#0B2E59",
                         "fill-opacity": 0.2
                       }}
                     />
@@ -615,7 +615,7 @@ export default function MarkBoundaryPage() {
                       id="landowner-boundary-line"
                       type="line"
                       paint={{
-                        "line-color": "#f59e0b",
+                        "line-color": "#0B2E59",
                         "line-width": 2.5,
                         "line-dasharray": [3, 2]
                       }}
@@ -632,10 +632,10 @@ export default function MarkBoundaryPage() {
                     anchor="center"
                   >
                     <div className="flex flex-col items-center group cursor-pointer">
-                      <div className="w-7 h-7 rounded-full bg-amber-600 border-2 border-white text-white font-bold text-[11px] flex items-center justify-center shadow-lg shadow-black/80 font-mono">
+                      <div className="w-7 h-7 rounded-full bg-[#0B2E59] border-2 border-white text-white font-bold text-[11px] flex items-center justify-center shadow-md font-mono">
                         P{pt.sequence}
                       </div>
-                      <span className="text-[9px] font-mono bg-slate-900/90 text-amber-300 px-1 rounded border border-amber-500/30 -mt-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                      <span className="text-[9px] font-mono bg-[#14213D] text-white px-1 rounded border border-white/20 -mt-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                         ±{pt.accuracy}m
                       </span>
                     </div>
@@ -648,17 +648,17 @@ export default function MarkBoundaryPage() {
 
         {/* Captured Points List */}
         {points.length > 0 && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-3 shadow-xs">
             <div className="flex items-center justify-between">
-              <h2 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-amber-400" />
+              <h2 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
+                <Layers className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
                 <span>Captured Boundary Vertices ({points.length})</span>
               </h2>
 
               <button
                 type="button"
                 onClick={handleResetAll}
-                className="text-[10px] font-mono text-red-400 hover:text-red-300 flex items-center gap-1"
+                className="text-[10px] font-mono text-[#B32424] dark:text-rose-400 hover:underline flex items-center gap-1"
               >
                 <RotateCcw className="w-3 h-3" /> Reset
               </button>
@@ -671,27 +671,27 @@ export default function MarkBoundaryPage() {
                 return (
                   <div
                     key={`item-${idx}`}
-                    className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between text-xs"
+                    className="p-2.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 flex items-center justify-between text-xs"
                   >
                     <div className="space-y-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-md bg-amber-500/20 text-amber-400 font-bold font-mono text-[11px] flex items-center justify-center">
+                        <span className="w-5 h-5 rounded-[2px] bg-[#EBF3FC] dark:bg-sky-950/50 text-[#0B2E59] dark:text-sky-400 font-bold font-mono text-[11px] flex items-center justify-center">
                           P{pt.sequence}
                         </span>
-                        <span className="font-bold text-white text-xs">
+                        <span className="font-bold text-[#14213D] dark:text-white text-xs">
                           Point {pt.sequence} ✓
                         </span>
-                        <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded border ${
+                        <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded-[2px] border ${
                           pt.accuracy <= 10
-                            ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-300"
+                            ? "bg-[#E8F5E9] dark:bg-emerald-950/30 border-[#C8E6C9] dark:border-emerald-500/30 text-[#1E7E34] dark:text-emerald-300"
                             : pt.accuracy <= 20
-                            ? "bg-amber-500/15 border-amber-500/30 text-amber-300"
-                            : "bg-red-500/15 border-red-500/30 text-red-300"
+                            ? "bg-[#FFF8E1] dark:bg-amber-950/30 border-[#FFE082] dark:border-amber-500/30 text-[#B36B00] dark:text-amber-300"
+                            : "bg-[#FFEBEE] dark:bg-rose-950/30 border-[#FFCDD2] dark:border-rose-500/30 text-[#B32424] dark:text-rose-300"
                         }`}>
                           Actual GPS accuracy: ±{pt.accuracy} m
                         </span>
                       </div>
-                      <div className="text-[10px] font-mono text-slate-400 pl-7">
+                      <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 pl-7">
                         Lat: {pt.lat}°, Lng: {pt.lng}°
                       </div>
                     </div>
@@ -702,10 +702,10 @@ export default function MarkBoundaryPage() {
                         disabled={capturing || submitting}
                         onClick={() => handleCapturePoint(idx)}
                         title="Re-capture Point"
-                        className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition-colors"
+                        className="p-1.5 rounded-[3px] bg-white dark:bg-slate-800 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-300 hover:text-[#14213D] transition-colors"
                       >
                         {isRecapturing ? (
-                          <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-400" />
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#0B2E59] dark:text-amber-400" />
                         ) : (
                           <RefreshCw className="w-3.5 h-3.5" />
                         )}
@@ -716,7 +716,7 @@ export default function MarkBoundaryPage() {
                         disabled={capturing || submitting}
                         onClick={() => handleRemovePoint(idx)}
                         title="Remove Point"
-                        className="p-1.5 rounded-lg bg-red-950/40 text-red-400 hover:text-red-300 transition-colors"
+                        className="p-1.5 rounded-[3px] bg-[#FFEBEE] dark:bg-red-950/40 border border-[#FFCDD2] dark:border-red-800/40 text-[#B32424] dark:text-red-400 hover:text-red-600 transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -730,26 +730,26 @@ export default function MarkBoundaryPage() {
 
         {/* Real Area Calculation & Uncertainty (Displayed ONLY when >= 4 points) */}
         {isPolygonReady && (
-          <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/30 border border-amber-500/40 rounded-2xl p-4 shadow-xl space-y-4 animate-fadeIn">
+          <div className="bg-white dark:bg-[#0D121F] border-2 border-[#0B2E59]/30 dark:border-white/20 rounded-[4px] p-4 shadow-xs space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold bg-amber-500/15 px-2.5 py-1 rounded-full border border-amber-500/30">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#B36B00] dark:text-amber-400 font-bold bg-[#FFF8E1] dark:bg-amber-500/15 px-2.5 py-1 rounded-[3px] border border-[#FFE082] dark:border-amber-500/30">
                 LANDOWNER-REPORTED / ESTIMATED
               </span>
-              <span className="text-[10px] font-mono text-slate-400">
+              <span className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400">
                 {isDemoMode ? "Assisted GPS estimate" : "GPS-based estimate"}
               </span>
             </div>
 
             {areaResult ? (
               <>
-                <div className="space-y-1 text-center py-2 border-y border-slate-800/80">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
+                <div className="space-y-1 text-center py-2 border-y border-[#DCE2E8] dark:border-white/10">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#5A6A80] dark:text-slate-400 font-semibold block">
                     ESTIMATED LAND AREA
                   </span>
-                  <div className="text-3xl font-black text-white font-mono tracking-tight">
-                    {areaResult.areaAcres} <span className="text-base font-medium text-amber-400">acres</span>
+                  <div className="text-3xl font-black text-[#14213D] dark:text-white font-mono tracking-tight">
+                    {areaResult.areaAcres} <span className="text-base font-medium text-[#0B2E59] dark:text-sky-400">acres</span>
                   </div>
-                  <div className="text-xs font-mono text-slate-300 flex items-center justify-center gap-4 pt-1">
+                  <div className="text-xs font-mono text-[#5A6A80] dark:text-slate-300 flex items-center justify-center gap-4 pt-1">
                     <span>{areaResult.areaSqm.toLocaleString()} m²</span>
                     <span>·</span>
                     <span>{areaResult.areaHectares} hectares</span>
@@ -757,57 +757,57 @@ export default function MarkBoundaryPage() {
                 </div>
 
                 {/* Uncertainty Section */}
-                <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                <div className="p-3 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-slate-300 font-mono uppercase text-[10px]">
+                    <span className="font-bold text-[#14213D] dark:text-slate-300 font-mono uppercase text-[10px]">
                       Measurement Uncertainty:
                     </span>
                     {areaResult.uncertaintySqm !== null ? (
-                      <span className="font-mono font-bold text-amber-400">
+                      <span className="font-mono font-bold text-[#0B2E59] dark:text-sky-400">
                         ±{areaResult.uncertaintySqm} m² (±{areaResult.uncertaintyAcres} acres)
                       </span>
                     ) : null}
                   </div>
-                  <p className="text-[10px] text-slate-400 leading-relaxed">
+                  <p className="text-[10px] text-[#5A6A80] dark:text-slate-400 leading-relaxed">
                     {areaResult.uncertaintyExplanation}
                   </p>
                 </div>
               </>
             ) : (
-              <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-amber-300">
+              <div className="p-3 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 text-xs text-[#B36B00] dark:text-amber-300">
                 Area calculation unavailable.
               </div>
             )}
 
             {/* Data Provenance & Legal Classification Notice */}
-            <div className="p-3 rounded-xl bg-slate-950/90 border border-white/5 space-y-2 text-[10px] font-mono">
-              <div className="flex items-center justify-between border-b border-white/5 pb-1">
-                <span className="text-slate-400">SOURCE:</span>
-                <span className="text-slate-200 font-bold">{isDemoMode ? "ASSISTED GPS CAPTURE" : "LANDOWNER GPS CAPTURE"}</span>
+            <div className="p-3 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 space-y-2 text-[10px] font-mono">
+              <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-1">
+                <span className="text-[#5A6A80] dark:text-slate-400">SOURCE:</span>
+                <span className="text-[#14213D] dark:text-slate-200 font-bold">{isDemoMode ? "ASSISTED GPS CAPTURE" : "LANDOWNER GPS CAPTURE"}</span>
               </div>
-              <div className="flex items-center justify-between border-b border-white/5 pb-1">
-                <span className="text-slate-400">STATUS:</span>
-                <span className="text-amber-400 font-bold">LANDOWNER-REPORTED / ESTIMATED</span>
+              <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-1">
+                <span className="text-[#5A6A80] dark:text-slate-400">STATUS:</span>
+                <span className="text-[#B36B00] dark:text-amber-400 font-bold">LANDOWNER-REPORTED / ESTIMATED</span>
               </div>
-              <div className="flex items-center justify-between border-b border-white/5 pb-1">
-                <span className="text-slate-400">AREA SOURCE:</span>
-                <span className="text-slate-200">CALCULATED FROM LANDOWNER GPS POLYGON</span>
+              <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-1">
+                <span className="text-[#5A6A80] dark:text-slate-400">AREA SOURCE:</span>
+                <span className="text-[#14213D] dark:text-slate-200">CALCULATED FROM LANDOWNER GPS POLYGON</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">AREA STATUS:</span>
-                <span className="text-amber-300">ESTIMATED</span>
+                <span className="text-[#5A6A80] dark:text-slate-400">AREA STATUS:</span>
+                <span className="text-[#B36B00] dark:text-amber-300">ESTIMATED</span>
               </div>
             </div>
 
-            <p className="text-[10px] text-slate-400 italic">
+            <p className="text-[10px] text-[#5A6A80] dark:text-slate-400 italic">
               Notice: This boundary is self-reported by the landholder for grievance resolution and does not constitute official government cadastral survey data until verified by the Competent Authority (CALA).
             </p>
           </div>
         )}
 
         {/* Observation Notes */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
-          <label className="block text-xs font-semibold text-white">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-2 shadow-xs">
+          <label className="block text-xs font-bold text-[#14213D] dark:text-white">
             Landholder Observations / Boundary Markers (Optional)
           </label>
           <textarea
@@ -815,7 +815,7 @@ export default function MarkBoundaryPage() {
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
             placeholder="e.g. Corner 1 is at the canal embankment, Corner 3 touches the neem tree, fenced with stone pillars..."
-            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none"
+            className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2 text-xs text-[#14213D] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#0B2E59] resize-none"
           />
         </div>
 
@@ -824,10 +824,10 @@ export default function MarkBoundaryPage() {
           <button
             type="submit"
             disabled={!isPolygonReady || submitting}
-            className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xl cursor-pointer ${
+            className={`w-full py-3.5 px-4 rounded-[4px] font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer ${
               isPolygonReady && !submitting
-                ? "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-950/50"
-                : "bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed"
+                ? "bg-[#1E7E34] hover:bg-[#166527] text-white"
+                : "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-300 dark:border-slate-700 cursor-not-allowed"
             }`}
           >
             {submitting ? (
@@ -839,13 +839,13 @@ export default function MarkBoundaryPage() {
               <span>CAPTURE AT LEAST 4 POINTS TO CONFIRM BOUNDARY</span>
             ) : (
               <>
-                <ShieldCheck className="w-4 h-4 text-emerald-300" />
+                <ShieldCheck className="w-4 h-4 text-white" />
                 <span>CONFIRM & SAVE LAND BOUNDARY</span>
               </>
             )}
           </button>
 
-          <p className="text-[10px] text-slate-500 text-center">
+          <p className="text-[10px] text-[#5A6A80] dark:text-slate-400 text-center">
             Persisted in official Land Records. Synchronized in real time with CALA Admin and Field Officers.
           </p>
         </form>

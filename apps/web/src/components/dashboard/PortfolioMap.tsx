@@ -124,13 +124,13 @@ export function PortfolioMap({
   const hasItems = parsedParcels.length > 0;
 
   return (
-    <div className="h-[380px] sm:h-[460px] w-full bg-slate-100 dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200/90 dark:border-white/10 shadow-gov relative group transition-colors">
+    <div className="h-[380px] sm:h-[460px] w-full bg-[#F4F6F8] dark:bg-[#07080F] rounded-[4px] overflow-hidden border border-[#DCE2E8] dark:border-white/10 shadow-xs relative group transition-colors">
       {/* Top Map Status Bar */}
-      <div className="absolute top-3 left-3 z-10 bg-white/95 dark:bg-slate-950/85 backdrop-blur-md border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-white px-3 py-1.5 rounded-lg shadow-md flex items-center gap-2 text-xs transition-colors">
-        <Navigation className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
-        <span className="font-semibold text-[11px] uppercase tracking-wider text-slate-700 dark:text-slate-300">National Cadastral Spatial GIS</span>
-        <span className="text-slate-300 dark:text-slate-600">|</span>
-        <span className={`font-mono font-bold ${hasItems ? 'text-indigo-500 dark:text-indigo-400' : 'text-slate-500'}`}>
+      <div className="absolute top-3 left-3 z-10 bg-white/95 dark:bg-[#07080F]/95 backdrop-blur-md border border-[#DCE2E8] dark:border-white/10 text-slate-800 dark:text-white px-3 py-1.5 rounded-[3px] shadow-xs flex items-center gap-2 text-xs transition-colors">
+        <Navigation className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
+        <span className="font-bold text-[11px] uppercase tracking-wider text-[#0B2E59] dark:text-slate-200">National Cadastral Spatial GIS</span>
+        <span className="text-[#DCE2E8] dark:text-slate-700">|</span>
+        <span className={`font-mono font-bold ${hasItems ? 'text-[#0B2E59] dark:text-sky-400' : 'text-slate-500'}`}>
           {parsedParcels.length} Verified Cadastral Parcel{parsedParcels.length === 1 ? '' : 's'}
         </span>
       </div>
@@ -152,16 +152,16 @@ export function PortfolioMap({
               id="verified-parcels-fill"
               type="fill"
               paint={{
-                'fill-color': '#6366f1',
-                'fill-opacity': 0.35
+                'fill-color': '#0B2E59',
+                'fill-opacity': 0.25
               }}
             />
             <Layer 
               id="verified-parcels-line"
               type="line"
               paint={{
-                'line-color': '#4f46e5',
-                'line-width': 2.5
+                'line-color': '#0B2E59',
+                'line-width': 2
               }}
             />
           </Source>
@@ -195,44 +195,44 @@ export function PortfolioMap({
                 aria-label={`Verified parcel ${p.parcel_id}`}
               >
                 {/* Animated Pin */}
-                <div className={`relative flex items-center justify-center p-1.5 rounded-full shadow-lg transition-transform group-hover/marker:scale-125 ${
+                <div className={`relative flex items-center justify-center p-1.5 rounded-full shadow-md transition-transform group-hover/marker:scale-125 ${
                   isSelected 
-                    ? 'bg-amber-500 text-white ring-4 ring-amber-400/40' 
+                    ? 'bg-[#B36B00] text-white ring-2 ring-[#B36B00]/40' 
                     : isCompleted
-                      ? 'bg-emerald-600 text-white'
+                      ? 'bg-[#1E7E34] text-white'
                       : isInitiated
-                        ? 'bg-sky-600 text-white'
-                        : 'bg-indigo-600 text-white'
+                        ? 'bg-[#0B2E59] text-white'
+                        : 'bg-[#0B2E59] text-white'
                 }`}>
                   <MapPin className="w-4 h-4" />
-                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-indigo-400 rounded-full animate-ping" />
+                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#0B2E59] dark:bg-sky-400 rounded-full animate-ping" />
                 </div>
 
                 {/* Parcel Tag Pill */}
-                <div className="mt-1 px-2.5 py-0.5 rounded-full bg-slate-950/90 text-white border border-slate-700 text-[10px] font-semibold whitespace-nowrap shadow-sm">
+                <div className="mt-1 px-2 py-0.5 rounded-[2px] bg-[#0B2E59] text-white border border-[#0B2E59]/40 text-[10px] font-mono font-bold whitespace-nowrap shadow-xs">
                   #{p.parcel_id.slice(-6)} &middot; {p.owner_name}
                 </div>
 
                 {/* Tooltip on hover */}
-                <div className="absolute bottom-full mb-3 hidden group-hover/marker:flex flex-col w-64 bg-slate-950/95 backdrop-blur-md text-white p-3.5 rounded-xl border border-slate-700 shadow-2xl pointer-events-none z-50 text-xs">
-                  <div className="font-bold text-sm text-white mb-1 flex items-center justify-between">
+                <div className="absolute bottom-full mb-3 hidden group-hover/marker:flex flex-col w-64 bg-white/95 dark:bg-[#0D121F]/95 backdrop-blur-md text-slate-800 dark:text-white p-3 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 shadow-lg pointer-events-none z-50 text-xs">
+                  <div className="font-bold text-sm text-[#0B2E59] dark:text-white mb-1 flex items-center justify-between">
                     <span>Parcel #{p.parcel_id}</span>
-                    <span className="text-[10px] text-indigo-400 font-mono">VERIFIED</span>
+                    <span className="text-[10px] text-[#1E7E34] dark:text-emerald-400 font-mono font-bold bg-[#E8F5E9] dark:bg-emerald-950/40 px-1.5 py-0.5 rounded-[2px] border border-[#C8E6C9] dark:border-emerald-800/40">VERIFIED</span>
                   </div>
-                  <div className="text-xs text-slate-300 font-medium">
-                    Owner: <strong className="text-white">{p.owner_name}</strong>
+                  <div className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                    Owner: <strong className="text-slate-900 dark:text-white">{p.owner_name}</strong>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-300 py-1.5 border-y border-slate-800 my-1">
+                  <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 dark:text-slate-300 py-1.5 border-y border-[#DCE2E8] dark:border-white/10 my-1">
                     <div>
-                      <span className="text-slate-500 block">Cadastral Area</span>
-                      <span className="font-mono font-bold text-emerald-400">{p.area_acres} Acres</span>
+                      <span className="text-slate-400 text-[10px] block">Cadastral Area</span>
+                      <span className="font-mono font-bold text-[#1E7E34] dark:text-emerald-400">{p.area_acres} Acres</span>
                     </div>
                     <div>
-                      <span className="text-slate-500 block">Status</span>
-                      <span className="font-mono font-bold text-amber-400 text-[10px] truncate block">{p.status}</span>
+                      <span className="text-slate-400 text-[10px] block">Status</span>
+                      <span className="font-mono font-bold text-[#B36B00] dark:text-amber-400 text-[10px] truncate block">{p.status}</span>
                     </div>
                   </div>
-                  <div className="text-indigo-300 text-[11px] font-semibold flex items-center gap-1 mt-1">
+                  <div className="text-[#0B2E59] dark:text-sky-300 text-[11px] font-semibold flex items-center gap-1 mt-1">
                     <span>Click to inspect case &amp; run What-If simulation</span>
                     <ArrowRight className="w-3 h-3" />
                   </div>
@@ -245,13 +245,13 @@ export function PortfolioMap({
 
       {/* Empty State Overlay when 0 verified parcels */}
       {!hasItems && (
-        <div className="absolute inset-0 flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-[2px] pointer-events-none z-20">
-          <div className="max-w-md p-5 rounded-2xl bg-slate-950/90 border border-slate-800 text-center shadow-2xl space-y-2 pointer-events-auto">
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto">
+        <div className="absolute inset-0 flex items-center justify-center p-6 bg-slate-950/20 backdrop-blur-[2px] pointer-events-none z-20">
+          <div className="max-w-md p-5 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 text-center shadow-lg space-y-2 pointer-events-auto">
+            <div className="w-10 h-10 rounded-[4px] bg-[#E6F0FA] dark:bg-sky-950/40 border border-[#B8D5ED] dark:border-sky-800/40 text-[#0B2E59] dark:text-sky-400 flex items-center justify-center mx-auto">
               <ShieldCheck className="w-5 h-5" />
             </div>
-            <div className="text-sm font-bold text-white">No Verified Parcels in GIS Scope</div>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <div className="text-sm font-bold text-[#0B2E59] dark:text-white">No Verified Parcels in GIS Scope</div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               Complaints verified by Field Officers on the ground will appear here with exact GPS boundary demarcations and interactive What-If simulation.
             </p>
           </div>
@@ -259,25 +259,25 @@ export function PortfolioMap({
       )}
 
       {/* Map Legend Overlay */}
-      <div className="absolute bottom-3 left-3 bg-white/95 dark:bg-slate-950/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 p-3 rounded-xl shadow-gov text-[11px] space-y-1.5 z-10 text-slate-700 dark:text-slate-300 font-medium">
-        <div className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[10px] flex items-center gap-1.5 mb-1.5">
-          <Layers className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
+      <div className="absolute bottom-3 left-3 bg-white/95 dark:bg-[#07080F]/95 backdrop-blur-md border border-[#DCE2E8] dark:border-white/10 p-3 rounded-[3px] shadow-xs text-[11px] space-y-1.5 z-10 text-slate-700 dark:text-slate-300 font-medium">
+        <div className="font-bold text-[#0B2E59] dark:text-white uppercase tracking-wider text-[10px] flex items-center gap-1.5 mb-1.5">
+          <Layers className="w-3 h-3 text-[#0B2E59] dark:text-sky-400" />
           <span>Cadastral GIS Legend</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-indigo-500/50 border border-indigo-500" />
+          <div className="w-3 h-3 rounded-[2px] bg-[#0B2E59]/20 border border-[#0B2E59]" />
           <span>Verified Cadastral Boundary (Polygon)</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-indigo-600 shadow-sm" />
+          <div className="w-3 h-3 rounded-full bg-[#0B2E59] shadow-xs" />
           <span>Verified by Field Officer</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-sky-600 shadow-sm" />
+          <div className="w-3 h-3 rounded-full bg-sky-600 shadow-xs" />
           <span>Implementation Active</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-emerald-600 shadow-sm" />
+          <div className="w-3 h-3 rounded-full bg-[#1E7E34] shadow-xs" />
           <span>Implementation Completed</span>
         </div>
       </div>

@@ -205,17 +205,17 @@ export default function ParcelVerificationPage() {
     return (
       <FieldShell title="Verify Parcel" showBack>
         <div className="p-8 space-y-4 max-w-lg mx-auto text-center py-16">
-          <div className="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center mx-auto text-slate-400">
-            <ShieldCheck className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 flex items-center justify-center mx-auto text-[#64748B] dark:text-slate-400 shadow-xs">
+            <ShieldCheck className="w-6 h-6 text-[#0B2E59] dark:text-sky-400" />
           </div>
-          <h2 className="text-base font-bold text-white">Parcel Record Not Found</h2>
-          <p className="text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">
+          <h2 className="text-base font-bold text-[#14213D] dark:text-white">Parcel Record Not Found</h2>
+          <p className="text-xs text-[#64748B] dark:text-slate-400 leading-relaxed max-w-xs mx-auto">
             No registered cadastral parcel record found for ID #{parcelId}.
           </p>
           <div className="pt-2">
             <Link
               href="/field/parcels"
-              className="inline-flex items-center gap-1.5 py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all"
+              className="inline-flex items-center gap-1.5 py-2 px-4 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold transition-all shadow-xs"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Return to Assigned Parcels
             </Link>
@@ -235,32 +235,32 @@ export default function ParcelVerificationPage() {
         <div className="flex items-center justify-between">
           <Link
             href={`/field/parcels/${parcelId}`}
-            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-[#64748B] hover:text-[#0B2E59] dark:text-slate-400 dark:hover:text-white transition-colors font-medium"
           >
-            <ArrowLeft className="w-4 h-4" /> Cancel & Return
+            <ArrowLeft className="w-4 h-4" /> Cancel &amp; Return
           </Link>
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded-[3px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 text-[#0B2E59] dark:text-sky-400 font-bold">
             ID: {parcelId}
           </span>
         </div>
 
         {/* 1. Ownership & Boundary Checklist */}
-        <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-4">
-          <div className="flex items-center gap-2 text-xs font-semibold text-white">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>Title & Physical Demarcation</span>
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#14213D] dark:text-white">
+            <ShieldCheck className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
+            <span>Title &amp; Physical Demarcation</span>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs text-slate-300 font-medium block">Owner / Representative Presence</label>
+            <label className="text-xs text-[#14213D] dark:text-slate-300 font-bold block">Owner / Representative Presence</label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setOwnerPresent(true)}
-                className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-[3px] text-xs font-bold border transition-all cursor-pointer ${
                   ownerPresent
-                    ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
-                    : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+                    ? "bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300 shadow-xs"
+                    : "bg-[#F8FAFC] dark:bg-[#07080F] border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-400 hover:bg-slate-100"
                 }`}
               >
                 Present at Survey
@@ -268,10 +268,10 @@ export default function ParcelVerificationPage() {
               <button
                 type="button"
                 onClick={() => setOwnerPresent(false)}
-                className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-[3px] text-xs font-bold border transition-all cursor-pointer ${
                   !ownerPresent
-                    ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
-                    : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+                    ? "bg-[#FFF8E1] dark:bg-amber-950/40 border-[#FFE082] dark:border-amber-800/40 text-[#B36B00] dark:text-amber-300 shadow-xs"
+                    : "bg-[#F8FAFC] dark:bg-[#07080F] border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-400 hover:bg-slate-100"
                 }`}
               >
                 Absentee / Non-Responsive
@@ -280,26 +280,26 @@ export default function ParcelVerificationPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs text-slate-300 font-medium block">Verified Claimant Name</label>
+            <label className="text-xs text-[#14213D] dark:text-slate-300 font-bold block">Verified Claimant Name</label>
             <input
               type="text"
               value={ownerVerifiedName}
               onChange={(e) => setOwnerVerifiedName(e.target.value)}
               placeholder="Confirm legal landowner name"
-              className="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-medium"
+              className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2 text-xs text-[#14213D] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#0B2E59] font-medium"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs text-slate-300 font-medium block">Boundary Pillars Intact</label>
+            <label className="text-xs text-[#14213D] dark:text-slate-300 font-bold block">Boundary Pillars Intact</label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setBoundaryConfirmed(true)}
-                className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-[3px] text-xs font-bold border transition-all cursor-pointer ${
                   boundaryConfirmed
-                    ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
-                    : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+                    ? "bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300 shadow-xs"
+                    : "bg-[#F8FAFC] dark:bg-[#07080F] border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-400 hover:bg-slate-100"
                 }`}
               >
                 Pillars Match RoR
@@ -307,10 +307,10 @@ export default function ParcelVerificationPage() {
               <button
                 type="button"
                 onClick={() => setBoundaryConfirmed(false)}
-                className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-[3px] text-xs font-bold border transition-all cursor-pointer ${
                   !boundaryConfirmed
-                    ? "bg-red-500/20 border-red-500/40 text-red-300"
-                    : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+                    ? "bg-[#FFEBEE] dark:bg-rose-950/40 border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-300 shadow-xs"
+                    : "bg-[#F8FAFC] dark:bg-[#07080F] border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-400 hover:bg-slate-100"
                 }`}
               >
                 Discrepancy / Encroached
@@ -319,11 +319,11 @@ export default function ParcelVerificationPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs text-slate-300 font-medium block">Physical Possession Status</label>
+            <label className="text-xs text-[#14213D] dark:text-slate-300 font-bold block">Physical Possession Status</label>
             <select
               value={possessionStatus}
               onChange={(e) => setPossessionStatus(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium cursor-pointer"
+              className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2 text-xs text-[#14213D] dark:text-white focus:outline-none focus:border-[#0B2E59] font-medium cursor-pointer"
             >
               <option value="cultivated">Active Agricultural Crop</option>
               <option value="vacant">Vacant / Fallow Open Land</option>
@@ -372,35 +372,35 @@ export default function ParcelVerificationPage() {
         />
 
         {/* 6. Observations & Remarks */}
-        <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
-          <span className="text-xs font-semibold text-white block">Field Observations & Officer Remarks</span>
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-3">
+          <span className="text-xs font-bold text-[#14213D] dark:text-white block">Field Observations &amp; Officer Remarks</span>
           <textarea
             value={observations}
             onChange={(e) => setObservations(e.target.value)}
             rows={2}
             placeholder="Observed crop types, structures, boundary markers, borewells..."
-            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 resize-none"
+            className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2 text-xs text-[#14213D] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#0B2E59] resize-none"
           />
           <textarea
             value={remarks}
             onChange={(e) => setRemarks(e.target.value)}
             rows={2}
             placeholder="Statutory remarks for Tehsildar / CALA legal review..."
-            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 resize-none"
+            className="w-full bg-[#F8FAFC] dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] px-3 py-2 text-xs text-[#14213D] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#0B2E59] resize-none"
           />
         </div>
 
         {/* 7. Final Decision Selector */}
-        <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
-          <label className="text-xs text-slate-300 font-medium block">Officer Statutory Recommendation</label>
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-3">
+          <label className="text-xs font-bold text-[#14213D] dark:text-white block">Officer Statutory Recommendation</label>
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
               onClick={() => setStatus("verified")}
-              className={`py-2.5 px-2 rounded-xl text-xs font-bold border transition-all flex flex-col items-center gap-1 cursor-pointer ${
+              className={`py-2.5 px-2 rounded-[3px] text-xs font-bold border transition-all flex flex-col items-center gap-1 cursor-pointer ${
                 status === "verified"
-                  ? "bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-md"
-                  : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+                  ? "bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300 shadow-xs"
+                  : "bg-[#F8FAFC] dark:bg-[#07080F] border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-400 hover:bg-slate-100"
               }`}
             >
               <CheckCircle2 className="w-4 h-4" />
@@ -410,10 +410,10 @@ export default function ParcelVerificationPage() {
             <button
               type="button"
               onClick={() => setStatus("disputed")}
-              className={`py-2.5 px-2 rounded-xl text-xs font-bold border transition-all flex flex-col items-center gap-1 cursor-pointer ${
+              className={`py-2.5 px-2 rounded-[3px] text-xs font-bold border transition-all flex flex-col items-center gap-1 cursor-pointer ${
                 status === "disputed"
-                  ? "bg-amber-500/20 border-amber-500 text-amber-300 shadow-md"
-                  : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+                  ? "bg-[#FFF8E1] dark:bg-amber-950/40 border-[#FFE082] dark:border-amber-800/40 text-[#B36B00] dark:text-amber-300 shadow-xs"
+                  : "bg-[#F8FAFC] dark:bg-[#07080F] border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-400 hover:bg-slate-100"
               }`}
             >
               <AlertTriangle className="w-4 h-4" />
@@ -423,10 +423,10 @@ export default function ParcelVerificationPage() {
             <button
               type="button"
               onClick={() => setStatus("rejected")}
-              className={`py-2.5 px-2 rounded-xl text-xs font-bold border transition-all flex flex-col items-center gap-1 cursor-pointer ${
+              className={`py-2.5 px-2 rounded-[3px] text-xs font-bold border transition-all flex flex-col items-center gap-1 cursor-pointer ${
                 status === "rejected"
-                  ? "bg-red-500/20 border-red-500 text-red-300 shadow-md"
-                  : "bg-slate-900/60 border-slate-700 text-slate-400 hover:bg-slate-800"
+                  ? "bg-[#FFEBEE] dark:bg-rose-950/40 border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-300 shadow-xs"
+                  : "bg-[#F8FAFC] dark:bg-[#07080F] border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-400 hover:bg-slate-100"
               }`}
             >
               <XCircle className="w-4 h-4" />
@@ -441,10 +441,10 @@ export default function ParcelVerificationPage() {
             type="button"
             disabled={submitting}
             onClick={() => handleSubmit(false)}
-            className="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 text-white rounded-xl text-sm font-bold shadow-xl shadow-emerald-950/40 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 px-4 bg-[#1E7E34] hover:bg-[#166527] disabled:bg-slate-400 text-white rounded-[4px] text-xs font-bold uppercase tracking-wider shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             {submitting ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
               <Send className="w-4 h-4" />
             )}
@@ -457,9 +457,9 @@ export default function ParcelVerificationPage() {
             type="button"
             disabled={submitting}
             onClick={() => handleSubmit(true)}
-            className="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-2.5 px-4 bg-white dark:bg-[#0D121F] hover:bg-[#F8FAFC] dark:hover:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-300 rounded-[4px] text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
           >
-            <Save className="w-3.5 h-3.5 text-slate-400" />
+            <Save className="w-3.5 h-3.5 text-[#64748B] dark:text-slate-400" />
             <span>Save to Device (Force Offline Storage)</span>
           </button>
         </div>

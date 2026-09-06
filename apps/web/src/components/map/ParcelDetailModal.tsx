@@ -44,290 +44,202 @@ export function ParcelDetailModal({ parcel, onClose, onSimulate }: ParcelDetailM
   const breakdown = parcel.criticality_breakdown || {};
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        width: '100%',
-        maxWidth: 580,
-        background: '#090d16',
-        borderLeft: '1px solid rgba(255,255,255,0.12)',
-        boxShadow: '-10px 0 40px rgba(0,0,0,0.85)',
-        zIndex: 1000,
-        display: 'flex',
-        flexDirection: 'column',
-        overflowY: 'auto'
-      }}
-    >
+    <div className="fixed top-0 right-0 bottom-0 w-full max-w-[580px] bg-white dark:bg-[#090d16] border-l border-[#DCE2E8] dark:border-white/10 shadow-2xl z-[1000] flex flex-col overflow-y-auto">
       {/* Modal Header */}
-      <div
-        style={{
-          padding: '20px 24px',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-          background: 'rgba(15,23,42,0.6)',
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-          backdropFilter: 'blur(10px)'
-        }}
-      >
+      <div className="p-5 border-b border-[#DCE2E8] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0D121F] flex items-start justify-between sticky top-0 z-10 shadow-xs">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-            <span
-              style={{
-                fontFamily: 'JetBrains Mono, monospace',
-                fontSize: 10,
-                padding: '2px 8px',
-                borderRadius: 4,
-                background: 'rgba(99,102,241,0.15)',
-                border: '1px solid rgba(99,102,241,0.3)',
-                color: '#818cf8',
-                fontWeight: 700
-              }}
-            >
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-[2px] bg-[#0B2E59] text-white uppercase">
               CADASTRAL PARCEL DOSSIER
             </span>
             <ProvenanceBadge sourceType={parcel.source_type || 'SYNTHETIC'} size="xs" />
           </div>
-          <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 20, fontWeight: 800, color: '#f8fafc', margin: 0 }}>
+          <h2 className="text-xl font-bold text-[#14213D] dark:text-[#F0F4FF] m-0">
             Survey No. {parcel.survey_number || parcel.survey_no}
           </h2>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 6, fontSize: 12, color: '#94a3b8' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <MapPin style={{ width: 12, height: 12, color: '#38bdf8' }} />
+          <div className="flex items-center gap-3 mt-1.5 text-xs text-[#5A6A80] dark:text-slate-400 font-medium">
+            <span className="flex items-center gap-1">
+              <MapPin className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
               {parcel.village_name || 'Kanhera Kalan'}, {parcel.tehsil || 'Ramganj Mandi'}
             </span>
             <span>•</span>
-            <span>{ha} ha ({sqM} sq.m)</span>
+            <span className="font-mono">{ha} ha ({sqM} sq.m)</span>
           </div>
         </div>
 
         <button
           onClick={onClose}
-          style={{
-            background: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: 8,
-            padding: 6,
-            color: '#94a3b8',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
+          className="p-1.5 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 bg-white dark:bg-white/5 text-[#5A6A80] dark:text-slate-400 hover:bg-[#F4F6F8] dark:hover:bg-white/10 cursor-pointer transition-colors"
         >
-          <X style={{ width: 18, height: 18 }} />
+          <X className="w-4 h-4" />
         </button>
       </div>
 
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div className="p-5 flex flex-col gap-4">
         {/* Section 13 Prominent MODEL_DERIVED Recommended Action */}
-        <div
-          style={{
-            padding: '16px 18px',
-            borderRadius: 12,
-            background: 'linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(99,102,241,0.12) 100%)',
-            border: '1px solid rgba(16,185,129,0.35)',
-            boxShadow: '0 4px 20px rgba(16,185,129,0.08)'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Sparkles style={{ width: 15, height: 15, color: '#34d399' }} />
-              <span style={{ fontSize: 11, fontWeight: 800, color: '#34d399', letterSpacing: '0.05em', fontFamily: 'JetBrains Mono, monospace' }}>
+        <div className="p-4 rounded-[4px] bg-[#E8F1FA] dark:bg-[#0B2E59]/30 border border-[#B8D5E5] dark:border-[#0B2E59] border-l-4 border-l-[#0B2E59] shadow-xs">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-[#0B2E59] dark:text-sky-300" />
+              <span className="text-[11px] font-bold text-[#0B2E59] dark:text-sky-200 uppercase tracking-wider font-mono">
                 MODEL-DERIVED RECOMMENDED ACTION
               </span>
             </div>
             <ProvenanceBadge sourceType="MODEL_DERIVED" size="xs" />
           </div>
-          <p style={{ margin: 0, fontSize: 13, color: '#e2e8f0', fontWeight: 600, lineHeight: 1.5 }}>
+          <p className="m-0 text-xs text-[#14213D] dark:text-[#F0F4FF] font-semibold leading-relaxed">
             {parcel.recommended_action || 'Proceed with statutory land record mutation and joint verification.'}
           </p>
           {onSimulate && (
             <button
               onClick={() => onSimulate(parcel.parcel_id)}
-              style={{
-                marginTop: 12,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '7px 14px',
-                borderRadius: 7,
-                background: 'rgba(16,185,129,0.2)',
-                border: '1px solid rgba(16,185,129,0.4)',
-                color: '#34d399',
-                fontSize: 11,
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
+              className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold shadow-xs cursor-pointer transition-colors"
             >
-              Simulate Intervention Effect <ArrowRight style={{ width: 12, height: 12 }} />
+              <span>Simulate Intervention Effect</span>
+              <ArrowRight className="w-3 h-3" />
             </button>
           )}
         </div>
 
         {/* Section 10 Composite Intelligence KPI Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-          <div
-            style={{
-              padding: '14px 16px',
-              borderRadius: 10,
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.08)'
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: 10, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>CRITICALITY SCORE</span>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs">
+            <div className="flex justify-between items-center">
+              <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono font-bold uppercase">CRITICALITY SCORE</span>
               <ProvenanceBadge sourceType="MODEL_DERIVED" size="xs" />
             </div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#818cf8', marginTop: 4 }}>
-              {critScore} <span style={{ fontSize: 13, color: '#64748b' }}>/ 100</span>
+            <div className="text-2xl font-bold font-mono text-[#0B2E59] dark:text-sky-400 mt-1">
+              {critScore} <span className="text-xs text-[#5A6A80] dark:text-slate-400">/ 100</span>
             </div>
             {breakdown.w1_downstream_segments !== undefined && (
-              <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 6, lineHeight: 1.4 }}>
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 mt-1.5 font-mono">
                 Seg: {breakdown.w1_downstream_segments} • MS: {breakdown.w2_downstream_milestones} • SPOF: {breakdown.w3_single_point_failure}
               </div>
             )}
           </div>
 
-          <div
-            style={{
-              padding: '14px 16px',
-              borderRadius: 10,
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.08)'
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: 10, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>RISK SCORE</span>
+          <div className="p-3.5 rounded-[4px] bg-[#F8FAFC] dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs">
+            <div className="flex justify-between items-center">
+              <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono font-bold uppercase">RISK SCORE</span>
               <ProvenanceBadge sourceType="MODEL_DERIVED" size="xs" />
             </div>
-            <div
-              style={{
-                fontFamily: 'Sora, sans-serif',
-                fontSize: 26,
-                fontWeight: 800,
-                color: Number(riskScore) >= 60 ? '#f43f5e' : Number(riskScore) >= 30 ? '#f59e0b' : '#10b981',
-                marginTop: 4
-              }}
-            >
-              {riskScore} <span style={{ fontSize: 13, color: '#64748b' }}>/ 100</span>
+            <div className={`text-2xl font-bold font-mono mt-1 ${
+              Number(riskScore) >= 60 ? 'text-[#B32424] dark:text-rose-400' : Number(riskScore) >= 30 ? 'text-[#B36B00] dark:text-amber-400' : 'text-[#1E7E34] dark:text-emerald-400'
+            }`}>
+              {riskScore} <span className="text-xs text-[#5A6A80] dark:text-slate-400">/ 100</span>
             </div>
-            <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 6 }}>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 mt-1.5 font-medium">
               {Number(riskScore) >= 60 ? 'High Risk Injunction' : Number(riskScore) >= 30 ? 'Moderate Statutory Delay' : 'Low Impedance'}
             </div>
           </div>
         </div>
 
         {/* Ownership & Classification */}
-        <div style={{ padding: '16px', borderRadius: 10, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
-          <h4 style={{ margin: '0 0 12px 0', fontSize: 12, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <User style={{ width: 13, height: 13, color: '#38bdf8' }} /> Landholder & Tenure
+        <div className="p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs">
+          <h4 className="m-0 mb-3 text-xs text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold flex items-center gap-1.5">
+            <User className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" /> Landholder & Tenure
           </h4>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, fontSize: 12 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             <div>
-              <span style={{ color: '#64748b' }}>Owner Name:</span>{' '}
-              <span style={{ color: '#e2e8f0', fontWeight: 600 }}>{parcel.owner?.name || parcel.owner_name || 'Geeta Yadav'}</span>
+              <span className="text-[#5A6A80] dark:text-slate-400">Owner Name:</span>{' '}
+              <span className="text-[#14213D] dark:text-[#F0F4FF] font-bold">{parcel.owner?.name || parcel.owner_name || 'Geeta Yadav'}</span>
             </div>
             <div>
-              <span style={{ color: '#64748b' }}>Tenure Type:</span>{' '}
-              <span style={{ color: '#e2e8f0' }}>{parcel.owner?.owner_type || 'individual'}</span>
+              <span className="text-[#5A6A80] dark:text-slate-400">Tenure Type:</span>{' '}
+              <span className="text-[#14213D] dark:text-slate-300">{parcel.owner?.owner_type || 'individual'}</span>
             </div>
             <div>
-              <span style={{ color: '#64748b' }}>Land Classification:</span>{' '}
-              <span style={{ color: '#e2e8f0', textTransform: 'capitalize' }}>{parcel.land_use || 'agricultural'}</span>
+              <span className="text-[#5A6A80] dark:text-slate-400">Land Classification:</span>{' '}
+              <span className="text-[#14213D] dark:text-slate-300 capitalize">{parcel.land_use || 'agricultural'}</span>
             </div>
             <div>
-              <span style={{ color: '#64748b' }}>Acquisition Stage:</span>{' '}
-              <span style={{ color: parcel.acquisition_status === 'possessed' ? '#34d399' : '#fbbf24', fontWeight: 700, textTransform: 'uppercase' }}>
+              <span className="text-[#5A6A80] dark:text-slate-400">Acquisition Stage:</span>{' '}
+              <span className={`font-mono font-bold uppercase ${parcel.acquisition_status === 'possessed' ? 'text-[#1E7E34] dark:text-emerald-400' : 'text-[#B36B00] dark:text-amber-400'}`}>
                 {parcel.acquisition_status || 'not_started'}
               </span>
             </div>
           </div>
           {parcel.ownership_conflict && (
-            <div style={{ marginTop: 10, padding: '8px 12px', borderRadius: 6, background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.3)', color: '#f43f5e', fontSize: 11, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <AlertTriangle style={{ width: 13, height: 13 }} />
+            <div className="mt-2.5 p-2 rounded-[3px] bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-300 text-[11px] font-semibold flex items-center gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
               Active Conflict: {parcel.conflict_type?.replace('_', ' ')}
             </div>
           )}
         </div>
 
         {/* Section 26-30 Statutory Compensation Breakdown */}
-        <div style={{ padding: '16px', borderRadius: 10, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <h4 style={{ margin: 0, fontSize: 12, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Coins style={{ width: 13, height: 13, color: '#fbbf24' }} /> RFCTLARR Act Sec 26–30 Compensation
+        <div className="p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs">
+          <div className="flex justify-between items-center mb-3">
+            <h4 className="m-0 text-xs text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold flex items-center gap-1.5">
+              <Coins className="w-3.5 h-3.5 text-[#B36B00] dark:text-amber-400" /> RFCTLARR Act Sec 26–30 Compensation
             </h4>
             <ProvenanceBadge sourceType={comp.source_type || 'MODEL_DERIVED'} size="xs" />
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 12 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: '#64748b' }}>Base Market Value (Sec 26):</span>
-              <span style={{ color: '#e2e8f0', fontFamily: 'JetBrains Mono, monospace' }}>₹{(comp.market_value_base || 0).toLocaleString()}</span>
+          <div className="flex flex-col gap-2 text-xs">
+            <div className="flex justify-between">
+              <span className="text-[#5A6A80] dark:text-slate-400">Base Market Value (Sec 26):</span>
+              <span className="text-[#14213D] dark:text-[#F0F4FF] font-mono font-bold">₹{(comp.market_value_base || 0).toLocaleString()}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: '#64748b' }}>Rural Multiplier Factor:</span>
-              <span style={{ color: '#e2e8f0', fontFamily: 'JetBrains Mono, monospace' }}>{comp.multiplier_factor || 1.5}x</span>
+            <div className="flex justify-between">
+              <span className="text-[#5A6A80] dark:text-slate-400">Rural Multiplier Factor:</span>
+              <span className="text-[#14213D] dark:text-[#F0F4FF] font-mono font-bold">{comp.multiplier_factor || 1.5}x</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: '#64748b' }}>Asset & Tree Value (Sec 29):</span>
-              <span style={{ color: '#e2e8f0', fontFamily: 'JetBrains Mono, monospace' }}>₹{(comp.asset_value || 0).toLocaleString()}</span>
+            <div className="flex justify-between">
+              <span className="text-[#5A6A80] dark:text-slate-400">Asset & Tree Value (Sec 29):</span>
+              <span className="text-[#14213D] dark:text-[#F0F4FF] font-mono font-bold">₹{(comp.asset_value || 0).toLocaleString()}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: '#64748b' }}>100% Solatium (Sec 30(1)):</span>
-              <span style={{ color: '#e2e8f0', fontFamily: 'JetBrains Mono, monospace' }}>₹{(comp.solatium_amount || 0).toLocaleString()}</span>
+            <div className="flex justify-between">
+              <span className="text-[#5A6A80] dark:text-slate-400">100% Solatium (Sec 30(1)):</span>
+              <span className="text-[#B36B00] dark:text-amber-400 font-mono font-bold">₹{(comp.solatium_amount || 0).toLocaleString()}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: '#64748b' }}>12% Additional Interest (Sec 30(3)):</span>
-              <span style={{ color: '#e2e8f0', fontFamily: 'JetBrains Mono, monospace' }}>₹{(comp.interest_12pct_amount || 0).toLocaleString()}</span>
+            <div className="flex justify-between">
+              <span className="text-[#5A6A80] dark:text-slate-400">12% Additional Interest (Sec 30(3)):</span>
+              <span className="text-[#0B2E59] dark:text-sky-300 font-mono font-bold">₹{(comp.interest_12pct_amount || 0).toLocaleString()}</span>
             </div>
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', margin: '4px 0' }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
-              <span style={{ color: '#cbd5e1' }}>Total Compensation Award:</span>
-              <span style={{ color: '#34d399', fontFamily: 'JetBrains Mono, monospace', fontSize: 14 }}>
+            <div className="h-px bg-[#DCE2E8] dark:border-white/10 my-1" />
+            <div className="flex justify-between font-bold text-xs">
+              <span className="text-[#14213D] dark:text-slate-200">Total Compensation Award:</span>
+              <span className="text-[#1E7E34] dark:text-emerald-400 font-mono text-sm">
                 ₹{(comp.total_compensation || 0).toLocaleString()}
               </span>
             </div>
-            <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>
-              Status: <span style={{ color: comp.compensation_status === 'disbursed' ? '#34d399' : '#f59e0b', textTransform: 'uppercase' }}>{comp.compensation_status || 'pending'}</span>
+            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 mt-0.5">
+              Status: <span className={`font-mono font-bold uppercase ${comp.compensation_status === 'disbursed' ? 'text-[#1E7E34] dark:text-emerald-400' : 'text-[#B36B00] dark:text-amber-400'}`}>{comp.compensation_status || 'pending'}</span>
             </div>
           </div>
         </div>
 
         {/* Legal Injunctions / Disputes */}
         {legals.length > 0 && (
-          <div style={{ padding: '16px', borderRadius: 10, background: 'rgba(244,63,94,0.05)', border: '1px solid rgba(244,63,94,0.25)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-              <h4 style={{ margin: 0, fontSize: 12, color: '#f43f5e', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Scale style={{ width: 13, height: 13 }} /> Judicial Proceedings
+          <div className="p-4 rounded-[4px] bg-[#FFEBEE]/50 dark:bg-rose-950/20 border border-[#FFCDD2] dark:border-rose-800/40 shadow-xs">
+            <div className="flex justify-between items-center mb-2.5">
+              <h4 className="m-0 text-xs text-[#B32424] dark:text-rose-400 uppercase font-mono font-bold flex items-center gap-1.5">
+                <Scale className="w-3.5 h-3.5" /> Judicial Proceedings
               </h4>
               <ProvenanceBadge sourceType={legals[0].source_type || 'SYNTHETIC'} size="xs" />
             </div>
             {legals.map((l: any, i: number) => (
-              <div key={i} style={{ fontSize: 11, color: '#e2e8f0', lineHeight: 1.5 }}>
-                <div style={{ fontWeight: 700, color: '#f43f5e' }}>{l.case_name} ({l.court})</div>
-                <div style={{ color: '#94a3b8' }}>Issue: {l.legal_issue} • Status: <span style={{ color: '#fbbf24', textTransform: 'uppercase' }}>{l.legal_status}</span></div>
+              <div key={i} className="text-xs text-[#14213D] dark:text-[#F0F4FF] leading-relaxed">
+                <div className="font-bold text-[#B32424] dark:text-rose-300">{l.case_name} ({l.court})</div>
+                <div className="text-[11px] text-[#5A6A80] dark:text-slate-400">Issue: {l.legal_issue} • Status: <span className="text-[#B36B00] dark:text-amber-400 font-bold uppercase">{l.legal_status}</span></div>
               </div>
             ))}
           </div>
         )}
 
         {/* Documents & Verifications */}
-        <div style={{ padding: '16px', borderRadius: 10, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
-          <h4 style={{ margin: '0 0 10px 0', fontSize: 12, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <FileText style={{ width: 13, height: 13, color: '#38bdf8' }} /> Land Records & Documents ({docs.length})
+        <div className="p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs">
+          <h4 className="m-0 mb-2.5 text-xs text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold flex items-center gap-1.5">
+            <FileText className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" /> Land Records & Documents ({docs.length})
           </h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div className="flex flex-col gap-1.5">
             {docs.map((d: any, i: number) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 11, padding: '6px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.02)' }}>
-                <span style={{ color: '#e2e8f0', textTransform: 'capitalize' }}>{d.document_type?.replace('_', ' ')}</span>
-                <span style={{ color: d.document_status === 'verified' ? '#34d399' : d.document_status === 'missing' ? '#f43f5e' : '#fbbf24', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, textTransform: 'uppercase' }}>
+              <div key={i} className="flex justify-between items-center text-xs p-2 rounded-[3px] bg-white dark:bg-white/5 border border-[#DCE2E8]/60 dark:border-white/5">
+                <span className="text-[#14213D] dark:text-slate-200 capitalize">{d.document_type?.replace('_', ' ')}</span>
+                <span className={`font-mono text-[10px] font-bold uppercase ${
+                  d.document_status === 'verified' ? 'text-[#1E7E34] dark:text-emerald-400' : d.document_status === 'missing' ? 'text-[#B32424] dark:text-rose-400' : 'text-[#B36B00] dark:text-amber-400'
+                }`}>
                   {d.document_status}
                 </span>
               </div>
@@ -336,24 +248,24 @@ export function ParcelDetailModal({ parcel, onClose, onSimulate }: ParcelDetailM
         </div>
 
         {/* Section 11 Dependency Graph Connections */}
-        <div style={{ padding: '16px', borderRadius: 10, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
-          <h4 style={{ margin: '0 0 10px 0', fontSize: 12, color: '#94a3b8', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <GitBranch style={{ width: 13, height: 13, color: '#818cf8' }} /> Critical Chain Dependencies
+        <div className="p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs">
+          <h4 className="m-0 mb-2.5 text-xs text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold flex items-center gap-1.5">
+            <GitBranch className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" /> Critical Chain Dependencies
           </h4>
-          <div style={{ fontSize: 11, color: '#94a3b8', display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div className="text-xs text-[#5A6A80] dark:text-slate-400 flex flex-col gap-1.5">
             <div>
-              <span style={{ color: '#64748b' }}>Upstream Direct Blockers:</span>{' '}
-              <span style={{ color: upstream.length > 0 ? '#f43f5e' : '#34d399', fontWeight: 700 }}>
+              <span>Upstream Direct Blockers:</span>{' '}
+              <span className={`font-bold ml-1 ${upstream.length > 0 ? 'text-[#B32424] dark:text-rose-400' : 'text-[#1E7E34] dark:text-emerald-400'}`}>
                 {upstream.length} Active Blocker(s)
               </span>
             </div>
             <div>
-              <span style={{ color: '#64748b' }}>Downstream Segments Impacted:</span>{' '}
-              <span style={{ color: '#818cf8', fontWeight: 700 }}>{downstream.length || 2} Segments</span>
+              <span>Downstream Segments Impacted:</span>{' '}
+              <span className="text-[#0B2E59] dark:text-sky-300 font-bold ml-1">{downstream.length || 2} Segments</span>
             </div>
             <div>
-              <span style={{ color: '#64748b' }}>Critical Path Membership:</span>{' '}
-              <span style={{ color: parcel.is_critical_path ? '#f43f5e' : '#34d399', fontWeight: 700 }}>
+              <span>Critical Path Membership:</span>{' '}
+              <span className={`font-bold ml-1 ${parcel.is_critical_path ? 'text-[#B32424] dark:text-rose-400' : 'text-[#1E7E34] dark:text-emerald-400'}`}>
                 {parcel.is_critical_path ? 'YES (Zero-Float Corridor Bottleneck)' : 'NO (Has Float)'}
               </span>
             </div>

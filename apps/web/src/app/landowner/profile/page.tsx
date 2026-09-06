@@ -68,8 +68,8 @@ export default function LandownerProfilePage() {
   if (!owner) {
     return (
       <LandownerShell title="Citizen Profile" showBack>
-        <div className="py-24 text-center text-xs text-slate-400 space-y-2">
-          <RefreshCw className="w-6 h-6 animate-spin mx-auto text-amber-400" />
+        <div className="py-24 text-center text-xs text-[#5A6A80] dark:text-slate-400 space-y-2">
+          <RefreshCw className="w-6 h-6 animate-spin mx-auto text-[#0B2E59] dark:text-amber-400" />
           <span>Loading citizen profile...</span>
         </div>
       </LandownerShell>
@@ -81,48 +81,48 @@ export default function LandownerProfilePage() {
       <div className="p-4 space-y-4 max-w-lg mx-auto pb-24">
         
         {/* Profile Details Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-xs space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xl flex-shrink-0">
+            <div className="w-14 h-14 rounded-[4px] bg-[#0B2E59] text-white flex items-center justify-center font-bold text-xl flex-shrink-0 shadow-xs">
               {owner.name?.slice(0, 1) || "U"}
             </div>
             <div>
-              <h1 className="font-bold text-white text-base font-display">
+              <h1 className="font-bold text-[#14213D] dark:text-white text-base font-display">
                 {owner.name}
               </h1>
-              <p className="text-xs text-amber-400 font-medium">
+              <p className="text-xs text-[#0B2E59] dark:text-sky-400 font-semibold">
                 Registered Citizen Titleholder
               </p>
             </div>
           </div>
 
-          <div className="space-y-2 text-xs border-t border-slate-800 pt-3">
+          <div className="space-y-2 text-xs border-t border-[#DCE2E8] dark:border-white/10 pt-3">
             <div className="flex items-center justify-between py-1">
-              <span className="text-slate-400 flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-slate-500" /> Email
+              <span className="text-[#5A6A80] dark:text-slate-400 flex items-center gap-2">
+                <Mail className="w-3.5 h-3.5 text-[#5A6A80]" /> Email
               </span>
-              <span className="font-mono text-white">{owner.email || "Not set"}</span>
+              <span className="font-mono text-[#14213D] dark:text-white font-medium">{owner.email || "Not set"}</span>
             </div>
 
             <div className="flex items-center justify-between py-1">
-              <span className="text-slate-400 flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-slate-500" /> Village
+              <span className="text-[#5A6A80] dark:text-slate-400 flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-[#5A6A80]" /> Village
               </span>
-              <span className="text-white">{owner.contact_village || owner.village || "Corridor Sector"}</span>
+              <span className="text-[#14213D] dark:text-slate-200">{owner.contact_village || owner.village || "Corridor Sector"}</span>
             </div>
 
             <div className="flex items-center justify-between py-1">
-              <span className="text-slate-400 flex items-center gap-2">
-                <Layers className="w-3.5 h-3.5 text-slate-500" /> Registered Parcels
+              <span className="text-[#5A6A80] dark:text-slate-400 flex items-center gap-2">
+                <Layers className="w-3.5 h-3.5 text-[#5A6A80]" /> Registered Parcels
               </span>
-              <span className="font-mono text-amber-400 font-bold">{parcelsCount} Parcels</span>
+              <span className="font-mono text-[#0B2E59] dark:text-sky-400 font-bold">{parcelsCount} Parcels</span>
             </div>
           </div>
 
-          <div className="pt-2 border-t border-slate-800">
+          <div className="pt-2 border-t border-[#DCE2E8] dark:border-white/10">
             <button
               onClick={handleSignOut}
-              className="w-full py-2.5 px-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-[4px] bg-[#FFEBEE] dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-950/30 border border-[#FFCDD2] dark:border-red-800/30 text-[#B32424] dark:text-red-400 text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
               <span>Sign Out of Citizen Portal</span>

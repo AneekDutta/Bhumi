@@ -232,19 +232,19 @@ export default function FieldMapPage() {
         <div className="space-y-2">
           {/* Search Input Bar */}
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#64748B] dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search Survey No, Village, or Landholder..."
-              className="w-full pl-9 pr-8 py-2 bg-slate-800/90 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-medium shadow-sm"
+              className="w-full pl-9 pr-8 py-2 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] text-xs text-[#14213D] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#0B2E59] font-medium shadow-xs"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="p-1 rounded-full text-slate-400 hover:text-white absolute right-2.5 top-1/2 -translate-y-1/2"
+                className="p-1 rounded-full text-[#64748B] hover:text-[#14213D] dark:text-slate-400 dark:hover:text-white absolute right-2.5 top-1/2 -translate-y-1/2"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -256,10 +256,10 @@ export default function FieldMapPage() {
             <button
               type="button"
               onClick={() => setFilterMode("ALL")}
-              className={`px-2.5 py-1 rounded-lg border whitespace-nowrap transition-all ${
+              className={`px-2.5 py-1 rounded-[3px] border whitespace-nowrap transition-all ${
                 filterMode === "ALL"
-                  ? "bg-emerald-600 border-emerald-500 text-white font-bold shadow-sm"
-                  : "bg-slate-800/90 border-slate-700 text-slate-400 hover:text-white"
+                  ? "bg-[#0B2E59] border-[#0B2E59] text-white font-bold shadow-xs"
+                  : "bg-white dark:bg-[#0D121F] border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-400 hover:bg-slate-50"
               }`}
             >
               All Parcels ({geojson?.features?.length || 0})
@@ -267,10 +267,10 @@ export default function FieldMapPage() {
             <button
               type="button"
               onClick={() => setFilterMode("PENDING")}
-              className={`px-2.5 py-1 rounded-lg border whitespace-nowrap transition-all ${
+              className={`px-2.5 py-1 rounded-[3px] border whitespace-nowrap transition-all ${
                 filterMode === "PENDING"
-                  ? "bg-amber-600 border-amber-500 text-white font-bold shadow-sm"
-                  : "bg-slate-800/90 border-slate-700 text-slate-400 hover:text-white"
+                  ? "bg-[#B36B00] border-[#B36B00] text-white font-bold shadow-xs"
+                  : "bg-white dark:bg-[#0D121F] border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-400 hover:bg-slate-50"
               }`}
             >
               Pending
@@ -278,10 +278,10 @@ export default function FieldMapPage() {
             <button
               type="button"
               onClick={() => setFilterMode("DISPUTED")}
-              className={`px-2.5 py-1 rounded-lg border whitespace-nowrap transition-all ${
+              className={`px-2.5 py-1 rounded-[3px] border whitespace-nowrap transition-all ${
                 filterMode === "DISPUTED"
-                  ? "bg-red-600 border-red-500 text-white font-bold shadow-sm"
-                  : "bg-slate-800/90 border-slate-700 text-slate-400 hover:text-white"
+                  ? "bg-[#B32424] border-[#B32424] text-white font-bold shadow-xs"
+                  : "bg-white dark:bg-[#0D121F] border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-400 hover:bg-slate-50"
               }`}
             >
               Disputed / Blocked
@@ -289,10 +289,10 @@ export default function FieldMapPage() {
             <button
               type="button"
               onClick={() => setFilterMode("INCIDENTS")}
-              className={`px-2.5 py-1 rounded-lg border whitespace-nowrap transition-all ${
+              className={`px-2.5 py-1 rounded-[3px] border whitespace-nowrap transition-all ${
                 filterMode === "INCIDENTS"
-                  ? "bg-rose-600 border-rose-500 text-white font-bold shadow-sm"
-                  : "bg-slate-800/90 border-slate-700 text-slate-400 hover:text-white"
+                  ? "bg-[#B32424] border-[#B32424] text-white font-bold shadow-xs"
+                  : "bg-white dark:bg-[#0D121F] border-[#DCE2E8] dark:border-white/10 text-[#64748B] dark:text-slate-400 hover:bg-slate-50"
               }`}
             >
               Incidents ({incidents.length})
@@ -301,10 +301,10 @@ export default function FieldMapPage() {
         </div>
 
         {/* Real Mobile Spatial Map Container */}
-        <div className="h-[380px] sm:h-[450px] relative rounded-2xl overflow-hidden shadow-2xl border border-slate-800 flex-shrink-0">
+        <div className="h-[380px] sm:h-[450px] relative rounded-[4px] overflow-hidden shadow-xs border border-[#DCE2E8] dark:border-white/10 flex-shrink-0">
           {loading ? (
-            <div className="w-full h-full flex flex-col items-center justify-center bg-slate-950 text-slate-400 gap-3">
-              <RefreshCw className="w-6 h-6 animate-spin text-emerald-400" />
+            <div className="w-full h-full flex flex-col items-center justify-center bg-[#F8FAFC] dark:bg-[#07080F] text-[#64748B] dark:text-slate-400 gap-3">
+              <RefreshCw className="w-6 h-6 animate-spin text-[#0B2E59] dark:text-sky-400" />
               <span className="text-xs font-mono">Loading Registered Cadastral Boundaries...</span>
             </div>
           ) : (
@@ -326,15 +326,15 @@ export default function FieldMapPage() {
 
               {/* Clean Empty State Overlay when 0 parcels in jurisdiction */}
               {(!filteredGeojson || !filteredGeojson.features || filteredGeojson.features.length === 0) && (
-                <div className="absolute inset-0 flex items-center justify-center p-6 bg-slate-950/50 backdrop-blur-[2px] pointer-events-none z-10">
-                  <div className="max-w-sm p-5 rounded-2xl bg-slate-900/95 border border-slate-700/80 text-center shadow-2xl space-y-2.5 pointer-events-auto">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+                <div className="absolute inset-0 flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-[2px] pointer-events-none z-10">
+                  <div className="max-w-sm p-5 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 text-center shadow-md space-y-2.5 pointer-events-auto">
+                    <div className="w-10 h-10 rounded-[4px] bg-[#E6F0FA] dark:bg-sky-950/40 border border-[#B8D5ED] dark:border-sky-800/40 text-[#0B5FA5] dark:text-sky-400 flex items-center justify-center mx-auto">
                       <ShieldCheck className="w-5 h-5" />
                     </div>
-                    <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                    <h4 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wider font-mono">
                       No Registered Parcels in Jurisdiction
                     </h4>
-                    <p className="text-[11px] text-slate-300 leading-relaxed">
+                    <p className="text-[11px] text-[#64748B] dark:text-slate-300 leading-relaxed">
                       No citizen land parcels or grievance boundaries have been registered in this sector.
                       Once landowners register parcels or submit demarcation claims, their GPS boundary polygons will appear here for ground inspection.
                     </p>
@@ -347,27 +347,27 @@ export default function FieldMapPage() {
 
         {/* Bottom Interactive Detail Card / Drawer */}
         {selectedParcel ? (
-          <div className="bg-slate-900 border border-slate-700/80 rounded-2xl p-4 shadow-xl space-y-3 animate-fadeIn flex-shrink-0">
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-3 animate-fadeIn flex-shrink-0">
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-emerald-400 font-bold text-xs">
+                  <span className="font-mono text-[#0B2E59] dark:text-sky-400 font-bold text-xs">
                     Survey {selectedParcel.survey_number || selectedParcel.survey_no || selectedParcel.parcel_id}
                   </span>
-                  <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full border uppercase font-bold ${
+                  <span className={`text-[9px] font-mono px-2 py-0.5 rounded-[3px] border uppercase font-bold ${
                     selectedParcel.ownership_conflict || selectedParcel.acquisition_status === "disputed"
-                      ? "bg-red-500/15 border-red-500/30 text-red-300"
+                      ? "bg-[#FFEBEE] dark:bg-rose-950/40 border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-300"
                       : selectedParcel.acquisition_status === "possessed"
-                      ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-300"
-                      : "bg-amber-500/15 border-amber-500/30 text-amber-300"
+                      ? "bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300"
+                      : "bg-[#FFF8E1] dark:bg-amber-950/40 border-[#FFE082] dark:border-amber-800/40 text-[#B36B00] dark:text-amber-300"
                   }`}>
                     {selectedParcel.acquisition_status || "Pending"}
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-white mt-0.5">
+                <h3 className="text-sm font-bold text-[#14213D] dark:text-white mt-0.5">
                   {selectedParcel.owner_name || "Citizen Landowner"}
                 </h3>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-[#64748B] dark:text-slate-400">
                   {selectedParcel.village_name || "Operational Sector"} · {selectedParcel.area_acres ? `${selectedParcel.area_acres} Acres` : selectedParcel.area_hectares ? `${selectedParcel.area_hectares} Ha` : "Area Pending Verification"}
                 </p>
               </div>
@@ -375,17 +375,17 @@ export default function FieldMapPage() {
               <button
                 type="button"
                 onClick={() => setSelectedParcel(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800"
+                className="p-1.5 rounded-[4px] text-[#64748B] hover:text-[#14213D] dark:text-slate-400 dark:hover:text-white bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
 
             {/* Actions for Selected Parcel */}
-            <div className="grid grid-cols-3 gap-2 pt-1 border-t border-slate-800 text-xs">
+            <div className="grid grid-cols-3 gap-2 pt-1 border-t border-[#DCE2E8] dark:border-white/10 text-xs">
               <Link
                 href={`/field/parcels/${selectedParcel.parcel_id}/verify`}
-                className="py-2 px-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-center flex items-center justify-center gap-1 shadow-md"
+                className="py-2 px-2 bg-[#1E7E34] hover:bg-[#166527] text-white font-bold rounded-[4px] text-center flex items-center justify-center gap-1 shadow-xs"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Verify</span>
@@ -393,15 +393,15 @@ export default function FieldMapPage() {
 
               <Link
                 href={`/field/parcels/${selectedParcel.parcel_id}/report`}
-                className="py-2 px-2 bg-red-950/40 hover:bg-red-950/60 border border-red-500/40 text-red-300 font-semibold rounded-xl text-center flex items-center justify-center gap-1"
+                className="py-2 px-2 bg-white dark:bg-[#0D121F] hover:bg-[#FFEBEE] dark:hover:bg-rose-950/30 border border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-400 font-semibold rounded-[4px] text-center flex items-center justify-center gap-1 shadow-xs"
               >
-                <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
+                <AlertTriangle className="w-3.5 h-3.5 text-[#B32424] dark:text-rose-400" />
                 <span>Blocker</span>
               </Link>
 
               <Link
                 href={`/field/parcels/${selectedParcel.parcel_id}`}
-                className="py-2 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded-xl text-center flex items-center justify-center gap-1 border border-slate-700"
+                className="py-2 px-2 bg-white dark:bg-[#0D121F] hover:bg-slate-50 dark:hover:bg-white/5 text-[#0B2E59] dark:text-sky-400 font-semibold rounded-[4px] text-center flex items-center justify-center gap-1 border border-[#DCE2E8] dark:border-white/10 shadow-xs"
               >
                 <span>Dossier</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -409,18 +409,18 @@ export default function FieldMapPage() {
             </div>
           </div>
         ) : selectedIncident ? (
-          <div className="bg-red-950/30 border border-red-500/40 rounded-2xl p-4 shadow-xl space-y-2.5 animate-fadeIn flex-shrink-0">
+          <div className="bg-white dark:bg-[#0D121F] border border-[#FFCDD2] dark:border-rose-800/40 rounded-[4px] p-4 shadow-xs space-y-2.5 animate-fadeIn flex-shrink-0">
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-red-400 font-bold text-xs">
+                  <span className="font-mono text-[#B32424] dark:text-rose-400 font-bold text-xs">
                     {selectedIncident.verification_id}
                   </span>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 font-bold uppercase">
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-[3px] bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-300 font-bold uppercase border border-[#FFCDD2] dark:border-rose-800/40">
                     {selectedIncident.status}
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-white capitalize mt-0.5">
+                <h3 className="text-sm font-bold text-[#14213D] dark:text-white capitalize mt-0.5">
                   {(selectedIncident.issue_type || "Ground Blocker").replace(/_/g, " ")}
                 </h3>
               </div>
@@ -428,35 +428,35 @@ export default function FieldMapPage() {
               <button
                 type="button"
                 onClick={() => setSelectedIncident(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800"
+                className="p-1.5 rounded-[4px] text-[#64748B] hover:text-[#14213D] dark:text-slate-400 dark:hover:text-white bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-[#333333] dark:text-slate-300 leading-relaxed">
               {selectedIncident.observations || selectedIncident.remarks}
             </p>
 
-            <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-red-500/20">
+            <div className="flex items-center justify-between text-[10px] text-[#64748B] dark:text-slate-400 pt-1 border-t border-[#DCE2E8] dark:border-white/10">
               <span>Reported by: {selectedIncident.officer_name || "Field Officer"}</span>
               <Link
                 href={`/field/parcels/${selectedIncident.parcel_id}`}
-                className="text-emerald-400 hover:underline flex items-center gap-1 font-semibold"
+                className="text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1 font-semibold"
               >
                 Open Parcel Survey {selectedIncident.survey_number || selectedIncident.parcel_id} →
               </Link>
             </div>
           </div>
         ) : (
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 shadow-md flex items-center justify-between text-xs text-slate-400 flex-shrink-0">
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-3 shadow-xs flex items-center justify-between text-xs text-[#64748B] dark:text-slate-400 flex-shrink-0">
             <div className="flex items-center gap-2">
-              <Compass className="w-4 h-4 text-emerald-400" />
+              <Compass className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
               <span className="text-[11px]">
-                Tap any parcel polygon or incident marker to inspect & act
+                Tap any parcel polygon or incident marker to inspect &amp; act
               </span>
             </div>
-            <span className="text-[10px] font-mono text-slate-500">WGS84 EPSG:4326</span>
+            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-500">WGS84 EPSG:4326</span>
           </div>
         )}
 
