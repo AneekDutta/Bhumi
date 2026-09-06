@@ -102,7 +102,7 @@ async def get_current_user_context(
         result = await db.execute(query)
         user = result.scalars().first()
 
-if not user:
+        if not user:
             # Auto-create user mapping for newly registered users via Supabase Auth
             user_metadata = payload.get("user_metadata", {})
             assigned_role = user_metadata.get("role", "LANDOWNER")
