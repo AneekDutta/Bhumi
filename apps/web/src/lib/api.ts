@@ -843,6 +843,18 @@ export const apiClient = {
 
   adminDecisionOnComplaint: async (complaintId: string, decision: any) => {
     return await supabaseDataService.adminDecisionOnComplaint(complaintId, decision);
+  },
+
+  registerNewParcel: async (payload: any) => {
+    return await supabaseDataService.registerNewParcel(payload);
+  },
+
+  getParcelById: async (parcelId: string) => {
+    return await supabaseDataService.getParcelById(parcelId);
+  },
+
+  generateUnique14DigitParcelId: async () => {
+    return await supabaseDataService.generateUnique14DigitParcelId();
   }
 };
 
@@ -879,4 +891,7 @@ export const linkOfficialParcelToComplaint = (complaintId: string, parcelId: str
   apiClient.linkOfficialParcelToComplaint(complaintId, parcelId, actorName);
 export const adminDecisionOnComplaint = (complaintId: string, decision: any) =>
   apiClient.adminDecisionOnComplaint(complaintId, decision);
+export const registerNewParcel = (payload: any) => apiClient.registerNewParcel(payload);
+export const getParcelById = (parcelId: string) => apiClient.getParcelById(parcelId);
+export const generateUnique14DigitParcelId = () => apiClient.generateUnique14DigitParcelId();
 

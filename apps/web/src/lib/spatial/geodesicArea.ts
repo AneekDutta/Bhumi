@@ -77,6 +77,20 @@ export interface BoundaryPointWithAccuracy {
   accuracy?: number; // device GPS accuracy in meters (float)
 }
 
+/**
+ * Calculates geodesic area in sqm, acres, and hectares from point coordinates.
+ */
+export function calculateGeodesicArea(points: BoundaryPointWithAccuracy[]): { sqm: number; acres: number; hectares: number } {
+  if (!points || points.length < 3) return { sqm: 0, acres: 0, hectares: 0 };
+  const coords: [number, number][] = points.map((p) => [p.lng, p.lat]);
+  const sqm = calculateSphericalPolygonArea(coords);
+  return {
+    sqm,
+    acres: sqm * 0.000247105,
+    hectares: sqm / 10000.0
+  };
+}
+
 export interface AreaAndUncertaintyResult {
   areaSqm: number;
   areaAcres: number;

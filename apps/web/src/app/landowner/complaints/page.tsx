@@ -91,7 +91,7 @@ export default function LandownerComplaintsPage() {
               Grievance Records
             </h1>
             <p className="text-xs text-slate-400">
-              Live status tracking with Supabase single source of truth
+              Live status tracking with institutional single source of truth
             </p>
           </div>
 
@@ -143,7 +143,7 @@ export default function LandownerComplaintsPage() {
         {loading ? (
           <div className="py-12 text-center text-slate-400 text-xs space-y-2">
             <RefreshCw className="w-5 h-5 animate-spin mx-auto text-emerald-400" />
-            <span>Connecting to Supabase...</span>
+            <span>Connecting to Land Records Registry...</span>
           </div>
         ) : filtered.length === 0 ? (
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-2">
