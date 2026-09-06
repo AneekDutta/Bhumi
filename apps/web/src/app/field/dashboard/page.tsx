@@ -147,7 +147,7 @@ export default function FieldDashboardPage() {
         {pendingComplaints.length === 0 ? (
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-2 shadow-lg">
             <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
-            <h2 className="text-sm font-bold text-white">No complaints pending verification.</h2>
+            <h2 className="text-sm font-bold text-white">No grievances available.</h2>
             <p className="text-xs text-slate-400 max-w-sm mx-auto">
               Landowner grievances filed against registered parcels will appear here in real time for on-site boundary verification.
             </p>
@@ -197,29 +197,29 @@ export default function FieldDashboardPage() {
         )}
 
         {/* Operational KPI Metrics */}
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="bg-slate-800/90 border border-slate-700/80 p-3.5 rounded-2xl shadow-sm space-y-1">
-            <span className="text-slate-400 block text-[11px]">Registered Parcels</span>
-            <span className="text-2xl font-bold font-mono text-white">{parcels.length}</span>
-            <span className="text-[10px] text-slate-400 block">In Operational Sector</span>
-          </div>
-
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
           <div className="bg-slate-800/90 border border-amber-500/30 p-3.5 rounded-2xl shadow-sm space-y-1">
-            <span className="text-amber-400 block text-[11px]">Pending Verification</span>
+            <span className="text-amber-400 block text-[11px] font-semibold">PENDING CASES</span>
             <span className="text-2xl font-bold font-mono text-amber-400">{pendingComplaints.length}</span>
             <span className="text-[10px] text-slate-400 block">Awaiting Ground Review</span>
           </div>
 
           <div className="bg-slate-800/90 border border-emerald-500/30 p-3.5 rounded-2xl shadow-sm space-y-1">
-            <span className="text-emerald-400 block text-[11px]">Verified by Field Officer</span>
+            <span className="text-emerald-400 block text-[11px] font-semibold">VERIFIED CASES</span>
             <span className="text-2xl font-bold font-mono text-emerald-400">{verifiedComplaints.length}</span>
-            <span className="text-[10px] text-slate-400 block">Moved to Admin Queue</span>
+            <span className="text-[10px] text-slate-400 block">Approved by Officer</span>
           </div>
 
           <div className="bg-slate-800/90 border border-red-500/30 p-3.5 rounded-2xl shadow-sm space-y-1">
-            <span className="text-red-400 block text-[11px]">Rejected by Officer</span>
+            <span className="text-red-400 block text-[11px] font-semibold">DECLINED CASES</span>
             <span className="text-2xl font-bold font-mono text-red-400">{rejectedComplaints.length}</span>
-            <span className="text-[10px] text-slate-400 block">Demarcation Mismatches</span>
+            <span className="text-[10px] text-slate-400 block">Rejected by Officer</span>
+          </div>
+
+          <div className="bg-slate-800/90 border border-slate-700/80 p-3.5 rounded-2xl shadow-sm space-y-1">
+            <span className="text-slate-300 block text-[11px] font-semibold">TOTAL CASES</span>
+            <span className="text-2xl font-bold font-mono text-white">{complaints.length}</span>
+            <span className="text-[10px] text-slate-400 block">Assigned to Officer</span>
           </div>
         </div>
 

@@ -117,8 +117,8 @@ export default function FieldLoginPage() {
       officer_id: officerId.trim().toUpperCase(),
       name: "Field Officer (Verified)",
       designation: "Cadastral Field Inspector",
-      assigned_villages: ["Ramganj Mandi", "Kanhera"],
-      pending_tasks_count: 5
+      assigned_villages: ["All Operational Sectors"],
+      pending_tasks_count: 0
     };
 
     loginAsOfficer(officerToLogin);

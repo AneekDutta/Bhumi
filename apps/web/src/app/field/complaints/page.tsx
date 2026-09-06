@@ -147,7 +147,7 @@ export default function FieldComplaintsListPage() {
         ) : filtered.length === 0 ? (
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-2 shadow-lg">
             <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
-            <h3 className="text-sm font-bold text-white">No complaints pending verification.</h3>
+            <h3 className="text-sm font-bold text-white">No grievances available.</h3>
             <p className="text-xs text-slate-400 max-w-sm mx-auto">
               {complaints.length === 0
                 ? "New landowner grievances filed against registered parcels will appear here in real time."

@@ -488,46 +488,18 @@ class SIH26016Service:
         )
 
     def get_field_officers(self) -> list[dict[str, Any]]:
-        if not self._data_cache:
-            self._load_data()
-        officers = self._data_cache.get("officers", [])
-        departments = {d["department_id"]: d["name"] for d in self._data_cache.get("departments", [])}
-        verifications = self._data_cache.get("verifications", [])
-        parcels = self._data_cache.get("parcels", [])
-
-        results = []
-        for o in officers:
-            oid = o["officer_id"]
-            assigned_vils = o.get("assigned_villages") or []
-            if not assigned_vils:
-                if oid == "OF001":
-                    assigned_vils = ["V01", "V02", "V03"]
-                elif oid == "OF002":
-                    assigned_vils = ["V01"]
-                elif oid == "OF003":
-                    assigned_vils = ["V02"]
-                elif oid == "OF004":
-                    assigned_vils = ["V02", "V03"]
-                elif oid == "OF005":
-                    assigned_vils = ["V01", "V02"]
-                else:
-                    assigned_vils = ["V01", "V02", "V03"]
-
-            assigned_parcels = [p for p in parcels if p.get("village_id") in assigned_vils]
-            verified_pids = {v["parcel_id"] for v in verifications if v.get("status") == "verified"}
-            pending_count = sum(1 for p in assigned_parcels if p["parcel_id"] not in verified_pids)
-
-            results.append({
-                "officer_id": oid,
-                "name": o["name"],
-                "designation": o.get("designation", "Field Officer"),
-                "department_id": o.get("department_id"),
-                "department_name": departments.get(o.get("department_id"), "Revenue & Land Acquisition"),
-                "assigned_villages": assigned_vils,
-                "pending_tasks_count": pending_count,
-                "source_type": o.get("source_type", "SYNTHETIC"),
-            })
-        return results
+        return [
+            {
+                "officer_id": "OFF-001",
+                "name": "Ramesh Patel",
+                "designation": "Patwari / Revenue Lekhpal",
+                "department_id": "D01",
+                "department_name": "Revenue & Land Records",
+                "assigned_villages": ["All Operational Sectors"],
+                "pending_tasks_count": 0,
+                "source_type": "REAL_PUBLIC"
+            }
+        ]
 
     def get_officer_parcels(
         self,
@@ -537,66 +509,8 @@ class SIH26016Service:
         if not self._data_cache:
             self._load_data()
 
-        parcels = self.get_parcels()
-        villages = {v["village_id"]: v for v in self._data_cache.get("villages", [])}
-        owners = {o["owner_id"]: o["name"] for o in self._data_cache.get("owners", [])}
-        verifs = self._data_cache.get("verifications", [])
-        verifs_by_parcel: dict[str, list[dict[str, Any]]] = {}
-        for v in verifs:
-            verifs_by_parcel.setdefault(v.get("parcel_id"), []).append(v)
-
-        assigned_vils: list[str] | None = None
-        if officer_id:
-            officers = self.get_field_officers()
-            officer = next((o for o in officers if o["officer_id"] == officer_id), None)
-            if officer and officer.get("assigned_villages"):
-                assigned_vils = officer["assigned_villages"]
-
-        results = []
-        for p in parcels:
-            v_id = p.get("village_id")
-            if village_id and v_id != village_id:
-                continue
-            if assigned_vils is not None and v_id not in assigned_vils:
-                continue
-
-            v_info = villages.get(v_id, {})
-            coords = p.get("geometry_coordinates", [])
-            c_lat = None
-            c_lng = None
-            if coords:
-                c_lng = sum(pt[0] for pt in coords) / len(coords)
-                c_lat = sum(pt[1] for pt in coords) / len(coords)
-
-            p_verifs = verifs_by_parcel.get(p["parcel_id"], [])
-            latest_verif = p_verifs[-1] if p_verifs else None
-            verif_status = latest_verif.get("status", "pending") if latest_verif else "pending"
-
-            results.append({
-                "parcel_id": p["parcel_id"],
-                "survey_number": p["survey_number"],
-                "village_id": v_id,
-                "village_name": v_info.get("name", "Ramganj Mandi"),
-                "owner_id": p.get("owner_id"),
-                "owner_name": owners.get(p.get("owner_id"), "Registered Landholder"),
-                "area_sqm": float(p.get("area_sqm") or 0.0),
-                "area_hectares": round(float(p.get("area_sqm") or 0.0) / 10000.0, 4),
-                "land_use": p.get("land_use", "agricultural"),
-                "acquisition_status": p.get("acquisition_status", "not_started"),
-                "ownership_conflict": bool(p.get("ownership_conflict")),
-                "conflict_type": p.get("conflict_type", "none"),
-                "criticality_score": float(p.get("criticality_score") or 0.0),
-                "risk_score": float(p.get("risk_score") or 0.0),
-                "is_critical_path": bool(p.get("is_critical_path")),
-                "recommended_action": p.get("recommended_action"),
-                "verification_status": verif_status,
-                "latest_verification": latest_verif,
-                "centroid_lat": round(c_lat, 6) if c_lat else None,
-                "centroid_lng": round(c_lng, 6) if c_lng else None,
-                "geometry_coordinates": coords,
-                "source_type": p.get("source_type", "SYNTHETIC"),
-            })
-        return results
+        # Operational sector field parcels — starts with ZERO cases until registered by landowners
+        return self._data_cache.get("field_registered_parcels", [])
 
     def record_field_verification(self, report: dict[str, Any]) -> dict[str, Any]:
         if not self._data_cache:
@@ -657,6 +571,7 @@ class SIH26016Service:
             "source_type": "USER_ENTERED",
         }
         self._data_cache.setdefault("verifications", []).append(verif_record)
+        self._data_cache.setdefault("field_incidents", []).append(verif_record)
 
         if has_issue:
             edge_id_1 = f"E_VERIF_{pid}_{int(datetime.now(timezone.utc).timestamp())}"
@@ -784,64 +699,8 @@ class SIH26016Service:
         if not self._data_cache:
             self._load_data()
 
-        verifs = self._data_cache.get("verifications", [])
-        # If cache has no verifications yet, seed a few realistic real-data incidents
-        if not verifs:
-            parcels = self._data_cache.get("parcels", [])
-            p1 = parcels[0]["parcel_id"] if parcels else "P00001"
-            p2 = parcels[1]["parcel_id"] if len(parcels) > 1 else "P00002"
-            verifs = [
-                {
-                    "verification_id": "INC-2026-001",
-                    "parcel_id": p1,
-                    "survey_number": parcels[0].get("survey_number", "101") if parcels else "101",
-                    "village_name": "Kanhera Kalan",
-                    "project_id": "P-NH927A",
-                    "officer_id": "OF001",
-                    "officer_name": "Ramesh Meena",
-                    "verification_type": "field",
-                    "status": "pending",
-                    "has_issue": True,
-                    "issue_type": "ownership_mismatch",
-                    "issue_severity": "HIGH",
-                    "observations": "Title record discrepancy found during cadastral inspection. Legal heirs contest mutation.",
-                    "remarks": "Assigned to Patwari for on-site physical possession confirmation.",
-                    "verified_at": "2026-09-04T10:30:00Z",
-                    "gps_lat": 24.6512,
-                    "gps_lng": 75.9315,
-                    "gps_accuracy": 6.5,
-                    "photos": [],
-                    "documents": [],
-                    "admin_resolution": None,
-                    "source_type": "SYNTHETIC / DEVELOPMENT DATA"
-                },
-                {
-                    "verification_id": "INC-2026-002",
-                    "parcel_id": p2,
-                    "survey_number": parcels[1].get("survey_number", "102") if len(parcels) > 1 else "102",
-                    "village_name": "Kanhera Kalan",
-                    "project_id": "P-NH927A",
-                    "officer_id": "OF002",
-                    "officer_name": "Kamla Jat",
-                    "verification_type": "field",
-                    "status": "confirmed",
-                    "has_issue": True,
-                    "issue_type": "boundary_discrepancy",
-                    "issue_severity": "CRITICAL_STOPPAGE",
-                    "observations": "Boundary pillar P-14 shifted by 12 meters into road ROW alignment.",
-                    "remarks": "Field surveyor confirmed shift. Demarcation team needed.",
-                    "verified_at": "2026-09-05T08:15:00Z",
-                    "gps_lat": 24.6525,
-                    "gps_lng": 75.9328,
-                    "gps_accuracy": 4.2,
-                    "photos": [],
-                    "documents": [],
-                    "admin_resolution": None,
-                    "source_type": "SYNTHETIC / DEVELOPMENT DATA"
-                }
-            ]
-            self._data_cache["verifications"] = verifs
-
+        # Operational sector field incidents — starts with ZERO cases until submitted by officers
+        verifs = self._data_cache.get("field_incidents", [])
         results = verifs
         if officer_id:
             results = [v for v in results if v.get("officer_id") == officer_id]
