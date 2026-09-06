@@ -84,59 +84,9 @@ export default function ParcelDetailsPage() {
       try {
         const list = await getFieldParcels();
         const match = list.find((p: any) => p.parcel_id === parcelId || p.id === parcelId);
-        if (match) {
-          setParcel(match);
-        } else {
-          setParcel({
-            parcel_id: parcelId,
-            project_id: "P-NH927A",
-            survey_no: "104/2B",
-            village_name: "Rampur",
-            tehsil: "Sadar",
-            district: "Varanasi",
-            area_acres: 1.45,
-            area_hectares: 0.587,
-            land_type: "Agricultural",
-            current_stage: "HEARING_OF_OBJECTIONS",
-            owner_name: "Raghunath Yadav",
-            father_name: "Ram Swaroop Yadav",
-            compensation_status: "Determined - Awaiting Disbursement",
-            assessed_value: 4500000,
-            rr_status: "Eligible under Second Schedule (RFCTLARR)",
-            legal_status: "No Active High Court Injunction",
-            risk_score: 42.0,
-            criticality_score: 55.0,
-            is_critical_path: false,
-            centroid_lat: 24.6492,
-            centroid_lng: 75.9284,
-            verification_status: "pending"
-          });
-        }
+        setParcel(match || null);
       } catch {
-        setParcel({
-          parcel_id: parcelId,
-          project_id: "P-NH927A",
-          survey_no: "104/2B",
-          village_name: "Rampur",
-          tehsil: "Sadar",
-          district: "Varanasi",
-          area_acres: 1.45,
-          area_hectares: 0.587,
-          land_type: "Agricultural",
-          current_stage: "HEARING_OF_OBJECTIONS",
-          owner_name: "Raghunath Yadav",
-          father_name: "Ram Swaroop Yadav",
-          compensation_status: "Determined - Awaiting Disbursement",
-          assessed_value: 4500000,
-          rr_status: "Eligible under Second Schedule (RFCTLARR)",
-          legal_status: "No Active High Court Injunction",
-          risk_score: 42.0,
-          criticality_score: 55.0,
-          is_critical_path: false,
-          centroid_lat: 24.6492,
-          centroid_lng: 75.9284,
-          verification_status: "pending"
-        });
+        setParcel(null);
       } finally {
         setLoading(false);
       }
@@ -243,7 +193,7 @@ export default function ParcelDetailsPage() {
     }
   };
 
-  if (loading || !parcel) {
+  if (loading) {
     return (
       <FieldShell title="Loading Parcel...">
         <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">
@@ -254,7 +204,31 @@ export default function ParcelDetailsPage() {
     );
   }
 
-  const sNo = parcel.survey_no || parcel.survey_number || "-";
+  if (!parcel) {
+    return (
+      <FieldShell title="Parcel Dossier" showBack>
+        <div className="p-8 space-y-4 max-w-lg mx-auto text-center py-16">
+          <div className="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center mx-auto text-slate-400">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <h2 className="text-base font-bold text-white">Parcel Record Not Found</h2>
+          <p className="text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">
+            No registered cadastral parcel record found for ID #{parcelId}.
+          </p>
+          <div className="pt-2">
+            <Link
+              href="/field/parcels"
+              className="inline-flex items-center gap-1.5 py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Return to Assigned Parcels
+            </Link>
+          </div>
+        </div>
+      </FieldShell>
+    );
+  }
+
+  const sNo = parcel.survey_no || parcel.survey_number || parcel.parcel_id || "-";
 
   return (
     <FieldShell title={`Parcel: Survey ${sNo}`} showBack>
@@ -284,13 +258,13 @@ export default function ParcelDetailsPage() {
                 Survey No. {sNo}
               </h1>
               <p className="text-xs text-slate-400">
-                {parcel.village_name || "Ramganj Mandi"}, Tehsil {parcel.tehsil || "Sadar"}, {parcel.district || "Kota"}
+                {parcel.village_name || "Operational Sector"}, Tehsil {parcel.tehsil || "Sector Jurisdiction"}, {parcel.district || "Corridor Zone"}
               </p>
             </div>
 
             <div className="text-right">
               <span className="inline-block px-2.5 py-1 text-xs font-mono font-bold rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                {parcel.area_acres || 1.45} Acres
+                {parcel.area_acres || 0} Acres
               </span>
               <span className="block text-[10px] text-slate-400 mt-1">
                 {parcel.land_type || "Agricultural"}
@@ -479,7 +453,7 @@ export default function ParcelDetailsPage() {
 
                   <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-white/5">
                     <span>Officer: {inc.officer_name || "Officer"}</span>
-                    <span className="font-mono text-[9px] text-slate-400">{inc.source_type || "SYNTHETIC / DEVELOPMENT DATA"}</span>
+                    <span className="font-mono text-[9px] text-slate-400">{inc.source_type || "OFFICIAL RECORD"}</span>
                   </div>
 
                   {!isResolved && inc.status === "reported" && (
@@ -759,12 +733,12 @@ export default function ParcelDetailsPage() {
             </div>
             <div>
               <span className="text-[10px] text-slate-400 block">2. Project Corridor</span>
-              <span className="font-mono font-semibold text-indigo-300">{parcel.project_id || "P-NH927A"}</span>
+              <span className="font-mono font-semibold text-indigo-300">{parcel.project_id || "National Corridor"}</span>
             </div>
 
             <div>
               <span className="text-[10px] text-slate-400 block">3. Village / Jurisdiction</span>
-              <span className="font-medium text-slate-200">{parcel.village_name || "Ramganj Mandi"}, {parcel.district || "Kota"}</span>
+              <span className="font-medium text-slate-200">{parcel.village_name || "Operational Sector"}, {parcel.district || "Corridor Zone"}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-400 block">4. Survey / Khasra No.</span>
@@ -774,25 +748,25 @@ export default function ParcelDetailsPage() {
             <div>
               <span className="text-[10px] text-slate-400 block">5. Extent / Area</span>
               <span className="font-mono font-medium text-slate-200">
-                {parcel.area_acres || 1.45} Acres ({parcel.area_hectares || 0.587} Ha)
+                {parcel.area_acres || 0} Acres ({parcel.area_hectares || 0} Ha)
               </span>
             </div>
             <div>
               <span className="text-[10px] text-slate-400 block">6. Acquisition Stage</span>
-              <span className="font-mono font-medium text-amber-400">{parcel.current_stage || "PRELIMINARY_11"}</span>
+              <span className="font-mono font-medium text-amber-400">{parcel.current_stage || "Pending Survey"}</span>
             </div>
 
             <div className="col-span-2 bg-slate-900/60 p-2.5 rounded-xl border border-white/5 space-y-1">
               <span className="text-[10px] text-slate-400 block">7. Recorded Landholder & Heirs</span>
-              <span className="font-bold text-white text-sm block">{parcel.owner_name || "Raghunath Yadav"}</span>
-              <span className="text-[11px] text-slate-400 block">S/O: {parcel.father_name || "Ram Swaroop Yadav"} · Verified Title</span>
+              <span className="font-bold text-white text-sm block">{parcel.owner_name || "Citizen Landowner"}</span>
+              <span className="text-[11px] text-slate-400 block">{parcel.father_name ? `S/O: ${parcel.father_name} · ` : ""}Verified Title</span>
             </div>
 
             <div className="col-span-2 grid grid-cols-2 gap-2">
               <div className="bg-slate-900/60 p-2.5 rounded-xl border border-white/5">
                 <span className="text-[10px] text-slate-400 block">8. Compensation Status</span>
                 <span className="font-semibold text-emerald-400 font-mono block">
-                  ₹{parcel.assessed_value ? (parcel.assessed_value / 100000).toFixed(2) : "45.00"} Lakhs
+                  ₹{parcel.assessed_value ? (parcel.assessed_value / 100000).toFixed(2) : "0.00"} Lakhs
                 </span>
                 <span className="text-[10px] text-slate-400 block mt-0.5">Determined / Pending Award</span>
               </div>

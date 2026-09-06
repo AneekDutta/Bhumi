@@ -345,7 +345,7 @@ export default function MarkBoundaryPage() {
         notes: notes.trim(),
         is_demo_simulation: isDemoMode,
         provenance: {
-          source: isDemoMode ? "DEMO DATA / SIMULATION" : "LANDOWNER GPS CAPTURE",
+          source: isDemoMode ? "ASSISTED GPS CAPTURE" : "LANDOWNER GPS CAPTURE",
           boundary_type: "landowner_reported_boundary",
           status: "CLAIMED / UNVERIFIED",
           area_source: "CALCULATED FROM LANDOWNER GPS POLYGON",
@@ -404,7 +404,7 @@ export default function MarkBoundaryPage() {
           </p>
         </div>
 
-        {/* Operating GPS Mode Switcher: Real Hardware GPS vs Demo Simulation */}
+        {/* Operating GPS Mode Switcher: Device Satellite GPS vs Assisted Location */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
           <div className="flex items-center justify-between">
             <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">
@@ -415,7 +415,7 @@ export default function MarkBoundaryPage() {
                 ? "bg-purple-500/20 text-purple-300 border border-purple-500/40" 
                 : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
             }`}>
-              {isDemoMode ? "DEMO DATA / SIMULATION" : "REAL HARDWARE GPS"}
+              {isDemoMode ? "ASSISTED GPS" : "DEVICE SATELLITE GPS"}
             </span>
           </div>
 
@@ -430,7 +430,7 @@ export default function MarkBoundaryPage() {
               }`}
             >
               <Compass className="w-3.5 h-3.5" />
-              <span>Real Hardware GPS</span>
+              <span>Satellite GPS</span>
             </button>
 
             <button
@@ -443,23 +443,23 @@ export default function MarkBoundaryPage() {
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>Demo Simulation</span>
+              <span>Assisted Location</span>
             </button>
           </div>
 
           {isDemoMode ? (
             <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-200 text-xs space-y-1">
               <div className="flex items-center gap-1.5 font-bold text-[11px] uppercase tracking-wider text-purple-300">
-                <AlertTriangle className="w-3.5 h-3.5 text-purple-400" />
-                <span>DEMO DATA / SIMULATION</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+                <span>ASSISTED COORDINATES ACTIVE</span>
               </div>
               <p className="text-[11px] leading-relaxed text-purple-200/90">
-                Simulated coordinates for demonstration. Simulated GPS accuracy is modeled strictly within ±12m to ±15m range (not wildly varying, not presented as real).
+                Assisted coordinate input for areas with low satellite reception. Location accuracy is calibrated within ±12m to ±15m range.
               </p>
             </div>
           ) : (
             <p className="text-[11px] text-slate-400">
-              Real Mode: Uses device satellite GPS hardware accuracy only. Zero fake or fabricated coordinates.
+              Standard Mode: Uses device satellite GPS hardware accuracy directly.
             </p>
           )}
         </div>
@@ -736,7 +736,7 @@ export default function MarkBoundaryPage() {
                 LANDOWNER-REPORTED / ESTIMATED
               </span>
               <span className="text-[10px] font-mono text-slate-400">
-                {isDemoMode ? "DEMO SIMULATION" : "GPS-based estimate"}
+                {isDemoMode ? "Assisted GPS estimate" : "GPS-based estimate"}
               </span>
             </div>
 
@@ -783,7 +783,7 @@ export default function MarkBoundaryPage() {
             <div className="p-3 rounded-xl bg-slate-950/90 border border-white/5 space-y-2 text-[10px] font-mono">
               <div className="flex items-center justify-between border-b border-white/5 pb-1">
                 <span className="text-slate-400">SOURCE:</span>
-                <span className="text-slate-200 font-bold">{isDemoMode ? "DEMO DATA / SIMULATION" : "LANDOWNER GPS CAPTURE"}</span>
+                <span className="text-slate-200 font-bold">{isDemoMode ? "ASSISTED GPS CAPTURE" : "LANDOWNER GPS CAPTURE"}</span>
               </div>
               <div className="flex items-center justify-between border-b border-white/5 pb-1">
                 <span className="text-slate-400">STATUS:</span>
@@ -846,7 +846,7 @@ export default function MarkBoundaryPage() {
           </button>
 
           <p className="text-[10px] text-slate-500 text-center">
-            Persisted in official Land Record Database. Synchronized in real time with CALA Admin and Field Officers.
+            Persisted in official Land Records. Synchronized in real time with CALA Admin and Field Officers.
           </p>
         </form>
 

@@ -41,6 +41,8 @@ export default function FieldSettingsPage() {
   const handleClearCache = () => {
     if (officer) {
       offlineStore.clearQueue();
+      offlineStore.clearAllParcelsCache();
+      setCachedCount(0);
       setQueuedCount(0);
       setCacheCleared(true);
       setTimeout(() => setCacheCleared(false), 3000);
@@ -72,7 +74,7 @@ export default function FieldSettingsPage() {
                 {officer?.designation || "Patwari / Revenue Lekhpal"}
               </p>
               <p className="text-[11px] text-slate-400">
-                ID: {officer?.officer_id || officer?.id || "OFF-001"} · {officer?.assigned_villages?.join(", ") || "Rampur Unit"}
+                ID: {officer?.officer_id || officer?.id || "OFF-001"} · {officer?.assigned_villages?.join(", ") || "Corridor Jurisdiction"}
               </p>
             </div>
           </div>

@@ -37,13 +37,13 @@ export default function FieldDashboardPage() {
   const refreshData = async () => {
     try {
       const active = offlineStore.getActiveOfficer();
-      const offId: string = (active ? (active.officer_id || active.id) : "OF001") || "OF001";
+      const offId: string = (active ? (active.officer_id || active.id) : "OFF-001") || "OFF-001";
       const data = await getFieldParcels(offId);
-      if (data && data.length > 0) setParcels(data);
+      setParcels(data || []);
       const incData = await getFieldIncidents();
-      if (incData) setIncidents(incData);
+      setIncidents(incData || []);
       const cData = await getLandownerComplaints();
-      if (cData) setComplaints(cData);
+      setComplaints(cData || []);
     } catch {}
   };
 
@@ -54,26 +54,23 @@ export default function FieldDashboardPage() {
 
   useEffect(() => {
     const active = offlineStore.getActiveOfficer();
-    setOfficer(active || { id: "OF001", name: "Ramesh Patel", designation: "Patwari / Revenue Lekhpal" });
+    setOfficer(active || { id: "OFF-001", name: "Ramesh Patel", designation: "Patwari / Revenue Lekhpal" });
 
     const q = offlineStore.getAll().filter((i) => !i.synced);
     setQueueCount(q.length);
 
     async function load() {
       try {
-        const offId: string = (active ? (active.officer_id || active.id) : "OF001") || "OF001";
+        const offId: string = (active ? (active.officer_id || active.id) : "OFF-001") || "OFF-001";
         const data = await getFieldParcels(offId);
+        setParcels(data || []);
         if (data && data.length > 0) {
-          setParcels(data);
           offlineStore.cacheParcels(offId, data);
         } else {
-          const cached = offlineStore.getCachedParcels(offId);
-          if (cached) setParcels(cached);
+          offlineStore.clearParcelCache(offId);
         }
       } catch {
-        const offId: string = (active ? (active.officer_id || active.id) : "OF001") || "OF001";
-        const cached = offlineStore.getCachedParcels(offId);
-        if (cached) setParcels(cached);
+        setParcels([]);
       }
 
       try {
@@ -83,6 +80,7 @@ export default function FieldDashboardPage() {
         setComplaints(cData || []);
       } catch {
         setIncidents([]);
+        setComplaints([]);
       } finally {
         setLoading(false);
       }
@@ -91,9 +89,16 @@ export default function FieldDashboardPage() {
     load();
   }, []);
 
-  const pendingCount = parcels.filter((p) => !p.verification_status || p.verification_status === "pending").length;
-  const disputedCount = parcels.filter((p) => p.verification_status === "disputed" || p.conflict_flag).length;
-  const verifiedCount = parcels.filter((p) => p.verification_status === "verified").length;
+  // ZERO FAKE DATA: Strictly calculated from actual database records
+  const pendingComplaints = complaints.filter(
+    (c) => c.status === "Pending Field Verification" || (c.status && (c.status.includes("SUBMITTED") || c.status.includes("AWAITING")))
+  );
+  const verifiedComplaints = complaints.filter(
+    (c) => c.status === "Verified by Field Officer" || (c.status && (c.status.includes("VERIFIED") || c.status.includes("Implementation")))
+  );
+  const rejectedComplaints = complaints.filter(
+    (c) => c.status === "Rejected by Field Officer" || c.status === "REJECTED"
+  );
 
   return (
     <FieldShell title="Field Ops Dashboard">
@@ -138,31 +143,38 @@ export default function FieldDashboardPage() {
           )}
         </div>
 
-
-        {/* Assigned Citizen Grievances Banner */}
-        {complaints.filter((c) => c.status !== "RESOLVED" && c.status !== "REJECTED").length > 0 && (
+        {/* Real Complaint Verification Queue / Empty State */}
+        {pendingComplaints.length === 0 ? (
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-2 shadow-lg">
+            <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
+            <h2 className="text-sm font-bold text-white">No complaints pending verification.</h2>
+            <p className="text-xs text-slate-400 max-w-sm mx-auto">
+              Landowner grievances filed against registered parcels will appear here in real time for on-site boundary verification.
+            </p>
+          </div>
+        ) : (
           <div className="bg-amber-950/30 border border-amber-500/40 rounded-2xl p-4 shadow-lg space-y-2">
             <div className="flex items-center justify-between">
               <Link
                 href="/field/complaints"
                 className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold hover:underline"
               >
-                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> Citizen Grievances & Claims
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> Pending Field Verification
               </Link>
               <Link
                 href="/field/complaints"
                 className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold hover:bg-amber-500/30 transition-colors"
               >
-                {complaints.filter((c) => c.status !== "RESOLVED" && c.status !== "REJECTED").length} Pending →
+                {pendingComplaints.length} Pending &rarr;
               </Link>
             </div>
 
             <p className="text-xs text-slate-300">
-              Affected citizens have submitted land or compensation grievances requiring ground verification.
+              Landowner complaints requiring on-ground GPS boundary demarcation and verification:
             </p>
 
             <div className="space-y-1.5 pt-1">
-              {complaints.filter((c) => c.status !== "RESOLVED" && c.status !== "REJECTED").slice(0, 3).map((cmp) => (
+              {pendingComplaints.slice(0, 3).map((cmp) => (
                 <Link
                   key={cmp.id || cmp.complaint_id}
                   href={`/field/complaints/${cmp.id || cmp.complaint_id}`}
@@ -171,11 +183,11 @@ export default function FieldDashboardPage() {
                   <div>
                     <span className="font-bold text-white block text-[11px]">{cmp.complaint_type}</span>
                     <span className="text-[10px] text-slate-400 font-mono">
-                      {cmp.parcel_id ? `Parcel: ${cmp.parcel_id}` : "Unregistered Land Claim"} · Citizen: {cmp.owner_name}
+                      {cmp.parcel_id ? `Parcel: #${cmp.parcel_id}` : "Unregistered Land Claim"} · Citizen: {cmp.owner_name}
                     </span>
                   </div>
                   <span className="text-amber-400 text-[11px] font-semibold flex items-center gap-1">
-                    <span>Review & Survey</span>
+                    <span>Verify Boundary</span>
                     <ArrowRight className="w-3 h-3" />
                   </span>
                 </Link>
@@ -184,30 +196,30 @@ export default function FieldDashboardPage() {
           </div>
         )}
 
-        {/* 4 KPI Metrics */}
+        {/* Operational KPI Metrics */}
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="bg-slate-800/90 border border-slate-700/80 p-3.5 rounded-2xl shadow-sm space-y-1">
-            <span className="text-slate-400 block text-[11px]">Assigned Parcels</span>
+            <span className="text-slate-400 block text-[11px]">Registered Parcels</span>
             <span className="text-2xl font-bold font-mono text-white">{parcels.length}</span>
-            <span className="text-[10px] text-slate-400 block">In Active Corridor</span>
+            <span className="text-[10px] text-slate-400 block">In Operational Sector</span>
           </div>
 
           <div className="bg-slate-800/90 border border-amber-500/30 p-3.5 rounded-2xl shadow-sm space-y-1">
-            <span className="text-amber-400 block text-[11px]">Pending Surveys</span>
-            <span className="text-2xl font-bold font-mono text-amber-400">{pendingCount}</span>
-            <span className="text-[10px] text-slate-400 block">Awaiting Field Verification</span>
-          </div>
-
-          <div className="bg-slate-800/90 border border-red-500/30 p-3.5 rounded-2xl shadow-sm space-y-1">
-            <span className="text-red-400 block text-[11px]">Flagged Disputes</span>
-            <span className="text-2xl font-bold font-mono text-red-400">{disputedCount || incidents.length}</span>
-            <span className="text-[10px] text-slate-400 block">Blocking CPM Path</span>
+            <span className="text-amber-400 block text-[11px]">Pending Verification</span>
+            <span className="text-2xl font-bold font-mono text-amber-400">{pendingComplaints.length}</span>
+            <span className="text-[10px] text-slate-400 block">Awaiting Ground Review</span>
           </div>
 
           <div className="bg-slate-800/90 border border-emerald-500/30 p-3.5 rounded-2xl shadow-sm space-y-1">
-            <span className="text-emerald-400 block text-[11px]">Verified Clear</span>
-            <span className="text-2xl font-bold font-mono text-emerald-400">{verifiedCount}</span>
-            <span className="text-[10px] text-slate-400 block">Reconciled with Records</span>
+            <span className="text-emerald-400 block text-[11px]">Verified by Field Officer</span>
+            <span className="text-2xl font-bold font-mono text-emerald-400">{verifiedComplaints.length}</span>
+            <span className="text-[10px] text-slate-400 block">Moved to Admin Queue</span>
+          </div>
+
+          <div className="bg-slate-800/90 border border-red-500/30 p-3.5 rounded-2xl shadow-sm space-y-1">
+            <span className="text-red-400 block text-[11px]">Rejected by Officer</span>
+            <span className="text-2xl font-bold font-mono text-red-400">{rejectedComplaints.length}</span>
+            <span className="text-[10px] text-slate-400 block">Demarcation Mismatches</span>
           </div>
         </div>
 
@@ -227,8 +239,8 @@ export default function FieldDashboardPage() {
                 <ArrowRight className="w-4 h-4" />
               </div>
               <div>
-                <span className="block font-bold text-sm">Assigned Queue</span>
-                <span className="text-[10px] text-emerald-100 opacity-90">GPS-sorted parcel list</span>
+                <span className="block font-bold text-sm">Parcels</span>
+                <span className="text-[10px] text-emerald-100 opacity-90">{parcels.length} registered</span>
               </div>
             </Link>
 
@@ -241,8 +253,8 @@ export default function FieldDashboardPage() {
                 <ArrowRight className="w-4 h-4" />
               </div>
               <div>
-                <span className="block font-bold text-sm">Citizen Claims</span>
-                <span className="text-[10px] text-amber-100 opacity-90">Review & Ground Survey</span>
+                <span className="block font-bold text-sm">Grievances</span>
+                <span className="text-[10px] text-amber-100 opacity-90">{pendingComplaints.length} pending survey</span>
               </div>
             </Link>
 
@@ -262,86 +274,46 @@ export default function FieldDashboardPage() {
           </div>
         </div>
 
-        {/* Urgent Field Incidents / Bottlenecks */}
-        {incidents.length > 0 && (
-          <div className="space-y-2.5 pt-1">
-            <div className="flex items-center justify-between text-xs font-semibold text-red-400 px-1">
-              <span className="flex items-center gap-1.5">
-                <AlertTriangle className="w-4 h-4" /> Active Ground Incidents ({incidents.length})
-              </span>
-            </div>
-
-            <div className="space-y-2">
-              {incidents.map((inc) => (
-                <Link
-                  key={inc.verification_id}
-                  href={`/field/parcels/${inc.parcel_id}`}
-                  className="block p-3.5 rounded-xl bg-red-950/20 border border-red-500/30 hover:border-red-500/60 transition-all space-y-1.5"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-white text-xs font-display flex items-center gap-1.5">
-                      <span className="font-mono text-red-400">{inc.verification_id}:</span>
-                      <span>{(inc.issue_type || "Incident").replace(/_/g, " ")}</span>
-                    </span>
-                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 uppercase font-bold">
-                      {inc.status}
-                    </span>
-                  </div>
-
-                  <p className="text-[11px] text-slate-300 line-clamp-2">
-                    {inc.observations || inc.remarks}
-                  </p>
-
-                  <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
-                    <span>Survey {inc.survey_number || inc.parcel_id} · {inc.village_name}</span>
-                    <span className="text-emerald-400 flex items-center gap-1 font-semibold">
-                      Inspect & Confirm <ArrowRight className="w-3 h-3" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Priority Parcels Nearby */}
+        {/* Registered Parcels Summary */}
         <div className="space-y-2.5 pt-1">
           <div className="flex items-center justify-between text-xs font-semibold text-slate-400 px-1">
-            <span>Priority Assigned Parcels</span>
+            <span>Operational Sector Parcels</span>
             <Link href="/field/parcels" className="text-emerald-400 hover:underline text-[11px] font-mono">
               View All ({parcels.length})
             </Link>
           </div>
 
-          <div className="space-y-2">
-            {parcels.slice(0, 3).map((p) => (
-              <Link
-                key={p.parcel_id}
-                href={`/field/parcels/${p.parcel_id}`}
-                className="block p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/80 hover:border-emerald-500/40 transition-all space-y-1.5"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-xs font-display">
-                    Survey No. {p.survey_no || p.survey_number}
-                  </span>
-                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
-                    p.verification_status === "verified"
-                      ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-300"
-                      : p.conflict_flag || p.verification_status === "disputed"
-                      ? "bg-red-500/15 border-red-500/30 text-red-300"
-                      : "bg-amber-500/15 border-amber-500/30 text-amber-300"
-                  }`}>
-                    {p.verification_status || "Pending"}
-                  </span>
-                </div>
+          {parcels.length === 0 ? (
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-1 shadow-sm">
+              <span className="text-xs font-bold text-slate-300 block">No registered parcels in operational sector.</span>
+              <p className="text-[11px] text-slate-400">
+                Parcels demarcated by landowners will appear here once registered.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {parcels.slice(0, 3).map((p) => (
+                <div
+                  key={p.parcel_id}
+                  className="block p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/80 space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-white text-xs font-mono">
+                      Parcel #{p.parcel_id}
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border bg-emerald-500/15 border-emerald-500/30 text-emerald-300">
+                      {p.status || "Registered"}
+                    </span>
+                  </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-400">
-                  <span>{p.village_name || "Ramganj Mandi"} · {p.owner_name || "Landholder"}</span>
-                  <span className="text-indigo-400 font-mono">{p.area_acres || 1.2} Acres</span>
+                  <div className="flex items-center justify-between text-[11px] text-slate-400">
+                    <span>{p.village_name || "Corridor Sector"} · {p.owner_name || "Landowner"}</span>
+                    <span className="text-indigo-400 font-mono">{p.area_acres || 0} Acres</span>
+                  </div>
                 </div>
-              </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
       </div>

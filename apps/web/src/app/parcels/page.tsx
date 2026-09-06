@@ -1,160 +1,352 @@
-import { apiClient, MOCK_PARCELS, NATIONAL_PROJECTS } from '@/lib/api';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import type { Metadata } from 'next';
-import { MapPin, AlertTriangle, CheckCircle2, Clock, ArrowRight, Filter } from 'lucide-react';
+import { 
+  MapPin, 
+  ShieldCheck, 
+  CheckCircle2, 
+  Clock, 
+  ArrowRight, 
+  Filter, 
+  FileText, 
+  Layers, 
+  Sparkles,
+  RefreshCw,
+  Search,
+  ExternalLink,
+  Navigation
+} from 'lucide-react';
+import { getAllRegisteredParcels } from '@/lib/api';
 
-export const metadata: Metadata = {
-  title: 'Parcel Register | BHUMI',
-  description: 'National cadastral survey parcel register with statutory stage and lapse risk overview.',
-};
+export default function ParcelsPage() {
+  const [parcels, setParcels] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
-const STAGE_COLORS: Record<string, { bg: string; color: string; border: string }> = {
-  PRELIMINARY_NOTIFICATION: { bg: 'rgba(99,102,241,0.12)', color: '#818cf8', border: 'rgba(99,102,241,0.25)' },
-  SOCIAL_IMPACT_ASSESSMENT: { bg: 'rgba(139,92,246,0.12)', color: '#a78bfa', border: 'rgba(139,92,246,0.25)' },
-  HEARING_OF_OBJECTIONS: { bg: 'rgba(245,158,11,0.12)', color: '#f59e0b', border: 'rgba(245,158,11,0.25)' },
-  DECLARATION: { bg: 'rgba(249,115,22,0.12)', color: '#f97316', border: 'rgba(249,115,22,0.25)' },
-  NOTICE_TO_PERSONS: { bg: 'rgba(244,63,94,0.12)', color: '#f43f5e', border: 'rgba(244,63,94,0.25)' },
-  AWARD_ENQUIRY: { bg: 'rgba(245,158,11,0.12)', color: '#fbbf24', border: 'rgba(245,158,11,0.25)' },
-  POSSESSION: { bg: 'rgba(16,185,129,0.12)', color: '#10b981', border: 'rgba(16,185,129,0.25)' },
-  RESOLVED: { bg: 'rgba(16,185,129,0.12)', color: '#10b981', border: 'rgba(16,185,129,0.25)' },
-};
+  const loadParcels = async () => {
+    setLoading(true);
+    try {
+      const data = await getAllRegisteredParcels();
+      setParcels(data || []);
+    } catch (err) {
+      console.error('Failed to load registered parcels:', err);
+      setParcels([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-export default async function ParcelsPage() {
-  let parcels = MOCK_PARCELS;
-  let errorMsg: string | null = null;
+  useEffect(() => {
+    loadParcels();
+  }, []);
 
-  try {
-    const res = await apiClient.getDashboardProjects(1);
-  } catch {
-    errorMsg = 'Operational service offline — showing national register dataset';
-  }
+  const filteredParcels = parcels.filter(p => {
+    const q = searchQuery.toLowerCase();
+    const pid = (p.parcel_id || p.id || '').toLowerCase();
+    const name = (p.owner_legal_name || p.owner_name || '').toLowerCase();
+    const vill = (p.village_name || p.contact_village || '').toLowerCase();
+    const dist = (p.district || '').toLowerCase();
+    return pid.includes(q) || name.includes(q) || vill.includes(q) || dist.includes(q);
+  });
 
-  const totalArea = parcels.reduce((s: number, p: any) => s + (Number(p.area_hectares) || 0), 0);
-  const possessedCount = parcels.filter((p: any) => p.status === 'POSSESSION' || p.status === 'RESOLVED').length;
-  const lapsedCount = parcels.filter((p: any) => p.is_lapsed).length;
-  const pendingCount = parcels.length - possessedCount;
+  const totalAreaAcres = parcels.reduce((sum, p) => {
+    const ac = Number(p.calculated_area_acres || p.area_acres || (p.calculated_area_sqm ? p.calculated_area_sqm / 4046.86 : 0)) || 0;
+    return sum + ac;
+  }, 0);
+
+  const verifiedIdentityCount = parcels.filter(p => 
+    p.identity_verified === true || p.aadhaar_verified === true || p.status === 'VERIFIED'
+  ).length;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {/* Header */}
-      <div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-          <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4, background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            {parcels.length} Parcels Registered
+      
+      {/* Real Data Provenance Banner */}
+      <div style={{
+        padding: '10px 16px',
+        borderRadius: 10,
+        background: 'rgba(16,185,129,0.08)',
+        border: '1px solid rgba(16,185,129,0.3)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: 10
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{
+            fontSize: 10,
+            fontFamily: 'JetBrains Mono, monospace',
+            fontWeight: 800,
+            padding: '2px 8px',
+            borderRadius: 4,
+            background: '#10b981',
+            color: '#000',
+            textTransform: 'uppercase'
+          }}>
+            CADASTRAL RECORDS
+          </span>
+          <span style={{ fontSize: 12, color: '#6ee7b7', fontWeight: 600 }}>
+            Registered Cadastral Parcels &bull; Authoritative Statutory Registry
           </span>
         </div>
-        <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
-          Cadastral Parcel Register
-        </h1>
-        <p style={{ fontSize: 12, color: '#4a5568', marginTop: 6 }}>
-          National cadastral survey records with RFCTLARR statutory stage tracking and lapse risk monitoring
-        </p>
-      </div>
-
-      {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14 }}>
-        {[
-          { label: 'Total Parcels', val: parcels.length, color: '#6366f1', bg: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.22)' },
-          { label: 'Pending Possession', val: pendingCount, color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.22)' },
-          { label: 'Possessed / Resolved', val: possessedCount, color: '#10b981', bg: 'rgba(16,185,129,0.1)', border: 'rgba(16,185,129,0.22)' },
-          { label: 'Lapse Risks', val: lapsedCount, color: '#f43f5e', bg: 'rgba(244,63,94,0.1)', border: 'rgba(244,63,94,0.22)' },
-          { label: 'Total Area (Ha)', val: totalArea.toFixed(2), color: '#8b5cf6', bg: 'rgba(139,92,246,0.1)', border: 'rgba(139,92,246,0.22)' },
-        ].map((s) => (
-          <div key={s.label} style={{ borderRadius: 13, padding: '16px 18px', background: s.bg, border: `1px solid ${s.border}` }}>
-            <div style={{ fontSize: 10, color: '#6b7a94', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>{s.label}</div>
-            <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 30, fontWeight: 800, color: s.color, lineHeight: 1.1, marginTop: 4 }}>{s.val}</div>
-          </div>
-        ))}
-      </div>
-
-      {errorMsg && (
-        <div style={{ borderRadius: 10, padding: '12px 16px', background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.25)', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <AlertTriangle style={{ width: 14, height: 14, color: '#f43f5e', flexShrink: 0 }} />
-          <span style={{ fontSize: 12, color: '#f43f5e' }}>{errorMsg}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
+            Official Revenue Parcels
+          </span>
+          <button
+            onClick={loadParcels}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#34d399',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              fontSize: 11,
+              fontWeight: 600
+            }}
+          >
+            <RefreshCw style={{ width: 12, height: 12, animation: loading ? 'spin 1s linear infinite' : 'none' }} />
+            <span>Refresh</span>
+          </button>
         </div>
-      )}
+      </div>
+
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{
+              fontSize: 10, fontFamily: 'JetBrains Mono, monospace', padding: '2px 8px', borderRadius: 4,
+              background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#34d399',
+              textTransform: 'uppercase', letterSpacing: '0.06em'
+            }}>
+              {parcels.length} Registered Parcels
+            </span>
+          </div>
+          <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#e2e8f0', margin: 0 }}>
+            Cadastral Parcel Register
+          </h1>
+          <p style={{ fontSize: 12, color: '#64748b', marginTop: 6 }}>
+            Authoritative registry of citizen land parcels with verified Aadhaar identity, official documents, and GPS boundaries
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Link
+            href="/landowner-gis"
+            style={{
+              padding: '9px 16px',
+              borderRadius: 8,
+              background: 'rgba(99,102,241,0.15)',
+              border: '1px solid rgba(99,102,241,0.3)',
+              color: '#a5b4fc',
+              fontSize: 12,
+              fontWeight: 700,
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6
+            }}
+          >
+            <Navigation style={{ width: 14, height: 14 }} />
+            <span>View in Landowner GIS</span>
+          </Link>
+          <Link
+            href="/landowner"
+            style={{
+              padding: '9px 16px',
+              borderRadius: 8,
+              background: 'linear-gradient(135deg, #10b981, #059669)',
+              color: '#fff',
+              fontSize: 12,
+              fontWeight: 700,
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6
+            }}
+          >
+            <FileText style={{ width: 14, height: 14 }} />
+            <span>Citizen Portal</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
+        <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)' }}>
+          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Registered Parcels</div>
+          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#10b981', marginTop: 4 }}>{parcels.length}</div>
+          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Registered in System</div>
+        </div>
+
+        <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.25)' }}>
+          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Aadhaar Verified</div>
+          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#818cf8', marginTop: 4 }}>{verifiedIdentityCount}</div>
+          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Citizen identity confirmed</div>
+        </div>
+
+        <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.25)' }}>
+          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Registered Area</div>
+          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 26, fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
+            {totalAreaAcres.toFixed(2)} <span style={{ fontSize: 14, fontWeight: 500 }}>Acres</span>
+          </div>
+          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Total declared cadastral land</div>
+        </div>
+
+        <div style={{ borderRadius: 13, padding: '16px 18px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}>
+          <div style={{ fontSize: 10, color: '#6b7a94', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>Field Officer</div>
+          <div style={{ fontFamily: 'Sora, sans-serif', fontSize: 18, fontWeight: 800, color: '#f59e0b', marginTop: 8 }}>Ramesh Patel</div>
+          <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>OFF-001 &middot; Patwari</div>
+        </div>
+      </div>
+
+      {/* Filter and Search Bar */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+        <div style={{ position: 'relative', minWidth: 280, maxWidth: 400, flex: 1 }}>
+          <Search style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: '#64748b' }} />
+          <input
+            type="text"
+            placeholder="Search by Parcel ID, Owner Name, Village, District..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '8px 12px 8px 34px',
+              borderRadius: 8,
+              border: '1px solid rgba(255,255,255,0.1)',
+              background: 'rgba(15,23,42,0.6)',
+              color: '#e2e8f0',
+              fontSize: 12,
+              outline: 'none'
+            }}
+          />
+        </div>
+        <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+          Showing {filteredParcels.length} of {parcels.length} parcels
+        </span>
+      </div>
 
       {/* Parcel Table */}
       <div className="glass" style={{ borderRadius: 14, overflow: 'hidden', padding: 0 }}>
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Survey Parcel Directory</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>All Cadastral Records</div>
+            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#64748b', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+              Cadastral Parcel Register
+            </div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#c4cfe4', marginTop: 2 }}>
+              Authoritative Records
+            </div>
           </div>
         </div>
 
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
-                {['Survey No.', 'Corridor', 'Area (Ha)', 'Classification', 'Owner', 'Stage', 'Status', 'Lapse Risk', ''].map((h) => (
-                  <th key={h} style={{ padding: '11px 16px', textAlign: 'left', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {parcels.length === 0 ? (
-                <tr>
-                  <td colSpan={9} style={{ padding: '40px 16px', textAlign: 'center', color: '#6b7a94', fontSize: 13 }}>
-                    No cadastral survey parcels registered. Awaiting operational data ingestion.
-                  </td>
+        {loading ? (
+          <div style={{ padding: '40px 16px', textAlign: 'center', color: '#64748b', fontSize: 13 }}>
+            <RefreshCw style={{ width: 20, height: 20, margin: '0 auto 10px', animation: 'spin 1s linear infinite', color: '#10b981' }} />
+            <span>Loading registered parcels...</span>
+          </div>
+        ) : filteredParcels.length === 0 ? (
+          <div style={{ padding: '48px 16px', textAlign: 'center' }}>
+            <CheckCircle2 style={{ width: 36, height: 36, color: '#10b981', margin: '0 auto 12px' }} />
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#e2e8f0', marginBottom: 6 }}>
+              No registered land parcels available.
+            </div>
+            <p style={{ fontSize: 12, color: '#64748b', margin: 0, maxWidth: 440, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.6 }}>
+              Land parcels registered by citizens in the Landowner Portal will appear here with verified identity, uploaded deeds, and GPS boundary vertices.
+            </p>
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+                  {['Parcel ID', 'Owner Name', 'Identity Status', 'Location', 'Area (Acres)', 'Boundary GPS', 'Documents', 'Action'].map(h => (
+                    <th key={h} style={{ padding: '11px 16px', textAlign: 'left', fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap' }}>
+                      {h}
+                    </th>
+                  ))}
                 </tr>
-              ) : parcels.map((p: any) => {
-                const isPossessed = p.status === 'POSSESSION' || p.status === 'RESOLVED';
-                const isLapsed = Boolean(p.is_lapsed);
-                const stageStyle = STAGE_COLORS[p.current_stage] || { bg: 'rgba(99,102,241,0.1)', color: '#818cf8', border: 'rgba(99,102,241,0.2)' };
-                const projectName = p.project_name || NATIONAL_PROJECTS.find(pr => pr.id === p.project_id)?.name || 'Corridor Alignment';
-                return (
-                  <tr key={p.id} className="tr-hover" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td style={{ padding: '12px 16px' }}>
-                      <Link href={`/parcels/${p.id}`} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, fontWeight: 700, color: '#818cf8', textDecoration: 'none' }}>
-                        {p.survey_no}
-                      </Link>
-                    </td>
-                    <td style={{ padding: '12px 16px' }}>
-                      <Link href={`/projects/${p.project_id}`} style={{ fontSize: 11, color: '#c4cfe4', textDecoration: 'none', fontWeight: 600 }}>
-                        {projectName}
-                      </Link>
-                    </td>
-                    <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', color: '#8899b4' }}>{p.area_hectares}</td>
-                    <td style={{ padding: '12px 16px', color: '#6b7a94', fontSize: 11 }}>{p.classification || 'Agricultural'}</td>
-                    <td style={{ padding: '12px 16px', color: '#6b7a94', fontSize: 11, maxWidth: 160 }}>
-                      <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {p.owner_name || 'Owner of Record'}
-                      </span>
-                    </td>
-                    <td style={{ padding: '12px 16px' }}>
-                      <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, background: stageStyle.bg, color: stageStyle.color, border: `1px solid ${stageStyle.border}`, fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.04em', whiteSpace: 'nowrap' }}>
-                        {(p.current_stage || 'PRELIMINARY_NOTIFICATION').replace(/_/g, ' ')}
-                      </span>
-                    </td>
-                    <td style={{ padding: '12px 16px' }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 99, background: isPossessed ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.12)', color: isPossessed ? '#10b981' : '#f59e0b', border: `1px solid ${isPossessed ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'}` }}>
-                        {isPossessed ? <CheckCircle2 style={{ width: 10, height: 10 }} /> : <Clock style={{ width: 10, height: 10 }} />}
-                        {p.status}
-                      </span>
-                    </td>
-                    <td style={{ padding: '12px 16px' }}>
-                      {isLapsed ? (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, background: 'rgba(244,63,94,0.15)', color: '#f43f5e', border: '1px solid rgba(244,63,94,0.3)', textTransform: 'uppercase' }}>
-                          <AlertTriangle style={{ width: 9, height: 9 }} /> Lapsed
+              </thead>
+              <tbody>
+                {filteredParcels.map(p => {
+                  const pid = p.parcel_id || p.id || 'N/A';
+                  const owner = p.owner_legal_name || p.owner_name || 'Landowner';
+                  const isVerified = p.identity_verified || p.aadhaar_verified || p.status === 'VERIFIED';
+                  const location = [p.village_name || p.contact_village, p.district, p.state].filter(Boolean).join(', ') || 'Rural Sector';
+                  const areaAcres = Number(p.calculated_area_acres || p.area_acres || (p.calculated_area_sqm ? p.calculated_area_sqm / 4046.86 : 0)).toFixed(2);
+                  const coordsCount = (p.coordinates && p.coordinates.length) || (p.landowner_reported_boundary?.coordinates?.[0]?.length) || 0;
+                  const docCount = p.documents?.length || p.document_ids?.length || (p.document_filename ? 1 : 0);
+
+                  return (
+                    <tr key={p.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                      <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#38bdf8' }}>
+                        #{pid}
+                      </td>
+                      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#e2e8f0' }}>
+                        {owner}
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 4,
+                          fontSize: 10,
+                          fontFamily: 'JetBrains Mono, monospace',
+                          fontWeight: 700,
+                          padding: '2px 8px',
+                          borderRadius: 4,
+                          background: isVerified ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)',
+                          color: isVerified ? '#34d399' : '#f59e0b',
+                          border: `1px solid ${isVerified ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'}`
+                        }}>
+                          <ShieldCheck style={{ width: 11, height: 11 }} />
+                          <span>{isVerified ? 'Aadhaar Verified' : 'Pending Verification'}</span>
                         </span>
-                      ) : (
-                        <span style={{ fontSize: 9, color: '#3a4258', fontFamily: 'JetBrains Mono, monospace' }}>—</span>
-                      )}
-                    </td>
-                    <td style={{ padding: '12px 16px' }}>
-                      <Link href={`/parcels/${p.id}`} style={{ fontSize: 11, fontWeight: 600, color: '#6b7a94', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
-                        Inspect <ArrowRight style={{ width: 11, height: 11 }} />
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                      </td>
+                      <td style={{ padding: '12px 16px', color: '#94a3b8' }}>
+                        {location}
+                      </td>
+                      <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600, color: '#10b981' }}>
+                        {areaAcres} Acres
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <span style={{ fontSize: 11, color: '#818cf8', fontFamily: 'JetBrains Mono, monospace' }}>
+                          {coordsCount} GPS Vertices
+                        </span>
+                      </td>
+                      <td style={{ padding: '12px 16px', color: '#94a3b8', fontSize: 11 }}>
+                        {docCount} Document{docCount === 1 ? '' : 's'}
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <Link
+                          href={`/landowner-gis?id=${pid}`}
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 700,
+                            color: '#818cf8',
+                            textDecoration: 'none',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 4
+                          }}
+                        >
+                          <span>GIS Boundary</span>
+                          <ArrowRight style={{ width: 12, height: 12 }} />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
+
     </div>
   );
 }

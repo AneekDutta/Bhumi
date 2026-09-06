@@ -752,18 +752,16 @@ export const apiClient = {
   },
 
   getFieldOfficers: async () => {
-    try {
-      const res = await authenticatedFetch(`/sih26016/field/officers`, { cache: 'no-store' });
-      if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
-
     return [
-      { officer_id: 'OF005', name: 'Girdhari Rathore', designation: 'Patwari', department_id: 'D04', department_name: 'Revenue & Land Records', assigned_villages: ['V01', 'V02'], pending_tasks_count: 8 },
-      { officer_id: 'OF002', name: 'Kamla Jat', designation: 'Field Surveyor', department_id: 'D04', department_name: 'Public Works Cadastral Survey', assigned_villages: ['V01'], pending_tasks_count: 12 },
-      { officer_id: 'OF004', name: 'Om Prakash Meena', designation: 'Field Surveyor', department_id: 'D03', department_name: 'National Highways Survey Cell', assigned_villages: ['V02', 'V03'], pending_tasks_count: 15 },
-      { officer_id: 'OF001', name: 'Ramesh Meena', designation: 'Tehsildar', department_id: 'D02', department_name: 'Competent Authority Revenue Office', assigned_villages: ['V01', 'V02', 'V03'], pending_tasks_count: 24 },
-      { officer_id: 'OF003', name: 'Geeta Jat', designation: 'Tehsildar', department_id: 'D02', department_name: 'Sub-Divisional Magistrate Office', assigned_villages: ['V02'], pending_tasks_count: 7 },
-      { officer_id: 'OF006', name: 'Sita Rathore', designation: 'Land Acquisition Officer', department_id: 'D02', department_name: 'Special Land Acquisition Desk', assigned_villages: ['V01', 'V02', 'V03'], pending_tasks_count: 19 },
+      {
+        officer_id: 'OFF-001',
+        name: 'Ramesh Patel',
+        designation: 'Patwari / Revenue Lekhpal',
+        department_id: 'D01',
+        department_name: 'Revenue & Land Records',
+        assigned_villages: ['All Operational Sectors'],
+        pending_tasks_count: 0
+      }
     ];
   },
 
@@ -1083,6 +1081,41 @@ export const apiClient = {
 
   generateUnique14DigitParcelId: async () => {
     return await supabaseDataService.generateUnique14DigitParcelId();
+  },
+
+  fieldVerifyComplaint: async (complaintId: string, officerId: string, officerName: string, notes: string) => {
+    return await supabaseDataService.fieldVerifyComplaint(complaintId, officerId, officerName, notes);
+  },
+
+  fieldRejectComplaint: async (complaintId: string, officerId: string, officerName: string, reason: string) => {
+    return await supabaseDataService.fieldRejectComplaint(complaintId, officerId, officerName, reason);
+  },
+
+  adminInitiateImplementation: async (complaintId: string, adminName: string, notes: string, orderRef?: string) => {
+    return await supabaseDataService.adminInitiateImplementation(complaintId, adminName, notes, orderRef);
+  },
+
+  adminCompleteImplementation: async (complaintId: string, adminName: string, completionNotes: string, statutoryData?: any) => {
+    return await supabaseDataService.adminCompleteImplementation(complaintId, adminName, completionNotes, statutoryData);
+  },
+
+  saveComplaintSimulation: async (complaintId: string, simulationPayload: any) => {
+    return await supabaseDataService.saveComplaintSimulation(complaintId, simulationPayload);
+  },
+
+  resolveComplaintWithNotice: async (complaintId: string, payload: any) => {
+    return await supabaseDataService.resolveComplaintWithNotice(complaintId, payload);
+  },
+
+  getComplaintAuditTrail: async (complaintId: string) => {
+    return await supabaseDataService.getComplaintAuditTrail(complaintId);
+  },
+
+  getAllRegisteredParcels: async () => {
+    return await supabaseDataService.getAllRegisteredParcels();
+  },
+  getRealDashboardStats: async () => {
+    return await supabaseDataService.getRealDashboardStats();
   }
 };
 
@@ -1122,4 +1155,20 @@ export const adminDecisionOnComplaint = (complaintId: string, decision: any) =>
 export const registerNewParcel = (payload: any) => apiClient.registerNewParcel(payload);
 export const getParcelById = (parcelId: string) => apiClient.getParcelById(parcelId);
 export const generateUnique14DigitParcelId = () => apiClient.generateUnique14DigitParcelId();
+export const fieldVerifyComplaint = (complaintId: string, officerId: string, officerName: string, notes: string) =>
+  apiClient.fieldVerifyComplaint(complaintId, officerId, officerName, notes);
+export const fieldRejectComplaint = (complaintId: string, officerId: string, officerName: string, reason: string) =>
+  apiClient.fieldRejectComplaint(complaintId, officerId, officerName, reason);
+export const saveComplaintSimulation = (complaintId: string, simulationPayload: any) =>
+  apiClient.saveComplaintSimulation(complaintId, simulationPayload);
+export const resolveComplaintWithNotice = (complaintId: string, payload: any) =>
+  apiClient.resolveComplaintWithNotice(complaintId, payload);
+export const getComplaintAuditTrail = (complaintId: string) =>
+  apiClient.getComplaintAuditTrail(complaintId);
+export const adminInitiateImplementation = (complaintId: string, adminName: string, notes: string, orderRef?: string) =>
+  apiClient.adminInitiateImplementation(complaintId, adminName, notes, orderRef);
+export const adminCompleteImplementation = (complaintId: string, adminName: string, completionNotes: string, statutoryData?: any) =>
+  apiClient.adminCompleteImplementation(complaintId, adminName, completionNotes, statutoryData);
+export const getAllRegisteredParcels = () => apiClient.getAllRegisteredParcels();
+export const getRealDashboardStats = () => apiClient.getRealDashboardStats();
 

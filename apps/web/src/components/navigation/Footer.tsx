@@ -16,7 +16,7 @@ export function Footer() {
               <span className="text-slate-300 font-medium">National Land Acquisition & Infrastructure Operations</span>
             </div>
             <p className="text-slate-400 text-xs leading-relaxed max-w-lg">
-              Decision-intelligence framework for statutory land acquisition workflows, PostGIS contiguous spatial contiguity clustering, and deterministic Critical Path Method (CPM) schedule risk attribution.
+              Statutory decision system for national land acquisition workflows, contiguous spatial contiguity clustering, and deterministic Critical Path Method (CPM) schedule risk attribution.
             </p>
             <div className="flex flex-wrap items-center gap-2 pt-1">
               <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800">
@@ -55,7 +55,7 @@ export function Footer() {
           </div>
           <div className="flex items-center space-x-3">
             <span className="flex items-center gap-1 text-slate-400 font-mono">
-              <Database className="w-3 h-3 text-indigo-400" /> Engine: v2.4.0 (CPM+GIS Frozen)
+              <ShieldCheck className="w-3 h-3 text-emerald-400" /> CALA Operations Platform v2.4.0
             </span>
           </div>
         </div>

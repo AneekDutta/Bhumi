@@ -425,19 +425,19 @@ export default function NewComplaintPage() {
 
       const result = await submitLandownerComplaint(payload);
 
-      if (!result || !result.success) {
-        throw new Error(result?.message || "Failed to create complaint record in database.");
+      if (!result?.success) {
+        throw new Error(result?.message || "Unable to submit grievance. Please try again.");
       }
 
       // Phase D: Done! Redirect to live tracking
-      setSubmitPhase("Complaint registered! Status: SUBMITTED — AWAITING FIELD REVIEW...");
+      setSubmitPhase("Grievance registered! Status: SUBMITTED — AWAITING FIELD REVIEW...");
       setTimeout(() => {
         router.push(`/landowner/complaints/${result.complaint_id}`);
-      }, 800);
+      }, 700);
 
     } catch (err: any) {
       console.error("Grievance submission error:", err);
-      setErrorMsg(err?.message || "An unexpected error occurred while submitting your complaint to Supabase.");
+      setErrorMsg(err?.message || "An unexpected error occurred while submitting your grievance.");
       setSubmitting(false);
       setSubmitPhase(null);
     }

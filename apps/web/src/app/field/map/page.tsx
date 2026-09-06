@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
   MapPin,
@@ -20,8 +20,8 @@ import {
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
 import { FieldSpatialMap } from "@/components/field/FieldSpatialMap";
-import { apiClient, getFieldIncidents } from "@/lib/api";
-import { useRealtimeIncidents } from "@/lib/supabase/useRealtime";
+import { getAllRegisteredParcels, getLandownerComplaints, getFieldIncidents } from "@/lib/api";
+import { useRealtimeIncidents, useRealtimeDashboard } from "@/lib/supabase/useRealtime";
 
 export default function FieldMapPage() {
   const [geojson, setGeojson] = useState<any>(null);
@@ -32,36 +32,164 @@ export default function FieldMapPage() {
   const [filterMode, setFilterMode] = useState<"ALL" | "PENDING" | "DISPUTED" | "INCIDENTS">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const reloadIncidents = async () => {
+  const loadSpatialData = useCallback(async () => {
+    setLoading(true);
     try {
-      const incs = await getFieldIncidents();
-      if (incs) setIncidents(incs);
-    } catch {}
-  };
+      const [parcels, complaints, incs] = await Promise.all([
+        getAllRegisteredParcels(),
+        getLandownerComplaints(),
+        getFieldIncidents()
+      ]);
+
+      const features: any[] = [];
+      const seenIds = new Set<string>();
+
+      // 1. Process complaints with boundary coordinates
+      for (const c of (complaints || [])) {
+        const pid = c.parcel_id || c.id;
+        seenIds.add(pid);
+        if (c.id) seenIds.add(c.id);
+
+        let coords: [number, number][] = [];
+        if (c.landowner_reported_boundary?.coordinates?.[0]) {
+          coords = c.landowner_reported_boundary.coordinates[0];
+        } else if (c.boundary?.coordinates?.[0]) {
+          coords = c.boundary.coordinates[0];
+        } else if (Array.isArray(c.coordinates) && c.coordinates.length >= 3) {
+          coords = c.coordinates.map((pt: any) => [pt.lng ?? pt[0], pt.lat ?? pt[1]]);
+          if (coords[0] && (coords[0][0] !== coords[coords.length - 1][0] || coords[0][1] !== coords[coords.length - 1][1])) {
+            coords.push([...coords[0]]);
+          }
+        } else if (c.landowner_boundary_coordinates && c.landowner_boundary_coordinates.length >= 3) {
+          coords = c.landowner_boundary_coordinates.map((pt: any) => [pt.lng ?? pt[0], pt.lat ?? pt[1]]);
+          if (coords[0] && (coords[0][0] !== coords[coords.length - 1][0] || coords[0][1] !== coords[coords.length - 1][1])) {
+            coords.push([...coords[0]]);
+          }
+        } else if (c.landowner_reported_location?.lng && c.landowner_reported_location?.lat) {
+          const centroid = [c.landowner_reported_location.lng, c.landowner_reported_location.lat];
+          const d = 0.0006;
+          coords = [
+            [centroid[0] - d, centroid[1] - d],
+            [centroid[0] + d, centroid[1] - d],
+            [centroid[0] + d, centroid[1] + d],
+            [centroid[0] - d, centroid[1] + d],
+            [centroid[0] - d, centroid[1] - d],
+          ];
+        }
+
+        if (coords.length >= 4) {
+          const areaAcres = Number(c.landowner_declared_area?.acres || (c.area_sqm ? c.area_sqm / 4046.86 : 0));
+          const areaSqm = Number(c.landowner_declared_area?.sqm || c.area_sqm || 0);
+          const isDisputed = Boolean(c.status?.toLowerCase().includes("dispute") || c.complaint_type);
+          const isVerified = Boolean(c.status?.toLowerCase().includes("verified"));
+
+          features.push({
+            type: "Feature",
+            id: c.id || pid,
+            geometry: {
+              type: "Polygon",
+              coordinates: [coords]
+            },
+            properties: {
+              parcel_id: pid,
+              survey_number: c.survey_number || c.survey_no || pid,
+              village_name: c.contact_village || c.village || "Operational Sector",
+              owner_name: c.owner_name || "Citizen Landowner",
+              area_sqm: areaSqm,
+              area_hectares: Number((areaAcres * 0.404686).toFixed(3)),
+              area_acres: areaAcres,
+              acquisition_status: isVerified ? "possessed" : isDisputed ? "disputed" : "notified",
+              ownership_conflict: isDisputed,
+              is_critical_path: isDisputed,
+              risk_score: isDisputed ? 75 : 25,
+              hasComplaint: true
+            }
+          });
+        }
+      }
+
+      // 2. Process registered parcels without active complaints
+      for (const p of (parcels || [])) {
+        const pid = p.parcel_id || p.id;
+        if (seenIds.has(pid) || seenIds.has(p.id)) continue;
+
+        let coords: [number, number][] = [];
+        if (p.boundary_coordinates && p.boundary_coordinates.length >= 3) {
+          coords = p.boundary_coordinates.map((pt: any) => [pt.lng ?? pt[0], pt.lat ?? pt[1]]);
+          if (coords[0] && (coords[0][0] !== coords[coords.length - 1][0] || coords[0][1] !== coords[coords.length - 1][1])) {
+            coords.push([...coords[0]]);
+          }
+        } else if (Array.isArray(p.coordinates) && p.coordinates.length >= 3) {
+          coords = p.coordinates.map((pt: any) => [pt.lng ?? pt[0], pt.lat ?? pt[1]]);
+          if (coords[0] && (coords[0][0] !== coords[coords.length - 1][0] || coords[0][1] !== coords[coords.length - 1][1])) {
+            coords.push([...coords[0]]);
+          }
+        }
+
+        if (coords.length >= 4) {
+          const areaAcres = Number(p.calculated_area_acres || p.area_acres || (p.calculated_area_sqm ? p.calculated_area_sqm / 4046.86 : 0));
+          const areaSqm = Number(p.calculated_area_sqm || p.area_sqm || 0);
+
+          features.push({
+            type: "Feature",
+            id: pid,
+            geometry: {
+              type: "Polygon",
+              coordinates: [coords]
+            },
+            properties: {
+              parcel_id: pid,
+              survey_number: p.survey_number || p.khasra_number || pid,
+              village_name: p.village_name || p.contact_village || "Operational Sector",
+              owner_name: p.owner_legal_name || p.owner_name || "Citizen Landowner",
+              area_sqm: areaSqm,
+              area_hectares: Number((areaAcres * 0.404686).toFixed(3)),
+              area_acres: areaAcres,
+              acquisition_status: p.status?.toLowerCase().includes("verified") ? "possessed" : "notified",
+              ownership_conflict: false,
+              is_critical_path: false,
+              risk_score: 15,
+              hasComplaint: false
+            }
+          });
+        }
+      }
+
+      setGeojson({
+        type: "FeatureCollection",
+        features,
+        properties: {
+          center: [75.9284, 24.6492],
+          zoom: 13,
+          total_parcels: features.length
+        }
+      });
+      setIncidents(incs || []);
+    } catch (err) {
+      console.error("Failed to load field spatial data:", err);
+      setGeojson({
+        type: "FeatureCollection",
+        features: [],
+        properties: { center: [75.9284, 24.6492], zoom: 13, total_parcels: 0 }
+      });
+      setIncidents([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   // Real-time synchronization: updates incident map markers when reported or resolved
   useRealtimeIncidents(undefined, () => {
-    reloadIncidents();
+    loadSpatialData();
+  });
+
+  useRealtimeDashboard(() => {
+    loadSpatialData();
   });
 
   useEffect(() => {
-    async function loadSpatialData() {
-      setLoading(true);
-      try {
-        const [geo, incs] = await Promise.all([
-          apiClient.getSIHParcelsGeoJSON("P-NH927A"),
-          getFieldIncidents()
-        ]);
-        setGeojson(geo);
-        setIncidents(incs || []);
-      } catch (err) {
-        console.error("Failed to load field spatial data:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
     loadSpatialData();
-  }, []);
+  }, [loadSpatialData]);
 
   // Filter geojson features based on search query and filter chips
   const filteredGeojson = useMemo(() => {
@@ -177,23 +305,43 @@ export default function FieldMapPage() {
           {loading ? (
             <div className="w-full h-full flex flex-col items-center justify-center bg-slate-950 text-slate-400 gap-3">
               <RefreshCw className="w-6 h-6 animate-spin text-emerald-400" />
-              <span className="text-xs font-mono">Loading Cadastral GeoJSON & Incidents...</span>
+              <span className="text-xs font-mono">Loading Registered Cadastral Boundaries...</span>
             </div>
           ) : (
-            <FieldSpatialMap
-              geojson={filteredGeojson}
-              incidents={incidents}
-              selectedParcelId={selectedParcel?.parcel_id}
-              onParcelSelect={(p) => {
-                setSelectedParcel(p);
-                setSelectedIncident(null);
-              }}
-              onIncidentSelect={(inc) => {
-                setSelectedIncident(inc);
-                setSelectedParcel(null);
-              }}
-              height="100%"
-            />
+            <>
+              <FieldSpatialMap
+                geojson={filteredGeojson}
+                incidents={incidents}
+                selectedParcelId={selectedParcel?.parcel_id}
+                onParcelSelect={(p) => {
+                  setSelectedParcel(p);
+                  setSelectedIncident(null);
+                }}
+                onIncidentSelect={(inc) => {
+                  setSelectedIncident(inc);
+                  setSelectedParcel(null);
+                }}
+                height="100%"
+              />
+
+              {/* Clean Empty State Overlay when 0 parcels in jurisdiction */}
+              {(!filteredGeojson || !filteredGeojson.features || filteredGeojson.features.length === 0) && (
+                <div className="absolute inset-0 flex items-center justify-center p-6 bg-slate-950/50 backdrop-blur-[2px] pointer-events-none z-10">
+                  <div className="max-w-sm p-5 rounded-2xl bg-slate-900/95 border border-slate-700/80 text-center shadow-2xl space-y-2.5 pointer-events-auto">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+                      <ShieldCheck className="w-5 h-5" />
+                    </div>
+                    <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                      No Registered Parcels in Jurisdiction
+                    </h4>
+                    <p className="text-[11px] text-slate-300 leading-relaxed">
+                      No citizen land parcels or grievance boundaries have been registered in this sector.
+                      Once landowners register parcels or submit demarcation claims, their GPS boundary polygons will appear here for ground inspection.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -204,7 +352,7 @@ export default function FieldMapPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-emerald-400 font-bold text-xs">
-                    Survey {selectedParcel.survey_number || selectedParcel.survey_no}
+                    Survey {selectedParcel.survey_number || selectedParcel.survey_no || selectedParcel.parcel_id}
                   </span>
                   <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full border uppercase font-bold ${
                     selectedParcel.ownership_conflict || selectedParcel.acquisition_status === "disputed"
@@ -217,10 +365,10 @@ export default function FieldMapPage() {
                   </span>
                 </div>
                 <h3 className="text-sm font-bold text-white mt-0.5">
-                  {selectedParcel.owner_name || "Registered Landholder"}
+                  {selectedParcel.owner_name || "Citizen Landowner"}
                 </h3>
                 <p className="text-[11px] text-slate-400">
-                  {selectedParcel.village_name || "Ramganj Mandi"} · {selectedParcel.area_hectares || 1.2} Ha ({Math.round((selectedParcel.area_hectares || 1.2) * 2.471)} Acres)
+                  {selectedParcel.village_name || "Operational Sector"} · {selectedParcel.area_acres ? `${selectedParcel.area_acres} Acres` : selectedParcel.area_hectares ? `${selectedParcel.area_hectares} Ha` : "Area Pending Verification"}
                 </p>
               </div>
 

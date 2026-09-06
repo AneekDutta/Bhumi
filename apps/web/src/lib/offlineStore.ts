@@ -162,5 +162,28 @@ export const offlineStore = {
     } catch {
       return null;
     }
+  },
+
+  clearParcelCache(officerId: string): void {
+    if (typeof window === "undefined") return;
+    try {
+      localStorage.removeItem(`${STORAGE_KEY_PARCEL_CACHE}_${officerId}`);
+    } catch {}
+  },
+
+  clearAllParcelsCache(): void {
+    if (typeof window === "undefined") return;
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(STORAGE_KEY_PARCEL_CACHE)) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+    } catch (e) {
+      console.warn("Could not clear parcel cache", e);
+    }
   }
 };

@@ -15,7 +15,8 @@ import {
   Compass,
   Clock,
   ShieldCheck,
-  Layers
+  Layers,
+  XCircle
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
 import { getLandownerComplaints } from "@/lib/api";
@@ -24,7 +25,7 @@ import { useRealtimeComplaints } from "@/lib/supabase/useRealtime";
 export default function FieldComplaintsListPage() {
   const [complaints, setComplaints] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<"ALL" | "AWAITING" | "ACCEPTED" | "VERIFIED" | "RESOLVED">("ALL");
+  const [filter, setFilter] = useState<"ALL" | "PENDING" | "VERIFIED" | "REJECTED">("ALL");
   const [search, setSearch] = useState("");
 
   const loadData = async () => {
@@ -50,10 +51,15 @@ export default function FieldComplaintsListPage() {
 
   const filtered = complaints.filter((c) => {
     const s = c.status || "";
-    if (filter === "AWAITING") return s.includes("SUBMITTED") || s.includes("AWAITING");
-    if (filter === "ACCEPTED") return s.includes("SITE VISIT") || s.includes("ASSIGNED");
-    if (filter === "VERIFIED") return s.includes("VERIFIED") && !s.includes("AWAITING");
-    if (filter === "RESOLVED") return s === "RESOLVED" || s === "REJECTED";
+    if (filter === "PENDING") {
+      return s === "Pending Field Verification" || s.includes("SUBMITTED") || s.includes("AWAITING");
+    }
+    if (filter === "VERIFIED") {
+      return s === "FIELD VERIFIED" || s === "Verified by Field Officer" || s.includes("Implementation") || s === "RESOLVED";
+    }
+    if (filter === "REJECTED") {
+      return s === "FIELD DECLINED" || s === "Rejected by Field Officer" || s === "REJECTED";
+    }
     return true;
   }).filter((c) => {
     if (!search.trim()) return true;
@@ -65,6 +71,10 @@ export default function FieldComplaintsListPage() {
       (c.parcel_id || "").toLowerCase().includes(q)
     );
   });
+
+  const pendingCount = complaints.filter(
+    (c) => c.status === "Pending Field Verification" || (c.status && (c.status.includes("SUBMITTED") || c.status.includes("AWAITING")))
+  ).length;
 
   return (
     <FieldShell title="Citizen Grievances & Claims">
@@ -89,7 +99,7 @@ export default function FieldComplaintsListPage() {
             Citizen Grievances & Claims
           </h1>
           <p className="text-xs text-slate-300">
-            Review landowner-reported land disputes, schedule site visits, and record independent ground surveys.
+            Conduct on-ground inspection of landowner grievances filed against registered parcels.
           </p>
         </div>
 
@@ -97,10 +107,9 @@ export default function FieldComplaintsListPage() {
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 text-xs">
           {[
             { id: "ALL", label: `All (${complaints.length})` },
-            { id: "AWAITING", label: "Awaiting Review" },
-            { id: "ACCEPTED", label: "Site Visit Accepted" },
-            { id: "VERIFIED", label: "Field Verified" },
-            { id: "RESOLVED", label: "Resolved" }
+            { id: "PENDING", label: `Pending Verification (${pendingCount})` },
+            { id: "VERIFIED", label: "Verified by Officer" },
+            { id: "REJECTED", label: "Rejected" }
           ].map((item) => (
             <button
               key={item.id}
@@ -124,7 +133,7 @@ export default function FieldComplaintsListPage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by ID, Citizen, Parcel, or Issue..."
+            placeholder="Search by Parcel ID, Citizen Name, or Grievance..."
             className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono"
           />
         </div>
@@ -133,19 +142,25 @@ export default function FieldComplaintsListPage() {
         {loading ? (
           <div className="py-16 text-center text-slate-400 text-xs space-y-2">
             <RefreshCw className="w-5 h-5 animate-spin mx-auto text-emerald-400" />
-            <span>Fetching grievances from Supabase...</span>
+            <span>Loading grievances...</span>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-2">
-            <FileText className="w-8 h-8 text-slate-600 mx-auto" />
-            <h3 className="text-sm font-bold text-white">No Grievances Match Filters</h3>
-            <p className="text-xs text-slate-400">All assigned complaints are up to date.</p>
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-2 shadow-lg">
+            <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
+            <h3 className="text-sm font-bold text-white">No complaints pending verification.</h3>
+            <p className="text-xs text-slate-400 max-w-sm mx-auto">
+              {complaints.length === 0
+                ? "New landowner grievances filed against registered parcels will appear here in real time."
+                : "No grievances match the selected filter."}
+            </p>
           </div>
         ) : (
           <div className="space-y-2.5">
             {filtered.map((c) => {
-              const s = c.status || "";
-              const isUnregistered = !c.parcel_id || c.parcel_id === "null";
+              const s = c.status || "Pending Field Verification";
+              const isPending = s === "Pending Field Verification" || s.includes("SUBMITTED") || s.includes("AWAITING");
+              const isVerified = s === "FIELD VERIFIED" || s === "Verified by Field Officer" || s.includes("Implementation") || s === "RESOLVED";
+              const isRejected = s === "FIELD DECLINED" || s === "Rejected by Field Officer" || s === "REJECTED";
 
               return (
                 <Link
@@ -159,14 +174,9 @@ export default function FieldComplaintsListPage() {
                         <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase">
                           {c.complaint_id || c.id}
                         </span>
-                        {isUnregistered && (
-                          <span className="text-[9px] font-mono bg-amber-500/10 text-amber-300 border border-amber-500/30 px-1.5 py-0.2 rounded font-bold">
-                            UNREGISTERED CLAIM
-                          </span>
-                        )}
-                        {c.is_demo_simulation && (
-                          <span className="text-[9px] font-mono bg-purple-500/10 text-purple-300 border border-purple-500/30 px-1.5 py-0.2 rounded font-bold">
-                            DEMO SIMULATION
+                        {c.parcel_id && (
+                          <span className="text-[9px] font-mono bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 px-1.5 py-0.2 rounded font-bold">
+                            PARCEL: #{c.parcel_id}
                           </span>
                         )}
                       </div>
@@ -176,15 +186,13 @@ export default function FieldComplaintsListPage() {
                     </div>
 
                     <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold border uppercase flex-shrink-0 ${
-                      s.includes("VERIFIED")
-                        ? "bg-teal-500/10 text-teal-300 border-teal-500/30"
-                        : s.includes("SITE VISIT")
-                        ? "bg-indigo-500/10 text-indigo-300 border-indigo-500/30"
-                        : s === "RESOLVED"
-                        ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/30"
-                        : "bg-amber-500/10 text-amber-300 border-amber-500/30"
+                      isVerified
+                        ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/40"
+                        : isRejected
+                        ? "bg-red-500/15 text-red-300 border-red-500/40"
+                        : "bg-amber-500/15 text-amber-300 border-amber-500/40"
                     }`}>
-                      {s.replace(/_/g, " ")}
+                      {s}
                     </span>
                   </div>
 
@@ -195,7 +203,7 @@ export default function FieldComplaintsListPage() {
                   <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 border-t border-slate-800 pt-2">
                     <span>Citizen: <strong className="text-slate-200">{c.owner_name}</strong></span>
                     <span className="flex items-center gap-1 text-emerald-400 font-semibold group-hover:translate-x-0.5 transition-transform">
-                      <span>Review & Survey</span>
+                      <span>{isPending ? "Verify Complaint" : "Review Details"}</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </span>
                   </div>

@@ -77,7 +77,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
     } catch (err: any) {
       setFeedback({
         type: "error",
-        message: err?.message || "Failed to submit resolution. Check backend connectivity."
+        message: err?.message || "Unable to submit resolution. Please try again."
       });
     } finally {
       setSubmitting(false);
@@ -220,7 +220,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                         color: "#94a3b8"
                       }}
                     >
-                      {inc.source_type || "SYNTHETIC / DEVELOPMENT DATA"}
+                      {inc.source_type || "OFFICIAL RECORD"}
                     </span>
                   </div>
                 </div>

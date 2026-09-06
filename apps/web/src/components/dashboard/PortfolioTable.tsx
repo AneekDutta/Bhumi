@@ -10,8 +10,8 @@ export function PortfolioTable({ projects }: { projects: any[] }) {
 
   if (!projects || projects.length === 0) {
     return (
-      <div className="p-8 text-center text-slate-500 border border-dashed border-slate-300 rounded-xl bg-white text-sm">
-        No infrastructure projects registered in the current portfolio scope.
+      <div className="p-8 text-center text-slate-500 border border-dashed border-slate-300 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900/40 text-sm">
+        No records available.
       </div>
     );
   }

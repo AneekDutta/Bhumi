@@ -77,28 +77,10 @@ export default function ParcelVerificationPage() {
           setParcel(found);
           setOwnerVerifiedName(found.owner_name || "");
         } else {
-          const fb = {
-            parcel_id: parcelId,
-            survey_no: "104/2B",
-            village_name: "Rampur",
-            owner_name: "Raghunath Yadav",
-            centroid_lat: 25.321,
-            centroid_lng: 82.987
-          };
-          setParcel(fb);
-          setOwnerVerifiedName(fb.owner_name);
+          setParcel(null);
         }
       } catch {
-        const fb = {
-          parcel_id: parcelId,
-          survey_no: "104/2B",
-          village_name: "Rampur",
-          owner_name: "Raghunath Yadav",
-          centroid_lat: 25.321,
-          centroid_lng: 82.987
-        };
-        setParcel(fb);
-        setOwnerVerifiedName(fb.owner_name);
+        setParcel(null);
       } finally {
         setLoading(false);
       }
@@ -121,8 +103,8 @@ export default function ParcelVerificationPage() {
       officer_name: activeOfficer?.name || "Field Officer",
       verification_type: "field",
       status,
-      gps_lat: gpsCoords?.lat || parcel?.centroid_lat || 25.321,
-      gps_lng: gpsCoords?.lng || parcel?.centroid_lng || 82.987,
+      gps_lat: gpsCoords?.lat || parcel?.centroid_lat || 24.6492,
+      gps_lng: gpsCoords?.lng || parcel?.centroid_lng || 75.9284,
       gps_accuracy: gpsCoords?.accuracy || 8,
       boundary_confirmed: boundaryConfirmed,
       possession_status: possessionStatus,
@@ -208,7 +190,42 @@ export default function ParcelVerificationPage() {
     );
   }
 
-  const sNo = parcel?.survey_no || parcel?.survey_number || "-";
+  if (loading) {
+    return (
+      <FieldShell title="Loading Parcel...">
+        <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">
+          <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-slate-400 font-mono">Fetching cadastral record...</p>
+        </div>
+      </FieldShell>
+    );
+  }
+
+  if (!parcel) {
+    return (
+      <FieldShell title="Verify Parcel" showBack>
+        <div className="p-8 space-y-4 max-w-lg mx-auto text-center py-16">
+          <div className="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center mx-auto text-slate-400">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <h2 className="text-base font-bold text-white">Parcel Record Not Found</h2>
+          <p className="text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">
+            No registered cadastral parcel record found for ID #{parcelId}.
+          </p>
+          <div className="pt-2">
+            <Link
+              href="/field/parcels"
+              className="inline-flex items-center gap-1.5 py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Return to Assigned Parcels
+            </Link>
+          </div>
+        </div>
+      </FieldShell>
+    );
+  }
+
+  const sNo = parcel?.survey_no || parcel?.survey_number || parcel?.parcel_id || "-";
 
   return (
     <FieldShell title={`Verify: Survey ${sNo}`} showBack>

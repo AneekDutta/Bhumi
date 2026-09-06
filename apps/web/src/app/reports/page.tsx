@@ -31,6 +31,11 @@ export default function ReportsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [exporting, setExporting] = useState<string | null>(null);
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     apiClient.getDashboardSummary().then(setSummary).catch(() => {});
@@ -277,7 +282,7 @@ export default function ReportsPage() {
 
         <div style={{ padding: '10px 24px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#3a4258' }}>
           <span>RFCTLARR Act 2013 · RFC 4180 Standard</span>
-          <span>Generated: {new Date().toLocaleTimeString()}</span>
+          <span suppressHydrationWarning>{mounted ? `Generated: ${new Date().toLocaleTimeString()}` : 'Generated: Ready'}</span>
         </div>
       </div>
     </div>

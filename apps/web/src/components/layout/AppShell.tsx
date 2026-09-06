@@ -4,14 +4,15 @@ import React, { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
+import { ExitButton } from "@/components/common/ExitButton";
 import { ShieldCheck, Activity } from "lucide-react";
 import Link from "next/link";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname === "/login" || pathname.startsWith("/login/") || pathname.startsWith("/auth/");
-  const isFieldPage = pathname.startsWith("/field");
-  const isLandownerPage = pathname.startsWith("/landowner");
+  const isFieldPage = pathname === "/field" || pathname.startsWith("/field/");
+  const isLandownerPage = (pathname === "/landowner" || pathname.startsWith("/landowner/")) && !pathname.startsWith("/landowner-");
 
   if (isAuthPage) {
     return (
@@ -43,7 +44,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="h-full w-full bg-slate-50 dark:bg-[#07080f] text-slate-900 dark:text-[#f0f4ff] font-sans antialiased overflow-hidden flex transition-colors duration-200">
       <Sidebar />
-      <main className="flex-1 h-screen overflow-y-auto overflow-x-hidden no-scrollbar flex flex-col justify-between">
+      <main className="flex-1 min-w-0 h-screen overflow-y-auto overflow-x-hidden no-scrollbar flex flex-col justify-between">
         {/* Top Header Bar */}
         <header className="sticky top-0 z-20 w-full border-b border-slate-200/80 dark:border-white/[0.07] bg-white/80 dark:bg-[#07080f]/80 backdrop-blur-md px-4 sm:px-6 lg:px-8 py-2.5 transition-colors duration-200">
           <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
@@ -65,6 +66,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span>What-If Workbench</span>
               </Link>
               <ThemeToggle variant="icon" />
+              <ExitButton variant="header" />
             </div>
           </div>
         </header>

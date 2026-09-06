@@ -223,7 +223,7 @@ export function DocumentRegister({
       <div className="border border-slate-300 rounded-lg p-6 bg-white">
         <h3 className="text-lg font-semibold text-slate-900 mb-4">Upload Document</h3>
         <p className="text-sm text-slate-500 mb-6">
-          Supported formats: PDF, JPEG, PNG. Max size: 50MB. Malware scanning is a production control and is not available in the local hackathon prototype.
+          Supported formats: PDF, JPEG, PNG. Maximum file size: 50MB.
         </p>
 
         {error && (

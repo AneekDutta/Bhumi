@@ -216,7 +216,7 @@ export default function FieldSyncPage() {
               <strong className="block font-semibold mb-0.5">
                 Batch Reconciliation Result:
               </strong>
-              Successfully propagated {syncResult.synced} records to BHUMI core database.
+              Successfully synchronized {syncResult.synced} records with central authority.
               {syncResult.failed > 0 && ` ${syncResult.failed} failed and remain queued.`}
             </div>
           </div>

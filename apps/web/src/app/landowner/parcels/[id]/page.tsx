@@ -119,7 +119,7 @@ export default function LandownerParcelDetailPage() {
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-3">
             <AlertCircle className="w-10 h-10 text-amber-400 mx-auto" />
             <h2 className="text-base font-bold text-white">Parcel Record Not Found</h2>
-            <p className="text-xs text-slate-400">{error || "No matching registered parcel found in the database."}</p>
+            <p className="text-xs text-slate-400">{error || "No matching registered parcel found."}</p>
             <Link
               href="/landowner/home"
               className="inline-flex items-center gap-1.5 py-2 px-4 rounded-xl text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300"
