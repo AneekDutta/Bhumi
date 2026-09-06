@@ -10,7 +10,6 @@ import {
   AlertTriangle, 
   ShieldCheck, 
   Layers, 
-  Sparkles, 
   RefreshCw,
   Locate,
   CheckCircle2,

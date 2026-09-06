@@ -32,7 +32,7 @@ export function AdminOperationsSection({ verifiedComplaints, projects }: AdminOp
       />
 
       {/* Corridor Spatial GIS displaying Real Verified Complaint Parcels */}
-      <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] overflow-hidden shadow-sm transition-colors">
+      <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-none overflow-hidden shadow-none transition-colors">
         <div className="p-4 border-b border-[#DCE2E8] dark:border-white/10 flex items-center justify-between flex-wrap gap-2">
           <div>
             <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 tracking-wider uppercase font-semibold">

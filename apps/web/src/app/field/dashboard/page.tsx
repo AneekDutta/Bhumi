@@ -14,7 +14,6 @@ import {
   ShieldCheck,
   Smartphone,
   Navigation,
-  Sparkles,
   Settings,
   Layers,
   Database,
@@ -105,10 +104,10 @@ export default function FieldDashboardPage() {
       <div className="p-4 space-y-4 max-w-lg mx-auto pb-24">
         
         {/* Officer Welcome Card */}
-        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-3">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-none p-4 shadow-none space-y-3">
           <div className="flex items-start justify-between">
             <div className="space-y-1">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#1E7E34] dark:text-emerald-400 font-bold bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/40 px-2 py-0.5 rounded-[2px]">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#1E7E34] dark:text-emerald-400 font-bold bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/40 px-2 py-0.5 rounded-none">
                 Operational Unit
               </span>
               <h1 className="text-lg font-bold text-[#14213D] dark:text-white font-display pt-1">
@@ -121,7 +120,7 @@ export default function FieldDashboardPage() {
 
             <Link
               href="/field/settings"
-              className="p-2 rounded-[4px] bg-[#F8FAFC] dark:bg-slate-800 border border-[#DCE2E8] dark:border-slate-700 text-[#5A6A80] dark:text-slate-300 hover:text-[#14213D] dark:hover:text-white transition-colors"
+              className="p-2 rounded-none bg-[#F8FAFC] dark:bg-slate-800 border border-[#DCE2E8] dark:border-slate-700 text-[#5A6A80] dark:text-slate-300 hover:text-[#14213D] dark:hover:text-white transition-colors"
               title="Field Settings"
             >
               <Settings className="w-4 h-4" />
@@ -132,7 +131,7 @@ export default function FieldDashboardPage() {
           {queueCount > 0 && (
             <Link
               href="/field/sync"
-              className="flex items-center justify-between p-2.5 rounded-[4px] bg-[#FFF8E1] dark:bg-amber-950/20 border border-[#FFE082] dark:border-amber-800/40 text-[#B36B00] dark:text-amber-300 text-xs transition-colors hover:bg-amber-100"
+              className="flex items-center justify-between p-2.5 rounded-none bg-[#FFF8E1] dark:bg-amber-950/20 border border-[#FFE082] dark:border-amber-800/40 text-[#B36B00] dark:text-amber-300 text-xs transition-colors hover:bg-amber-100"
             >
               <div className="flex items-center gap-2">
                 <RefreshCw className="w-4 h-4 text-[#B36B00] dark:text-amber-400 animate-spin" />
@@ -145,7 +144,7 @@ export default function FieldDashboardPage() {
 
         {/* Real Complaint Verification Queue / Empty State */}
         {pendingComplaints.length === 0 ? (
-          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-6 text-center space-y-2 shadow-xs">
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-none p-6 text-center space-y-2 shadow-none">
             <CheckCircle2 className="w-8 h-8 text-[#1E7E34] dark:text-emerald-400 mx-auto" />
             <h2 className="text-sm font-bold text-[#14213D] dark:text-white">No grievances available.</h2>
             <p className="text-xs text-[#5A6A80] dark:text-slate-400 max-w-sm mx-auto">
@@ -153,7 +152,7 @@ export default function FieldDashboardPage() {
             </p>
           </div>
         ) : (
-          <div className="bg-white dark:bg-[#0D121F] border-l-4 border-l-[#B36B00] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-2">
+          <div className="bg-white dark:bg-[#0D121F] border-l-4 border-l-[#B36B00] border border-[#DCE2E8] dark:border-white/10 rounded-none p-4 shadow-none space-y-2">
             <div className="flex items-center justify-between">
               <Link
                 href="/field/complaints"
@@ -163,7 +162,7 @@ export default function FieldDashboardPage() {
               </Link>
               <Link
                 href="/field/complaints"
-                className="text-[10px] font-mono px-2 py-0.5 rounded-[3px] bg-[#FFF8E1] dark:bg-amber-500/20 text-[#B36B00] dark:text-amber-300 font-bold border border-[#FFE082] dark:border-amber-800/40 hover:underline transition-colors"
+                className="text-[10px] font-mono px-2 py-0.5 rounded-none bg-[#FFF8E1] dark:bg-amber-500/20 text-[#B36B00] dark:text-amber-300 font-bold border border-[#FFE082] dark:border-amber-800/40 hover:underline transition-colors"
               >
                 {pendingComplaints.length} Pending &rarr;
               </Link>
@@ -196,29 +195,29 @@ export default function FieldDashboardPage() {
           </div>
         )}
 
-        {/* Operational KPI Metrics */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 p-3 rounded-[4px] shadow-xs space-y-1">
+        {/* Operational KPI Metrics - Flat Government Ledger */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-1">
+          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B36B00] space-y-0.5">
             <span className="text-[#B36B00] dark:text-amber-400 block text-[10px] font-bold uppercase tracking-wider">PENDING CASES</span>
-            <span className="text-2xl font-bold font-mono text-[#B36B00] dark:text-amber-400">{pendingComplaints.length}</span>
+            <span className="text-2xl font-bold font-mono text-[#B36B00] dark:text-amber-400 block">{pendingComplaints.length}</span>
             <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Awaiting Review</span>
           </div>
 
-          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 p-3 rounded-[4px] shadow-xs space-y-1">
+          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34] space-y-0.5">
             <span className="text-[#1E7E34] dark:text-emerald-400 block text-[10px] font-bold uppercase tracking-wider">VERIFIED CASES</span>
-            <span className="text-2xl font-bold font-mono text-[#1E7E34] dark:text-emerald-400">{verifiedComplaints.length}</span>
+            <span className="text-2xl font-bold font-mono text-[#1E7E34] dark:text-emerald-400 block">{verifiedComplaints.length}</span>
             <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Approved</span>
           </div>
 
-          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 p-3 rounded-[4px] shadow-xs space-y-1">
+          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B32424] space-y-0.5">
             <span className="text-[#B32424] dark:text-rose-400 block text-[10px] font-bold uppercase tracking-wider">DECLINED CASES</span>
-            <span className="text-2xl font-bold font-mono text-[#B32424] dark:text-rose-400">{rejectedComplaints.length}</span>
+            <span className="text-2xl font-bold font-mono text-[#B32424] dark:text-rose-400 block">{rejectedComplaints.length}</span>
             <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Rejected</span>
           </div>
 
-          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 p-3 rounded-[4px] shadow-xs space-y-1">
+          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B2E59] dark:border-sky-500 space-y-0.5">
             <span className="text-[#0B2E59] dark:text-sky-400 block text-[10px] font-bold uppercase tracking-wider">TOTAL CASES</span>
-            <span className="text-2xl font-bold font-mono text-[#14213D] dark:text-white">{complaints.length}</span>
+            <span className="text-2xl font-bold font-mono text-[#14213D] dark:text-white block">{complaints.length}</span>
             <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Assigned</span>
           </div>
         </div>
@@ -232,7 +231,7 @@ export default function FieldDashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <Link
               href="/field/parcels"
-              className="p-3.5 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white font-semibold text-xs shadow-xs flex flex-col justify-between h-24 transition-all"
+              className="p-3.5 rounded-none bg-[#0B2E59] hover:bg-[#082242] text-white font-semibold text-xs shadow-none flex flex-col justify-between h-24 transition-all"
             >
               <div className="flex items-center justify-between">
                 <ClipboardList className="w-5 h-5" />
@@ -246,7 +245,7 @@ export default function FieldDashboardPage() {
 
             <Link
               href="/field/complaints"
-              className="p-3.5 rounded-[4px] bg-[#B36B00] hover:bg-[#995C00] text-white font-semibold text-xs shadow-xs flex flex-col justify-between h-24 transition-all"
+              className="p-3.5 rounded-none bg-[#B36B00] hover:bg-[#995C00] text-white font-semibold text-xs shadow-none flex flex-col justify-between h-24 transition-all"
             >
               <div className="flex items-center justify-between">
                 <FileText className="w-5 h-5" />
@@ -260,7 +259,7 @@ export default function FieldDashboardPage() {
 
             <Link
               href="/field/sync"
-              className="p-3.5 rounded-[4px] bg-white dark:bg-[#0D121F] hover:bg-[#F8FAFC] dark:hover:bg-[#141B2D] border border-[#DCE2E8] dark:border-white/10 text-[#14213D] dark:text-white font-semibold text-xs shadow-xs flex flex-col justify-between h-24 transition-all"
+              className="p-3.5 rounded-none bg-white dark:bg-[#0D121F] hover:bg-[#F8FAFC] dark:hover:bg-[#141B2D] border border-[#DCE2E8] dark:border-white/10 text-[#14213D] dark:text-white font-semibold text-xs shadow-none flex flex-col justify-between h-24 transition-all"
             >
               <div className="flex items-center justify-between">
                 <Database className="w-5 h-5 text-[#0B2E59] dark:text-sky-400" />

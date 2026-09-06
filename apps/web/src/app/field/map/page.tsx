@@ -14,7 +14,6 @@ import {
   Search,
   Filter,
   Layers,
-  Sparkles,
   RefreshCw,
   X
 } from "lucide-react";

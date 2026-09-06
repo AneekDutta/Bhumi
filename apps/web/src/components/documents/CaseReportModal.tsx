@@ -6,7 +6,6 @@ import {
   Download, 
   X, 
   CheckCircle2, 
-  Sparkles, 
   ShieldCheck, 
   MapPin, 
   User, 
@@ -258,10 +257,10 @@ export function CaseReportModal({
           </div>
 
           {/* SECTION E: WHAT-IF SIMULATION */}
-          <div className="p-4 rounded-[4px] bg-[#E8F1FA] dark:bg-[#0B2E59]/20 border border-[#B8D5E5] dark:border-sky-800/40 space-y-3">
+          <div className="p-4 rounded-none bg-[#E8F1FA] dark:bg-[#0B2E59]/20 border border-[#B8D5E5] dark:border-sky-800/40 space-y-3">
             <div className="flex items-center justify-between border-b border-[#B8D5E5] dark:border-sky-800/30 pb-2">
               <span className="font-bold text-[#0B2E59] dark:text-white uppercase tracking-wider font-mono text-[11px] flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" /> Section E: Statutory What-If Simulation
+                <Scale className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" /> Section E: Statutory What-If Simulation
               </span>
               <span className="text-[10px] font-mono text-[#0B2E59] dark:text-sky-300 font-bold">{reportData.simulationId || "SIM-2026-ACTIVE"}</span>
             </div>

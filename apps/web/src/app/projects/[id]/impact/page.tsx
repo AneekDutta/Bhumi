@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { apiClient } from "@/lib/api";
-import { Activity, Calendar, Clock, AlertTriangle, CheckCircle2, ArrowRight, Sparkles, Compass, RotateCcw } from "lucide-react";
+import { Activity, Calendar, Clock, AlertTriangle, CheckCircle2, ArrowRight, Scale, Compass, RotateCcw } from "lucide-react";
 import { DataRealityBanner, ProvenanceBadge } from "@/components/common/ProvenanceBadge";
 import { WhatIfWorkbench } from "@/components/simulator/WhatIfWorkbench";
 
@@ -356,9 +356,9 @@ export default function ProjectImpactPage() {
                   type="button"
                   onClick={() => runSimulation(selectedBottleneck.parcel_id)}
                   disabled={simulating}
-                  className="flex items-center gap-2 px-3.5 py-2.5 rounded-[4px] text-xs font-bold bg-[#0B2E59] hover:bg-[#082242] text-white shadow-xs transition-all cursor-pointer disabled:bg-slate-300 dark:disabled:bg-slate-800"
+                  className="flex items-center gap-2 px-3.5 py-2.5 rounded-none text-xs font-bold bg-[#0B2E59] hover:bg-[#082242] text-white shadow-none transition-all cursor-pointer disabled:bg-slate-300 dark:disabled:bg-slate-800"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <Scale className="w-3.5 h-3.5 text-amber-400" />
                   {simulating ? 'Computing Counterfactual...' : 'Simulate: Resolve Blocker'}
                 </button>
               </div>

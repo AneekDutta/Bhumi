@@ -33,6 +33,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const isHomePage = pathname === "/";
   const isAuthPage =
     pathname === "/login" ||
     pathname.startsWith("/login/") ||
@@ -42,6 +43,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   const isLandownerPage =
     (pathname === "/landowner" || pathname.startsWith("/landowner/")) &&
     !pathname.startsWith("/landowner-");
+
+  if (isHomePage) {
+    return (
+      <div className="w-full min-h-screen bg-[#F4F6F8] dark:bg-[#07080F] text-[#14213D] dark:text-[#F0F4FF] antialiased">
+        {children}
+      </div>
+    );
+  }
 
   if (isAuthPage) {
     return (
@@ -75,7 +84,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="w-full flex items-center justify-between gap-2">
           <div className="flex items-center gap-3">
             <span className="text-slate-200">
-              Toll Free Helpline: <strong>1800-11-9999</strong> / <strong>011-23717379</strong>
+              Emergency Helpline: <strong>7595093196</strong> / <strong>6202346942</strong>
             </span>
             <span className="text-white/30 hidden sm:inline">|</span>
             <span className="text-slate-300 hidden sm:inline">helpdesk-bhumi@gov.in</span>
@@ -104,7 +113,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="w-full px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
           
           {/* LEFT: State Lion Capital Emblem + Bilingual Ministry Title */}
-          <Link href="/" className="flex items-center gap-3.5 group min-w-0">
+          <Link href="/dashboard" className="flex items-center gap-3.5 group min-w-0">
             {/* Ashoka Sarnath Lion Capital Emblem Vector */}
             <div className="w-10 h-11 flex-shrink-0 flex items-center justify-center">
               <svg viewBox="0 0 64 72" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
@@ -161,7 +170,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             {/* What-If Workbench Link */}
             <Link
               href="/intelligence/what-if"
-              className="hidden xl:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors"
+              className="hidden xl:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-none bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors"
             >
               <Activity className="w-3.5 h-3.5 text-amber-300" />
               <span>What-If Workbench</span>
@@ -169,8 +178,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
             {/* Authority Officer Profile Card */}
             <div className="flex items-center gap-2.5 pl-2 sm:pl-3 sm:border-l sm:border-white/20">
-              <div className="w-8 h-8 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center text-[#0b2545] dark:text-white font-semibold flex-shrink-0 shadow-sm">
-                <User className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-none bg-white/10 border border-white/20 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                <User className="w-4 h-4 text-amber-300" />
               </div>
               <div className="hidden sm:flex flex-col text-left">
                 <div className="text-xs font-medium text-white flex items-center gap-1">

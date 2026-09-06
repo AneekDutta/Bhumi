@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { DocumentRegister } from '@/components/documents/DocumentRegister';
 import { FieldIncidentReviewCard } from '@/components/documents/FieldIncidentReviewCard';
 import { LandownerGrievanceReviewCard } from '@/components/documents/LandownerGrievanceReviewCard';
-import { CheckCircle2, Clock, AlertTriangle, FileText, MapPin, User, Scale, ArrowRight, ShieldCheck, Calendar, Hash, Building2, AlertCircle, Sparkles, Coins } from 'lucide-react';
+import { CheckCircle2, Clock, AlertTriangle, FileText, MapPin, User, Scale, ArrowRight, ShieldCheck, Calendar, Hash, Building2, AlertCircle, Coins } from 'lucide-react';
 import { ProvenanceBadge, DataRealityBanner } from '@/components/common/ProvenanceBadge';
 import { RealtimeParcelHeader } from '@/components/parcels/RealtimeParcelHeader';
 
@@ -94,10 +94,10 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
 
       {/* Section 13 MODEL-DERIVED Recommended Action */}
       {activeParcel.recommended_action && (
-        <div className="bg-white dark:bg-[#0D121F] border border-[#0B2E59]/30 dark:border-[#0B2E59]/60 border-l-4 border-l-[#0B2E59] rounded-[4px] p-4 shadow-xs flex flex-col gap-2">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#0B2E59]/30 dark:border-[#0B2E59]/60 border-l-4 border-l-[#0B2E59] rounded-none p-4 shadow-none flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
+              <Scale className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
               <span className="text-[11px] font-bold text-[#0B2E59] dark:text-sky-300 font-mono uppercase tracking-wider">
                 MODEL-DERIVED RECOMMENDED ACTION (SECTION 13)
               </span>

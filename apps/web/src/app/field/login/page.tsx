@@ -13,7 +13,7 @@ import {
   Monitor, 
   Smartphone,
   ChevronRight,
-  Sparkles,
+  Navigation,
   KeyRound,
   Lock,
   Zap,
@@ -188,7 +188,7 @@ export default function FieldLoginPage() {
             type="button"
             disabled={loading}
             onClick={handleInstantDemoLogin}
-            className="w-full py-3 px-4 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs tracking-wider uppercase transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+            className="w-full py-3 px-4 rounded-none bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs tracking-wider uppercase transition-all shadow-none flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
           >
             {loading ? (
               <>
@@ -197,7 +197,7 @@ export default function FieldLoginPage() {
               </>
             ) : (
               <>
-                <Sparkles className="w-4 h-4 text-white/80" />
+                <Navigation className="w-4 h-4 text-white/80" />
                 <span>Launch Field Console</span>
                 <ArrowRight className="w-4 h-4" />
               </>

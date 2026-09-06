@@ -5,7 +5,7 @@ import {
   Activity,
   Play,
   RotateCcw,
-  Sparkles,
+  Scale,
   Calendar,
   Clock,
   Coins,
@@ -238,7 +238,7 @@ export function WhatIfWorkbench({
         <div className="mt-2 p-4 rounded-[4px] bg-[#E8F5E9]/50 dark:bg-emerald-950/20 border border-[#C8E6C9] dark:border-emerald-800/40 flex flex-col gap-3 shadow-xs">
           <div className="flex justify-between items-center flex-wrap gap-2">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#1E7E34] dark:text-emerald-400" />
+              <Scale className="w-4 h-4 text-[#1E7E34] dark:text-emerald-400" />
               <span className="text-xs font-bold text-[#1E7E34] dark:text-emerald-300 uppercase tracking-wider font-mono">
                 Deterministic Schedule Delta Output
               </span>

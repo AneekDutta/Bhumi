@@ -11,7 +11,6 @@ import {
   Filter, 
   FileText, 
   Layers, 
-  Sparkles,
   RefreshCw,
   Search,
   ExternalLink,
@@ -117,31 +116,31 @@ export default function ParcelsPage() {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
-          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Registered Parcels</div>
-          <div className="text-2xl font-bold text-[#14213D] dark:text-white mt-1">{parcels.length}</div>
+      {/* Stats Cards - Form Ledger Style */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B2E59] dark:border-sky-500">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider font-mono">Registered Parcels</div>
+          <div className="text-2xl font-bold text-[#14213D] dark:text-white mt-1 font-mono">{parcels.length}</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Registered in System</div>
         </div>
 
-        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
-          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Aadhaar Verified</div>
-          <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 mt-1">{verifiedIdentityCount}</div>
+        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B5FA5]">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider font-mono">Aadhaar Verified</div>
+          <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 mt-1 font-mono">{verifiedIdentityCount}</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Citizen identity confirmed</div>
         </div>
 
-        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
-          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Registered Area</div>
-          <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 mt-1">
+        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34]">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider font-mono">Registered Area</div>
+          <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 mt-1 font-mono">
             {totalAreaAcres.toFixed(2)} <span className="text-xs font-medium text-[#555555] dark:text-slate-400">Acres</span>
           </div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Total declared cadastral land</div>
         </div>
 
-        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
-          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Field Officer</div>
-          <div className="text-base font-bold text-[#B36B00] dark:text-amber-400 mt-1.5">Ramesh Patel</div>
+        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B36B00]">
+          <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider font-mono">Field Officer</div>
+          <div className="text-base font-bold text-[#B36B00] dark:text-amber-400 mt-1.5 font-mono">Ramesh Patel</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">OFF-001 &bull; Patwari</div>
         </div>
       </div>

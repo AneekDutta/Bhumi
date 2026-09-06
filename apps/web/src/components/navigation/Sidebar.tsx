@@ -18,7 +18,7 @@ import {
   ShieldCheck,
   FileText,
   Navigation,
-  Sparkles,
+  SlidersHorizontal,
   Database
 } from "lucide-react";
 
@@ -33,7 +33,7 @@ export function Sidebar() {
     {
       group: "Operations",
       items: [
-        { id: "dashboard", href: "/", label: "National Dashboard", icon: LayoutDashboard }
+        { id: "dashboard", href: "/dashboard", label: "National Dashboard", icon: LayoutDashboard }
       ]
     },
     {
@@ -55,7 +55,7 @@ export function Sidebar() {
     {
       group: "Intelligence",
       items: [
-        { id: "what-if", href: "/intelligence/what-if", label: "What-If Simulation", icon: Sparkles },
+        { id: "what-if", href: "/intelligence/what-if", label: "What-If Simulation", icon: SlidersHorizontal },
         { id: "timeline", href: "/timeline", label: "Statutory Timelines", icon: Clock }
       ]
     },
@@ -69,7 +69,7 @@ export function Sidebar() {
   ];
 
   const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
+    if (href === "/dashboard") return pathname === "/dashboard" || pathname === "/";
     if (href === "/projects") return pathname === "/projects" || (pathname.startsWith("/projects/") && !pathname.includes("/gis") && !pathname.includes("/spatial"));
     return pathname === href || pathname.startsWith(`${href}/`);
   };
@@ -79,8 +79,8 @@ export function Sidebar() {
       <div>
         {/* Brand */}
         <div className="p-4 pb-3 border-b border-[#DCE2E8] dark:border-white/[0.06] flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-[34px] h-[34px] rounded-[4px] flex-shrink-0 bg-[#0B2E59] flex items-center justify-center text-white font-devanagari font-bold text-base shadow-sm">
+          <Link href="/dashboard" className="flex items-center gap-2.5 group">
+            <div className="w-[34px] h-[34px] rounded-none flex-shrink-0 bg-[#0B2E59] flex items-center justify-center text-white font-devanagari font-bold text-base">
               भ
             </div>
             <div>

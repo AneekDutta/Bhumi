@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { CheckCircle2, Clock, Sparkles, Flame, ExternalLink, ArrowLeft } from "lucide-react";
+import { CheckCircle2, Clock, ShieldCheck, Flame, ExternalLink, ArrowLeft } from "lucide-react";
 
 interface SubmissionStatusModalProps {
   response: any;
@@ -43,9 +43,9 @@ export function SubmissionStatusModal({
         )}
 
         {!response.offline && (
-          <div className="bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 text-left space-y-3">
+          <div className="bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-none p-4 text-left space-y-3">
             <div className="flex items-center gap-2 text-xs font-bold text-[#0B2E59] dark:text-sky-300 font-mono uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" /> Causal Propagation Verified
+              <ShieldCheck className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" /> Causal Propagation Verified
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-xs">

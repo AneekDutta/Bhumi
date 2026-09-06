@@ -20,7 +20,6 @@ import {
   XCircle,
   AlertCircle,
   Download,
-  Sparkles,
   Scale,
   History
 } from "lucide-react";
@@ -341,10 +340,10 @@ export default function LandownerComplaintDetailPage() {
 
         {/* Attached What-If Simulation Card */}
         {(complaint.what_if_simulation || complaint.simulation_record) && (
-          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-3 shadow-xs">
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-none p-4 space-y-3 shadow-none">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
+                <Scale className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
                 <h2 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wider font-mono">
                   What-If Simulation Record Attached
                 </h2>

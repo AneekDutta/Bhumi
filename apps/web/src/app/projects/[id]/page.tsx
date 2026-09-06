@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { DocumentRegister } from '@/components/documents/DocumentRegister';
-import { Activity, Compass, AlertTriangle, CheckCircle2, Clock, ArrowRight, AlertOctagon, Sparkles } from 'lucide-react';
+import { Activity, Compass, AlertTriangle, CheckCircle2, Clock, ArrowRight, AlertOctagon } from 'lucide-react';
 import { ProvenanceBadge, DataRealityBanner } from '@/components/common/ProvenanceBadge';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {

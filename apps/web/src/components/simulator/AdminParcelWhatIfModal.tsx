@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { 
   Activity, 
-  Sparkles, 
   CheckCircle2, 
   AlertTriangle, 
   Clock, 
@@ -124,8 +123,8 @@ export function AdminParcelWhatIfModal({
         {/* Header */}
         <div className="px-5 py-3.5 border-b border-[#DCE2E8] dark:border-white/10 bg-[#0B2E59] text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-[3px] bg-white/15 border border-white/20 flex items-center justify-center text-white">
-              <Sparkles className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-none bg-white/15 border border-white/20 flex items-center justify-center text-white">
+              <Scale className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -400,9 +399,9 @@ export function AdminParcelWhatIfModal({
                   onSaveSimulation(simPayload);
                   onClose();
                 }}
-                className="px-3.5 py-1.5 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 rounded-none bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs flex items-center gap-1.5 shadow-none transition-colors cursor-pointer"
               >
-                <Sparkles className="w-3.5 h-3.5 text-sky-200" />
+                <Scale className="w-3.5 h-3.5 text-sky-200" />
                 <span>Save Simulation &amp; Generate Report</span>
               </button>
             )}

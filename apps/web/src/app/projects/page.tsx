@@ -75,35 +75,35 @@ export default function ProjectsPage() {
         </Link>
       </div>
 
-      {/* Summary KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-3.5 rounded-[4px] bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 shadow-sm transition-colors">
-          <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Total Length</div>
-          <div className="text-2xl font-extrabold text-[#14213D] dark:text-[#F0F4FF] mt-1">
+      {/* Summary KPI Cards - Form Ledger Style */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B2E59] dark:border-sky-500">
+          <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Total Length</div>
+          <div className="text-2xl font-extrabold text-[#14213D] dark:text-[#F0F4FF] mt-1 font-mono">
             {totalLength.toFixed(1)} <span className="text-xs font-medium text-[#64748B]">km</span>
           </div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Linear corridor alignments</div>
         </div>
 
-        <div className="p-3.5 rounded-[4px] bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 shadow-sm transition-colors">
-          <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Planned Acquisition</div>
-          <div className="text-2xl font-extrabold text-[#0B5FA5] dark:text-sky-400 mt-1">
+        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B5FA5] dark:border-sky-400">
+          <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Planned Acquisition</div>
+          <div className="text-2xl font-extrabold text-[#0B5FA5] dark:text-sky-400 mt-1 font-mono">
             {totalPlannedAcq.toLocaleString()} <span className="text-xs font-medium text-[#64748B]">Ha</span>
           </div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Across 6 strategic sectors</div>
         </div>
 
-        <div className="p-3.5 rounded-[4px] bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 shadow-sm transition-colors">
-          <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Acquired to Date</div>
-          <div className="text-2xl font-extrabold text-[#1E7E34] dark:text-emerald-400 mt-1">
+        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34]">
+          <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Acquired to Date</div>
+          <div className="text-2xl font-extrabold text-[#1E7E34] dark:text-emerald-400 mt-1 font-mono">
             {totalAcquired.toLocaleString()} <span className="text-xs font-medium text-[#64748B]">Ha</span>
           </div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">{avgProgress}% Portfolio throughput</div>
         </div>
 
-        <div className="p-3.5 rounded-[4px] bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 shadow-sm transition-colors">
-          <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Macro Bottlenecks</div>
-          <div className="text-2xl font-extrabold text-[#B36B00] dark:text-amber-400 mt-1">
+        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B36B00]">
+          <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Macro Bottlenecks</div>
+          <div className="text-2xl font-extrabold text-[#B36B00] dark:text-amber-400 mt-1 font-mono">
             {projects.reduce((s, p) => s + p.statistics.unresolved_bottlenecks, 0)}
           </div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Projected corridor clusters</div>
@@ -117,7 +117,7 @@ export default function ProjectsPage() {
           return (
             <div
               key={p.id}
-              className="p-4 rounded-[4px] bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 shadow-sm flex flex-col justify-between gap-3.5 transition-colors"
+              className="p-4 rounded-none bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 shadow-none flex flex-col justify-between gap-3.5 transition-colors"
             >
               <div>
                 {/* Sector and Status */}

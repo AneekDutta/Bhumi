@@ -13,7 +13,6 @@ import {
   ShieldCheck,
   Coins,
   Scale,
-  Sparkles,
   Send,
   Camera,
   Compass

@@ -14,7 +14,6 @@ import {
   Home,
   ShieldAlert,
   ArrowRight,
-  Sparkles,
   GitBranch,
   Info
 } from 'lucide-react';
@@ -77,10 +76,10 @@ export function ParcelDetailModal({ parcel, onClose, onSimulate }: ParcelDetailM
 
       <div className="p-5 flex flex-col gap-4">
         {/* Section 13 Prominent MODEL_DERIVED Recommended Action */}
-        <div className="p-4 rounded-[4px] bg-[#E8F1FA] dark:bg-[#0B2E59]/30 border border-[#B8D5E5] dark:border-[#0B2E59] border-l-4 border-l-[#0B2E59] shadow-xs">
+        <div className="p-4 rounded-none bg-[#E8F1FA] dark:bg-[#0B2E59]/30 border border-[#B8D5E5] dark:border-[#0B2E59] border-l-4 border-l-[#0B2E59] shadow-none">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-[#0B2E59] dark:text-sky-300" />
+              <Scale className="w-4 h-4 text-[#0B2E59] dark:text-sky-300" />
               <span className="text-[11px] font-bold text-[#0B2E59] dark:text-sky-200 uppercase tracking-wider font-mono">
                 MODEL-DERIVED RECOMMENDED ACTION
               </span>

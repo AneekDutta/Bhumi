@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import Map, { Marker, NavigationControl, Source, Layer } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useRouter } from 'next/navigation';
-import { MapPin, Navigation, ArrowRight, Layers, ShieldCheck, Sparkles, AlertTriangle } from 'lucide-react';
+import { MapPin, Navigation, ArrowRight, Layers, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 
 export interface PortfolioMapProps {

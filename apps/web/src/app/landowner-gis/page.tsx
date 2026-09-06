@@ -9,7 +9,6 @@ import {
   Navigation, 
   MapPin, 
   ShieldCheck, 
-  Sparkles, 
   ArrowRight, 
   Layers, 
   FileText, 
@@ -390,9 +389,9 @@ export default function RealLandownerGISPage() {
                 <button
                   type="button"
                   onClick={() => setWhatIfModalOpen(true)}
-                  className="w-full py-2.5 px-3.5 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold shadow-xs flex items-center justify-center gap-2 cursor-pointer transition-all"
+                  className="w-full py-2.5 px-3.5 rounded-none bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold shadow-none flex items-center justify-center gap-2 cursor-pointer transition-all"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <Scale className="w-3.5 h-3.5 text-amber-400" />
                   <span>Run What-If Simulation on Parcel #{selectedParcel.parcel_id}</span>
                 </button>
               </div>

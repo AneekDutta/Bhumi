@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRealtimeParcel } from "@/lib/supabase/useRealtime";
 import { ProvenanceBadge } from "@/components/common/ProvenanceBadge";
-import { Sparkles, CheckCircle2, AlertTriangle } from "lucide-react";
+import { CheckCircle2, AlertTriangle } from "lucide-react";
 
 interface RealtimeParcelHeaderProps {
   parcelId: string;
@@ -73,7 +73,7 @@ export function RealtimeParcelHeader({
             alignItems: "center",
             gap: 4
           }}>
-            <Sparkles style={{ width: 11, height: 11 }} /> Live Synchronized at {lastSyncTime}
+            <CheckCircle2 style={{ width: 11, height: 11 }} /> Live Synchronized at {lastSyncTime}
           </span>
         )}
 

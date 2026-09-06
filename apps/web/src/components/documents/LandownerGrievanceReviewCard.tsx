@@ -14,7 +14,6 @@ import {
   Layers, 
   ExternalLink,
   Briefcase,
-  Sparkles,
   FileCheck2,
   XCircle,
   IndianRupee,
@@ -257,7 +256,7 @@ export function LandownerGrievanceReviewCard({
   };
 
   return (
-    <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 mb-6 shadow-sm transition-colors">
+    <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-none p-5 mb-6 shadow-none transition-colors">
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div>
           <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 tracking-wider uppercase font-semibold">
@@ -323,16 +322,16 @@ export function LandownerGrievanceReviewCard({
               <div
                 key={cmp.id}
                 id={`complaint-card-${cmp.id}`}
-                className={`p-4 rounded-[4px] transition-all border ${
+                className={`p-4 rounded-none transition-all border ${
                   isSelected
-                    ? "border-[#0B5FA5] ring-2 ring-[#0B5FA5]/20 bg-white dark:bg-[#0B1220]"
-                    : "bg-[#F8FAFC] dark:bg-[#0B1220] border-[#DCE2E8] dark:border-white/10"
+                    ? "border-[#0B5FA5] ring-1 ring-[#0B5FA5]/30 bg-white dark:bg-[#0B1220]"
+                    : "bg-white dark:bg-[#0B1220] border-[#DCE2E8] dark:border-white/10"
                 }`}
               >
                 {/* Status Bar */}
                 <div className="flex items-center justify-between flex-wrap gap-2 mb-2.5">
                   <div className="flex items-center gap-2">
-                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] border ${
+                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-none border ${
                       isCompleted
                         ? "bg-[#EBF7EE] text-[#1E7E34] border-[#BEE3C8] dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
                         : isInitiated
@@ -352,30 +351,30 @@ export function LandownerGrievanceReviewCard({
                   </div>
                 </div>
 
-                {/* Primary Demarcation Summary Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3">
-                  <div className="p-2.5 rounded-[3px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                {/* Primary Demarcation Summary Grid - Form Ledger Style */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+                  <div className="pb-2 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B5FA5]">
                     <div className="text-[9px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">14-Digit Parcel ID</div>
                     <div className="text-xs font-bold text-[#0B5FA5] dark:text-sky-400 font-mono mt-0.5">
                       {parcelId}
                     </div>
                   </div>
 
-                  <div className="p-2.5 rounded-[3px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                  <div className="pb-2 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#14213D] dark:border-slate-500">
                     <div className="text-[9px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Verified Landowner</div>
                     <div className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] mt-0.5">
                       {cmp.owner_name || "Landowner"}
                     </div>
                   </div>
 
-                  <div className="p-2.5 rounded-[3px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                  <div className="pb-2 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34]">
                     <div className="text-[9px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Cadastral Demarcation</div>
                     <div className="text-xs font-bold text-[#1E7E34] dark:text-emerald-400 font-mono mt-0.5">
                       {areaAcres} Acres ({Number(areaSqm).toLocaleString()} m²)
                     </div>
                   </div>
 
-                  <div className="p-2.5 rounded-[3px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+                  <div className="pb-2 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B36B00]">
                     <div className="text-[9px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Operational Sector</div>
                     <div className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] mt-0.5">
                       {cmp.contact_village || cmp.village || "Corridor Sector"}
@@ -384,14 +383,14 @@ export function LandownerGrievanceReviewCard({
                 </div>
 
                 {/* Grievance Description */}
-                <div className="mb-3 text-xs text-[#333333] dark:text-slate-300 bg-white dark:bg-[#07080F] p-3 rounded-[3px] border border-[#DCE2E8] dark:border-white/10">
+                <div className="mb-3 text-xs text-[#333333] dark:text-slate-300 bg-white dark:bg-[#07080F] p-3 rounded-none border border-[#DCE2E8] dark:border-white/10">
                   <strong className="text-[#14213D] dark:text-white">Grievance Claim: </strong>
                   {cmp.description || cmp.complaint_type || "Boundary demarcation adjustment claim against cadastral survey."}
                 </div>
 
                 {/* Field Officer Ground Verification Banner */}
                 {cmp.field_verification && (
-                  <div className="p-3 rounded-[3px] mb-3 bg-[#E6F0FA] dark:bg-sky-950/40 border border-[#BDD7EE] dark:border-sky-800">
+                  <div className="p-3 rounded-none mb-3 bg-[#E6F0FA] dark:bg-sky-950/40 border border-[#BDD7EE] dark:border-sky-800">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-[#0B5FA5] dark:text-sky-300 mb-1">
                       <ShieldCheck className="w-3.5 h-3.5" />
                       <span>FIELD VERIFICATION ACCORD &bull; Verified by {cmp.field_verification.officer_name || "Ramesh Patel (Patwari)"}</span>
@@ -404,9 +403,9 @@ export function LandownerGrievanceReviewCard({
 
                 {/* Attached What-If Simulation Badge */}
                 {(cmp.what_if_simulation || cmp.simulation_record) && (
-                  <div className="p-2.5 rounded-[3px] mb-3 bg-[#FFF8E6] dark:bg-amber-950/40 border border-[#FFE29A] dark:border-amber-800 flex items-center justify-between flex-wrap gap-2">
+                  <div className="p-2.5 rounded-none mb-3 bg-[#FFF8E6] dark:bg-amber-950/40 border border-[#FFE29A] dark:border-amber-800 flex items-center justify-between flex-wrap gap-2">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-[#B36B00] dark:text-amber-300">
-                      <Sparkles className="w-3.5 h-3.5" />
+                      <Scale className="w-3.5 h-3.5" />
                       <span>SIMULATION ATTACHED: {(cmp.what_if_simulation || cmp.simulation_record).simulation_id || "SIM-RFCTLARR"}</span>
                     </div>
                     <div className="text-xs text-[#14213D] dark:text-slate-200 font-mono font-bold">
@@ -421,16 +420,16 @@ export function LandownerGrievanceReviewCard({
                   {/* Action 1: What-If Simulation */}
                   <button
                     onClick={() => setSimulatingComplaint(cmp)}
-                    className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/50 border border-[#BDD7EE] dark:border-sky-800 text-[#0B5FA5] dark:text-sky-300 hover:bg-[#D4E6F8] dark:hover:bg-sky-900/50 transition-colors flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded-none text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/50 border border-[#BDD7EE] dark:border-sky-800 text-[#0B5FA5] dark:text-sky-300 hover:bg-[#D4E6F8] dark:hover:bg-sky-900/50 transition-colors flex items-center gap-1.5"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-[#0B5FA5] dark:text-sky-300" />
+                    <Scale className="w-3.5 h-3.5 text-[#0B5FA5] dark:text-sky-300" />
                     <span>Run What-If Simulation</span>
                   </button>
 
                   {/* Action 2: Detailed What-If Case Report & PDF */}
                   <button
                     onClick={() => setSelectedReportComplaint(cmp)}
-                    className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#EBF7EE] dark:bg-emerald-950/50 border border-[#BEE3C8] dark:border-emerald-800 text-[#1E7E34] dark:text-emerald-300 hover:bg-[#DCF2E2] dark:hover:bg-emerald-900/50 transition-colors flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded-none text-xs font-bold bg-[#EBF7EE] dark:bg-emerald-950/50 border border-[#BEE3C8] dark:border-emerald-800 text-[#1E7E34] dark:text-emerald-300 hover:bg-[#DCF2E2] dark:hover:bg-emerald-900/50 transition-colors flex items-center gap-1.5"
                   >
                     <FileText className="w-3.5 h-3.5 text-[#1E7E34] dark:text-emerald-300" />
                     <span>Detailed Case Report &amp; PDF</span>
@@ -444,7 +443,7 @@ export function LandownerGrievanceReviewCard({
                         setInitiatingId(null);
                         setCompletingId(null);
                       }}
-                      className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#0B2E59] hover:bg-[#123C6B] text-white transition-colors flex items-center gap-1.5 shadow-sm"
+                      className="px-3 py-1.5 rounded-none text-xs font-bold bg-[#0B2E59] hover:bg-[#123C6B] text-white transition-colors flex items-center gap-1.5"
                     >
                       <Scale className="w-3.5 h-3.5" />
                       <span>Resolve Matter</span>

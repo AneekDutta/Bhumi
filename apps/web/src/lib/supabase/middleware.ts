@@ -41,7 +41,7 @@ export async function updateSession(request: NextRequest) {
 
   // Public paths that don't require auth
   const publicPaths = ['/login', '/auth/callback', '/auth/confirm', '/field/login', '/landowner/login', '/landowner/register'];
-  const isPublicPath = publicPaths.some((p) => pathname.startsWith(p));
+  const isPublicPath = pathname === '/' || publicPaths.some((p) => pathname.startsWith(p));
 
   // Check for either Supabase user or verified session cookie
   const officerSession = request.cookies.get('bhumi_officer_session')?.value;
@@ -82,10 +82,17 @@ export async function updateSession(request: NextRequest) {
   if (request.nextUrl.searchParams.get('switch') === 'admin') {
     const url = request.nextUrl.clone();
     url.searchParams.delete('switch');
+    url.pathname = '/dashboard';
     const response = NextResponse.redirect(url);
-    response.cookies.set('bhumi_officer_session', 'officer%40bhumi.gov.in', {
+    const sessionData = {
+      officer_id: 'OFF-CALA-01',
+      name: 'Sh. Rajesh Kumar',
+      email: 'officer@bhumi.gov.in',
+      role: 'ADMIN'
+    };
+    response.cookies.set('bhumi_officer_session', encodeURIComponent(JSON.stringify(sessionData)), {
       path: '/',
-      maxAge: 86400,
+      maxAge: 86400 * 7,
       sameSite: 'lax',
     });
     return response;
