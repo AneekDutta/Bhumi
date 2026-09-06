@@ -37,7 +37,16 @@ export function AppShell({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const isHomePage = pathname === "/";
+  const isPublicPage =
+    pathname === "/" ||
+    pathname === "/highway-register" ||
+    pathname.startsWith("/highway-register/") ||
+    pathname === "/gazette" ||
+    pathname.startsWith("/gazette/") ||
+    pathname === "/calculator" ||
+    pathname.startsWith("/calculator/") ||
+    pathname === "/grievance" ||
+    pathname.startsWith("/grievance/");
   const isAuthPage =
     pathname === "/login" ||
     pathname.startsWith("/login/") ||
@@ -48,7 +57,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     (pathname === "/landowner" || pathname.startsWith("/landowner/")) &&
     !pathname.startsWith("/landowner-");
 
-  if (isHomePage) {
+  if (isPublicPage) {
     return (
       <div className="w-full min-h-screen bg-[#F4F6F8] dark:bg-[#07080F] text-[#14213D] dark:text-[#F0F4FF] antialiased">
         {children}
@@ -147,7 +156,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="w-full px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
           
           {/* LEFT: CALA Generic Administrative Seal + Bilingual System Title */}
-          <Link href="/dashboard" className="flex items-center gap-3.5 group min-w-0">
+          <Link href="/" className="flex items-center gap-3.5 group min-w-0">
             <CalaSealLogo size={42} className="w-10 h-10 flex-shrink-0 drop-shadow-xs" variant="light" />
 
             {/* Bilingual Ministry / Authority Title */}

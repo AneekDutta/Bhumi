@@ -25,10 +25,8 @@ import {
   Check,
   Landmark
 } from "lucide-react";
-import { ThemeToggle } from "@/components/common/ThemeToggle";
-import { CalaSealLogo } from "@/components/common/CalaSealLogo";
-import { DigitalCorridorMark } from "@/components/common/DigitalCorridorMark";
 import { useI18n } from "@/lib/i18n/I18nContext";
+import { PublicShell } from "@/components/layout/PublicShell";
 
 type AuthMode = "LOGIN" | "FORGOT_PASSWORD" | "UPDATE_PASSWORD";
 
@@ -248,161 +246,8 @@ function LoginPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F6F8] dark:bg-[#07080F] text-[#333333] dark:text-[#CBD5E1] flex flex-col justify-between font-sans transition-colors duration-150">
-      
-      {/* ========================================================================= */}
-      {/* 1. TOP UTILITY STRIP                                                      */}
-      {/* ========================================================================= */}
-      <div className="bg-[#071A32] text-white text-[11px] px-4 py-1.5 border-b border-white/10 flex-shrink-0">
-        <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          
-          {/* Left: Emergency Helpline */}
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5 text-slate-200">
-              <Phone className="w-3 h-3 text-amber-400" />
-              <span>Emergency Helpline: <strong>7595093196</strong> / <strong>6202346942</strong></span>
-            </span>
-            <span className="text-white/30 hidden md:inline">|</span>
-            <span className="text-slate-300 hidden md:inline">support@bhumi.internal</span>
-            <span className="text-white/30 hidden lg:inline">|</span>
-            <span className="text-slate-300 hidden lg:inline">CALA Directorate · Smart India Hackathon Prototype (SIH26016)</span>
-          </div>
-
-          {/* Right: Language Switcher, Accessibility Font Size, Theme */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1 text-slate-300">
-              <button
-                type="button"
-                onClick={() => setLanguage("en")}
-                className={`cursor-pointer hover:underline ${language === "en" ? "text-white font-bold" : "text-slate-300"}`}
-              >
-                English
-              </button>
-              <span className="text-white/40">|</span>
-              <button
-                type="button"
-                onClick={() => setLanguage("hi")}
-                className={`font-devanagari cursor-pointer hover:underline ${language === "hi" ? "text-white font-bold" : "text-slate-300"}`}
-              >
-                हिन्दी
-              </button>
-            </div>
-            <span className="text-white/30">|</span>
-            <div className="flex items-center gap-1 font-mono text-[10px]">
-              <button
-                type="button"
-                onClick={() => setTextSize("sm")}
-                className={`px-1 py-0.5 rounded-none cursor-pointer font-bold ${textSize === "sm" ? "bg-white/30 text-white" : "bg-white/10 hover:bg-white/20 text-slate-200"}`}
-              >
-                A-
-              </button>
-              <button
-                type="button"
-                onClick={() => setTextSize("base")}
-                className={`px-1 py-0.5 rounded-none cursor-pointer font-bold ${textSize === "base" ? "bg-white/30 text-white" : "bg-white/10 hover:bg-white/20 text-slate-200"}`}
-              >
-                A
-              </button>
-              <button
-                type="button"
-                onClick={() => setTextSize("lg")}
-                className={`px-1 py-0.5 rounded-none cursor-pointer font-bold ${textSize === "lg" ? "bg-white/30 text-white" : "bg-white/10 hover:bg-white/20 text-slate-200"}`}
-              >
-                A+
-              </button>
-            </div>
-            <span className="text-white/30">|</span>
-            <ThemeToggle variant="icon" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20 !rounded-none" />
-          </div>
-
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* 2. MAIN CALA BRANDING HEADER                                              */}
-      {/* ========================================================================= */}
-      <header className="bg-[#0B2E59] text-white px-4 py-3 sm:px-8 border-b border-[#0A2647] flex-shrink-0">
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
-          
-          {/* Left: CALA Seal + Bilingual Title */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 flex-shrink-0 flex items-center justify-center">
-              <CalaSealLogo size={44} />
-            </div>
-
-            <div className="flex flex-col">
-              <span className="font-devanagari font-bold text-xs sm:text-sm text-amber-300 leading-tight">
-                केन्द्रीय भूमि अधिग्रहण प्राधिकरण
-              </span>
-              <span className="font-bold text-sm sm:text-base text-white leading-tight tracking-wide">
-                Central Authority for Land Acquisition (CALA)
-              </span>
-              <span className="text-[11px] text-slate-200 font-normal">
-                BHUMI — Land Acquisition Management System · भूमि अधिग्रहण प्रबंधन पोर्टल
-              </span>
-            </div>
-          </Link>
-
-          {/* Right: Institutional Insignia */}
-          <div className="hidden md:flex items-center gap-3">
-            <DigitalCorridorMark className="h-10 text-white/90" />
-            <div className="text-right">
-              <div className="text-[10px] uppercase font-mono tracking-wider text-amber-300 font-bold">
-                SIH26016 PROTOTYPE
-              </div>
-              <div className="text-[11px] text-slate-300">
-                Statutory NH Corridor Portal
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </header>
-
-      {/* ========================================================================= */}
-      {/* 3. GOVERNMENT BLUE RULE (2px)                                             */}
-      {/* ========================================================================= */}
-      <div className="h-[2px] w-full bg-[#0B5FA5] flex-shrink-0" />
-
-      {/* ========================================================================= */}
-      {/* 4. HORIZONTAL NAVY NAVIGATION BAR (All Valid Public Routes)               */}
-      {/* ========================================================================= */}
-      <nav className="bg-[#123C6B] text-white text-xs font-semibold px-4 sm:px-8 border-b border-[#0A2647] flex-shrink-0">
-        <div className="max-w-[1440px] mx-auto flex items-center overflow-x-auto no-scrollbar">
-          <Link href="/" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-            Home
-          </Link>
-          <Link href="/#about" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-            About Portal
-          </Link>
-          <Link href="/#portals" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-            Portal Directory
-          </Link>
-          <Link href="/#gazette-search" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-            Public Gazette Search
-          </Link>
-          <Link href="/#track-grievance" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-            Track Grievance
-          </Link>
-          <Link href="/#calculator" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-            Compensation Estimator
-          </Link>
-          <Link href="/field/login" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-            Field Officer App
-          </Link>
-          <Link href="/landowner/login" className="px-4 py-2.5 hover:bg-[#2F6FB0] transition-colors whitespace-nowrap">
-            Citizen Grievance Portal
-          </Link>
-          <Link href="/login" className="px-4 py-2.5 bg-[#2F6FB0] text-white font-bold transition-colors whitespace-nowrap border-b-2 border-amber-400">
-            Officer Login
-          </Link>
-        </div>
-      </nav>
-
-      {/* ========================================================================= */}
-      {/* 5. MAIN CONTENT — TWO-COLUMN PORTAL LAYOUT                                 */}
-      {/* ========================================================================= */}
-      <main className="flex-1 max-w-[1440px] w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <PublicShell>
+      <div className="max-w-[1440px] w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* ======================================================================= */}
         {/* LEFT COLUMN (60%) — OFFICIAL MANDATE, PORTAL DIRECTORY & STATUTORY INFO */}
@@ -802,26 +647,8 @@ function LoginPageContent() {
 
         </div>
 
-      </main>
-
-      {/* ========================================================================= */}
-      {/* 6. OFFICIAL CALA PROTOTYPE FOOTER                                         */}
-      {/* ========================================================================= */}
-      <footer className="bg-[#0A2647] text-white py-4 px-4 text-center text-xs border-t border-[#071A32] flex-shrink-0 space-y-1">
-        <div className="max-w-[1440px] mx-auto space-y-1">
-          <p className="font-medium text-slate-200">
-            Designed and Developed for CALA — Central Authority for Land Acquisition
-          </p>
-          <p className="text-[11px] text-slate-400">
-            BHUMI Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.
-          </p>
-          <p className="text-[10px] text-slate-400 font-mono pt-1">
-            Emergency Helpline: 7595093196 / 6202346942 · Technical Support: support@bhumi.internal
-          </p>
-        </div>
-      </footer>
-
-    </div>
+      </div>
+    </PublicShell>
   );
 }
 

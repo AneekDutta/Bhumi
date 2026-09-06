@@ -34,6 +34,46 @@ export interface GovernmentProject {
 
 export const MOCK_GOVERNMENT_PROJECTS: GovernmentProject[] = [
   {
+    id: "P-NH927A",
+    name: "NH-927A Kota–Jhalawar Bypass Widening",
+    code: "CALA-NH927A-RJ",
+    sector: "Highways",
+    department: "CALA Directorate · Kota Division",
+    state: "Rajasthan",
+    district: "Kota / Jhalawar",
+    total_length_km: 48.5,
+    total_project_area_ha: 85.0,
+    planned_acquisition_ha: 39.54,
+    acquired_area_ha: 15.68,
+    acquisition_progress_pct: 39.2,
+    project_delay_days: 229,
+    status: "CRITICAL_BLOCKER",
+    timeline_start: "2025-04-01",
+    timeline_target: "2027-12-31",
+    estimated_cost_cr: 420.0,
+    centroid: {
+      coordinates: [75.98, 24.69]
+    },
+    corridor_path: [
+      [75.92, 24.62],
+      [75.95, 24.65],
+      [75.98, 24.69],
+      [76.01, 24.72]
+    ],
+    milestones: [
+      { name: "Sec 3A Intention Notification", target_date: "2025-11-05", status: "COMPLETED" },
+      { name: "Sec 3C Objections Hearing", target_date: "2026-01-15", status: "COMPLETED" },
+      { name: "Sec 3D Declaration", target_date: "2026-02-14", status: "COMPLETED" },
+      { name: "Sec 3G Compensation Determination", target_date: "2026-05-30", status: "IN_PROGRESS" },
+      { name: "Sec 3E Physical Possession", target_date: "2026-08-30", status: "PENDING" }
+    ],
+    statistics: {
+      total_parcels_projected: 181,
+      unresolved_bottlenecks: 110,
+      contiguous_clusters: 3
+    }
+  },
+  {
     id: "GOV-HW-01",
     name: "Delhi–Mumbai Expressway (Package 14)",
     code: "NHAI-DME-PKG14",

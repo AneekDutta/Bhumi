@@ -156,6 +156,19 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>("en");
   const [textSize, setTextSizeState] = useState<TextSize>("base");
 
+  const applyZoom = (size: TextSize) => {
+    if (typeof document !== "undefined") {
+      const zoomLevels: Record<TextSize, string> = {
+        sm: "90%",
+        base: "100%",
+        lg: "112%",
+      };
+      (document.documentElement.style as any).zoom = zoomLevels[size];
+      document.documentElement.classList.remove("text-size-sm", "text-size-base", "text-size-lg");
+      document.documentElement.classList.add(`text-size-${size}`);
+    }
+  };
+
   // Load persisted preferences on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -166,6 +179,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       const savedSize = localStorage.getItem("bhumi_text_size") as TextSize;
       if (savedSize === "sm" || savedSize === "base" || savedSize === "lg") {
         setTextSizeState(savedSize);
+        applyZoom(savedSize);
+      } else {
+        applyZoom("base");
       }
     }
   }, []);
@@ -181,8 +197,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     setTextSizeState(size);
     if (typeof window !== "undefined") {
       localStorage.setItem("bhumi_text_size", size);
-      document.documentElement.classList.remove("text-size-sm", "text-size-base", "text-size-lg");
-      document.documentElement.classList.add(`text-size-${size}`);
+      applyZoom(size);
     }
   };
 

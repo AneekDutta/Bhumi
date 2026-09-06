@@ -11,16 +11,21 @@ import { MOCK_PARCELS, NATIONAL_PROJECTS } from '@/lib/api';
 
 const getPipelineStages = () => {
   const total = MOCK_PARCELS.length;
-  const countStage = (s: string) => MOCK_PARCELS.filter(p => p.current_stage?.toUpperCase().includes(s)).length;
   const calcPct = (cnt: number) => total > 0 ? Math.round((cnt / total) * 100) : 0;
+  
+  // Real dataset counts for NH-927A (181 parcels)
+  const notifiedCount = MOCK_PARCELS.filter(p => p.current_stage === 'notified').length;
+  const objectionsCount = MOCK_PARCELS.filter(p => p.current_stage === 'notified' && (p.blocker || p.status === 'UNRESOLVED')).length;
+  const declaredCount = MOCK_PARCELS.filter(p => p.current_stage === 'compensation_pending' || p.current_stage === 'possessed').length;
+  const awardCount = MOCK_PARCELS.filter(p => p.current_stage === 'compensation_pending').length;
+  const possessionCount = MOCK_PARCELS.filter(p => p.current_stage === 'possessed').length;
+
   return [
-    { stage: 'SIA / Sec 4', cases: countStage('SIA'), limit: '6 months', color: '#6366f1', pct: calcPct(countStage('SIA')) },
-    { stage: 'Sec 11 Notification', cases: countStage('PRELIMINARY') + countStage('NOTIF'), limit: '–', color: '#8b5cf6', pct: calcPct(countStage('PRELIMINARY') + countStage('NOTIF')) },
-    { stage: 'Sec 15 Objections', cases: countStage('OBJECTION') + countStage('HEARING'), limit: '60 days', color: '#a78bfa', pct: calcPct(countStage('OBJECTION') + countStage('HEARING')) },
-    { stage: 'Sec 19 Declaration', cases: countStage('DECLARATION'), limit: '12 months', color: '#f59e0b', pct: calcPct(countStage('DECLARATION')) },
-    { stage: 'Sec 21 Claims Notice', cases: countStage('CLAIM') + countStage('NOTICE'), limit: '30 days', color: '#f97316', pct: calcPct(countStage('CLAIM') + countStage('NOTICE')) },
-    { stage: 'Sec 23 Award', cases: countStage('AWARD') + countStage('ENQUIRY'), limit: '12 months', color: '#f43f5e', pct: calcPct(countStage('AWARD') + countStage('ENQUIRY')) },
-    { stage: 'Sec 38 Possession', cases: countStage('POSSESSION'), limit: '60 days', color: '#10b981', pct: calcPct(countStage('POSSESSION')) },
+    { stage: 'Sec 3A / Sec 11 Notification', cases: notifiedCount, limit: '12 months', color: '#0B5FA5', pct: calcPct(notifiedCount) },
+    { stage: 'Sec 3C / Sec 15 Objections', cases: objectionsCount, limit: '21–60 days', color: '#B36B00', pct: calcPct(objectionsCount) },
+    { stage: 'Sec 3D / Sec 19 Declaration', cases: declaredCount, limit: '12 months', color: '#2F6FB0', pct: calcPct(declaredCount) },
+    { stage: 'Sec 3G / Sec 23 Award Enquiry', cases: awardCount, limit: '12 months', color: '#C2410C', pct: calcPct(awardCount) },
+    { stage: 'Sec 3E / Sec 38 Possession', cases: possessionCount, limit: '60 days', color: '#1E7E34', pct: calcPct(possessionCount) },
   ];
 };
 
@@ -36,14 +41,15 @@ const RFCTLARR_LIMITS = [
 
 const MOCK_CASES = MOCK_PARCELS.map((p, idx) => {
   const proj = NATIONAL_PROJECTS.find(pr => pr.id === p.project_id);
+  const isLapsed = Boolean(p.is_lapsed || (p.current_stage === 'notified' && p.blocker && p.blocker.assumed_resolution_days > 180));
   return {
     id: `c${(idx + 1).toString().padStart(3, '0')}`,
     parcel_id: p.id,
     survey_no: p.survey_no,
-    project: proj ? proj.name : 'Operational Corridor',
+    project: proj ? proj.name : 'NH-927A Kota–Jhalawar Bypass',
     stage: p.current_stage,
-    days_in_stage: p.is_lapsed ? 340 : (idx * 31) % 180 + 15,
-    lapsed: Boolean(p.is_lapsed),
+    days_in_stage: isLapsed ? 340 : (idx * 17) % 120 + 20,
+    lapsed: isLapsed,
     owner: p.owner_name || 'Landholder'
   };
 });
@@ -131,7 +137,7 @@ export default function TimelinePage() {
               <div className="w-full h-2 bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all"
-                  style={{ width: `${s.pct}%`, backgroundColor: '#0B5FA5' }}
+                  style={{ width: `${s.pct}%`, backgroundColor: s.color || '#0B5FA5' }}
                 />
               </div>
             </div>

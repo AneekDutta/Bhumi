@@ -40,7 +40,20 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Public paths that don't require auth
-  const publicPaths = ['/login', '/auth/callback', '/auth/confirm', '/field/login', '/landowner/login', '/landowner/register'];
+  const publicPaths = [
+    '/login', 
+    '/auth/callback', 
+    '/auth/confirm', 
+    '/field/login', 
+    '/landowner/login', 
+    '/landowner/register',
+    '/highway-register',
+    '/gazette',
+    '/calculator',
+    '/grievance',
+    '/reports',
+    '/projects',
+  ];
   const isPublicPath = pathname === '/' || publicPaths.some((p) => pathname.startsWith(p));
 
   // Check for either Supabase user or verified session cookie

@@ -81,7 +81,7 @@ export function Sidebar() {
       <div>
         {/* Brand */}
         <div className="p-4 pb-3 border-b border-[#DCE2E8] dark:border-white/[0.06] flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2.5 group">
+          <Link href="/" className="flex items-center gap-2.5 group">
             <CalaSealLogo size={34} className="w-[34px] h-[34px] flex-shrink-0" variant="navy" />
             <div>
               <div className="font-bold text-[#14213D] dark:text-white text-[15px] leading-tight">
