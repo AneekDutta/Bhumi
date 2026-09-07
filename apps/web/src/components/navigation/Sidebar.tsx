@@ -107,7 +107,7 @@ export function Sidebar() {
     <div className="h-full flex flex-col justify-between bg-white dark:bg-[#080E18] text-[#333333] dark:text-[#F0F4FF] transition-colors duration-200">
       <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
         {/* Desktop Authority Console Subheader Strip (No duplicate logo) */}
-        <div className="hidden md:flex items-center justify-between px-3.5 py-2.5 border-b border-[#DCE2E8] dark:border-white/[0.07] bg-[#F8FAFC]/90 dark:bg-white/[0.02] flex-shrink-0">
+        <div className="hidden md:flex items-center justify-between px-3 py-2 border-b border-[#DCE2E8] dark:border-white/[0.07] bg-[#F8FAFC]/90 dark:bg-white/[0.02] flex-shrink-0">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-[11px] font-bold text-[#0B2E59] dark:text-sky-400 uppercase tracking-wider font-mono">
@@ -141,12 +141,12 @@ export function Sidebar() {
           </button>
         </div>
 
-        {/* Navigation items */}
-        <nav className="p-3 space-y-3.5 flex-1 min-h-0 overflow-y-auto">
+        {/* Navigation items (Strictly Fixed & Non-Scrollable) */}
+        <nav className="p-2 sm:px-2.5 sm:py-2 space-y-1.5 flex-1 min-h-0 overflow-hidden select-none">
           {navGroups.map((grp, idx) => (
-            <div key={grp.groupKey} className={idx > 0 ? "pt-1" : ""}>
-              <div className="px-2.5 pb-1 flex items-center justify-between">
-                <span className="text-[10px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase tracking-wider font-sans">
+            <div key={grp.groupKey} className={idx > 0 ? "pt-0.5" : ""}>
+              <div className="px-2 pb-0.5 flex items-center justify-between">
+                <span className="text-[9.5px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase tracking-wider font-sans">
                   {t(grp.groupKey) || grp.fallbackGroup}
                 </span>
               </div>
@@ -161,23 +161,23 @@ export function Sidebar() {
                       key={item.id}
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
-                      className={`group flex items-center gap-2.5 px-3 py-2 text-xs rounded-md transition-all ${
+                      className={`group flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-md transition-all ${
                         active
                           ? "bg-[#0B2E59] text-white shadow-xs font-semibold"
                           : "text-[#334155] dark:text-[#CBD5E1] hover:text-[#0B2E59] dark:hover:text-white hover:bg-[#F1F5F9] dark:hover:bg-white/[0.05] font-medium"
                       }`}
                     >
                       <Icon 
-                        className={`w-4 h-4 flex-shrink-0 transition-colors ${
+                        className={`w-3.5 h-3.5 flex-shrink-0 transition-colors ${
                           active 
                             ? "text-amber-300" 
                             : "text-[#0B2E59]/70 dark:text-slate-400 group-hover:text-[#0B2E59] dark:group-hover:text-white"
                         }`} 
                         strokeWidth={active ? 2 : 1.75} 
                       />
-                      <span className="flex-1 truncate">{itemLabel}</span>
+                      <span className="flex-1 truncate tracking-tight">{itemLabel}</span>
                       {badge && (
-                        <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded-full font-bold tracking-tight shadow-xs ${
+                        <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded-full font-bold tracking-tight shadow-xs ${
                           active
                             ? "bg-white/20 text-white"
                             : badge === "CORE"
@@ -199,7 +199,7 @@ export function Sidebar() {
       </div>
 
       {/* Desktop Compact Statutory Compliance Status Footer */}
-      <div className="hidden md:block p-3 border-t border-[#DCE2E8] dark:border-white/[0.07] bg-[#F8FAFC] dark:bg-black/20 flex-shrink-0">
+      <div className="hidden md:block p-2.5 px-3 border-t border-[#DCE2E8] dark:border-white/[0.07] bg-[#F8FAFC] dark:bg-black/20 flex-shrink-0">
         <div className="flex items-center justify-between text-[11px] text-[#64748B] dark:text-slate-400">
           <div className="flex items-center gap-1.5 truncate">
             <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0" />
