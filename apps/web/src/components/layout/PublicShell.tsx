@@ -24,7 +24,7 @@ export function PublicShell({ children, onOfficerLoginClick }: PublicShellProps)
     { href: "/gazette", label: t("nav.statutory") },
     { href: "/calculator", label: t("nav.calculator") },
     { href: "/grievance", label: t("nav.grievance") },
-    { href: "/login", label: t("nav.officer_login"), highlight: true },
+    { href: "/?login=officer", label: t("nav.officer_login"), highlight: true },
   ];
 
   return (
@@ -183,13 +183,16 @@ export function PublicShell({ children, onOfficerLoginClick }: PublicShellProps)
         <div className="max-w-[1440px] mx-auto flex items-center justify-between overflow-x-auto no-scrollbar">
           <div className="flex items-center">
             {navItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isOfficerLogin = item.href === "/?login=officer" || item.href === "/login";
+              const isActive = isOfficerLogin
+                ? (pathname === "/" && typeof window !== "undefined" && window.location.search.includes("login=officer"))
+                : pathname === item.href;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={(e) => {
-                    if (item.href === "/login" && onOfficerLoginClick && pathname === "/") {
+                    if (isOfficerLogin && onOfficerLoginClick && pathname === "/") {
                       e.preventDefault();
                       onOfficerLoginClick();
                     }
@@ -235,7 +238,7 @@ export function PublicShell({ children, onOfficerLoginClick }: PublicShellProps)
             <Link href="/calculator" className="hover:underline">Compensation Estimator</Link>
             <span>·</span>
             <Link
-              href="/login"
+              href="/?login=officer"
               onClick={(e) => {
                 if (onOfficerLoginClick && pathname === "/") {
                   e.preventDefault();

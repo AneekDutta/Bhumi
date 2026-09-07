@@ -338,7 +338,7 @@ export default function LandownerRegisterPage() {
             <Link href="/field/login" className="text-[#1E7E34] dark:text-emerald-400 hover:underline">
               Field Officer Console →
             </Link>
-            <Link href="/login" className="text-[#0B2E59] dark:text-sky-400 hover:underline">
+            <Link href="/?login=officer" className="text-[#0B2E59] dark:text-sky-400 hover:underline">
               Admin Web Console →
             </Link>
           </div>

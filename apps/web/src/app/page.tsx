@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { 
   Shield, 
   Search, 
@@ -25,6 +26,7 @@ import { KoshLogo } from "@/components/common/KoshLogo";
 import { useI18n } from "@/lib/i18n/I18nContext";
 import { createClient } from "@/lib/supabase/client";
 import { MOCK_GOVERNMENT_PROJECTS } from "@/lib/mockProjectData";
+import { getSafeRedirectUrl, UserRole } from "@/lib/routes";
 
 interface GovUpdateItem {
   id: string;
@@ -190,20 +192,56 @@ const GOV_UPDATES: GovUpdateItem[] = [
   },
 ];
 
-export default function LandingPage() {
+function LandingPageContent() {
   const { t } = useI18n();
+  const searchParams = useSearchParams();
 
   // Panel View State: "UPDATES" (default) or "OFFICER_LOGIN"
-  const [panelView, setPanelView] = useState<"UPDATES" | "OFFICER_LOGIN">("UPDATES");
+  const [panelView, setPanelView] = useState<"UPDATES" | "OFFICER_LOGIN">(() => {
+    if (typeof window !== "undefined") {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get("login") === "officer" || p.get("login") === "true") return "OFFICER_LOGIN";
+    }
+    return "UPDATES";
+  });
   const [activeFilter, setActiveFilter] = useState<"ALL" | "STATUTORY" | "CORRIDOR">("ALL");
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Sync with searchParams if navigated with ?login=officer
+  useEffect(() => {
+    const loginParam = searchParams?.get("login");
+    if (loginParam === "officer" || loginParam === "true") {
+      setPanelView("OFFICER_LOGIN");
+      setTimeout(() => {
+        const el = document.getElementById("command-panel");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      }, 100);
+    }
+  }, [searchParams]);
+
   const handleOpenOfficerLogin = () => {
     setPanelView("OFFICER_LOGIN");
+    if (typeof window !== "undefined" && !window.location.search.includes("login=officer")) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("login", "officer");
+      window.history.replaceState({}, "", `${url.pathname}?${url.searchParams.toString()}`);
+    }
     const el = document.getElementById("command-panel");
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  };
+
+  const handleCloseOfficerLogin = () => {
+    setPanelView("UPDATES");
+    if (typeof window !== "undefined" && window.location.search.includes("login=")) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("login");
+      const cleanUrl = url.pathname + (url.searchParams.toString() ? `?${url.searchParams.toString()}` : "");
+      window.history.replaceState({}, "", cleanUrl);
     }
   };
 
@@ -258,14 +296,22 @@ export default function LandingPage() {
     };
 
     // Set role & officer session, explicitly purge opposing landowner session
+    document.cookie = "kosh_user_role=ADMIN; path=/; max-age=604800; SameSite=Lax";
     document.cookie = "bhumi_user_role=ADMIN; path=/; max-age=604800; SameSite=Lax";
+    document.cookie = `kosh_officer_session=${encodeURIComponent(
+      JSON.stringify(sessionData)
+    )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
     document.cookie = `bhumi_officer_session=${encodeURIComponent(
       JSON.stringify(sessionData)
     )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+    document.cookie = "kosh_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
     document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
+    const nextUrl = searchParams?.get("next");
+    const destination = getSafeRedirectUrl("ADMIN", nextUrl);
+
     setTimeout(() => {
-      window.location.href = "/dashboard";
+      window.location.href = destination;
     }, 400);
   };
 
@@ -301,7 +347,7 @@ export default function LandingPage() {
       }
 
       if (data?.session) {
-        const userRole = data.user.user_metadata?.role || "ADMIN";
+        const userRole = (data.user.user_metadata?.role || "ADMIN") as UserRole;
         setLoginSuccess("Access authorized. Directing to Operational Console...");
         const sessionData = {
           officer_id: data.user.id,
@@ -309,20 +355,22 @@ export default function LandingPage() {
           email: data.user.email,
           role: userRole,
         };
+        document.cookie = `kosh_user_role=${userRole}; path=/; max-age=604800; SameSite=Lax`;
         document.cookie = `bhumi_user_role=${userRole}; path=/; max-age=604800; SameSite=Lax`;
+        document.cookie = `kosh_officer_session=${encodeURIComponent(
+          JSON.stringify(sessionData)
+        )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
         document.cookie = `bhumi_officer_session=${encodeURIComponent(
           JSON.stringify(sessionData)
         )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+        document.cookie = "kosh_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
         document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
+        const nextUrl = searchParams?.get("next");
+        const destination = getSafeRedirectUrl(userRole, nextUrl);
+
         setTimeout(() => {
-          if (userRole === "FIELD_OFFICER") {
-            window.location.href = "/field/dashboard";
-          } else if (userRole === "LANDOWNER") {
-            window.location.href = "/landowner/home";
-          } else {
-            window.location.href = "/dashboard";
-          }
+          window.location.href = destination;
         }, 400);
       }
     } catch (err: any) {
@@ -684,7 +732,7 @@ export default function LandingPage() {
 
                   <button
                     type="button"
-                    onClick={() => setPanelView("UPDATES")}
+                    onClick={handleCloseOfficerLogin}
                     className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-300 hover:text-white bg-[#123C6B] hover:bg-[#1A4B82] px-2.5 py-1 border border-amber-400/40 transition-colors cursor-pointer rounded"
                     title="Return to Government Updates Live Feed"
                   >
@@ -854,5 +902,13 @@ export default function LandingPage() {
 
       </section>
     </PublicShell>
+  );
+}
+
+export default function LandingPage() {
+  return (
+    <Suspense fallback={null}>
+      <LandingPageContent />
+    </Suspense>
   );
 }

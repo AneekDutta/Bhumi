@@ -394,7 +394,7 @@ function FieldLoginContent() {
               Are you a CALA Director or State Administrator?
             </p>
             <Link
-              href="/login"
+              href="/?login=officer"
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0B2E59] dark:text-sky-400 hover:underline transition-colors mt-0.5"
             >
               <Monitor className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
