@@ -33,10 +33,14 @@ import {
 
 interface ExtractedField {
   field_name: string;
-  field_label: string;
-  extracted_value: any;
+  field_label?: string;
+  label?: string;
+  extracted_value?: any;
+  normalized_value?: any;
+  raw_value?: any;
   verified_value?: any;
-  confidence_score: number;
+  confidence_score?: number;
+  confidence?: number;
   validation_status: string;
   validation_notes?: string;
 }
@@ -521,7 +525,7 @@ export default function DocumentIntelligencePage() {
                       >
                         <div className="space-y-0.5">
                           <div className="font-semibold text-slate-800 dark:text-slate-200">
-                            {f.field_label || f.field_name}
+                            {f.field_label || f.label || f.field_name}
                           </div>
                           <div className="text-[11px] font-mono text-slate-400">
                             Field ID: {f.field_name}
@@ -555,24 +559,47 @@ export default function DocumentIntelligencePage() {
                           ) : (
                             <div className="flex items-center gap-2">
                               <span className="font-mono font-medium text-slate-900 dark:text-white px-2 py-0.5 rounded bg-slate-100 dark:bg-[#181c38]">
-                                {String(f.verified_value !== undefined ? f.verified_value : f.extracted_value)}
+                                {String(
+                                  f.verified_value !== undefined
+                                    ? f.verified_value
+                                    : f.extracted_value !== undefined
+                                    ? f.extracted_value
+                                    : f.normalized_value !== undefined
+                                    ? f.normalized_value
+                                    : f.raw_value ?? '—'
+                                )}
                               </span>
 
-                              <span
-                                className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                                  f.confidence_score >= 0.85
-                                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                                    : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
-                                }`}
-                              >
-                                {Math.round(f.confidence_score * 100)}%
-                              </span>
+                              {(() => {
+                                const sc = f.confidence_score !== undefined ? f.confidence_score : (f.confidence !== undefined ? f.confidence : 0.9);
+                                return (
+                                  <span
+                                    className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
+                                      sc >= 0.85
+                                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                        : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                                    }`}
+                                  >
+                                    {Math.round(sc * 100)}%
+                                  </span>
+                                );
+                              })()}
 
                               {docDetail.review_status !== 'VERIFIED' && (
                                 <button
                                   onClick={() => {
                                     setEditingField(f.field_name);
-                                    setEditValue(String(f.verified_value !== undefined ? f.verified_value : f.extracted_value));
+                                    setEditValue(
+                                      String(
+                                        f.verified_value !== undefined
+                                          ? f.verified_value
+                                          : f.extracted_value !== undefined
+                                          ? f.extracted_value
+                                          : f.normalized_value !== undefined
+                                          ? f.normalized_value
+                                          : f.raw_value ?? ''
+                                      )
+                                    );
                                   }}
                                   className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                                   title="Edit field value"

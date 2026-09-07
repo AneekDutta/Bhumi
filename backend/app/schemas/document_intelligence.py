@@ -11,7 +11,7 @@ Strictly enforces:
 from datetime import date, datetime
 from enum import Enum
 from typing import Any, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class DocumentCategory(str, Enum):
@@ -84,11 +84,24 @@ class ExtractedFieldItem(BaseModel):
     raw_value: Any
     normalized_value: Any
     confidence: float = Field(..., ge=0.0, le=1.0)
+    confidence_score: Optional[float] = None
+    field_label: Optional[str] = None
+    extracted_value: Optional[Any] = None
     source_page: int = 1
     bbox: Optional[BoundingBox] = None
     validation_status: str = "PROPOSED"  # PROPOSED | ACCEPTED | MODIFIED | REJECTED
     validation_notes: Optional[str] = None
     verified_value: Optional[Any] = None
+
+    @model_validator(mode="after")
+    def populate_aliases(self):
+        if self.confidence_score is None:
+            self.confidence_score = self.confidence
+        if self.field_label is None:
+            self.field_label = self.label
+        if self.extracted_value is None:
+            self.extracted_value = self.normalized_value if self.normalized_value is not None else self.raw_value
+        return self
 
 
 # Specific Extraction Payload Schemas

@@ -81,7 +81,7 @@ function FieldLoginContent() {
     try {
       const supabase = createClient();
       await supabase.auth.signInWithPassword({
-        email: "officer@kosh.cala.gov.in",
+        email: "officer@kosh.sih2026.org",
         password: "CommanderPass@2025",
       });
     } catch (e) {

@@ -215,7 +215,9 @@ class DocumentIntelligenceService:
         detected_category = category or self._detect_category_from_text(clean_text, filename)
 
         # 5. Extract Structured Fields (Directly grounded in raw_text)
-        fields, structured_dict, validation_errors = await self._extract_fields(detected_category, clean_text)
+        fields, structured_dict, validation_errors = await self._extract_fields(
+            detected_category, clean_text, base_conf=ocr_res.average_confidence
+        )
         if injection_detected:
             validation_errors.append("SECURITY_WARNING: Adversarial prompt injection pattern was detected and defanged in OCR stream.")
 
@@ -284,7 +286,7 @@ class DocumentIntelligenceService:
         return DocumentJobRead(**job_record)
 
     async def _extract_fields(
-        self, cat: Optional[DocumentCategory], text: str
+        self, cat: Optional[DocumentCategory], text: str, base_conf: float = 0.90
     ) -> tuple[list[ExtractedFieldItem], dict[str, Any], list[str]]:
         """
         Extracts structured fields directly from raw OCR text with zero hardcoded defaults.
@@ -387,6 +389,9 @@ class DocumentIntelligenceService:
             except Exception as e:
                 logger.warning(f"LLM extraction notice: {e}")
 
+        def _fconf(delta: float) -> float:
+            return round(max(0.70, min(0.99, base_conf + delta)), 2)
+
         # 3. Assemble Extracted Fields with Normalized Values
         if parcel_id:
             fields.append(ExtractedFieldItem(
@@ -394,7 +399,7 @@ class DocumentIntelligenceService:
                 label="Parcel ID",
                 raw_value=parcel_id,
                 normalized_value=parcel_id,
-                confidence=0.98,
+                confidence=_fconf(0.04),
             ))
             structured["parcel_id"] = parcel_id
 
@@ -404,7 +409,7 @@ class DocumentIntelligenceService:
                 label="Survey / Khasra Number",
                 raw_value=survey_no,
                 normalized_value=survey_no,
-                confidence=0.97,
+                confidence=_fconf(0.03),
             ))
             structured["survey_number"] = survey_no
 
@@ -414,7 +419,7 @@ class DocumentIntelligenceService:
                 label="Notified Village",
                 raw_value=village,
                 normalized_value=village,
-                confidence=0.96,
+                confidence=_fconf(0.02),
             ))
             structured["village"] = village
 
@@ -429,7 +434,7 @@ class DocumentIntelligenceService:
                 label="Determined Compensation / Amount (INR)",
                 raw_value=amt_match.group(0).strip(),
                 normalized_value=num_amt,
-                confidence=0.98,
+                confidence=_fconf(0.04),
             ))
             structured["amount"] = num_amt
             structured["total_compensation"] = num_amt
@@ -442,7 +447,7 @@ class DocumentIntelligenceService:
                 label="Statutory Document Date",
                 raw_value=date_str,
                 normalized_value=norm_date,
-                confidence=0.98,
+                confidence=_fconf(0.03),
             ))
             structured["date"] = norm_date
             structured["notification_date"] = norm_date
@@ -455,7 +460,7 @@ class DocumentIntelligenceService:
                 label="Notification / Reference Code",
                 raw_value=notif_no,
                 normalized_value=notif_no,
-                confidence=0.97,
+                confidence=_fconf(0.03),
             ))
             structured["notification_number"] = notif_no
             structured["award_number"] = notif_no
@@ -466,7 +471,7 @@ class DocumentIntelligenceService:
                 label="Acquisition Project",
                 raw_value=project,
                 normalized_value=project,
-                confidence=0.95,
+                confidence=_fconf(0.01),
             ))
             structured["project_name"] = project
 
@@ -476,7 +481,7 @@ class DocumentIntelligenceService:
                 label="Revenue District",
                 raw_value=district,
                 normalized_value=district,
-                confidence=0.95,
+                confidence=_fconf(0.01),
             ))
             structured["district"] = district
 
@@ -486,7 +491,7 @@ class DocumentIntelligenceService:
                 label="Landowner / Titleholder",
                 raw_value=landowner,
                 normalized_value=landowner,
-                confidence=0.95,
+                confidence=_fconf(-0.01),
             ))
             structured["landowner_name"] = landowner
 
@@ -496,7 +501,7 @@ class DocumentIntelligenceService:
                 label="Judicial Forum",
                 raw_value=court,
                 normalized_value=court,
-                confidence=0.98,
+                confidence=_fconf(0.02),
             ))
             structured["court_name"] = court
 
@@ -506,7 +511,7 @@ class DocumentIntelligenceService:
                 label="Writ Petition / Case Number",
                 raw_value=case_no,
                 normalized_value=case_no,
-                confidence=0.97,
+                confidence=_fconf(0.02),
             ))
             structured["case_number"] = case_no
 
@@ -520,7 +525,7 @@ class DocumentIntelligenceService:
                 label="Total Acquisition Area (Ha)",
                 raw_value=area_str,
                 normalized_value=area_num,
-                confidence=0.95,
+                confidence=_fconf(0.0),
             ))
             structured["total_area_hectares"] = area_num
 
@@ -530,7 +535,7 @@ class DocumentIntelligenceService:
                 label="Raw Text Excerpt",
                 raw_value=text[:200],
                 normalized_value=text[:200],
-                confidence=0.90,
+                confidence=_fconf(-0.05),
             ))
             structured["document_excerpt"] = text[:500]
 
