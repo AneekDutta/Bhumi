@@ -299,7 +299,15 @@ class DocumentIntelligenceService:
 
         def _find_val(pattern: str) -> Optional[str]:
             m = re.search(pattern, text, re.IGNORECASE)
-            return m.group(1).strip() if m else None
+            if not m:
+                return None
+            try:
+                for grp in m.groups():
+                    if grp:
+                        return grp.strip()
+                return m.group(0).strip()
+            except Exception:
+                return m.group(0).strip()
 
         # 1. Deterministic Extraction from OCR Stream
         parcel_id = _find_val(r"(?:Parcel(?:\s*(?:ID|Number|No\.?))?)[:\s\t]+([A-Za-z0-9\-_]+)")
@@ -311,7 +319,7 @@ class DocumentIntelligenceService:
         project = _find_val(r"(?:Project(?:\s*Name)?)[:\s\t]+([^\n\r\t]+)")
         district = _find_val(r"District[:\s\t]+([^\n\r,]+)")
         landowner = _find_val(r"(?:Landowner|Petitioner|Claimant|Owner)[:\s\t]+([^\n\r,]+)")
-        court = _find_val(r"(?:In\s+the\s+High\s+Court[^\n\r]+|Court[:\s\t]+[^\n\r]+)")
+        court = _find_val(r"(?:Judicial\s*Forum|Court)[:\s\t]+([^\n\r]+)|(In\s+the\s+High\s+Court[^\n\r]+)")
         case_no = _find_val(r"(?:Writ\s+Petition|Case|W\.?P\.?)\s*(?:No\.?)?[:\s\t]*([^\n\r]+)")
         area_str = _find_val(r"(?:Area|Total\s*Area)[:\s\t]*([\d\.]+)\s*(?:Hectares?|Ha\.?|Acres?)?")
 
