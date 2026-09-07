@@ -188,7 +188,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               {/* What-If Workbench Link */}
               <Link
                 href="/intelligence/what-if"
-                className="hidden xl:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-none bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors"
+                className="hidden xl:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded bg-white/10 hover:bg-white/20 text-white border border-white/20 shadow-xs transition-colors"
               >
                 <Activity className="w-3.5 h-3.5 text-amber-300" />
                 <span>{t("app.whatif_workbench")}</span>
@@ -196,7 +196,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
               {/* Authority Officer Profile Card */}
               <div className="flex items-center gap-2.5 pl-2 sm:pl-3 sm:border-l sm:border-white/20">
-                <div className="w-8 h-8 rounded-none bg-white/10 border border-white/20 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                <div className="w-8 h-8 rounded bg-white/10 border border-white/20 flex items-center justify-center text-white font-semibold flex-shrink-0 shadow-xs">
                   <User className="w-4 h-4 text-amber-300" />
                 </div>
                 <div className="hidden sm:flex flex-col text-left">
@@ -215,8 +215,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
               {/* Theme Toggle & Sign Out */}
               <div className="flex items-center gap-1.5">
-                <ThemeToggle variant="icon" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20" />
-                <ExitButton variant="header" className="!bg-white/10 !border-white/20 !text-rose-200 hover:!bg-white/20" />
+                <ThemeToggle variant="icon" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20 !rounded" />
+                <ExitButton variant="header" className="!bg-white/10 !border-white/20 !text-rose-200 hover:!bg-white/20 !rounded" />
               </div>
             </div>
           </div>
@@ -235,7 +235,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           ================================================================ */}
       <div className="flex-1 flex min-h-0 w-full overflow-hidden">
         <Sidebar />
-        <main className="flex-1 min-w-0 flex flex-col justify-between bg-[#F4F6F8] dark:bg-[#07080F]">
+        <main className="flex-1 min-w-0 h-full overflow-y-auto overflow-x-hidden flex flex-col justify-between bg-[#F4F6F8] dark:bg-[#07080F]">
           {/* Page Content Container */}
           <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
             {children}

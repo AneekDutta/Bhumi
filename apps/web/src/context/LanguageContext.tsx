@@ -13,6 +13,7 @@ export interface LanguageContextType {
 
 const DICTIONARY: Record<string, { en: string; hi: string }> = {
   // Navigation Groups & Items
+  'nav.command_menu': { en: 'Authority Console', hi: 'प्राधिकरण कंसोल' },
   'nav.operations': { en: 'Operations', hi: 'परिचालन' },
   'nav.action_center': { en: 'Officer Action Center', hi: 'अधिकारी कार्रवाई केंद्र' },
   'nav.dashboard': { en: 'National Dashboard', hi: 'राष्ट्रीय डैशबोर्ड' },
