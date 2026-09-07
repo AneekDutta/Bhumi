@@ -54,7 +54,6 @@ export function Sidebar() {
       groupKey: "nav.operations",
       fallbackGroup: "Operations",
       items: [
-        { id: "action-center", translationKey: "nav.action_center", href: "/action-center", label: "Officer Action Center", icon: AlertOctagon, badge: "CORE" },
         { id: "dashboard", translationKey: "nav.dashboard", href: "/dashboard", label: "National Dashboard", icon: LayoutDashboard }
       ]
     },
@@ -85,15 +84,6 @@ export function Sidebar() {
         { id: "document-intelligence", translationKey: "nav.document_intelligence", href: "/document-intelligence", label: "Document Intelligence", icon: ScanLine },
         { id: "what-if", translationKey: "nav.what_if", href: "/intelligence/what-if", label: "What-If Simulation", icon: SlidersHorizontal },
         { id: "timeline", translationKey: "nav.statutory_timelines", href: "/timeline", label: "Statutory Timelines", icon: Clock }
-      ]
-    },
-    {
-      groupKey: "nav.governance_law",
-      fallbackGroup: "Governance & Law",
-      items: [
-        { id: "legal-rights", translationKey: "nav.legal_rights", href: "/legal-rights", label: "Legal & Rights", icon: Scale },
-        { id: "reports", translationKey: "nav.reports", href: "/reports", label: "MIS Reports", icon: FileSpreadsheet },
-        { id: "status", translationKey: "nav.system_status", href: "/status", label: "System Status", icon: Cpu }
       ]
     }
   ];
