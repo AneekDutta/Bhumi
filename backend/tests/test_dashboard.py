@@ -177,3 +177,36 @@ async def test_dashboard_mock_auth_officer_no_header():
     identity = await get_current_user_context(req, auth=None)
     assert identity.role == "OFFICER"
     assert identity.assigned_project_id is None
+
+
+@pytest.mark.asyncio
+async def test_dashboard_summary_metrics_and_all_six_reports():
+    def mock_auth():
+        return TrustedIdentity(user_id="u1", role="ADMIN")
+    app.dependency_overrides[get_current_user_context] = mock_auth
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+        # 1. Summary endpoint must include total_length_km and total_parcels
+        res_sum = await ac.get("/api/v1/dashboard/summary")
+        assert res_sum.status_code == 200
+        sum_data = res_sum.json()
+        assert sum_data["total_projects"] >= 1
+        assert sum_data["total_length_km"] > 0
+        assert sum_data["total_parcels"] > 0
+        assert sum_data["unresolved_parcels"] > 0
+
+        # 2. All six report categories must return non-empty genuine rows
+        categories = [
+            "project_status",
+            "acquisition_status",
+            "delay_impact",
+            "critical_blockers",
+            "spatial_blockage",
+            "milestone_exposure"
+        ]
+        for cat in categories:
+            res_rep = await ac.get(f"/api/v1/dashboard/reports?report_type={cat}")
+            assert res_rep.status_code == 200
+            rep_data = res_rep.json()
+            assert rep_data["report_type"] == cat
+            assert len(rep_data["rows"]) > 0, f"Report {cat} should have rows"

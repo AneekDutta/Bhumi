@@ -16,6 +16,8 @@ class DashboardSummaryResponse(BaseModel):
     total_projects: int
     delayed_projects: int
     unresolved_parcels: int
+    total_parcels: int = 0
+    total_length_km: float = 0.0
     total_spatial_clusters: int
     critical_path_blocked_projects: int
 

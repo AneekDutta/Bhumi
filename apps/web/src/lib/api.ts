@@ -458,105 +458,26 @@ const getDynamicClusters = (projectId?: string) => {
 
 export const apiClient = {
   getDashboardSummary: async () => {
-    try {
-      const res = await fetch(`${API_URL}/dashboard/summary`, { cache: 'no-store' });
-      if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
-    return MOCK_DASHBOARD_SUMMARY;
+    const res = await authenticatedFetch(`/api/v1/dashboard/summary`, { cache: 'no-store' });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Failed to load dashboard summary (HTTP ${res.status}): ${errText || res.statusText}`);
+    }
+    return await res.json();
   },
 
   getDashboardProjects: async (size: number = 100) => {
-    try {
-      const res = await fetch(`${API_URL}/dashboard/projects?size=${size}`, { cache: 'no-store' });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.items && data.items.length > 0) return data;
-      }
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
-    return { items: NATIONAL_PROJECTS.slice(0, size), total: NATIONAL_PROJECTS.length };
+    const res = await authenticatedFetch(`/api/v1/dashboard/projects?size=${size}`, { cache: 'no-store' });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Failed to load dashboard projects (HTTP ${res.status}): ${errText || res.statusText}`);
+    }
+    return await res.json();
   },
 
   getDashboardReports: async (reportType: string) => {
-    try {
-      const res = await fetch(`${API_URL}/dashboard/reports?report_type=${reportType}`);
-      if (res.ok) return res;
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
-
-    // Mock realistic CSV rows for MIS Reports Hub preview & export
-    let rows: any[] = [];
-    if (reportType === 'project_status') {
-      rows = NATIONAL_PROJECTS.map(p => ({
-        project_id: p.id,
-        project_name: p.name,
-        state: p.state_name,
-        district: p.district_name,
-        length_km: p.total_length_km,
-        total_parcels: p.total_parcels,
-        unresolved_parcels: p.unresolved_parcel_count,
-        delay_days: p.project_delay_days,
-        critical_path_status: p.critical_path_blocked ? 'BLOCKED' : 'ON_TRACK',
-        urgency: p.highest_urgency
-      }));
-    } else if (reportType === 'acquisition_status') {
-      rows = MOCK_PARCELS.map(p => ({
-        survey_no: p.survey_no,
-        village: p.village_name,
-        area_ha: p.area_hectares,
-        act: p.statutory_act,
-        stage: p.current_stage,
-        status: p.status,
-        owner: p.owner_name
-      }));
-    } else if (reportType === 'delay_impact') {
-      rows = MOCK_BLOCKERS.map(b => ({
-        activity: 'Right-of-Way Possession',
-        predecessor_parcel: b.survey_no,
-        delay_days: b.delay_days,
-        schedule_variance: `+${b.delay_days}d`,
-        float_consumed: b.delay_days > 0 ? '100%' : '0%',
-        urgency: b.delay_days > 15 ? 'CRITICAL' : 'HIGH',
-        statutory_root_cause: b.description
-      }));
-    } else if (reportType === 'critical_blockers') {
-      rows = MOCK_BLOCKERS.map(b => ({
-        parcel: b.survey_no,
-        blocker_type: b.blocker_type,
-        description: b.description,
-        urgency: b.delay_days > 15 ? 'CRITICAL' : 'HIGH',
-        impact_days: b.delay_days,
-        legal_forum: b.forum || 'Competent Authority Land Acquisition'
-      }));
-    } else if (reportType === 'spatial_blockage') {
-      const unresolved = MOCK_PARCELS.filter(p => p.status === 'UNRESOLVED');
-      rows = unresolved.length > 0 ? [
-        {
-          cluster_id: 'CLUSTER-ACTIVE',
-          corridor_segment: 'Alignment Corridor',
-          contiguous_parcels: unresolved.map(p => p.survey_no).join(', '),
-          total_contiguous_area_ha: unresolved.reduce((s, p) => s + p.area_hectares, 0),
-          chainage_start: 'KM 0+000',
-          chainage_end: 'KM 10+000',
-          bottleneck_severity: unresolved.some(p => p.is_lapsed) ? 'CRITICAL' : 'MEDIUM'
-        }
-      ] : [];
-    } else {
-      // milestone_exposure
-      const delayed = NATIONAL_PROJECTS.filter(p => (p.project_delay_days || 0) > 0);
-      rows = delayed.map(p => ({
-        milestone: `${p.name} - Earthworks Completion`,
-        target_date: '2026-06-01',
-        projected_date: '2026-07-01',
-        slippage_days: p.project_delay_days || 0,
-        financial_penalty_exposure: '₹1.5 Cr',
-        driving_blocker: 'Unresolved Parcel Possession'
-      }));
-    }
-
-    return {
-      ok: true,
-      status: 200,
-      json: async () => ({ rows })
-    } as any;
+    const res = await authenticatedFetch(`/api/v1/dashboard/reports?report_type=${encodeURIComponent(reportType)}`);
+    return res;
   },
 
   getHealth: async () => {

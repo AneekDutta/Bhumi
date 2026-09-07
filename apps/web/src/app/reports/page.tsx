@@ -28,6 +28,8 @@ export default function ReportsPage() {
   const [rows, setRows] = useState<any[]>([]);
   const [summary, setSummary] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [summaryLoading, setSummaryLoading] = useState(true);
+  const [summaryError, setSummaryError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [exporting, setExporting] = useState<string | null>(null);
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -37,23 +39,36 @@ export default function ReportsPage() {
     setMounted(true);
   }, []);
 
+  const fetchSummary = async () => {
+    setSummaryLoading(true);
+    try {
+      const data = await apiClient.getDashboardSummary();
+      setSummary(data);
+      setSummaryError(null);
+    } catch (err: any) {
+      setSummaryError(err?.message || 'Unable to load live dashboard summary.');
+    } finally {
+      setSummaryLoading(false);
+    }
+  };
+
   useEffect(() => {
-    apiClient.getDashboardSummary().then(setSummary).catch(() => {});
+    fetchSummary();
   }, []);
 
-  const totalKm = summary?.total_length_km || 0;
-  const totalProjects = summary?.total_projects || 0;
-  const totalParcels = summary?.total_parcels || 0;
-  const unresolvedParcels = summary?.unresolved_parcels || 0;
+  const totalKm = summary?.total_length_km ?? 0;
+  const totalProjects = summary?.total_projects ?? 0;
+  const totalParcels = summary?.total_parcels ?? 0;
+  const unresolvedParcels = summary?.unresolved_parcels ?? 0;
   const possessedParcels = Math.max(0, totalParcels - unresolvedParcels);
   const rowClearance = totalParcels > 0 ? Math.round((possessedParcels / totalParcels) * 100) : 0;
-  const delayedProjects = summary?.delayed_projects || 0;
+  const delayedProjects = summary?.delayed_projects ?? 0;
 
   const dynamicKpiCards = [
-    { label: 'National Alignment', val: `${totalKm.toFixed(1)} km`, sub: `Across ${totalProjects} Active Corridor${totalProjects === 1 ? '' : 's'}` },
-    { label: 'RoW Clearance', val: `${rowClearance}%`, sub: `${possessedParcels} / ${totalParcels} Parcels Possessed` },
-    { label: 'Pending Parcels', val: `${unresolvedParcels}`, sub: `Across ${totalProjects} Corridor${totalProjects === 1 ? '' : 's'}` },
-    { label: 'Delayed Corridors', val: `${delayedProjects}`, sub: delayedProjects > 0 ? `${delayedProjects} Corridors with Overrun` : 'All Corridors On Schedule' },
+    { label: 'National Alignment', val: `${totalKm.toFixed(1)} km`, sub: summaryLoading ? 'Loading metrics...' : summaryError ? 'Offline / Error' : `Across ${totalProjects} Active Corridor${totalProjects === 1 ? '' : 's'}` },
+    { label: 'RoW Clearance', val: `${rowClearance}%`, sub: summaryLoading ? 'Calculating clearance...' : summaryError ? 'Offline / Error' : `${possessedParcels} / ${totalParcels} Parcels Possessed` },
+    { label: 'Pending Parcels', val: `${unresolvedParcels}`, sub: summaryLoading ? 'Loading parcels...' : summaryError ? 'Offline / Error' : `Across ${totalProjects} Corridor${totalProjects === 1 ? '' : 's'}` },
+    { label: 'Delayed Corridors', val: `${delayedProjects}`, sub: summaryLoading ? 'Evaluating delays...' : summaryError ? 'Offline / Error' : (delayedProjects > 0 ? `${delayedProjects} Corridors with Overrun` : 'All Corridors On Schedule') },
   ];
 
   const loadReportData = async (type: string) => {
@@ -61,11 +76,17 @@ export default function ReportsPage() {
     setNotification(null);
     try {
       const res = await apiClient.getDashboardReports(type);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`HTTP ${res.status}: ${errText || res.statusText}`);
+      }
       const data = await res.json();
       setRows(data.rows || []);
-    } catch {
-      setNotification({ type: 'error', message: 'Could not fetch live data. Using fallback dataset.' });
+    } catch (err: any) {
+      setNotification({
+        type: 'error',
+        message: `Failed to load ${type} report: ${err?.message || 'Server error'}. Please verify your officer credentials.`,
+      });
       setRows([]);
     } finally {
       setLoading(false);
