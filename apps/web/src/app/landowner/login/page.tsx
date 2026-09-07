@@ -238,12 +238,12 @@ function LandownerLoginContent() {
           </div>
 
           {/* Instant Citizen Demo Access */}
-          <div className="bg-[#FFF8E6] dark:bg-amber-950/30 border border-[#FFE29A] dark:border-amber-800 p-3 rounded-none text-xs space-y-1.5">
+          <div className="bg-[#FFF8E6] dark:bg-amber-950/30 border border-[#FFE29A] dark:border-amber-800 p-3 rounded-md shadow-xs text-xs space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="font-bold text-[#B36B00] dark:text-amber-300 text-[11px] uppercase tracking-wider">
                 Titleholder Demo Access
               </span>
-              <span className="text-[9px] font-mono bg-[#B36B00] text-white px-1 py-0.2 rounded-none font-bold">
+              <span className="text-[9px] font-mono bg-[#B36B00] text-white px-1.5 py-0.5 rounded font-bold">
                 1-TAP
               </span>
             </div>
@@ -254,7 +254,7 @@ function LandownerLoginContent() {
               type="button"
               onClick={handleInstantDemoLogin}
               disabled={loading}
-              className="w-full py-2 px-3 bg-[#B36B00] hover:bg-[#8F5500] text-white font-bold text-xs rounded-none transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full py-2 px-3 bg-[#B36B00] hover:bg-[#8F5500] text-white font-bold text-xs rounded shadow-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <span>Instant Citizen Portal Demo Login &rarr;</span>
             </button>

@@ -42,7 +42,7 @@ export default function CompensationCalculatorPage() {
         {/* Header */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-none bg-[#1E7E34] text-white uppercase">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#1E7E34] text-white uppercase">
               FIRST SCHEDULE &bull; RFCTLARR ACT 2013 &bull; SEC 3G NH ACT 1956
             </span>
           </div>
@@ -58,7 +58,7 @@ export default function CompensationCalculatorPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           {/* Input Controls Form */}
-          <div className="lg:col-span-6 bg-white dark:bg-[#0A1220] border border-[#DCE2E8] dark:border-white/10 p-5 rounded-none space-y-4 shadow-none">
+          <div className="lg:col-span-6 bg-white dark:bg-[#0A1220] border border-[#DCE2E8] dark:border-white/10 p-5 rounded-md space-y-4 shadow-xs">
             <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-2">
               <h2 className="text-xs font-bold uppercase tracking-wider text-[#14213D] dark:text-slate-300 flex items-center gap-2">
                 <Calculator className="w-4 h-4 text-[#1E7E34]" />
@@ -77,7 +77,7 @@ export default function CompensationCalculatorPage() {
                   min="1"
                   value={calcAreaSqm}
                   onChange={(e) => setCalcAreaSqm(Number(e.target.value) || 0)}
-                  className="w-full font-mono bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                  className="w-full font-mono bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded focus:outline-none focus:border-[#0B5FA5]"
                 />
                 <span className="text-[10px] text-[#64748B] dark:text-slate-400 mt-1 block">
                   Approx. {(calcAreaSqm / 10000).toFixed(3)} Hectares ({(calcAreaSqm * 0.000247105).toFixed(2)} Acres)
@@ -93,7 +93,7 @@ export default function CompensationCalculatorPage() {
                   min="1"
                   value={calcCircleRate}
                   onChange={(e) => setCalcCircleRate(Number(e.target.value) || 0)}
-                  className="w-full font-mono bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                  className="w-full font-mono bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded focus:outline-none focus:border-[#0B5FA5]"
                 />
                 <span className="text-[10px] text-[#64748B] dark:text-slate-400 mt-1 block">
                   As recorded in Sub-Registrar Gazette
@@ -109,7 +109,7 @@ export default function CompensationCalculatorPage() {
                 <select
                   value={calcLocationType}
                   onChange={(e) => setCalcLocationType(e.target.value as any)}
-                  className="w-full bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                  className="w-full bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded focus:outline-none focus:border-[#0B5FA5]"
                 >
                   <option value="RURAL">Rural Area (Multiplier 1.5x - 2.0x applies)</option>
                   <option value="URBAN">Urban Area (Multiplier 1.0x applies)</option>
@@ -124,7 +124,7 @@ export default function CompensationCalculatorPage() {
                   <select
                     value={calcRuralMultiplier}
                     onChange={(e) => setCalcRuralMultiplier(Number(e.target.value))}
-                    className="w-full font-mono bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                    className="w-full font-mono bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded focus:outline-none focus:border-[#0B5FA5]"
                   >
                     <option value={1.5}>1.5x (Radial distance 0 to 10 km from urban limits)</option>
                     <option value={1.75}>1.75x (Radial distance 10 to 20 km from urban limits)</option>
@@ -144,7 +144,7 @@ export default function CompensationCalculatorPage() {
                   min="0"
                   value={calcAssetsValue}
                   onChange={(e) => setCalcAssetsValue(Number(e.target.value) || 0)}
-                  className="w-full font-mono bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                  className="w-full font-mono bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded focus:outline-none focus:border-[#0B5FA5]"
                 />
                 <span className="text-[10px] text-[#64748B] dark:text-slate-400 mt-1 block">
                   Assessed value of wells, trees, boundary walls
@@ -161,7 +161,7 @@ export default function CompensationCalculatorPage() {
                   max="60"
                   value={calcInterestMonths}
                   onChange={(e) => setCalcInterestMonths(Number(e.target.value) || 0)}
-                  className="w-full font-mono bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                  className="w-full font-mono bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white p-2 rounded focus:outline-none focus:border-[#0B5FA5]"
                 />
                 <span className="text-[10px] text-[#64748B] dark:text-slate-400 mt-1 block">
                   12% per annum under Section 30(3) of RFCTLARR Act
@@ -169,14 +169,14 @@ export default function CompensationCalculatorPage() {
               </div>
             </div>
 
-            <div className="p-3 bg-slate-50 dark:bg-white/5 border-l-2 border-[#0B5FA5] text-[11px] text-[#555555] dark:text-slate-400">
+            <div className="p-3 bg-slate-50 dark:bg-white/5 border-l-2 border-[#0B5FA5] text-[11px] text-[#555555] dark:text-slate-400 rounded-r">
               <strong className="text-[#14213D] dark:text-slate-200">Legal Mandate Note:</strong> Under RFCTLARR First Schedule, the statutory solatium is an unconditional 100% addition over the total market value of the land and all assets attached thereto.
             </div>
 
           </div>
 
           {/* Statutory Breakdown Result Ledger */}
-          <div className="lg:col-span-6 bg-white dark:bg-[#0A1220] border border-[#DCE2E8] dark:border-white/10 p-5 rounded-none space-y-4 shadow-none flex flex-col justify-between">
+          <div className="lg:col-span-6 bg-white dark:bg-[#0A1220] border border-[#DCE2E8] dark:border-white/10 p-5 rounded-md space-y-4 shadow-xs flex flex-col justify-between">
             <div className="space-y-3">
               <h2 className="text-xs font-bold uppercase tracking-wider text-[#14213D] dark:text-slate-300 border-b border-[#DCE2E8] dark:border-white/10 pb-2 flex items-center justify-between">
                 <span>Statutory Award Breakdown</span>
@@ -186,7 +186,7 @@ export default function CompensationCalculatorPage() {
               <div className="space-y-2 text-xs">
                 
                 {/* Line 1 */}
-                <div className="flex items-center justify-between p-2.5 rounded-none bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between p-2.5 rounded bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-slate-800">
                   <div>
                     <span className="font-bold text-[#14213D] dark:text-white">1. Basic Market Value (Section 26(1))</span>
                     <div className="text-[10px] text-[#64748B] dark:text-slate-400">
@@ -199,7 +199,7 @@ export default function CompensationCalculatorPage() {
                 </div>
 
                 {/* Line 2 */}
-                <div className="flex items-center justify-between p-2.5 rounded-none bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between p-2.5 rounded bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-slate-800">
                   <div>
                     <span className="font-bold text-[#14213D] dark:text-white">2. Multiplied Land Value (Factor: {calcEffectiveMultiplier}x)</span>
                     <div className="text-[10px] text-[#64748B] dark:text-slate-400">
@@ -212,7 +212,7 @@ export default function CompensationCalculatorPage() {
                 </div>
 
                 {/* Line 3 */}
-                <div className="flex items-center justify-between p-2.5 rounded-none bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between p-2.5 rounded bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-slate-800">
                   <div>
                     <span className="font-bold text-[#14213D] dark:text-white">3. Immovable Assets / Trees / Crops (Section 29)</span>
                     <div className="text-[10px] text-[#64748B] dark:text-slate-400">
@@ -225,7 +225,7 @@ export default function CompensationCalculatorPage() {
                 </div>
 
                 {/* Line 4 */}
-                <div className="flex items-center justify-between p-2.5 rounded-none bg-emerald-50/70 dark:bg-emerald-950/30 border-b-2 border-emerald-500">
+                <div className="flex items-center justify-between p-2.5 rounded bg-emerald-50/70 dark:bg-emerald-950/30 border-b-2 border-emerald-500">
                   <div>
                     <span className="font-bold text-[#1E7E34] dark:text-emerald-300">4. 100% Mandatory Solatium (Section 30(1))</span>
                     <div className="text-[10px] text-[#1E7E34] dark:text-emerald-400">
@@ -238,7 +238,7 @@ export default function CompensationCalculatorPage() {
                 </div>
 
                 {/* Line 5 */}
-                <div className="flex items-center justify-between p-2.5 rounded-none bg-blue-50/70 dark:bg-blue-950/30 border-b-2 border-blue-500">
+                <div className="flex items-center justify-between p-2.5 rounded bg-blue-50/70 dark:bg-blue-950/30 border-b-2 border-blue-500">
                   <div>
                     <span className="font-bold text-[#0B5FA5] dark:text-sky-300">5. 12% Additional Statutory Component ({calcInterestMonths} Months)</span>
                     <div className="text-[10px] text-[#0B5FA5] dark:text-sky-400">
@@ -253,7 +253,7 @@ export default function CompensationCalculatorPage() {
               </div>
 
               {/* Grand Total Callout */}
-              <div className="p-4 bg-[#0B2E59] text-white rounded-none flex items-center justify-between border-t-2 border-amber-400 mt-4">
+              <div className="p-4 bg-[#0B2E59] text-white rounded-md flex items-center justify-between border-t-2 border-amber-400 mt-4 shadow-xs">
                 <div>
                   <span className="text-[10px] font-mono text-amber-300 uppercase tracking-widest block">
                     TOTAL ESTIMATED STATUTORY COMPENSATION

@@ -32,7 +32,7 @@ export function PortfolioTable({ projects, viewOnly = false }: { projects: any[]
   });
 
   return (
-    <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] shadow-xs overflow-hidden transition-colors">
+    <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-xs overflow-hidden transition-colors">
       {/* Table Filter & Search Controls */}
       <div className="p-3 border-b border-[#DCE2E8] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#07080F] flex flex-col sm:flex-row items-center justify-between gap-3">
         {/* Search input */}
@@ -43,7 +43,7 @@ export function PortfolioTable({ projects, viewOnly = false }: { projects: any[]
             placeholder="Search corridor or project ID..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-8 pr-3 py-1 text-xs bg-white dark:bg-[#0D121F] text-slate-900 dark:text-slate-100 border border-[#DCE2E8] dark:border-white/15 rounded-[3px] focus:outline-none focus:border-[#0B2E59] shadow-xs"
+            className="w-full pl-8 pr-3 py-1 text-xs bg-white dark:bg-[#0D121F] text-slate-900 dark:text-slate-100 border border-[#DCE2E8] dark:border-white/15 rounded focus:outline-none focus:border-[#0B2E59] shadow-xs"
           />
         </div>
 
@@ -53,7 +53,7 @@ export function PortfolioTable({ projects, viewOnly = false }: { projects: any[]
             <button
               key={mode}
               onClick={() => setFilterMode(mode)}
-              className={`px-2.5 py-1 rounded-[3px] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 rounded text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 filterMode === mode
                   ? 'bg-[#0B2E59] text-white shadow-xs font-bold'
                   : 'bg-white dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-[#DCE2E8] dark:border-white/10 hover:bg-[#F4F6F8] dark:hover:bg-white/10'
@@ -111,12 +111,12 @@ export function PortfolioTable({ projects, viewOnly = false }: { projects: any[]
                           ID: {pId.substring(0, 8)}
                         </span>
                         {p.total_length_km && (
-                          <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-[2px] bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40">
+                          <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40">
                             {p.total_length_km} km
                           </span>
                         )}
                         {isCP && (
-                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[2px] text-[10px] font-mono font-bold bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-300 border border-[#FFCDD2] dark:border-rose-800/40">
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-300 border border-[#FFCDD2] dark:border-rose-800/40">
                             <AlertTriangle className="w-3 h-3" /> CP Blocked
                           </span>
                         )}
@@ -139,7 +139,7 @@ export function PortfolioTable({ projects, viewOnly = false }: { projects: any[]
                   </td>
 
                   <td className="px-3 py-3 text-center">
-                    <span className={`inline-flex px-2 py-0.5 rounded-[2px] text-[10px] font-mono font-bold uppercase tracking-wide border ${
+                    <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wide border ${
                       p.highest_urgency === 'CRITICAL'
                         ? 'bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-300 border-[#FFCDD2] dark:border-rose-800/40'
                         : p.highest_urgency === 'HIGH'
@@ -155,14 +155,14 @@ export function PortfolioTable({ projects, viewOnly = false }: { projects: any[]
                       <div className="flex items-center justify-end gap-2">
                         <Link
                           href={`/projects/${pId}/impact`}
-                          className="text-xs font-semibold px-2.5 py-1 rounded-[3px] bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-slate-200 border border-[#DCE2E8] dark:border-white/10 transition-colors flex items-center gap-1 shadow-xs"
+                          className="text-xs font-semibold px-2.5 py-1 rounded bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-slate-200 border border-[#DCE2E8] dark:border-white/10 transition-colors flex items-center gap-1 shadow-xs"
                         >
                           <Activity className="w-3 h-3" />
                           <span>Impact</span>
                         </Link>
                         <Link
                           href={`/projects/${pId}/spatial`}
-                          className="text-xs font-semibold px-2.5 py-1 rounded-[3px] bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#1E7E34] dark:text-emerald-300 border border-[#DCE2E8] dark:border-white/10 transition-colors flex items-center gap-1 shadow-xs"
+                          className="text-xs font-semibold px-2.5 py-1 rounded bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#1E7E34] dark:text-emerald-300 border border-[#DCE2E8] dark:border-white/10 transition-colors flex items-center gap-1 shadow-xs"
                         >
                           <MapPin className="w-3 h-3" />
                           <span>GIS</span>

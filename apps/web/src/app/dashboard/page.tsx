@@ -20,11 +20,10 @@ import {
 } from 'lucide-react';
 import { apiClient, getRealDashboardStats } from '@/lib/api';
 import { AdminOperationsSection } from '@/components/dashboard/AdminOperationsSection';
-import { DashboardHeaderAndAlerts } from '@/components/dashboard/DashboardHeaderAndAlerts';
 import { MOCK_GOVERNMENT_PROJECTS } from '@/lib/mockProjectData';
 
 export const metadata: Metadata = {
-  title: 'National Operations Console | KOSH',
+  title: 'National Operations Console | BHUMI',
   description: 'National land acquisition portfolio overview separated into Government Infrastructure Corridors and Real Citizen Grievances.',
 };
 
@@ -47,10 +46,8 @@ async function getVerifiedComplaints() {
 }
 
 export default async function NationalDashboardPage() {
-  const [verifiedComplaints, stats] = await Promise.all([
-    getVerifiedComplaints(),
-    getRealDashboardStats(),
-  ]);
+  const verifiedComplaints = await getVerifiedComplaints();
+  const stats = await getRealDashboardStats();
 
   const totalParcels = stats.total_parcels;
   const pendingVerification = stats.pending_field_verification;
@@ -69,13 +66,25 @@ export default async function NationalDashboardPage() {
   return (
     <div className="space-y-6">
 
-      {/* Main Top Header with Operational Alerts & MIS Export */}
-      <DashboardHeaderAndAlerts stats={stats} />
+      {/* Main Top Header */}
+      <div className="flex items-center justify-between flex-wrap gap-4 border-b border-[#DCE2E8] dark:border-white/10 pb-3">
+        <div>
+          <div className="text-xs font-bold text-[#0B5FA5] dark:text-sky-400 uppercase tracking-wider mb-1">
+            CALA Directorate &bull; Land Acquisition Operations
+          </div>
+          <h1 className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] m-0 leading-tight">
+            National Land Acquisition Operations
+          </h1>
+          <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
+            National Infrastructure Corridors and Citizen Landowner Cases under RFCTLARR Act 2013 &amp; NH Act 1956.
+          </p>
+        </div>
+      </div>
 
       {/* ========================================================================= */}
       {/* INFRASTRUCTURE PROJECT PORTFOLIO */}
       {/* ========================================================================= */}
-      <section className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-none p-5 shadow-none space-y-4 transition-colors">
+      <section className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-md p-5 shadow-xs space-y-4 transition-colors">
         {/* Section Heading with Thin Rule */}
         <div className="flex items-center justify-between flex-wrap gap-3 border-b border-[#DCE2E8] dark:border-white/10 pb-2.5">
           <h2 className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] m-0">
@@ -99,12 +108,11 @@ export default async function NationalDashboardPage() {
           Multi-sector linear corridor footprints representing Highways, Railways, Industrial Corridors, and Urban Infrastructure.
         </p>
 
-        {/* Section A Portfolio KPI Strip - Command-Center Continuous Surface */}
-        <div className="py-4 border-y border-[#DCE2E8] dark:border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-[#DCE2E8] dark:divide-white/10">
-          <div className="pt-2 sm:pt-0 sm:px-3 first:px-0 first:pt-0">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Total Length</div>
-            <div className="text-2xl sm:text-3xl font-black text-[#14213D] dark:text-[#F0F4FF] mt-1 font-mono tracking-tight">
-              {mockTotalLength.toFixed(1)} <span className="text-xs font-semibold text-[#5A6A80]">km</span>
+        {/* Section A Portfolio KPI Strip - Seamless Layout with Vertical Dividers (Item 16) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-[#FAFCFE] dark:bg-[#070B14] rounded-md overflow-hidden shadow-xs">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
+              {mockTotalLength.toFixed(1)} <span className="text-xs font-medium text-[#5A6A80]">km</span>
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
               Total Length
@@ -112,10 +120,9 @@ export default async function NationalDashboardPage() {
             <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Highways &amp; Railways</div>
           </div>
 
-          <div className="pt-2 sm:pt-0 sm:px-3">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Planned Acquisition</div>
-            <div className="text-2xl sm:text-3xl font-black text-[#0B5FA5] dark:text-sky-400 mt-1 font-mono tracking-tight">
-              {mockTotalPlannedAcq.toLocaleString()} <span className="text-xs font-semibold text-[#5A6A80]">Ha</span>
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
+              {mockTotalPlannedAcq.toLocaleString()} <span className="text-xs font-medium text-[#5A6A80]">Ha</span>
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
               Planned Acquisition
@@ -123,10 +130,9 @@ export default async function NationalDashboardPage() {
             <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Projected corridor land</div>
           </div>
 
-          <div className="pt-2 sm:pt-0 sm:px-3">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Acquired to Date</div>
-            <div className="text-2xl sm:text-3xl font-black text-[#1E7E34] dark:text-emerald-400 mt-1 font-mono tracking-tight">
-              {mockTotalAcquired.toLocaleString()} <span className="text-xs font-semibold text-[#5A6A80]">Ha</span>
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 tracking-tight">
+              {mockTotalAcquired.toLocaleString()} <span className="text-xs font-medium text-[#5A6A80]">Ha</span>
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
               Acquired to Date
@@ -134,10 +140,9 @@ export default async function NationalDashboardPage() {
             <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Under Section 3D/3G</div>
           </div>
 
-          <div className="pt-2 sm:pt-0 sm:px-3">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Corridor Bottlenecks</div>
-            <div className="text-2xl sm:text-3xl font-black text-[#B36B00] dark:text-amber-400 mt-1 font-mono tracking-tight">
-              {mockBottlenecks}
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
+              {mockAvgProgress}%
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
               Portfolio Throughput
@@ -151,14 +156,14 @@ export default async function NationalDashboardPage() {
           {mockProjects.slice(0, 3).map(p => (
             <div
               key={p.id}
-              className="p-3.5 rounded-[2px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 flex flex-col justify-between gap-2.5 transition-colors shadow-none"
+              className="p-3.5 rounded-md bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 flex flex-col justify-between gap-2.5 transition-colors shadow-xs"
             >
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-[10px] font-mono font-bold text-[#0B5FA5] dark:text-sky-400">
                     {p.code} &middot; {p.sector}
                   </span>
-                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] border ${
+                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
                     p.status === 'DELAYED'
                       ? 'bg-[#FFF8E6] text-[#B36B00] border-[#FFE29A] dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800'
                       : p.status === 'CRITICAL_BLOCKER'
@@ -194,9 +199,9 @@ export default async function NationalDashboardPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION B: CITIZEN LANDOWNER GRIEVANCES & ACQUISITION DIRECTIVES */}
+      {/* LANDOWNER GRIEVANCES & CADASTRAL ACQUISITION CASES */}
       {/* ========================================================================= */}
-      <section className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-none p-5 shadow-none space-y-4 transition-colors">
+      <section className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-md p-5 shadow-xs space-y-4 transition-colors">
         {/* Section Heading with Thin Rule */}
         <div className="flex items-center justify-between flex-wrap gap-3 border-b border-[#DCE2E8] dark:border-white/10 pb-2.5">
           <h2 className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] m-0">
@@ -220,11 +225,10 @@ export default async function NationalDashboardPage() {
           Source of truth for citizen cases. Originates strictly from citizen parcel registrations (4+ GPS coordinates) &rarr; landowner complaints &rarr; Field Officer ground verification &rarr; Admin statutory determination.
         </p>
 
-        {/* Real KPIs Cards - Command-Center Continuous Surface */}
-        <div className="py-4 border-y border-[#DCE2E8] dark:border-white/10 grid grid-cols-2 sm:grid-cols-5 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-[#DCE2E8] dark:divide-white/10">
-          <div className="pt-2 sm:pt-0 sm:px-3 first:px-0 first:pt-0">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Registered Parcels</div>
-            <div className="text-2xl sm:text-3xl font-black text-[#14213D] dark:text-[#F0F4FF] mt-1 font-mono tracking-tight">
+        {/* Real KPIs Cards - Seamless Layout with Vertical Dividers (Item 16) */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-[#FAFCFE] dark:bg-[#070B14] rounded-md overflow-hidden shadow-xs">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
               {totalParcels}
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
@@ -233,9 +237,8 @@ export default async function NationalDashboardPage() {
             <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">{stats.area_proposed_acres || 0} Acres Proposed</div>
           </div>
 
-          <div className="pt-2 sm:pt-0 sm:px-3">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Pending Inspection</div>
-            <div className="text-2xl sm:text-3xl font-black text-[#B36B00] dark:text-amber-400 mt-1 font-mono tracking-tight">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
               {pendingVerification}
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
@@ -244,9 +247,8 @@ export default async function NationalDashboardPage() {
             <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Assigned to OFF-001</div>
           </div>
 
-          <div className="pt-2 sm:pt-0 sm:px-3">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Verified Cases</div>
-            <div className="text-2xl sm:text-3xl font-black text-[#1E7E34] dark:text-emerald-400 mt-1 font-mono tracking-tight">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 tracking-tight">
               {verifiedCount}
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
@@ -255,9 +257,8 @@ export default async function NationalDashboardPage() {
             <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Passed ground check</div>
           </div>
 
-          <div className="pt-2 sm:pt-0 sm:px-3">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Active Orders</div>
-            <div className="text-2xl sm:text-3xl font-black text-[#0B5FA5] dark:text-sky-400 mt-1 font-mono tracking-tight">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
               {implementationInitiated}
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
@@ -266,9 +267,8 @@ export default async function NationalDashboardPage() {
             <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Under implementation</div>
           </div>
 
-          <div className="pt-2 sm:pt-0 sm:px-3">
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Completed Awards</div>
-            <div className="text-2xl sm:text-3xl font-black text-[#1E7E34] dark:text-emerald-400 mt-1 font-mono tracking-tight">
+          <div className="py-3 px-4">
+            <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 tracking-tight">
               {implementationCompleted}
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
@@ -278,8 +278,8 @@ export default async function NationalDashboardPage() {
           </div>
         </div>
 
-        {/* Statutory Aggregations Strip - Command-Center Continuous Surface */}
-        <div className="pt-2 pb-1 space-y-3">
+        {/* Statutory Aggregations Strip - Seamless Form Style */}
+        <div className="pt-3 pb-1 border-t border-b border-[#DCE2E8] dark:border-white/10 space-y-2.5">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2">
               <Scale className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400" />
@@ -292,31 +292,36 @@ export default async function NationalDashboardPage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-[#DCE2E8] dark:divide-white/10 pt-1">
-            <div className="pt-2 sm:pt-0 sm:px-3 first:px-0 first:pt-0">
-              <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Compensation Assessed</span>
-              <div className="text-lg sm:text-xl font-extrabold text-[#0B5FA5] dark:text-sky-400 font-mono mt-0.5 tracking-tight">
+          <div className="grid grid-cols-2 sm:grid-cols-4 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-[#FAFCFE] dark:bg-[#070B14] rounded-md overflow-hidden shadow-xs">
+            <div className="py-2.5 px-4">
+              <div className="text-lg font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
                 ₹{(stats.compensation_assessed_inr || 0).toLocaleString()}
               </div>
               <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-0.5">
                 Compensation Assessed
               </div>
             </div>
-            <div className="pt-2 sm:pt-0 sm:px-3">
-              <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Compensation Paid</span>
-              <div className="text-lg sm:text-xl font-extrabold text-[#1E7E34] dark:text-emerald-400 font-mono mt-0.5 tracking-tight">
+
+            <div className="py-2.5 px-4">
+              <div className="text-lg font-bold text-[#1E7E34] dark:text-emerald-400 tracking-tight">
                 ₹{(stats.compensation_paid_inr || 0).toLocaleString()}
               </div>
-            </div>
-            <div className="pt-2 sm:pt-0 sm:px-3">
-              <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Affected Families</span>
-              <div className="text-lg sm:text-xl font-extrabold text-[#14213D] dark:text-[#F0F4FF] font-mono mt-0.5 tracking-tight">
-                {stats.affected_families_count || 0}
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-0.5">
+                Compensation Paid
               </div>
             </div>
-            <div className="pt-2 sm:pt-0 sm:px-3">
-              <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Possession Complete</span>
-              <div className="text-lg sm:text-xl font-extrabold text-[#0B5FA5] dark:text-sky-400 font-mono mt-0.5 tracking-tight">
+
+            <div className="py-2.5 px-4">
+              <div className="text-lg font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
+                {stats.affected_families_count || 0}
+              </div>
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-0.5">
+                Affected Families
+              </div>
+            </div>
+
+            <div className="py-2.5 px-4">
+              <div className="text-lg font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
                 {stats.possession_complete_count || 0} / {totalParcels || 0}
               </div>
               <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-0.5">

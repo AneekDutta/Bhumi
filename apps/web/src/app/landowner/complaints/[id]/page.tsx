@@ -383,7 +383,7 @@ export default function LandownerComplaintDetailPage() {
 
         {/* Attached What-If Simulation Card */}
         {(complaint.what_if_simulation || complaint.simulation_record) && (
-          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-none p-4 space-y-3 shadow-none">
+          <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-md p-4 space-y-3 shadow-xs">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Scale className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />

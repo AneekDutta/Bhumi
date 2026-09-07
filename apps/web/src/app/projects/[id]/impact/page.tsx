@@ -356,7 +356,7 @@ export default function ProjectImpactPage() {
                   type="button"
                   onClick={() => runSimulation(selectedBottleneck.parcel_id)}
                   disabled={simulating}
-                  className="flex items-center gap-2 px-3.5 py-2.5 rounded-none text-xs font-bold bg-[#0B2E59] hover:bg-[#082242] text-white shadow-none transition-all cursor-pointer disabled:bg-slate-300 dark:disabled:bg-slate-800"
+                  className="flex items-center gap-2 px-3.5 py-2.5 rounded text-xs font-bold bg-[#0B2E59] hover:bg-[#082242] text-white shadow-xs transition-all cursor-pointer disabled:bg-slate-300 dark:disabled:bg-slate-800"
                 >
                   <Scale className="w-3.5 h-3.5 text-amber-400" />
                   {simulating ? 'Computing Counterfactual...' : 'Simulate: Resolve Blocker'}

@@ -118,19 +118,19 @@ export default function ParcelsPage() {
 
       {/* Stats Cards - Form Ledger Style */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B2E59] dark:border-sky-500">
+        <div className="p-3 bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-xs border-b-2 border-b-[#0B2E59] dark:border-b-sky-500">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider font-mono">Registered Parcels</div>
           <div className="text-2xl font-bold text-[#14213D] dark:text-white mt-1 font-mono">{parcels.length}</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Registered in System</div>
         </div>
 
-        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B5FA5]">
+        <div className="p-3 bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-xs border-b-2 border-b-[#0B5FA5]">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider font-mono">Aadhaar Verified</div>
           <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 mt-1 font-mono">{verifiedIdentityCount}</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Citizen identity confirmed</div>
         </div>
 
-        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34]">
+        <div className="p-3 bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-xs border-b-2 border-b-[#1E7E34]">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider font-mono">Registered Area</div>
           <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 mt-1 font-mono">
             {totalAreaAcres.toFixed(2)} <span className="text-xs font-medium text-[#555555] dark:text-slate-400">Acres</span>
@@ -138,7 +138,7 @@ export default function ParcelsPage() {
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Total declared cadastral land</div>
         </div>
 
-        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B36B00]">
+        <div className="p-3 bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-xs border-b-2 border-b-[#B36B00]">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider font-mono">Field Officer</div>
           <div className="text-base font-bold text-[#B36B00] dark:text-amber-400 mt-1.5 font-mono">Ramesh Patel</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">OFF-001 &bull; Patwari</div>
@@ -154,7 +154,7 @@ export default function ParcelsPage() {
             placeholder="Search by Parcel ID, Owner Name, Village, District..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 bg-white dark:bg-[#0a0f1d] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white rounded-[4px] text-xs focus:border-[#0B2E59] outline-none shadow-xs"
+            className="w-full pl-9 pr-3 py-2 bg-white dark:bg-[#0a0f1d] border border-[#CBD5E1] dark:border-white/15 text-[#14213D] dark:text-white rounded text-xs focus:border-[#0B2E59] outline-none shadow-xs"
           />
         </div>
         <span className="text-xs text-[#64748B] dark:text-slate-400 font-mono">
@@ -163,7 +163,7 @@ export default function ParcelsPage() {
       </div>
 
       {/* Parcel Table */}
-      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-xs overflow-hidden">
         <div className="px-4 py-3 border-b border-[#DCE2E8] dark:border-white/10 flex items-center justify-between bg-slate-50/50 dark:bg-white/[0.02]">
           <div>
             <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 tracking-wider uppercase">

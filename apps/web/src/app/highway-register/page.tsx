@@ -89,7 +89,7 @@ export default function HighwayRegisterPage() {
         {/* Breadcrumb and Statutory Section */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-none bg-[#0B2E59] text-white uppercase">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#0B2E59] text-white uppercase">
               STATUTORY CADASTRE &bull; FORM 3D/3G
             </span>
             <span className="text-xs text-[#64748B] dark:text-slate-400 font-mono">
@@ -105,7 +105,7 @@ export default function HighwayRegisterPage() {
         </div>
 
         {/* 4 Summary Stat Tiles */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-white dark:bg-[#0B1220]">
+        <div className="grid grid-cols-2 sm:grid-cols-4 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-white dark:bg-[#0B1220] rounded-md overflow-hidden shadow-xs">
           <div className="py-3 px-4">
             <div className="text-2xl font-bold text-[#14213D] dark:text-white tracking-tight">
               {normalizedParcels.length}
@@ -156,7 +156,7 @@ export default function HighwayRegisterPage() {
         </div>
 
         {/* Filter and Search Bar */}
-        <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-3">
+        <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-3 rounded-md shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DCE2E8] dark:border-white/10 pb-3">
             <div className="font-bold text-xs uppercase tracking-wide text-[#14213D] dark:text-white flex items-center gap-2">
               <FileSpreadsheet className="w-4 h-4 text-[#0B5FA5]" />
@@ -179,7 +179,7 @@ export default function HighwayRegisterPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="e.g. V02-KH-0001 or Geeta Meena..."
-                  className="w-full pl-8 py-1.5 px-2.5 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                  className="w-full pl-8 py-1.5 px-2.5 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded focus:outline-none focus:border-[#0B5FA5]"
                 />
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
               </div>
@@ -193,7 +193,7 @@ export default function HighwayRegisterPage() {
               <select
                 value={villageFilter}
                 onChange={(e) => setVillageFilter(e.target.value)}
-                className="w-full py-1.5 px-2 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                className="w-full py-1.5 px-2 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded focus:outline-none focus:border-[#0B5FA5]"
               >
                 <option value="ALL">All Revenue Villages ({villages.length})</option>
                 {villages.map((v) => (
@@ -210,7 +210,7 @@ export default function HighwayRegisterPage() {
               <select
                 value={stageFilter}
                 onChange={(e) => setStageFilter(e.target.value)}
-                className="w-full py-1.5 px-2 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                className="w-full py-1.5 px-2 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded focus:outline-none focus:border-[#0B5FA5]"
               >
                 <option value="ALL">All Stages</option>
                 <option value="NOTIFIED">Sec 3A Notified (82)</option>
@@ -222,7 +222,7 @@ export default function HighwayRegisterPage() {
         </div>
 
         {/* Parcels Table */}
-        <div className="overflow-x-auto border border-[#CBD5E1] dark:border-slate-800 bg-white dark:bg-[#0B1220] rounded-none">
+        <div className="overflow-x-auto border border-[#CBD5E1] dark:border-slate-800 bg-white dark:bg-[#0B1220] rounded-md overflow-hidden shadow-xs">
           <table className="w-full text-xs text-left">
             <thead className="bg-[#0B2E59] text-white">
               <tr>
@@ -282,7 +282,7 @@ export default function HighwayRegisterPage() {
                       </span>
                     </td>
                     <td className="py-2 px-3">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-none ${
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
                         p.status === "POSSESSION" || isPossessed
                           ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300"
                           : p.status === "RESOLVED"

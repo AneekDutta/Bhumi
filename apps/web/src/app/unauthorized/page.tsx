@@ -44,16 +44,16 @@ function UnauthorizedContent() {
             </div>
           </div>
         </Link>
-        <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800/40 uppercase">
+        <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800/40 uppercase">
           HTTP 403 · Access Denied
         </span>
       </header>
 
       {/* Main Card */}
       <main className="w-full max-w-md mx-auto my-auto py-8">
-        <div className="bg-white dark:bg-[#0D121F] border-2 border-red-300 dark:border-red-800/50 rounded-[4px] p-6 shadow-sm space-y-5">
+        <div className="bg-white dark:bg-[#0D121F] border-2 border-red-300 dark:border-red-800/50 rounded-md p-6 shadow-xs space-y-5">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-[4px] bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/40 flex items-center justify-center text-red-600 dark:text-red-400 shrink-0">
+            <div className="w-12 h-12 rounded bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/40 flex items-center justify-center text-red-600 dark:text-red-400 shrink-0">
               <ShieldAlert className="w-6 h-6" />
             </div>
             <div>
@@ -66,7 +66,7 @@ function UnauthorizedContent() {
             </div>
           </div>
 
-          <div className="bg-[#F8FAFC] dark:bg-white/[0.02] border border-[#DCE2E8] dark:border-white/10 rounded-[3px] p-3 space-y-2 text-xs">
+          <div className="bg-[#F8FAFC] dark:bg-white/[0.02] border border-[#DCE2E8] dark:border-white/10 rounded p-3 space-y-2 text-xs">
             <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
               <span>Attempted Resource:</span>
               <span className="font-mono font-bold text-[#0B2E59] dark:text-sky-300 truncate max-w-[200px]" title={from}>
@@ -95,7 +95,7 @@ function UnauthorizedContent() {
             {current && (
               <Link
                 href={myDashboard}
-                className="w-full py-2.5 px-4 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-2"
+                className="w-full py-2.5 px-4 rounded bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-2"
               >
                 <Home className="w-3.5 h-3.5" />
                 <span>Return to My Designated Portal ({getRoleLabel(current)})</span>
@@ -105,7 +105,7 @@ function UnauthorizedContent() {
             {required && (
               <Link
                 href={requiredLogin}
-                className="w-full py-2 px-4 rounded-[4px] bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-sky-300 border border-[#CBD5E1] dark:border-white/10 text-xs font-bold transition-all flex items-center justify-center gap-2"
+                className="w-full py-2 px-4 rounded bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-sky-300 border border-[#CBD5E1] dark:border-white/10 text-xs font-bold transition-all flex items-center justify-center gap-2"
               >
                 <KeyRound className="w-3.5 h-3.5" />
                 <span>Sign In with {getRoleLabel(required)} Credentials</span>
@@ -114,7 +114,7 @@ function UnauthorizedContent() {
 
             <Link
               href="/"
-              className="w-full py-2 px-4 rounded-[4px] bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-all flex items-center justify-center gap-2"
+              className="w-full py-2 px-4 rounded bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-all flex items-center justify-center gap-2"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Public BHUMI Home</span>

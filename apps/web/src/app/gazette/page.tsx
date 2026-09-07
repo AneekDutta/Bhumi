@@ -200,7 +200,7 @@ export default function GazetteSearchPage() {
         {/* Header */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-none bg-[#0B2E59] text-white uppercase">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#0B2E59] text-white uppercase">
               THE GAZETTE OF INDIA &bull; STATUTORY NOTICES
             </span>
           </div>
@@ -213,7 +213,7 @@ export default function GazetteSearchPage() {
         </div>
 
         {/* Filter Controls Bar */}
-        <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-3">
+        <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-3 rounded-md shadow-xs">
           <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-2">
             <div className="font-bold text-xs uppercase tracking-wide text-[#14213D] dark:text-white flex items-center gap-2">
               <FileText className="w-4 h-4 text-[#0B5FA5]" />
@@ -232,7 +232,7 @@ export default function GazetteSearchPage() {
               <select
                 value={corridorFilter}
                 onChange={(e) => setCorridorFilter(e.target.value)}
-                className="w-full py-1.5 px-2 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                className="w-full py-1.5 px-2 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded focus:outline-none focus:border-[#0B5FA5]"
               >
                 <option value="ALL">All National Highway Corridors ({corridors.length})</option>
                 {corridors.map((c) => (
@@ -248,7 +248,7 @@ export default function GazetteSearchPage() {
               <select
                 value={sectionFilter}
                 onChange={(e) => setSectionFilter(e.target.value)}
-                className="w-full py-1.5 px-2 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                className="w-full py-1.5 px-2 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded focus:outline-none focus:border-[#0B5FA5]"
               >
                 <option value="ALL">All Statutory Sections</option>
                 <option value="Section 3A">Section 3A (Intention to Acquire)</option>
@@ -267,7 +267,7 @@ export default function GazetteSearchPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="e.g. Kota, S.O. 1642, Rajasthan, Dausa..."
-                  className="w-full pl-8 py-1.5 px-2.5 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                  className="w-full pl-8 py-1.5 px-2.5 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded focus:outline-none focus:border-[#0B5FA5]"
                 />
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
               </div>
@@ -276,7 +276,7 @@ export default function GazetteSearchPage() {
         </div>
 
         {/* Gazette Table */}
-        <div className="overflow-x-auto border border-[#CBD5E1] dark:border-slate-800 bg-white dark:bg-[#0B1220] rounded-none">
+        <div className="overflow-x-auto border border-[#CBD5E1] dark:border-slate-800 bg-white dark:bg-[#0B1220] rounded-md shadow-xs">
           <table className="w-full text-xs text-left">
             <thead className="bg-[#0B2E59] text-white">
               <tr>
@@ -317,7 +317,7 @@ export default function GazetteSearchPage() {
                     {g.villagesCount}
                   </td>
                   <td className="py-2.5 px-3">
-                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-none ${
+                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded ${
                       g.section === "Section 3D" 
                         ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300"
                         : g.section === "Section 3G"
@@ -353,10 +353,10 @@ export default function GazetteSearchPage() {
         {/* Modal for Gazette Inspection */}
         {selectedNotice && (
           <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-            <div className="bg-white dark:bg-[#0A1220] border-2 border-[#0B2E59] max-w-2xl w-full p-6 space-y-4 shadow-xl">
+            <div className="bg-white dark:bg-[#0A1220] border border-[#0B2E59] max-w-2xl w-full p-6 space-y-4 rounded-lg shadow-xl">
               <div className="flex items-start justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-3">
                 <div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-[#0B2E59] text-white uppercase">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#0B2E59] text-white uppercase">
                     THE GAZETTE OF INDIA &bull; EXTRAORDINARY
                   </span>
                   <h3 className="text-lg font-bold text-[#14213D] dark:text-white mt-1">
@@ -369,14 +369,14 @@ export default function GazetteSearchPage() {
                 <button
                   type="button"
                   onClick={() => setSelectedNotice(null)}
-                  className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white"
+                  className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               <div className="space-y-3 text-xs">
-                <div className="grid grid-cols-2 gap-2 p-3 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800">
+                <div className="grid grid-cols-2 gap-2 p-3 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded">
                   <div>
                     <span className="text-slate-500 block text-[10px] uppercase font-bold">Publication Date:</span>
                     <span className="font-semibold text-[#14213D] dark:text-white">{selectedNotice.date}</span>
@@ -399,7 +399,7 @@ export default function GazetteSearchPage() {
                   <h4 className="font-bold text-[#14213D] dark:text-white mb-1">
                     Statutory Executive Order Summary:
                   </h4>
-                  <p className="p-3 bg-slate-100 dark:bg-[#07080F] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
+                  <p className="p-3 bg-slate-100 dark:bg-[#07080F] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 leading-relaxed font-sans rounded">
                     {selectedNotice.statutorySummary}
                   </p>
                 </div>
@@ -409,7 +409,7 @@ export default function GazetteSearchPage() {
                 <button
                   type="button"
                   onClick={() => setSelectedNotice(null)}
-                  className="px-4 py-2 border border-slate-300 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-white/5"
+                  className="px-4 py-2 border border-slate-300 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-white/5 rounded"
                 >
                   Close
                 </button>
@@ -418,7 +418,7 @@ export default function GazetteSearchPage() {
                   onClick={() => {
                     alert(`Downloading statutory copy of ${selectedNotice.soNumber}`);
                   }}
-                  className="px-4 py-2 bg-[#0B2E59] hover:bg-[#071A32] text-white text-xs font-bold flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#0B2E59] hover:bg-[#071A32] text-white text-xs font-bold flex items-center gap-1.5 rounded"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Download Official Gazette Copy</span>

@@ -85,7 +85,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
   };
 
   return (
-    <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 mb-6 shadow-xs">
+    <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-md p-5 mb-6 shadow-xs">
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div>
           <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 uppercase tracking-wider font-semibold">
@@ -97,7 +97,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
         </div>
         <button
           onClick={loadIncidents}
-          className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 bg-white dark:bg-[#07080F] text-[#5A6A80] dark:text-slate-300 hover:bg-[#F8FAFC] dark:hover:bg-white/5 transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded border border-[#DCE2E8] dark:border-white/10 bg-white dark:bg-[#07080F] text-[#5A6A80] dark:text-slate-300 hover:bg-[#F8FAFC] dark:hover:bg-white/5 transition-colors cursor-pointer"
         >
           <RefreshCw className="w-3 h-3" /> Refresh Records
         </button>
@@ -105,7 +105,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
 
       {feedback && (
         <div
-          className={`mb-4 p-3 rounded-[4px] text-xs font-semibold flex items-center gap-2 border ${
+          className={`mb-4 p-3 rounded text-xs font-semibold flex items-center gap-2 border ${
             feedback.type === "success"
               ? "bg-[#E8F5E9] dark:bg-emerald-950/30 border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300"
               : "bg-[#FFEBEE] dark:bg-rose-950/30 border-[#FFCDD2] dark:border-rose-800/40 text-[#B32424] dark:text-rose-300"
@@ -121,7 +121,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
           Loading field ground verifications...
         </div>
       ) : incidents.length === 0 ? (
-        <div className="p-6 text-center bg-[#F8FAFC] dark:bg-[#07080F] rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+        <div className="p-6 text-center bg-[#F8FAFC] dark:bg-[#07080F] rounded-md border border-[#DCE2E8] dark:border-white/10 shadow-xs">
           <CheckCircle2 className="w-5 h-5 text-[#1E7E34] mx-auto mb-2" />
           <div className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF]">No Ground Blockers Reported</div>
           <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-1">
@@ -137,7 +137,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
             return (
               <div
                 key={inc.verification_id}
-                className={`rounded-[4px] p-4 border flex flex-col gap-3 ${
+                className={`rounded-md p-4 border flex flex-col gap-3 shadow-xs ${
                   isResolved
                     ? "bg-[#E8F5E9]/30 dark:bg-emerald-950/20 border-[#C8E6C9] dark:border-emerald-800/40"
                     : "bg-[#FFEBEE]/30 dark:bg-rose-950/20 border-[#FFCDD2] dark:border-rose-800/40"
@@ -147,7 +147,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                 <div className="flex items-start justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2.5">
                     <div
-                      className={`w-8 h-8 rounded-[4px] flex items-center justify-center shrink-0 ${
+                      className={`w-8 h-8 rounded flex items-center justify-center shrink-0 ${
                         isResolved
                           ? "bg-[#E8F5E9] dark:bg-emerald-900/40 text-[#1E7E34] dark:text-emerald-300"
                           : "bg-[#FFEBEE] dark:bg-rose-900/40 text-[#B32424] dark:text-rose-300"
@@ -161,7 +161,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                           {(inc.issue_type || "Ground Incident").replace(/_/g, " ")}
                         </span>
                         <span
-                          className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-[2px] uppercase ${
+                          className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase ${
                             isResolved
                               ? "bg-[#E8F5E9] dark:bg-emerald-950/50 text-[#1E7E34] dark:text-emerald-300 border border-[#C8E6C9] dark:border-emerald-800/40"
                               : "bg-[#FFEBEE] dark:bg-rose-950/50 text-[#B32424] dark:text-rose-300 border border-[#FFCDD2] dark:border-rose-800/40"
@@ -176,13 +176,13 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                     </div>
                   </div>
 
-                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-[#F8FAFC] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-400 uppercase">
+                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-[#F8FAFC] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-400 uppercase">
                     {inc.source_type || "OFFICIAL RECORD"}
                   </span>
                 </div>
 
                 {/* Observations and Details */}
-                <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-3 text-xs leading-relaxed">
+                <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded p-3 text-xs leading-relaxed shadow-xs">
                   <p className="text-[#14213D] dark:text-[#F0F4FF] m-0 mb-1">
                     <strong className="text-[#0B2E59] dark:text-sky-300">Field Notes: </strong>
                     {inc.observations || inc.remarks || "Incident recorded during site visit."}
@@ -220,7 +220,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
 
                 {/* Existing Admin Resolution if present */}
                 {inc.admin_resolution && (
-                  <div className="bg-[#E8F5E9]/60 dark:bg-emerald-950/30 border border-[#C8E6C9] dark:border-emerald-800/40 rounded-[4px] p-3 text-xs">
+                  <div className="bg-[#E8F5E9]/60 dark:bg-emerald-950/30 border border-[#C8E6C9] dark:border-emerald-800/40 rounded p-3 text-xs shadow-xs">
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-bold text-[#1E7E34] dark:text-emerald-300 uppercase">
                         Administrative Order: {inc.admin_resolution.action}
@@ -244,12 +244,12 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                           setAction("RESOLVE");
                           setComment("");
                         }}
-                        className="px-3.5 py-1.5 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+                        className="px-3.5 py-1.5 rounded bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
                       >
                         <ShieldCheck className="w-3.5 h-3.5" /> Adjudicate / Resolve Blocker
                       </button>
                     ) : (
-                      <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-3.5 flex flex-col gap-3">
+                      <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-md p-3.5 flex flex-col gap-3 shadow-xs">
                         <div className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF]">
                           Administrative Action for {inc.verification_id}
                         </div>
@@ -258,9 +258,9 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                           <button
                             type="button"
                             onClick={() => setAction("RESOLVE")}
-                            className={`px-3 py-1.5 rounded-[4px] text-xs font-bold transition-colors cursor-pointer ${
+                            className={`px-3 py-1.5 rounded text-xs font-bold transition-colors cursor-pointer ${
                               action === "RESOLVE"
-                                ? "bg-[#1E7E34] text-white"
+                                ? "bg-[#1E7E34] text-white shadow-xs"
                                 : "bg-[#F8FAFC] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-300 hover:bg-[#E2E8F0]/50"
                             }`}
                           >
@@ -269,9 +269,9 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                           <button
                             type="button"
                             onClick={() => setAction("ESCALATE")}
-                            className={`px-3 py-1.5 rounded-[4px] text-xs font-bold transition-colors cursor-pointer ${
+                            className={`px-3 py-1.5 rounded text-xs font-bold transition-colors cursor-pointer ${
                               action === "ESCALATE"
-                                ? "bg-[#B36B00] text-white"
+                                ? "bg-[#B36B00] text-white shadow-xs"
                                 : "bg-[#F8FAFC] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-300 hover:bg-[#E2E8F0]/50"
                             }`}
                           >
@@ -280,9 +280,9 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                           <button
                             type="button"
                             onClick={() => setAction("REJECT")}
-                            className={`px-3 py-1.5 rounded-[4px] text-xs font-bold transition-colors cursor-pointer ${
+                            className={`px-3 py-1.5 rounded text-xs font-bold transition-colors cursor-pointer ${
                               action === "REJECT"
-                                ? "bg-[#B32424] text-white"
+                                ? "bg-[#B32424] text-white shadow-xs"
                                 : "bg-[#F8FAFC] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-300 hover:bg-[#E2E8F0]/50"
                             }`}
                           >
@@ -299,7 +299,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             placeholder="Enter joint survey order number, settlement terms, or demarcation reference..."
-                            className="w-full bg-[#F8FAFC] dark:bg-[#0D121F] border border-[#CBD5E1] dark:border-white/15 rounded-[4px] p-2 text-xs text-[#14213D] dark:text-white outline-none focus:border-[#0B2E59] resize-none"
+                            className="w-full bg-[#F8FAFC] dark:bg-[#0D121F] border border-[#CBD5E1] dark:border-white/15 rounded p-2 text-xs text-[#14213D] dark:text-white outline-none focus:border-[#0B2E59] resize-none"
                           />
                         </div>
 
@@ -308,7 +308,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                             type="button"
                             disabled={submitting}
                             onClick={() => setResolvingId(null)}
-                            className="px-3 py-1.5 rounded-[4px] bg-white dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-300 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/10 cursor-pointer"
+                            className="px-3 py-1.5 rounded bg-white dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 text-[#5A6A80] dark:text-slate-300 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/10 cursor-pointer"
                           >
                             Cancel
                           </button>
@@ -316,7 +316,7 @@ export function FieldIncidentReviewCard({ parcelId, projectId }: FieldIncidentRe
                             type="button"
                             disabled={submitting}
                             onClick={() => handleResolve(inc.verification_id)}
-                            className="px-3.5 py-1.5 rounded-[4px] bg-[#1E7E34] hover:bg-[#166527] text-white text-xs font-bold cursor-pointer disabled:opacity-50 inline-flex items-center gap-1.5 shadow-xs"
+                            className="px-3.5 py-1.5 rounded bg-[#1E7E34] hover:bg-[#166527] text-white text-xs font-bold cursor-pointer disabled:opacity-50 inline-flex items-center gap-1.5 shadow-xs"
                           >
                             <Send className="w-3 h-3" />
                             {submitting ? "Processing..." : "Commit Administrative Order"}

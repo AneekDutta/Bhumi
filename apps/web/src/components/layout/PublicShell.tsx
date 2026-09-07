@@ -11,9 +11,10 @@ import { Phone, Bell, Landmark } from "lucide-react";
 
 interface PublicShellProps {
   children: ReactNode;
+  onOfficerLoginClick?: () => void;
 }
 
-export function PublicShell({ children }: PublicShellProps) {
+export function PublicShell({ children, onOfficerLoginClick }: PublicShellProps) {
   const pathname = usePathname();
   const { language, setLanguage, textSize, setTextSize, t } = useI18n();
 
@@ -68,7 +69,7 @@ export function PublicShell({ children }: PublicShellProps) {
             <div className="flex items-center gap-1 font-mono text-[10px]">
               <button 
                 onClick={() => setTextSize('sm')}
-                className={`px-1.5 py-0.5 rounded-none font-bold cursor-pointer transition-colors ${textSize === 'sm' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
+                className={`px-1.5 py-0.5 rounded-sm font-bold cursor-pointer transition-colors ${textSize === 'sm' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
                 aria-label="Decrease text size"
                 title="Decrease font scale"
               >
@@ -76,7 +77,7 @@ export function PublicShell({ children }: PublicShellProps) {
               </button>
               <button 
                 onClick={() => setTextSize('base')}
-                className={`px-1.5 py-0.5 rounded-none font-bold cursor-pointer transition-colors ${textSize === 'base' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
+                className={`px-1.5 py-0.5 rounded-sm font-bold cursor-pointer transition-colors ${textSize === 'base' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
                 aria-label="Default text size"
                 title="Default font scale (100%)"
               >
@@ -84,7 +85,7 @@ export function PublicShell({ children }: PublicShellProps) {
               </button>
               <button 
                 onClick={() => setTextSize('lg')}
-                className={`px-1.5 py-0.5 rounded-none font-bold cursor-pointer transition-colors ${textSize === 'lg' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
+                className={`px-1.5 py-0.5 rounded-sm font-bold cursor-pointer transition-colors ${textSize === 'lg' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
                 aria-label="Increase text size"
                 title="Increase font scale"
               >
@@ -92,7 +93,7 @@ export function PublicShell({ children }: PublicShellProps) {
               </button>
             </div>
             <span className="text-white/30">|</span>
-            <ThemeToggle variant="icon" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20 !rounded-none" />
+            <ThemeToggle variant="icon" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20 !rounded" />
           </div>
 
         </div>
@@ -136,7 +137,7 @@ export function PublicShell({ children }: PublicShellProps) {
       <div className="bg-[#EBF3FC] dark:bg-[#0A1A2E] text-xs border-b border-[#D0E2F2] dark:border-sky-950 px-3 sm:px-4 py-1.5 flex items-center gap-3 overflow-hidden select-none">
         {/* Fixed Red Official Bulletins Label on Left */}
         <div className="flex-shrink-0 z-10 bg-[#EBF3FC] dark:bg-[#0A1A2E] flex items-center pr-2 border-r border-[#D0E2F2] dark:border-sky-900">
-          <span className="bg-[#B32424] text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded-none flex items-center gap-1.5 shadow-xs uppercase tracking-wider">
+          <span className="bg-[#B32424] text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1.5 shadow-xs uppercase tracking-wider">
             <Bell className="w-3 h-3 text-amber-300 animate-pulse flex-shrink-0" />
             <span>{t("ticker.heading")}</span>
           </span>
@@ -180,7 +181,13 @@ export function PublicShell({ children }: PublicShellProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-4 py-2.5 transition-colors whitespace-nowrap ${
+                  onClick={(e) => {
+                    if (item.href === "/login" && onOfficerLoginClick && pathname === "/") {
+                      e.preventDefault();
+                      onOfficerLoginClick();
+                    }
+                  }}
+                  className={`px-4 py-2.5 transition-colors whitespace-nowrap cursor-pointer ${
                     isActive
                       ? "bg-[#0B2E59] text-amber-300 font-bold border-b-2 border-amber-400"
                       : item.highlight
@@ -220,7 +227,18 @@ export function PublicShell({ children }: PublicShellProps) {
             <span>·</span>
             <Link href="/calculator" className="hover:underline">Compensation Estimator</Link>
             <span>·</span>
-            <Link href="/login" className="hover:underline">Officer Login</Link>
+            <Link
+              href="/login"
+              onClick={(e) => {
+                if (onOfficerLoginClick && pathname === "/") {
+                  e.preventDefault();
+                  onOfficerLoginClick();
+                }
+              }}
+              className="hover:underline cursor-pointer"
+            >
+              Officer Login
+            </Link>
           </div>
 
           <p className="font-medium text-slate-200">

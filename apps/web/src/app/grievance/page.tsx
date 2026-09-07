@@ -148,8 +148,8 @@ export default function GrievanceTrackerPage() {
         {/* Header */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-none bg-[#B36B00] text-white uppercase">
-              KOSH SAMVAAD &bull; CITIZEN GRIEVANCE REDRESSAL
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#B36B00] text-white uppercase">
+              BHUMI SAMVAAD &bull; CITIZEN GRIEVANCE REDRESSAL
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#14213D] dark:text-white leading-tight">
@@ -161,7 +161,7 @@ export default function GrievanceTrackerPage() {
         </div>
 
         {/* Aggregate Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 border border-[#DCE2E8] dark:border-white/10 divide-y sm:divide-y-0 sm:divide-x divide-[#DCE2E8] dark:divide-white/10 bg-white dark:bg-[#0A1220]">
+        <div className="grid grid-cols-1 sm:grid-cols-3 border border-[#DCE2E8] dark:border-white/10 divide-y sm:divide-y-0 sm:divide-x divide-[#DCE2E8] dark:divide-white/10 bg-white dark:bg-[#0A1220] rounded-md overflow-hidden shadow-xs">
           <div className="p-4">
             <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white">1,284</div>
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400 mt-1">
@@ -192,7 +192,7 @@ export default function GrievanceTrackerPage() {
         </div>
 
         {/* Token Search Box */}
-        <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-5 space-y-4">
+        <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-5 space-y-4 rounded-md shadow-xs">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -207,13 +207,13 @@ export default function GrievanceTrackerPage() {
                 value={searchToken}
                 onChange={(e) => setSearchToken(e.target.value)}
                 placeholder="Enter Grievance Token ID (e.g. GRV-2026-0927)"
-                className="w-full uppercase font-mono text-sm p-2.5 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded-none focus:outline-none focus:border-[#0B5FA5]"
+                className="w-full uppercase font-mono text-sm p-2.5 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded focus:outline-none focus:border-[#0B5FA5]"
               />
             </div>
 
             <button
               type="submit"
-              className="py-2.5 px-6 bg-[#0B2E59] hover:bg-[#0A2647] text-white font-bold text-xs uppercase tracking-wider rounded-none w-full sm:w-auto transition-colors cursor-pointer"
+              className="py-2.5 px-6 bg-[#0B2E59] hover:bg-[#0A2647] text-white font-bold text-xs uppercase tracking-wider rounded w-full sm:w-auto transition-colors cursor-pointer"
             >
               Track Status / स्थिति जांचें
             </button>
@@ -227,28 +227,28 @@ export default function GrievanceTrackerPage() {
             <button
               type="button"
               onClick={() => handleQuickLoad("GRV-2026-0927")}
-              className="font-mono text-[11px] px-2 py-1 rounded-none bg-slate-100 dark:bg-white/10 text-[#0B5FA5] dark:text-sky-300 hover:underline border border-slate-300 dark:border-slate-700 cursor-pointer"
+              className="font-mono text-[11px] px-2 py-1 rounded bg-slate-100 dark:bg-white/10 text-[#0B5FA5] dark:text-sky-300 hover:underline border border-slate-300 dark:border-slate-700 cursor-pointer"
             >
               GRV-2026-0927 (NH-927A Kota)
             </button>
             <button
               type="button"
               onClick={() => handleQuickLoad("GRV-2025-0891")}
-              className="font-mono text-[11px] px-2 py-1 rounded-none bg-slate-100 dark:bg-white/10 text-[#0B5FA5] dark:text-sky-300 hover:underline border border-slate-300 dark:border-slate-700 cursor-pointer"
+              className="font-mono text-[11px] px-2 py-1 rounded bg-slate-100 dark:bg-white/10 text-[#0B5FA5] dark:text-sky-300 hover:underline border border-slate-300 dark:border-slate-700 cursor-pointer"
             >
               GRV-2025-0891 (Tree Valuation)
             </button>
             <button
               type="button"
               onClick={() => handleQuickLoad("GRV-2025-0142")}
-              className="font-mono text-[11px] px-2 py-1 rounded-none bg-slate-100 dark:bg-white/10 text-[#0B5FA5] dark:text-sky-300 hover:underline border border-slate-300 dark:border-slate-700 cursor-pointer"
+              className="font-mono text-[11px] px-2 py-1 rounded bg-slate-100 dark:bg-white/10 text-[#0B5FA5] dark:text-sky-300 hover:underline border border-slate-300 dark:border-slate-700 cursor-pointer"
             >
               GRV-2025-0142 (Demarcation)
             </button>
             <button
               type="button"
               onClick={() => handleQuickLoad("GRV-2025-0518")}
-              className="font-mono text-[11px] px-2 py-1 rounded-none bg-slate-100 dark:bg-white/10 text-[#0B5FA5] dark:text-sky-300 hover:underline border border-slate-300 dark:border-slate-700 cursor-pointer"
+              className="font-mono text-[11px] px-2 py-1 rounded bg-slate-100 dark:bg-white/10 text-[#0B5FA5] dark:text-sky-300 hover:underline border border-slate-300 dark:border-slate-700 cursor-pointer"
             >
               GRV-2025-0518 (DBT Cleared)
             </button>
@@ -257,8 +257,8 @@ export default function GrievanceTrackerPage() {
 
         {/* Empty State / Initial Instructions */}
         {!activeGrievance && !grievanceNotFound && (
-          <div className="bg-white dark:bg-[#0A1220] border border-[#CBD5E1] dark:border-slate-800 rounded-none p-8 text-center space-y-3">
-            <div className="w-12 h-12 rounded-none bg-[#EBF3FA] dark:bg-white/5 border border-[#0B5FA5]/30 mx-auto flex items-center justify-center text-[#0B5FA5] dark:text-sky-400">
+          <div className="bg-white dark:bg-[#0A1220] border border-[#CBD5E1] dark:border-slate-800 rounded-md shadow-xs p-8 text-center space-y-3">
+            <div className="w-12 h-12 rounded bg-[#EBF3FA] dark:bg-white/5 border border-[#0B5FA5]/30 mx-auto flex items-center justify-center text-[#0B5FA5] dark:text-sky-400">
               <Search className="w-6 h-6" />
             </div>
             <h3 className="text-sm font-bold text-[#14213D] dark:text-white uppercase tracking-wider">
@@ -286,7 +286,7 @@ export default function GrievanceTrackerPage() {
 
         {/* Grievance Result Card */}
         {activeGrievance && (
-          <div className="bg-white dark:bg-[#0A1220] border border-[#CBD5E1] dark:border-slate-800 rounded-none p-5 space-y-5">
+          <div className="bg-white dark:bg-[#0A1220] border border-[#CBD5E1] dark:border-slate-800 rounded-md shadow-xs p-5 space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DCE2E8] dark:border-white/10 pb-3">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-widest text-[#0B5FA5] dark:text-sky-400 font-bold">
@@ -304,7 +304,7 @@ export default function GrievanceTrackerPage() {
               </div>
 
               <div className="text-right flex flex-col items-start sm:items-end">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-none bg-[#EBF7EE] dark:bg-emerald-950/60 border border-[#BEE3C8] dark:border-emerald-800 text-[#1E7E34] dark:text-emerald-300 text-xs font-bold">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#EBF7EE] dark:bg-emerald-950/60 border border-[#BEE3C8] dark:emerald-800 text-[#1E7E34] dark:text-emerald-300 text-xs font-bold">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>{activeGrievance.status}</span>
                 </span>
@@ -333,7 +333,7 @@ export default function GrievanceTrackerPage() {
                 ].map((st) => (
                   <div
                     key={st.step}
-                    className={`p-2.5 rounded-none border ${
+                    className={`p-2.5 rounded border ${
                       st.step <= activeGrievance.stage
                         ? "bg-[#F0FDF4] dark:bg-emerald-950/20 border-[#1E7E34] dark:border-emerald-500 text-[#1E7E34] dark:text-emerald-400"
                         : "bg-slate-50 dark:bg-white/5 border-slate-300 dark:border-slate-800 text-slate-400"
@@ -343,7 +343,7 @@ export default function GrievanceTrackerPage() {
                       {st.step <= activeGrievance.stage ? (
                         <CheckCircle2 className="w-3.5 h-3.5" />
                       ) : (
-                        <span className="w-3.5 h-3.5 rounded-none border border-current flex items-center justify-center text-[9px]">
+                        <span className="w-3.5 h-3.5 rounded border border-current flex items-center justify-center text-[9px]">
                           {st.step}
                         </span>
                       )}
@@ -365,7 +365,7 @@ export default function GrievanceTrackerPage() {
 
               <div className="space-y-2">
                 {activeGrievance.history.map((h, i) => (
-                  <div key={i} className="flex items-start gap-2.5 text-xs p-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800">
+                  <div key={i} className="flex items-start gap-2.5 text-xs p-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded">
                     <span className="font-mono text-[11px] text-[#64748B] dark:text-slate-400 w-24 flex-shrink-0">
                       {h.date}
                     </span>
@@ -386,14 +386,14 @@ export default function GrievanceTrackerPage() {
         )}
 
         {grievanceNotFound && (
-          <div className="p-4 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 rounded-none text-xs text-[#B32424] dark:text-rose-300 flex items-center gap-2">
+          <div className="p-4 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 rounded-md text-xs text-[#B32424] dark:text-rose-300 flex items-center gap-2 shadow-xs">
             <AlertTriangle className="w-4 h-4 flex-shrink-0" />
             <span>Grievance Token not found in the national registry. Verify the token ID or log in to the Citizen Portal to file a new case.</span>
           </div>
         )}
 
         {/* Bottom CTA to Citizen Portal */}
-        <div className="bg-[#EBF3FA] dark:bg-white/5 border border-[#0B5FA5] dark:border-sky-800 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="bg-[#EBF3FA] dark:bg-white/5 border border-[#0B5FA5] dark:border-sky-800 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-md shadow-xs">
           <div>
             <h3 className="text-xs font-bold text-[#0B2E59] dark:text-white uppercase tracking-wider">
               Need to lodge a new objection or compensation dispute?
@@ -404,7 +404,7 @@ export default function GrievanceTrackerPage() {
           </div>
           <Link
             href="/landowner/login"
-            className="px-4 py-2 bg-[#0B2E59] hover:bg-[#071A32] text-white text-xs font-bold rounded-none flex items-center gap-1.5 whitespace-nowrap"
+            className="px-4 py-2 bg-[#0B2E59] hover:bg-[#071A32] text-white text-xs font-bold rounded flex items-center gap-1.5 whitespace-nowrap"
           >
             <span>Proceed to Citizen Portal</span>
             <ArrowRight className="w-3.5 h-3.5" />

@@ -96,7 +96,7 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
 
       {/* Section 13 MODEL-DERIVED Recommended Action */}
       {activeParcel.recommended_action && (
-        <div className="bg-white dark:bg-[#0D121F] border border-[#0B2E59]/30 dark:border-[#0B2E59]/60 border-l-4 border-l-[#0B2E59] rounded-none p-4 shadow-none flex flex-col gap-2">
+        <div className="bg-white dark:bg-[#0D121F] border border-[#0B2E59]/30 dark:border-[#0B2E59]/60 border-l-4 border-l-[#0B2E59] rounded-md p-4 shadow-xs flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Scale className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />

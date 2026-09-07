@@ -257,7 +257,7 @@ export function LandownerGrievanceReviewCard({
   };
 
   return (
-    <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-none p-5 mb-6 shadow-none transition-colors">
+    <div className="bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-md p-5 mb-6 shadow-xs transition-colors">
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div>
           <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 tracking-wider uppercase font-semibold">
@@ -277,7 +277,7 @@ export function LandownerGrievanceReviewCard({
       </div>
 
       {feedback && (
-        <div className={`p-2.5 rounded-[3px] mb-3 text-xs flex items-center gap-2 ${
+        <div className={`p-2.5 rounded mb-3 text-xs flex items-center gap-2 ${
           feedback.type === "success"
             ? "bg-[#EBF7EE] dark:bg-emerald-950/40 border border-[#BEE3C8] dark:border-emerald-800 text-[#1E7E34] dark:text-emerald-300"
             : "bg-[#FDF0F0] dark:bg-rose-950/40 border border-[#F8C8C8] dark:border-rose-800 text-[#B32424] dark:text-rose-300"
@@ -294,7 +294,7 @@ export function LandownerGrievanceReviewCard({
         </div>
       ) : verifiedComplaints.length === 0 ? (
         /* Empty State */
-        <div className="p-8 rounded-[4px] bg-[#F8FAFC] dark:bg-[#0B1220] border border-dashed border-[#CBD5E1] dark:border-slate-800 text-center">
+        <div className="p-8 rounded-md bg-[#F8FAFC] dark:bg-[#0B1220] border border-dashed border-[#CBD5E1] dark:border-slate-800 text-center shadow-xs">
           <CheckCircle2 className="w-8 h-8 text-[#1E7E34] dark:text-emerald-400 mx-auto mb-2" />
           <p className="text-sm font-bold text-[#14213D] dark:text-[#F0F4FF] mb-1">
             No landowner grievances available.
@@ -323,7 +323,7 @@ export function LandownerGrievanceReviewCard({
               <div
                 key={cmp.id}
                 id={`complaint-card-${cmp.id}`}
-                className={`p-4 rounded-none transition-all border ${
+                className={`p-4 rounded-md shadow-xs transition-all border ${
                   isSelected
                     ? "border-[#0B5FA5] ring-1 ring-[#0B5FA5]/30 bg-white dark:bg-[#0B1220]"
                     : "bg-white dark:bg-[#0B1220] border-[#DCE2E8] dark:border-white/10"
@@ -332,7 +332,7 @@ export function LandownerGrievanceReviewCard({
                 {/* Status Bar */}
                 <div className="flex items-center justify-between flex-wrap gap-2 mb-2.5">
                   <div className="flex items-center gap-2">
-                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-none border ${
+                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
                       isCompleted
                         ? "bg-[#EBF7EE] text-[#1E7E34] border-[#BEE3C8] dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
                         : isInitiated
@@ -395,14 +395,14 @@ export function LandownerGrievanceReviewCard({
                 </div>
 
                 {/* Grievance Description */}
-                <div className="mb-3 text-xs text-[#333333] dark:text-slate-300 bg-white dark:bg-[#07080F] p-3 rounded-none border border-[#DCE2E8] dark:border-white/10">
+                <div className="mb-3 text-xs text-[#333333] dark:text-slate-300 bg-white dark:bg-[#07080F] p-3 rounded border border-[#DCE2E8] dark:border-white/10 shadow-xs">
                   <strong className="text-[#14213D] dark:text-white">Grievance Claim: </strong>
                   {cmp.description || cmp.complaint_type || "Boundary demarcation adjustment claim against cadastral survey."}
                 </div>
 
                 {/* Field Officer Ground Verification Banner */}
                 {cmp.field_verification && (
-                  <div className="p-3 rounded-none mb-3 bg-[#E6F0FA] dark:bg-sky-950/40 border border-[#BDD7EE] dark:border-sky-800">
+                  <div className="p-3 rounded mb-3 bg-[#E6F0FA] dark:bg-sky-950/40 border border-[#BDD7EE] dark:border-sky-800 shadow-xs">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-[#0B5FA5] dark:text-sky-300 mb-1">
                       <ShieldCheck className="w-3.5 h-3.5" />
                       <span>FIELD VERIFICATION ACCORD &bull; Verified by {cmp.field_verification.officer_name || "Ramesh Patel (Patwari)"}</span>
@@ -415,7 +415,7 @@ export function LandownerGrievanceReviewCard({
 
                 {/* Attached What-If Simulation Badge */}
                 {(cmp.what_if_simulation || cmp.simulation_record) && (
-                  <div className="p-2.5 rounded-none mb-3 bg-[#FFF8E6] dark:bg-amber-950/40 border border-[#FFE29A] dark:border-amber-800 flex items-center justify-between flex-wrap gap-2">
+                  <div className="p-2.5 rounded mb-3 bg-[#FFF8E6] dark:bg-amber-950/40 border border-[#FFE29A] dark:border-amber-800 flex items-center justify-between flex-wrap gap-2 shadow-xs">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-[#B36B00] dark:text-amber-300">
                       <Scale className="w-3.5 h-3.5" />
                       <span>SIMULATION ATTACHED: {(cmp.what_if_simulation || cmp.simulation_record).simulation_id || "SIM-RFCTLARR"}</span>
@@ -432,16 +432,16 @@ export function LandownerGrievanceReviewCard({
                   {/* Action 1: What-If Simulation */}
                   <button
                     onClick={() => setSimulatingComplaint(cmp)}
-                    className="px-3 py-1.5 rounded-none text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/50 border border-[#BDD7EE] dark:border-sky-800 text-[#0B5FA5] dark:text-sky-300 hover:bg-[#D4E6F8] dark:hover:bg-sky-900/50 transition-colors flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/50 border border-[#BDD7EE] dark:border-sky-800 text-[#0B5FA5] dark:text-sky-300 hover:bg-[#D4E6F8] dark:hover:bg-sky-900/50 transition-colors flex items-center gap-1.5 shadow-xs"
                   >
-                    <Scale className="w-3.5 h-3.5 text-[#0B5FA5] dark:text-sky-300" />
+                    <Scale className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-300" />
                     <span>Run What-If Simulation</span>
                   </button>
 
                   {/* Action 2: Detailed What-If Case Report & PDF */}
                   <button
                     onClick={() => setSelectedReportComplaint(cmp)}
-                    className="px-3 py-1.5 rounded-none text-xs font-bold bg-[#EBF7EE] dark:bg-emerald-950/50 border border-[#BEE3C8] dark:border-emerald-800 text-[#1E7E34] dark:text-emerald-300 hover:bg-[#DCF2E2] dark:hover:bg-emerald-900/50 transition-colors flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded text-xs font-bold bg-[#EBF7EE] dark:bg-emerald-950/50 border border-[#BEE3C8] dark:border-emerald-800 text-[#1E7E34] dark:text-emerald-300 hover:bg-[#DCF2E2] dark:hover:bg-emerald-900/50 transition-colors flex items-center gap-1.5 shadow-xs"
                   >
                     <FileText className="w-3.5 h-3.5 text-[#1E7E34] dark:text-emerald-300" />
                     <span>Detailed Case Report &amp; PDF</span>
@@ -455,7 +455,7 @@ export function LandownerGrievanceReviewCard({
                         setInitiatingId(null);
                         setCompletingId(null);
                       }}
-                      className="px-3 py-1.5 rounded-none text-xs font-bold bg-[#0B2E59] hover:bg-[#123C6B] text-white transition-colors flex items-center gap-1.5"
+                      className="px-3 py-1.5 rounded text-xs font-bold bg-[#0B2E59] hover:bg-[#123C6B] text-white transition-colors flex items-center gap-1.5 shadow-xs"
                     >
                       <Scale className="w-3.5 h-3.5" />
                       <span>Resolve Matter</span>
@@ -470,7 +470,7 @@ export function LandownerGrievanceReviewCard({
                         setCompletingId(null);
                         setResolvingId(null);
                       }}
-                      className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#0B5FA5] hover:bg-[#094d87] text-white transition-colors flex items-center gap-1.5 shadow-sm"
+                      className="px-3 py-1.5 rounded text-xs font-bold bg-[#0B5FA5] hover:bg-[#094d87] text-white transition-colors flex items-center gap-1.5 shadow-xs"
                     >
                       <Briefcase className="w-3.5 h-3.5" />
                       <span>Initiate Implementation</span>
@@ -488,7 +488,7 @@ export function LandownerGrievanceReviewCard({
                         setStatutoryAssessed(Math.round(Number(areaAcres) * 1850000 * 2.24));
                         setStatutoryPaid(Math.round(Number(areaAcres) * 1850000 * 2.24));
                       }}
-                      className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#1E7E34] hover:bg-[#18662a] text-white transition-colors flex items-center gap-1.5 shadow-sm"
+                      className="px-3 py-1.5 rounded text-xs font-bold bg-[#1E7E34] hover:bg-[#18662a] text-white transition-colors flex items-center gap-1.5 shadow-xs"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>Complete Implementation</span>
@@ -506,8 +506,8 @@ export function LandownerGrievanceReviewCard({
 
                 {/* Initiate Implementation Drawer */}
                 {initiatingId === cmp.id && (
-                  <div className="mt-3 p-3.5 rounded-[4px] bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 space-y-2.5">
-                    <div className="text-xs font-bold text-[#0B5FA5] dark:text-sky-300">
+                  <div className="mt-3 p-3.5 rounded-md bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 space-y-2.5 shadow-xs">
+                    <div className="text-xs font-bold text-[#0B2E59] dark:text-sky-300">
                       Issue Administrative Implementation Order:
                     </div>
 
@@ -516,7 +516,7 @@ export function LandownerGrievanceReviewCard({
                       placeholder="Administrative Order Reference (e.g. CALA-ORDER-2026-081)..."
                       value={orderRef}
                       onChange={(e) => setOrderRef(e.target.value)}
-                      className="input w-full font-mono bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
+                      className="input w-full font-mono bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                     />
 
                     <textarea
@@ -524,20 +524,20 @@ export function LandownerGrievanceReviewCard({
                       placeholder="Enter specific implementation directives (e.g., sanction boundary adjustment, order PFMS compensation calculation)..."
                       value={initiateNotes}
                       onChange={(e) => setInitiateNotes(e.target.value)}
-                      className="input w-full bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
+                      className="input w-full bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                     />
 
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleInitiate(cmp.complaint_id || cmp.id)}
                         disabled={initiateSubmitting}
-                        className="btn-primary py-1.5 px-3 text-xs"
+                        className="btn-primary py-1.5 px-3 text-xs rounded shadow-xs"
                       >
                         {initiateSubmitting ? "Initiating..." : "Confirm & Initiate Implementation"}
                       </button>
                       <button
                         onClick={() => setInitiatingId(null)}
-                        className="px-3 py-1.5 rounded-[3px] text-xs font-semibold border border-[#CBD5E1] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+                        className="px-3 py-1.5 rounded text-xs font-semibold border border-[#CBD5E1] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
                       >
                         Cancel
                       </button>
@@ -547,7 +547,7 @@ export function LandownerGrievanceReviewCard({
 
                 {/* Complete Implementation Drawer with Statutory Parameters */}
                 {completingId === cmp.id && (
-                  <div className="mt-3 p-3.5 rounded-[4px] bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 space-y-3">
+                  <div className="mt-3 p-3.5 rounded-md bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 space-y-3 shadow-xs">
                     <div className="text-xs font-bold text-[#1E7E34] dark:text-emerald-400">
                       Finalize Statutory Acquisition Record:
                     </div>
@@ -562,7 +562,7 @@ export function LandownerGrievanceReviewCard({
                           step="0.001"
                           value={statutoryAcqAcres}
                           onChange={(e) => setStatutoryAcqAcres(Number(e.target.value))}
-                          className="input w-full font-mono text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
+                          className="input w-full font-mono text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                         />
                       </div>
 
@@ -574,7 +574,7 @@ export function LandownerGrievanceReviewCard({
                           type="number"
                           value={statutoryAssessed}
                           onChange={(e) => setStatutoryAssessed(Number(e.target.value))}
-                          className="input w-full font-mono text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
+                          className="input w-full font-mono text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                         />
                       </div>
 
@@ -586,7 +586,7 @@ export function LandownerGrievanceReviewCard({
                           type="number"
                           value={statutoryPaid}
                           onChange={(e) => setStatutoryPaid(Number(e.target.value))}
-                          className="input w-full font-mono text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
+                          className="input w-full font-mono text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                         />
                       </div>
 
@@ -597,7 +597,7 @@ export function LandownerGrievanceReviewCard({
                         <select
                           value={statutoryPossession}
                           onChange={(e) => setStatutoryPossession(e.target.value)}
-                          className="input w-full text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white"
+                          className="input w-full text-xs bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                         >
                           <option value="Possession Handed Over">Possession Handed Over</option>
                           <option value="Physical Possession Complete">Physical Possession Complete</option>
@@ -611,20 +611,20 @@ export function LandownerGrievanceReviewCard({
                       placeholder="Enter final resolution directives and revenue mutation reference..."
                       value={completeNotes}
                       onChange={(e) => setCompleteNotes(e.target.value)}
-                      className="input w-full bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs"
+                      className="input w-full bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded"
                     />
 
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleComplete(cmp.complaint_id || cmp.id, Number(areaAcres))}
                         disabled={completeSubmitting}
-                        className="px-3.5 py-1.5 rounded-[3px] text-xs font-bold bg-[#1E7E34] hover:bg-[#18662a] text-white transition-colors"
+                        className="px-3.5 py-1.5 rounded text-xs font-bold bg-[#1E7E34] hover:bg-[#18662a] text-white transition-colors shadow-xs"
                       >
                         {completeSubmitting ? "Finalizing Order..." : "Finalize Acquisition & Close Case"}
                       </button>
                       <button
                         onClick={() => setCompletingId(null)}
-                        className="px-3 py-1.5 rounded-[3px] text-xs font-semibold border border-[#CBD5E1] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+                        className="px-3 py-1.5 rounded text-xs font-semibold border border-[#CBD5E1] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
                       >
                         Cancel
                       </button>
@@ -634,7 +634,7 @@ export function LandownerGrievanceReviewCard({
 
                 {/* Resolve Matter Drawer */}
                 {resolvingId === cmp.id && (
-                  <div className="mt-3 p-3.5 rounded-[4px] bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 space-y-2.5">
+                  <div className="mt-3 p-3.5 rounded-md bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 space-y-2.5 shadow-xs">
                     <div className="text-xs font-bold text-[#1E7E34] dark:text-emerald-400 flex items-center gap-1.5">
                       <Scale className="w-3.5 h-3.5" />
                       <span>Issue Statutory Resolution &amp; Formal Notice (RFCTLARR Act 2013):</span>
@@ -648,20 +648,20 @@ export function LandownerGrievanceReviewCard({
                       placeholder="Enter final administrative determination, boundary rectification findings, and compensation sanction details..."
                       value={resolveNotes}
                       onChange={(e) => setResolveNotes(e.target.value)}
-                      className="input w-full bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs"
+                      className="input w-full bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white text-xs rounded"
                     />
 
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleResolveMatter(cmp.complaint_id || cmp.id)}
                         disabled={resolveSubmitting}
-                        className="px-3.5 py-1.5 rounded-[3px] text-xs font-bold bg-[#0B2E59] hover:bg-[#123C6B] text-white transition-colors"
+                        className="px-3.5 py-1.5 rounded text-xs font-bold bg-[#0B2E59] hover:bg-[#123C6B] text-white transition-colors shadow-xs"
                       >
                         {resolveSubmitting ? "Issuing Statutory Determination..." : "Confirm Resolution & Issue Notice"}
                       </button>
                       <button
                         onClick={() => setResolvingId(null)}
-                        className="px-3 py-1.5 rounded-[3px] text-xs font-semibold border border-[#CBD5E1] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+                        className="px-3 py-1.5 rounded text-xs font-semibold border border-[#CBD5E1] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
                       >
                         Cancel
                       </button>
@@ -671,7 +671,7 @@ export function LandownerGrievanceReviewCard({
 
                 {/* Resolved Case Banner & Direct PDF Downloads */}
                 {isCompleted && (
-                  <div className="mt-3 p-3 rounded-[3px] bg-[#EBF7EE] dark:bg-emerald-950/40 border border-[#BEE3C8] dark:border-emerald-800 flex items-center justify-between flex-wrap gap-3">
+                  <div className="mt-3 p-3 rounded-md bg-[#EBF7EE] dark:bg-emerald-950/40 border border-[#BEE3C8] dark:border-emerald-800 flex items-center justify-between flex-wrap gap-3 shadow-xs">
                     <div>
                       <div className="flex items-center gap-1.5 text-xs font-bold text-[#1E7E34] dark:text-emerald-300">
                         <CheckCircle2 className="w-4 h-4" />
@@ -685,7 +685,7 @@ export function LandownerGrievanceReviewCard({
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => generateLandownerNoticePdf(buildLandownerNoticeData(cmp))}
-                        className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#FFF8E6] dark:bg-amber-950/50 border border-[#FFE29A] dark:border-amber-800 text-[#B36B00] dark:text-amber-300 hover:bg-[#FEEFC3] transition-colors flex items-center gap-1.5"
+                        className="px-3 py-1.5 rounded text-xs font-bold bg-[#FFF8E6] dark:bg-amber-950/50 border border-[#FFE29A] dark:border-amber-800 text-[#B36B00] dark:text-amber-300 hover:bg-[#FEEFC3] transition-colors flex items-center gap-1.5 shadow-xs"
                         title="Download Official Statutory Resolution Notice (PDF)"
                       >
                         <Download className="w-3.5 h-3.5" />
@@ -694,7 +694,7 @@ export function LandownerGrievanceReviewCard({
 
                       <button
                         onClick={() => generateCaseReportPdf(buildCaseReportData(cmp))}
-                        className="px-3 py-1.5 rounded-[3px] text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/50 border border-[#BDD7EE] dark:border-sky-800 text-[#0B5FA5] dark:text-sky-300 hover:bg-[#D4E6F8] transition-colors flex items-center gap-1.5"
+                        className="px-3 py-1.5 rounded text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/50 border border-[#BDD7EE] dark:border-sky-800 text-[#0B5FA5] dark:text-sky-300 hover:bg-[#D4E6F8] transition-colors flex items-center gap-1.5 shadow-xs"
                         title="Download Complete Case Report (PDF)"
                       >
                         <Download className="w-3.5 h-3.5" />

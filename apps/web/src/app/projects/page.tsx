@@ -33,9 +33,9 @@ export default function ProjectsPage() {
     <div className="space-y-6">
       
       {/* Official Government Portfolio Banner */}
-      <div className="p-3 rounded-[4px] bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 flex items-center justify-between flex-wrap gap-2 shadow-sm transition-colors">
+      <div className="p-3 rounded-md bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 flex items-center justify-between flex-wrap gap-2 shadow-xs transition-colors">
         <div className="flex items-center gap-2.5">
-          <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-[3px] bg-[#0B2E59] text-white uppercase tracking-wider">
+          <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded bg-[#0B2E59] text-white uppercase tracking-wider">
             NATIONAL INFRASTRUCTURE PORTFOLIO
           </span>
           <span className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF]">
@@ -51,7 +51,7 @@ export default function ProjectsPage() {
       <div className="flex items-center justify-between flex-wrap gap-4 border-b border-[#DCE2E8] dark:border-white/10 pb-4">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/50 text-[#0B5FA5] dark:text-sky-400 border border-[#BDD7EE] dark:border-sky-800">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#E6F0FA] dark:bg-sky-950/50 text-[#0B5FA5] dark:text-sky-400 border border-[#BDD7EE] dark:border-sky-800">
               {projects.length} National Corridors
             </span>
             <span className="text-xs text-[#64748B] dark:text-slate-400 font-mono">
@@ -68,7 +68,7 @@ export default function ProjectsPage() {
 
         <Link
           href="/projects/gis"
-          className="btn-primary px-3.5 py-2 text-xs flex items-center gap-1.5"
+          className="btn-primary px-3.5 py-2 text-xs flex items-center gap-1.5 rounded"
         >
           <Navigation className="w-3.5 h-3.5" />
           <span>Open Project Spatial Map</span>
@@ -77,7 +77,7 @@ export default function ProjectsPage() {
 
       {/* Summary KPI Cards - Form Ledger Style */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B2E59] dark:border-sky-500">
+        <div className="p-3 bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-xs border-b-2 border-b-[#0B2E59] dark:border-b-sky-500">
           <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Total Length</div>
           <div className="text-2xl font-extrabold text-[#14213D] dark:text-[#F0F4FF] mt-1 font-mono">
             {totalLength.toFixed(1)} <span className="text-xs font-medium text-[#64748B]">km</span>
@@ -85,7 +85,7 @@ export default function ProjectsPage() {
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Linear corridor alignments</div>
         </div>
 
-        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B5FA5] dark:border-sky-400">
+        <div className="p-3 bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-xs border-b-2 border-b-[#0B5FA5] dark:border-b-sky-400">
           <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Planned Acquisition</div>
           <div className="text-2xl font-extrabold text-[#0B5FA5] dark:text-sky-400 mt-1 font-mono">
             {totalPlannedAcq.toLocaleString()} <span className="text-xs font-medium text-[#64748B]">Ha</span>
@@ -93,7 +93,7 @@ export default function ProjectsPage() {
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">Across 6 strategic sectors</div>
         </div>
 
-        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34]">
+        <div className="p-3 bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-xs border-b-2 border-b-[#1E7E34]">
           <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Acquired to Date</div>
           <div className="text-2xl font-extrabold text-[#1E7E34] dark:text-emerald-400 mt-1 font-mono">
             {totalAcquired.toLocaleString()} <span className="text-xs font-medium text-[#64748B]">Ha</span>
@@ -101,7 +101,7 @@ export default function ProjectsPage() {
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1">{avgProgress}% Portfolio throughput</div>
         </div>
 
-        <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B36B00]">
+        <div className="p-3 bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-xs border-b-2 border-b-[#B36B00]">
           <div className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-bold tracking-wider">Macro Bottlenecks</div>
           <div className="text-2xl font-extrabold text-[#B36B00] dark:text-amber-400 mt-1 font-mono">
             {projects.reduce((s, p) => s + p.statistics.unresolved_bottlenecks, 0)}
@@ -117,15 +117,15 @@ export default function ProjectsPage() {
           return (
             <div
               key={p.id}
-              className="p-4 rounded-none bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 shadow-none flex flex-col justify-between gap-3.5 transition-colors"
+              className="p-4 rounded-md bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 shadow-xs flex flex-col justify-between gap-3.5 transition-colors"
             >
               <div>
                 {/* Sector and Status */}
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-[#E6F0FA] dark:bg-sky-950/50 text-[#0B5FA5] dark:text-sky-400 border border-[#BDD7EE] dark:border-sky-800">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#E6F0FA] dark:bg-sky-950/50 text-[#0B5FA5] dark:text-sky-400 border border-[#BDD7EE] dark:border-sky-800">
                     {p.sector.toUpperCase()}
                   </span>
-                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-[3px] border ${
+                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
                     p.status === 'DELAYED'
                       ? 'bg-[#FFF8E6] text-[#B36B00] border-[#FFE29A] dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800'
                       : p.status === 'CRITICAL_BLOCKER'
@@ -145,7 +145,7 @@ export default function ProjectsPage() {
                 </div>
 
                 {/* Department */}
-                <div className="text-[11px] text-[#333333] dark:text-slate-300 bg-[#F1F4F7] dark:bg-[#07080F] px-2.5 py-1.5 rounded-[3px] border border-[#DCE2E8] dark:border-white/10 mb-3">
+                <div className="text-[11px] text-[#333333] dark:text-slate-300 bg-[#F1F4F7] dark:bg-[#07080F] px-2.5 py-1.5 rounded border border-[#DCE2E8] dark:border-white/10 mb-3">
                   {p.department}
                 </div>
 
@@ -157,7 +157,7 @@ export default function ProjectsPage() {
                       {p.acquisition_progress_pct}%
                     </span>
                   </div>
-                  <div className="h-2 rounded-[2px] bg-[#F1F4F7] dark:bg-slate-800 overflow-hidden">
+                  <div className="h-2 rounded bg-[#F1F4F7] dark:bg-slate-800 overflow-hidden">
                     <div
                       className="h-full bg-[#1E7E34] dark:bg-emerald-500 rounded-[2px]"
                       style={{ width: `${p.acquisition_progress_pct}%` }}

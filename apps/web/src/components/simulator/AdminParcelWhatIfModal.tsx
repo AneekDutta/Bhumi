@@ -135,7 +135,7 @@ export function AdminParcelWhatIfModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-fade-in">
-      <div className="relative w-full max-w-4xl max-h-[92vh] flex flex-col bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] shadow-2xl overflow-hidden text-slate-900 dark:text-slate-100">
+      <div className="relative w-full max-w-4xl max-h-[92vh] flex flex-col bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-2xl overflow-hidden text-slate-900 dark:text-slate-100">
         
         {/* National Tricolor Top Stripe */}
         <div className="h-[3px] w-full bg-gradient-to-r from-[#FF9933] via-[#FFFFFF] to-[#128807]" />
@@ -143,13 +143,13 @@ export function AdminParcelWhatIfModal({
         {/* Header */}
         <div className="px-5 py-3.5 border-b border-[#DCE2E8] dark:border-white/10 bg-[#0B2E59] text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-none bg-white/15 border border-white/20 flex items-center justify-center text-white">
+            <div className="w-8 h-8 rounded bg-white/15 border border-white/20 flex items-center justify-center text-white">
               <Scale className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-sm font-bold text-white tracking-wide">Statutory What-If Counterfactual Simulator</h2>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-[2px] bg-white/20 text-white font-bold border border-white/30">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/20 text-white font-bold border border-white/30">
                   RFCTLARR 2013
                 </span>
               </div>
@@ -161,7 +161,7 @@ export function AdminParcelWhatIfModal({
           <button 
             type="button" 
             onClick={onClose}
-            className="p-1 rounded-[3px] text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-1 rounded text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -172,7 +172,7 @@ export function AdminParcelWhatIfModal({
 
           {/* Insufficient Data Alert */}
           {!hasSufficientData && (
-            <div className="p-3.5 rounded-[4px] bg-[#FFF8E1] dark:bg-amber-950/40 border border-[#FFE082] dark:border-amber-800/50 text-[#B36B00] dark:text-amber-200 text-xs flex items-center gap-2.5">
+            <div className="p-3.5 rounded-md bg-[#FFF8E1] dark:bg-amber-950/40 border border-[#FFE082] dark:border-amber-800/50 text-[#B36B00] dark:text-amber-200 text-xs flex items-center gap-2.5">
               <AlertTriangle className="w-5 h-5 flex-shrink-0 text-[#B36B00] dark:text-amber-400" />
               <div>
                 <span className="font-bold uppercase tracking-wider block text-[11px]">Insufficient data for simulation</span>
@@ -182,9 +182,9 @@ export function AdminParcelWhatIfModal({
           )}
 
           {/* Real Cadastral Geometry Banner */}
-          <div className="p-3.5 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs flex flex-wrap items-center justify-between gap-4">
+          <div className="p-3.5 rounded-md bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-[3px] bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300">
+              <div className="p-2 rounded bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300">
                 <Layers className="w-4 h-4" />
               </div>
               <div>
@@ -202,7 +202,7 @@ export function AdminParcelWhatIfModal({
                   type="number"
                   value={baseRatePerSqm}
                   onChange={(e) => setBaseRatePerSqm(Number(e.target.value) || 100)}
-                  className="w-24 px-2 py-1 rounded-[3px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/15 text-xs font-mono text-slate-900 dark:text-white text-right focus:border-[#0B2E59] outline-none"
+                  className="w-24 px-2 py-1 rounded bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/15 text-xs font-mono text-slate-900 dark:text-white text-right focus:border-[#0B2E59] outline-none"
                 />
               </div>
               <div>
@@ -210,7 +210,7 @@ export function AdminParcelWhatIfModal({
                 <select 
                   value={ruralMultiplier}
                   onChange={(e) => setRuralMultiplier(Number(e.target.value))}
-                  className="px-2 py-1 rounded-[3px] bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/15 text-xs font-mono text-slate-900 dark:text-white focus:border-[#0B2E59] outline-none"
+                  className="px-2 py-1 rounded bg-white dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/15 text-xs font-mono text-slate-900 dark:text-white focus:border-[#0B2E59] outline-none"
                 >
                   <option value={1.0}>1.00x (Urban)</option>
                   <option value={1.25}>1.25x (Peri-Urban)</option>
@@ -235,7 +235,7 @@ export function AdminParcelWhatIfModal({
                     key={interv.id}
                     type="button"
                     onClick={() => setSelectedInterventionId(interv.id)}
-                    className={`p-3 rounded-[4px] border text-left transition-all cursor-pointer flex flex-col justify-between shadow-xs ${
+                    className={`p-3 rounded-md border text-left transition-all cursor-pointer flex flex-col justify-between shadow-xs ${
                       isSelected 
                         ? "bg-[#E6F0FA] dark:bg-sky-950/40 border-[#0B2E59] dark:border-sky-500 ring-1 ring-[#0B2E59] dark:ring-sky-500" 
                         : "bg-white dark:bg-[#0D121F] border-[#DCE2E8] dark:border-white/10 hover:border-[#0B2E59]/40 hover:bg-[#F8FAFC] dark:hover:bg-white/5"
@@ -270,12 +270,12 @@ export function AdminParcelWhatIfModal({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
               
               {/* BEFORE INTERVENTION */}
-              <div className="p-3.5 rounded-[4px] bg-[#FFEBEE]/60 dark:bg-rose-950/20 border border-[#FFCDD2] dark:border-rose-800/40 space-y-2.5">
+              <div className="p-3.5 rounded-md bg-[#FFEBEE]/60 dark:bg-rose-950/20 border border-[#FFCDD2] dark:border-rose-800/40 space-y-2.5">
                 <div className="flex items-center justify-between pb-2 border-b border-[#FFCDD2] dark:border-rose-800/40">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#B32424] dark:text-rose-400 flex items-center gap-1.5">
                     <AlertTriangle className="w-3.5 h-3.5 text-[#B32424] dark:text-rose-400" /> Before Intervention
                   </span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-[2px] bg-[#FFCDD2] dark:bg-rose-900/60 text-[#B32424] dark:text-rose-200 font-bold">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#FFCDD2] dark:bg-rose-900/60 text-[#B32424] dark:text-rose-200 font-bold">
                     CRITICAL BOTTLENECK
                   </span>
                 </div>
@@ -295,22 +295,22 @@ export function AdminParcelWhatIfModal({
                   </div>
                   <div className="flex justify-between items-center py-1">
                     <span className="text-slate-600 dark:text-slate-400">Site Possession:</span>
-                    <span className="font-semibold text-[#B32424] dark:text-rose-400">Possession Blocked</span>
+                    <span className="font-semibold text-[#B36B00] dark:text-rose-400">Possession Blocked</span>
                   </div>
                 </div>
 
-                <div className="p-2 rounded-[3px] bg-white/70 dark:bg-rose-950/40 text-[11px] text-[#B32424] dark:text-rose-300 leading-relaxed border border-[#FFCDD2] dark:border-rose-800/30">
+                <div className="p-2 rounded bg-white/70 dark:bg-rose-950/40 text-[11px] text-[#B32424] dark:text-rose-300 leading-relaxed border border-[#FFCDD2] dark:border-rose-800/30">
                   Contested cadastral demarcation stalls contractor mobilization and increases escalation liability by ₹1.2L per week.
                 </div>
               </div>
 
               {/* AFTER INTERVENTION */}
-              <div className="p-3.5 rounded-[4px] bg-[#E8F5E9]/60 dark:bg-emerald-950/20 border border-[#C8E6C9] dark:border-emerald-800/40 space-y-2.5">
+              <div className="p-3.5 rounded-md bg-[#E8F5E9]/60 dark:bg-emerald-950/20 border border-[#C8E6C9] dark:border-emerald-800/40 space-y-2.5">
                 <div className="flex items-center justify-between pb-2 border-b border-[#C8E6C9] dark:border-emerald-800/40">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#1E7E34] dark:text-emerald-400 flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#1E7E34] dark:text-emerald-400" /> After Intervention
                   </span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-[2px] bg-[#C8E6C9] dark:bg-emerald-900/60 text-[#1E7E34] dark:text-emerald-200 font-bold">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#C8E6C9] dark:bg-emerald-900/60 text-[#1E7E34] dark:text-emerald-200 font-bold">
                     ORDER INITIATED
                   </span>
                 </div>
@@ -336,7 +336,7 @@ export function AdminParcelWhatIfModal({
                   </div>
                 </div>
 
-                <div className="p-2 rounded-[3px] bg-white/70 dark:bg-emerald-950/40 text-[11px] text-[#1E7E34] dark:text-emerald-300 leading-relaxed border border-[#C8E6C9] dark:border-emerald-800/30">
+                <div className="p-2 rounded bg-white/70 dark:bg-emerald-950/40 text-[11px] text-[#1E7E34] dark:text-emerald-300 leading-relaxed border border-[#C8E6C9] dark:border-emerald-800/30">
                   Execution of {activeIntervention.name} resolves statutory grievance and unblocks project alignment within {activeIntervention.processingDays} days.
                 </div>
               </div>
@@ -345,7 +345,7 @@ export function AdminParcelWhatIfModal({
           </div>
 
           {/* Statutory Compensation Breakdown Table */}
-          <div className="p-3.5 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs">
+          <div className="p-3.5 rounded-md bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs">
             <div className="text-xs font-bold uppercase tracking-wider text-[#0B2E59] dark:text-slate-300 mb-2 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <IndianRupee className="w-3.5 h-3.5 text-[#B36B00] dark:text-amber-400" />
@@ -355,22 +355,22 @@ export function AdminParcelWhatIfModal({
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs pt-1.5">
-              <div className="p-2.5 rounded-[3px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+              <div className="p-2.5 rounded bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
                 <span className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-mono block">Base Market Value</span>
                 <span className="font-mono font-bold text-slate-900 dark:text-white text-sm">₹{baseMarketValue.toLocaleString()}</span>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">{areaSqm.toLocaleString()} m² × ₹{baseRatePerSqm}</span>
               </div>
-              <div className="p-2.5 rounded-[3px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+              <div className="p-2.5 rounded bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
                 <span className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-mono block">Multiplied Base (§ 26(2))</span>
                 <span className="font-mono font-bold text-slate-900 dark:text-white text-sm">₹{multipliedMarketValue.toLocaleString()}</span>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">Factor {ruralMultiplier}x</span>
               </div>
-              <div className="p-2.5 rounded-[3px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
+              <div className="p-2.5 rounded bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10">
                 <span className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-mono block">100% Solatium (§ 30(1))</span>
                 <span className="font-mono font-bold text-[#0B2E59] dark:text-sky-300 text-sm">₹{solatium100Pct.toLocaleString()}</span>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">Statutory 100% solatium</span>
               </div>
-              <div className="p-2.5 rounded-[3px] bg-[#E8F5E9] dark:bg-emerald-950/30 border border-[#C8E6C9] dark:border-emerald-800/40">
+              <div className="p-2.5 rounded bg-[#E8F5E9] dark:bg-emerald-950/30 border border-[#C8E6C9] dark:border-emerald-800/40">
                 <span className="text-[#1E7E34] dark:text-emerald-300 text-[10px] uppercase font-mono block font-bold">Total Statutory Award</span>
                 <span className="font-mono font-extrabold text-[#1E7E34] dark:text-emerald-400 text-sm">₹{totalStatutoryCompensation.toLocaleString()}</span>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">Incl. 12% additional statutory amount (§ 30(3))</span>
@@ -431,7 +431,7 @@ export function AdminParcelWhatIfModal({
                   onClose();
                 }}
                 disabled={!hasSufficientData}
-                className="px-3.5 py-1.5 rounded-none bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs flex items-center gap-1.5 shadow-none transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3.5 py-1.5 rounded bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Scale className="w-3.5 h-3.5 text-sky-200" />
                 <span>Save Simulation &amp; Generate Report</span>
@@ -451,7 +451,7 @@ export function AdminParcelWhatIfModal({
                   });
                   onClose();
                 }}
-                className="px-3.5 py-1.5 rounded-[4px] bg-[#1E7E34] hover:bg-[#166527] text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3.5 py-1.5 rounded bg-[#1E7E34] hover:bg-[#166527] text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span>Apply Simulation Scenario</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -467,7 +467,7 @@ export function AdminParcelWhatIfModal({
                   onInitiate(target.id || target.complaint_id, notes);
                   onClose();
                 }}
-                className="px-3.5 py-1.5 rounded-[4px] bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-slate-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-[#DCE2E8] dark:border-white/15 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3.5 py-1.5 rounded bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-slate-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-[#DCE2E8] dark:border-white/15 disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
               >
                 <span>Initiate Implementation</span>
                 <ArrowRight className="w-3.5 h-3.5" />

@@ -205,7 +205,7 @@ export default function FieldSyncPage() {
 
         {/* Sync Result Banner */}
         {syncResult && (
-          <div className={`p-3 rounded-none border text-xs flex items-start gap-2.5 ${
+          <div className={`p-3 rounded-md shadow-xs border text-xs flex items-start gap-2.5 ${
             syncResult.failed === 0
               ? "bg-[#E8F5E9] dark:bg-emerald-950/30 border-[#C8E6C9] dark:border-emerald-500/40 text-[#1E7E34] dark:text-emerald-300"
               : "bg-[#FFF8E1] dark:bg-amber-950/30 border-[#FFE082] dark:border-amber-500/40 text-[#B36B00] dark:text-amber-300"

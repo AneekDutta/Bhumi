@@ -249,7 +249,7 @@ export default function SpatialIntelligencePage() {
                   <div className="pt-1">
                     <Link
                       href={`/projects/${projectId}/impact`}
-                      className="w-full flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-none bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold shadow-none transition-all"
+                      className="w-full flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-bold shadow-xs transition-all"
                     >
                       <Scale className="w-3.5 h-3.5" />
                       <span>Launch What-If Intervention</span>

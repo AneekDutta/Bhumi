@@ -74,35 +74,23 @@ function LoginPageContent() {
   }, [searchParams]);
 
   // Instant Officer Demo Login
-  const handleInstantDemoLogin = async () => {
+  const handleInstantDemoLogin = () => {
     setLoading(true);
     setErrorMsg(null);
     setSuccessMsg("Security clearance accepted for CALA Officer. Loading National Operations Console...");
-
-    // Establish canonical Supabase JWT session for protected API access
-    try {
-      await supabase.auth.signInWithPassword({
-        email: "officer@kosh.sih2026.org",
-        password: "CommanderPass@2025",
-      });
-    } catch (e) {
-      console.warn("Supabase auth fallback:", e);
-    }
 
     // Establish official CALA Officer session cookie
     const sessionData = {
       officer_id: "OFF-CALA-01",
       name: "Sh. Rajesh Kumar",
-      email: "officer@kosh.sih2026.org",
+      email: "officer@bhumi.gov.in",
       role: "ADMIN",
     };
 
-    const cookieVal = encodeURIComponent(JSON.stringify(sessionData));
-    document.cookie = "kosh_user_role=ADMIN; path=/; max-age=604800; SameSite=Lax";
     document.cookie = "bhumi_user_role=ADMIN; path=/; max-age=604800; SameSite=Lax";
-    document.cookie = `kosh_officer_session=${cookieVal}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
-    document.cookie = `bhumi_officer_session=${cookieVal}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
-    document.cookie = "kosh_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+    document.cookie = `bhumi_officer_session=${encodeURIComponent(
+      JSON.stringify(sessionData)
+    )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
     document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
     setTimeout(() => {
@@ -119,11 +107,17 @@ function LoginPageContent() {
     setLoading(true);
 
     let loginEmail = emailOrId.trim();
-    const lower = loginEmail.toLowerCase();
-    if (lower === "off-cala-01" || lower === "officer" || lower === "officer@kosh.gov.in" || lower === "officer@bhumi.gov.in") {
-      loginEmail = "officer@kosh.sih2026.org";
-    } else if (!loginEmail.includes("@")) {
-      loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@kosh.sih2026.org`;
+    if (!loginEmail.includes("@")) {
+      loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@bhumi.gov.in`;
+    }
+
+    // Auto-fallback for demo officer credentials
+    if (
+      loginEmail.toLowerCase() === "officer@bhumi.gov.in" &&
+      password === "CommanderPass@2025"
+    ) {
+      handleInstantDemoLogin();
+      return;
     }
 
     try {
@@ -134,8 +128,8 @@ function LoginPageContent() {
 
       if (error) {
         // Fallback for officer demo ID
-        if (loginEmail.toLowerCase() === "officer@kosh.sih2026.org") {
-          await handleInstantDemoLogin();
+        if (loginEmail.toLowerCase() === "officer@bhumi.gov.in") {
+          handleInstantDemoLogin();
           return;
         }
 
@@ -158,7 +152,6 @@ function LoginPageContent() {
         const role = (data.user?.user_metadata?.role as string)?.toUpperCase() || "ADMIN";
         setSuccessMsg("Security clearance accepted. Loading operational console...");
 
-        document.cookie = `kosh_user_role=${role}; path=/; max-age=604800; SameSite=Lax`;
         document.cookie = `bhumi_user_role=${role}; path=/; max-age=604800; SameSite=Lax`;
 
         if (role === "LANDOWNER") {
@@ -168,10 +161,7 @@ function LoginPageContent() {
             email: data.user.email,
             role: "LANDOWNER",
           };
-          const loVal = encodeURIComponent(JSON.stringify(sessionPayload));
-          document.cookie = `kosh_landowner_session=${loVal}; path=/; max-age=604800; SameSite=Lax`;
-          document.cookie = `bhumi_landowner_session=${loVal}; path=/; max-age=604800; SameSite=Lax`;
-          document.cookie = "kosh_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+          document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=604800; SameSite=Lax`;
           document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
         } else {
           const sessionData = {
@@ -180,10 +170,7 @@ function LoginPageContent() {
             email: data.user.email,
             role: role,
           };
-          const offVal = encodeURIComponent(JSON.stringify(sessionData));
-          document.cookie = `kosh_officer_session=${offVal}; path=/; max-age=604800; SameSite=Lax`;
-          document.cookie = `bhumi_officer_session=${offVal}; path=/; max-age=604800; SameSite=Lax`;
-          document.cookie = "kosh_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+          document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(sessionData))}; path=/; max-age=604800; SameSite=Lax`;
           document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
         }
 
@@ -212,7 +199,7 @@ function LoginPageContent() {
 
     let resetEmail = emailOrId.trim();
     if (!resetEmail.includes("@")) {
-      resetEmail = `${resetEmail.toLowerCase().replace(/\s+/g, "")}@kosh.sih2026.org`;
+      resetEmail = `${resetEmail.toLowerCase().replace(/\s+/g, "")}@bhumi.gov.in`;
     }
 
     try {
@@ -272,7 +259,7 @@ function LoginPageContent() {
 
   // Quick fill helper for demonstration
   const handleQuickFill = () => {
-    setEmailOrId("officer@kosh.sih2026.org");
+    setEmailOrId("officer@bhumi.gov.in");
     setPassword("CommanderPass@2025");
     setCaptchaInput(captchaCode.replace(/\s+/g, ""));
     setErrorMsg(null);
@@ -289,15 +276,15 @@ function LoginPageContent() {
           
           {/* Section Heading with Thin Rule */}
           <div className="border-b border-[#DCE2E8] dark:border-white/10 pb-3">
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-none bg-[#0B2E59]/10 dark:bg-white/10 text-[#0B2E59] dark:text-sky-300 font-mono text-[11px] font-bold mb-2">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#0B2E59]/10 dark:bg-white/10 text-[#0B2E59] dark:text-sky-300 font-mono text-[11px] font-bold mb-2">
               <Shield className="w-3.5 h-3.5" />
-              <span>SIH26016 · DEMONSTRATION AUTHENTICATION GATEWAY</span>
+              <span>CENTRAL ADMINISTRATIVE AUTHENTICATION GATEWAY</span>
             </div>
             <h1 className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] leading-tight">
-              KOSH — SIH26016 · Land Acquisition Decision Support Prototype
+              Real-Time National Land Acquisition &amp; Decision Support System
             </h1>
             <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1 leading-relaxed">
-              Academic decision-support prototype modeling corridor workflows for MoRTH, NHAI, District CALAs, Field Surveyors, and Landowners under the RFCTLARR Act 2013 &amp; NH Act 1956.
+              Unified digital infrastructure connecting the Ministry of Road Transport &amp; Highways, National Highways Authority of India (NHAI), District CALAs, Field Surveyors, and Affected Landowners under the RFCTLARR Act 2013 &amp; NH Act 1956.
             </p>
           </div>
 
@@ -310,9 +297,9 @@ function LoginPageContent() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               
               {/* Card 1: CALA Officer Console (Active) */}
-              <div className="bg-white dark:bg-[#0B1220] border-2 border-[#0B5FA5] dark:border-sky-500 p-3.5 rounded-none relative">
+              <div className="bg-white dark:bg-[#0B1220] border-2 border-[#0B5FA5] dark:border-sky-500 p-3.5 rounded-md shadow-xs relative">
                 <div className="absolute top-2 right-2">
-                  <span className="text-[9px] font-mono font-bold bg-[#0B5FA5] text-white px-1.5 py-0.5 rounded-none">
+                  <span className="text-[9px] font-mono font-bold bg-[#0B5FA5] text-white px-1.5 py-0.5 rounded">
                     ACTIVE
                   </span>
                 </div>
@@ -331,7 +318,7 @@ function LoginPageContent() {
               {/* Card 2: Field Officer Mobile App */}
               <Link 
                 href="/field/login"
-                className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 hover:border-[#1E7E34] dark:hover:border-emerald-500 p-3.5 rounded-none transition-all group block"
+                className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 hover:border-[#1E7E34] dark:hover:border-emerald-500 p-3.5 rounded-md shadow-xs transition-all group block"
               >
                 <Smartphone className="w-5 h-5 text-[#1E7E34] dark:text-emerald-400 mb-2" />
                 <h3 className="font-bold text-xs text-[#14213D] dark:text-white group-hover:text-[#1E7E34] dark:group-hover:text-emerald-400">
@@ -349,14 +336,14 @@ function LoginPageContent() {
               {/* Card 3: Citizen / Landowner Portal */}
               <Link 
                 href="/landowner/login"
-                className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 hover:border-[#B36B00] dark:hover:border-amber-500 p-3.5 rounded-none transition-all group block"
+                className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 hover:border-[#B36B00] dark:hover:border-amber-500 p-3.5 rounded-md shadow-xs transition-all group block"
               >
                 <Scale className="w-5 h-5 text-[#B36B00] dark:text-amber-400 mb-2" />
                 <h3 className="font-bold text-xs text-[#14213D] dark:text-white group-hover:text-[#B36B00] dark:group-hover:text-amber-400">
                   Citizen Landowner Portal
                 </h3>
                 <p className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1 leading-relaxed">
-                  KOSH Samvaad citizen interface for checking compensation awards, lodging statutory objections, and tracking DBT disbursals.
+                  Bhumi Samvaad citizen interface for checking compensation awards, lodging statutory objections, and tracking DBT disbursals.
                 </p>
                 <div className="mt-2.5 text-[10px] font-bold text-[#B36B00] dark:text-amber-400 flex items-center gap-1">
                   <span>Switch to Citizen Portal</span>
@@ -368,21 +355,21 @@ function LoginPageContent() {
           </div>
 
           {/* Statutory Compliance Guidelines */}
-          <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 rounded-none space-y-3">
+          <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 rounded-md shadow-xs space-y-3">
             <h3 className="text-xs font-bold text-[#14213D] dark:text-white flex items-center gap-2">
               <FileText className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
               <span>Statutory Mandate &amp; Legal Framework</span>
             </h3>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-[#475569] dark:text-slate-300">
-              <div className="p-2.5 bg-slate-50 dark:bg-white/5 border-l-2 border-[#0B2E59] dark:border-sky-400 space-y-1">
+              <div className="p-2.5 bg-slate-50 dark:bg-white/5 border-l-2 border-[#0B2E59] dark:border-sky-400 rounded-r space-y-1">
                 <span className="font-bold text-[#14213D] dark:text-white">National Highways Act, 1956</span>
                 <p className="leading-relaxed">
                   Statutory gazette lifecycle governance: Section 3A (Intention to acquire), 3C (Objection hearings), 3D (Declaration of acquisition), and 3G/3H (Award determination and deposit).
                 </p>
               </div>
 
-              <div className="p-2.5 bg-slate-50 dark:bg-white/5 border-l-2 border-[#1E7E34] dark:border-emerald-400 space-y-1">
+              <div className="p-2.5 bg-slate-50 dark:bg-white/5 border-l-2 border-[#1E7E34] dark:border-emerald-400 rounded-r space-y-1">
                 <span className="font-bold text-[#14213D] dark:text-white">RFCTLARR Act, 2013</span>
                 <p className="leading-relaxed">
                   Mandatory calculation of 100% Solatium, rural factor multipliers (1.5x - 2.0x), 12% additional interest per annum, and Rehabilitation &amp; Resettlement entitlements.
@@ -392,7 +379,7 @@ function LoginPageContent() {
           </div>
 
           {/* Security & Access Instructions */}
-          <div className="p-3.5 bg-[#FFFBEB] dark:bg-amber-950/30 border border-[#FDE68A] dark:border-amber-800 rounded-none text-xs space-y-1.5">
+          <div className="p-3.5 bg-[#FFFBEB] dark:bg-amber-950/30 border border-[#FDE68A] dark:border-amber-800 rounded-md shadow-xs text-xs space-y-1.5">
             <div className="font-bold text-[#92400E] dark:text-amber-300 flex items-center gap-1.5 text-xs">
               <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
               <span>Official Access Advisory for CALA Officers</span>
@@ -409,7 +396,7 @@ function LoginPageContent() {
         {/* ======================================================================= */}
         <div className="lg:col-span-5 space-y-4">
           
-          <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-none shadow-none overflow-hidden transition-colors">
+          <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 rounded-md shadow-xs overflow-hidden transition-colors">
             
             {/* Card Navy Header Bar */}
             <div className="bg-[#0B2E59] text-white p-4 flex items-center justify-between border-b border-[#0A2647]">
@@ -421,7 +408,7 @@ function LoginPageContent() {
                   CALA Directorate / Authorized Project Officers
                 </span>
               </div>
-              <div className="flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-none bg-white/10 text-slate-200 border border-white/20">
+              <div className="flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-slate-200 border border-white/20">
                 <Lock className="w-3 h-3 text-emerald-400" />
                 <span>CALA SECURED · STATUTORY PROTOCOL</span>
               </div>
@@ -432,34 +419,34 @@ function LoginPageContent() {
               
               {/* Feedback messages */}
               {sessionExpired && (
-                <div className="p-2.5 rounded-none bg-[#FFF8E6] dark:bg-amber-950/40 border border-[#FFE29A] dark:border-amber-800 text-[#B36B00] dark:text-amber-300 text-xs flex items-start gap-2">
+                <div className="p-2.5 rounded bg-[#FFF8E6] dark:bg-amber-950/40 border border-[#FFE29A] dark:border-amber-800 text-[#B36B00] dark:text-amber-300 text-xs flex items-start gap-2">
                   <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                   <span>Session timed out. Please re-authenticate.</span>
                 </div>
               )}
 
               {errorMsg && (
-                <div className="p-2.5 rounded-none bg-[#FDF0F0] dark:bg-rose-950/40 border border-[#F8C8C8] dark:border-rose-800 text-[#B32424] dark:text-rose-300 text-xs flex items-start gap-2">
+                <div className="p-2.5 rounded bg-[#FDF0F0] dark:bg-rose-950/40 border border-[#F8C8C8] dark:border-rose-800 text-[#B32424] dark:text-rose-300 text-xs flex items-start gap-2">
                   <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                   <span>{errorMsg}</span>
                 </div>
               )}
 
               {successMsg && (
-                <div className="p-2.5 rounded-none bg-[#EBF7EE] dark:bg-emerald-950/40 border border-[#BEE3C8] dark:border-emerald-800 text-[#1E7E34] dark:text-emerald-300 text-xs flex items-start gap-2">
+                <div className="p-2.5 rounded bg-[#EBF7EE] dark:bg-emerald-950/40 border border-[#BEE3C8] dark:border-emerald-800 text-[#1E7E34] dark:text-emerald-300 text-xs flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
                   <span>{successMsg}</span>
                 </div>
               )}
 
               {/* CALA Official Evaluation Clearance Box (Pure Gov Ledger Style) */}
-              <div className="bg-[#F1F6FB] dark:bg-[#0B2546] border border-[#B3D4F5] dark:border-sky-800 p-3 rounded-none text-xs">
+              <div className="bg-[#F1F6FB] dark:bg-[#0B2546] border border-[#B3D4F5] dark:border-sky-800 p-3 rounded-md shadow-xs text-xs">
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-bold text-[#0B2E59] dark:text-sky-300 flex items-center gap-1.5 text-xs">
                     <Shield className="w-3.5 h-3.5 text-[#0B5FA5]" />
                     CALA Officer Evaluation Clearance
                   </span>
-                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-none bg-[#0B2E59] text-white font-semibold">
+                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#0B2E59] text-white font-semibold">
                     OFFICIAL
                   </span>
                 </div>
@@ -470,7 +457,7 @@ function LoginPageContent() {
                   type="button"
                   onClick={handleInstantDemoLogin}
                   disabled={loading}
-                  className="w-full bg-[#0B5FA5] hover:bg-[#094d87] text-white py-2 px-3 rounded-none font-bold text-xs flex items-center justify-center gap-2 transition-colors border border-[#084880]"
+                  className="w-full bg-[#0B5FA5] hover:bg-[#094d87] text-white py-2 px-3 rounded shadow-xs font-bold text-xs flex items-center justify-center gap-2 transition-colors border border-[#084880]"
                 >
                   <KeyRound className="w-3.5 h-3.5 text-amber-300" />
                   <span>Authorized CALA Officer Evaluation Access</span>
@@ -500,9 +487,9 @@ function LoginPageContent() {
                       required
                       value={emailOrId}
                       onChange={(e) => setEmailOrId(e.target.value)}
-                      placeholder="e.g. officer@kosh.sih2026.org"
+                      placeholder="e.g. officer@bhumi.gov.in"
                       disabled={loading}
-                      className="input w-full bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded-none"
+                      className="input w-full bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                     />
                   </div>
 
@@ -520,7 +507,7 @@ function LoginPageContent() {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter password"
                         disabled={loading}
-                        className="input w-full pr-9 bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded-none"
+                        className="input w-full pr-9 bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                       />
                       <button
                         type="button"
@@ -539,14 +526,14 @@ function LoginPageContent() {
                       Security Code (CAPTCHA) <span className="text-[#B32424] dark:text-rose-400">*</span>
                     </label>
                     <div className="flex items-center gap-2 mb-1.5">
-                      <div className="bg-[#F1F4F7] dark:bg-[#0A2647] border border-[#CBD5E1] dark:border-slate-700 px-4 py-2 font-mono font-bold text-base tracking-[0.25em] text-[#0B2E59] dark:text-amber-300 select-none rounded-none">
+                      <div className="bg-[#F1F4F7] dark:bg-[#0A2647] border border-[#CBD5E1] dark:border-slate-700 px-4 py-2 font-mono font-bold text-base tracking-[0.25em] text-[#0B2E59] dark:text-amber-300 select-none rounded">
                         {captchaCode}
                       </div>
                       <button
                         type="button"
                         onClick={refreshCaptcha}
                         title="Change CAPTCHA image"
-                        className="p-2 rounded-none border border-[#CBD5E1] dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 transition-colors"
+                        className="p-2 rounded border border-[#CBD5E1] dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 transition-colors"
                       >
                         <RefreshCw className="w-4 h-4" />
                       </button>
@@ -557,7 +544,7 @@ function LoginPageContent() {
                       value={captchaInput}
                       onChange={(e) => setCaptchaInput(e.target.value)}
                       placeholder="Enter the characters shown above"
-                      className="input w-full bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded-none"
+                      className="input w-full bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                     />
                   </div>
 
@@ -567,7 +554,7 @@ function LoginPageContent() {
                         type="checkbox"
                         checked={rememberDevice}
                         onChange={(e) => setRememberDevice(e.target.checked)}
-                        className="rounded-none text-[#0B2E59]"
+                        className="rounded text-[#0B2E59]"
                       />
                       <span className="text-[11px] text-[#64748B] dark:text-slate-400">Remember Officer ID</span>
                     </label>
@@ -584,7 +571,7 @@ function LoginPageContent() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="btn-primary w-full py-2.5 uppercase tracking-wider text-xs rounded-none"
+                    className="btn-primary w-full py-2.5 uppercase tracking-wider text-xs rounded shadow-xs"
                   >
                     {loading ? (
                       <>
@@ -607,7 +594,7 @@ function LoginPageContent() {
                   <div>
                     <h4 className="font-bold text-[#14213D] dark:text-white text-sm mb-1">Recover Credentials</h4>
                     <p className="text-[11px] text-[#64748B] dark:text-slate-400">
-                      Enter your registered demonstration email address to receive authorization reset instructions.
+                      Enter your official government email address to receive authorization reset instructions.
                     </p>
                   </div>
                   <div>
@@ -619,11 +606,11 @@ function LoginPageContent() {
                       required
                       value={emailOrId}
                       onChange={(e) => setEmailOrId(e.target.value)}
-                      placeholder="officer@kosh.sih2026.org"
-                      className="input w-full bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded-none"
+                      placeholder="officer@bhumi.gov.in"
+                      className="input w-full bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                     />
                   </div>
-                  <button type="submit" disabled={loading} className="btn-primary w-full py-2.5 text-xs rounded-none">
+                  <button type="submit" disabled={loading} className="btn-primary w-full py-2.5 text-xs rounded shadow-xs">
                     Dispatch Recovery Link
                   </button>
                   <button
@@ -644,7 +631,7 @@ function LoginPageContent() {
                   className="text-[11px] font-mono text-[#0B5FA5] dark:text-sky-400 hover:underline inline-flex items-center gap-1.5"
                 >
                   <KeyRound className="w-3 h-3" />
-                  <span>[ Auto-fill officer@kosh.sih2026.org ]</span>
+                  <span>[ Auto-fill officer@bhumi.gov.in ]</span>
                 </button>
 
                 <div className="pt-2 text-left space-y-1.5 border-t border-[#DCE2E8] dark:border-white/10">
@@ -667,14 +654,14 @@ function LoginPageContent() {
 
           </div>
 
-          {/* Demonstration Gateway Notice Box */}
-          <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-3 rounded-none text-xs text-[#64748B] dark:text-slate-400 space-y-1 transition-colors">
+          {/* Official Security Disclaimer Box */}
+          <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-3 rounded-md shadow-xs text-xs text-[#64748B] dark:text-slate-400 space-y-1 transition-colors">
             <div className="font-bold text-[#14213D] dark:text-white flex items-center gap-1 text-[11px]">
               <Shield className="w-3.5 h-3.5 text-[#0B5FA5] dark:text-sky-400" />
-              <span>SIH26016 Demonstration Notice</span>
+              <span>CALA Access Protocol Notice</span>
             </div>
             <p className="text-[11px] leading-relaxed">
-              This prototype models administrative decision support for the Ministry of Road Transport &amp; Highways and Competent Authorities for Land Acquisition (CALA) under the RFCTLARR Act 2013 &amp; NH Act 1956.
+              This system is strictly for authorized personnel of the Competent Authority for Land Acquisition (CALA) and designated project directors. Unauthorized access attempts are logged and subject to administrative sanctions.
             </p>
           </div>
 
@@ -689,7 +676,7 @@ export default function LoginPage() {
   return (
     <React.Suspense fallback={
       <div className="w-full h-screen bg-[#F4F6F8] flex items-center justify-center text-slate-600 font-mono text-xs">
-        Loading KOSH Decision Support Prototype...
+        Loading BHUMI Portal...
       </div>
     }>
       <LoginPageContent />

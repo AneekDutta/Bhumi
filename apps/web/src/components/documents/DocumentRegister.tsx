@@ -220,14 +220,14 @@ export function DocumentRegister({
 
   return (
     <div className="space-y-6">
-      <div className="border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 bg-white dark:bg-[#0D121F] shadow-xs">
+      <div className="border border-[#DCE2E8] dark:border-white/10 rounded-md p-5 bg-white dark:bg-[#0D121F] shadow-xs">
         <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1 uppercase tracking-wide font-mono">Upload Document</h3>
         <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
           Supported formats: PDF, JPEG, PNG. Maximum file size: 50MB.
         </p>
 
         {error && (
-          <div className="bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-300 p-2.5 rounded-[3px] mb-4 text-xs border border-[#FFCDD2] dark:border-rose-800/40">
+          <div className="bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-300 p-2.5 rounded mb-4 text-xs border border-[#FFCDD2] dark:border-rose-800/40">
             {error}
           </div>
         )}
@@ -241,7 +241,7 @@ export function DocumentRegister({
                 required
                 value={title}
                 onChange={e => setTitle(e.target.value)}
-                className="w-full border border-[#DCE2E8] dark:border-white/15 rounded-[3px] px-3 py-1.5 bg-white dark:bg-[#07080F] text-slate-900 dark:text-white shadow-xs focus:border-[#0B2E59] text-xs outline-none"
+                className="w-full border border-[#DCE2E8] dark:border-white/15 rounded px-3 py-1.5 bg-white dark:bg-[#07080F] text-slate-900 dark:text-white shadow-xs focus:border-[#0B2E59] text-xs outline-none"
               />
             </div>
             <div>
@@ -249,7 +249,7 @@ export function DocumentRegister({
               <select
                 value={docType}
                 onChange={e => setDocType(e.target.value)}
-                className="w-full border border-[#DCE2E8] dark:border-white/15 rounded-[3px] px-3 py-1.5 bg-white dark:bg-[#07080F] text-slate-900 dark:text-white shadow-xs focus:border-[#0B2E59] text-xs outline-none"
+                className="w-full border border-[#DCE2E8] dark:border-white/15 rounded px-3 py-1.5 bg-white dark:bg-[#07080F] text-slate-900 dark:text-white shadow-xs focus:border-[#0B2E59] text-xs outline-none"
               >
                 <option value="NOTICE">Notice</option>
                 <option value="DEED">Deed</option>
@@ -265,7 +265,7 @@ export function DocumentRegister({
               type="text"
               value={description}
               onChange={e => setDescription(e.target.value)}
-              className="w-full border border-[#DCE2E8] dark:border-white/15 rounded-[3px] px-3 py-1.5 bg-white dark:bg-[#07080F] text-slate-900 dark:text-white shadow-xs focus:border-[#0B2E59] text-xs outline-none"
+              className="w-full border border-[#DCE2E8] dark:border-white/15 rounded px-3 py-1.5 bg-white dark:bg-[#07080F] text-slate-900 dark:text-white shadow-xs focus:border-[#0B2E59] text-xs outline-none"
             />
           </div>
 
@@ -276,21 +276,21 @@ export function DocumentRegister({
               required
               accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
               onChange={e => setFile(e.target.files?.[0] || null)}
-              className="w-full text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-[3px] file:border-0 file:text-xs file:font-semibold file:bg-[#F4F6F8] dark:file:bg-white/10 file:text-[#0B2E59] dark:file:text-slate-200 hover:file:bg-[#E6F0FA]"
+              className="w-full text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-[#F4F6F8] dark:file:bg-white/10 file:text-[#0B2E59] dark:file:text-slate-200 hover:file:bg-[#E6F0FA]"
             />
           </div>
 
           <button
             type="submit"
             disabled={uploading || !file}
-            className="w-full sm:w-auto px-4 py-2 bg-[#0B2E59] hover:bg-[#082242] text-white rounded-[4px] text-xs font-bold transition-colors disabled:opacity-50 shadow-xs cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2 bg-[#0B2E59] hover:bg-[#082242] text-white rounded text-xs font-bold transition-colors disabled:opacity-50 shadow-xs cursor-pointer"
           >
             {uploading ? "Uploading..." : "Upload Document"}
           </button>
         </form>
       </div>
 
-      <div className="border border-[#DCE2E8] dark:border-white/10 rounded-[4px] overflow-hidden bg-white dark:bg-[#0D121F] shadow-xs">
+      <div className="border border-[#DCE2E8] dark:border-white/10 rounded-md overflow-hidden bg-white dark:bg-[#0D121F] shadow-xs">
         <div className="px-5 py-3 border-b border-[#DCE2E8] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#07080F]">
           <h3 className="text-xs font-bold text-[#0B2E59] dark:text-slate-200 uppercase tracking-wide font-mono">Document Register</h3>
         </div>
@@ -313,10 +313,10 @@ export function DocumentRegister({
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white">{doc.title}</h4>
-                      <span className="px-1.5 py-0.5 rounded-[2px] text-[10px] font-mono font-bold bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40">
                         {doc.document_type}
                       </span>
-                      <span className="px-1.5 py-0.5 rounded-[2px] text-[10px] font-mono font-bold bg-[#F4F6F8] dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-[#DCE2E8] dark:border-white/10">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#F4F6F8] dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-[#DCE2E8] dark:border-white/10">
                         v{doc.current_version}
                       </span>
                     </div>
@@ -330,25 +330,25 @@ export function DocumentRegister({
                   <div className="flex flex-wrap items-center gap-2">
                     <button
                       onClick={() => handleDownload(doc.id)}
-                      className="px-2.5 py-1 text-xs font-semibold text-[#0B2E59] dark:text-slate-200 bg-white dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 rounded-[3px] hover:bg-[#F4F6F8] dark:hover:bg-white/10 shadow-xs"
+                      className="px-2.5 py-1 text-xs font-semibold text-[#0B2E59] dark:text-slate-200 bg-white dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 rounded hover:bg-[#F4F6F8] dark:hover:bg-white/10 shadow-xs"
                     >
                       Download Latest
                     </button>
                     <button
                       onClick={() => setVersionUploadDocId(versionUploadDocId === doc.id ? null : doc.id)}
-                      className="px-2.5 py-1 text-xs font-semibold text-white bg-[#0B2E59] hover:bg-[#082242] rounded-[3px] shadow-xs"
+                      className="px-2.5 py-1 text-xs font-semibold text-white bg-[#0B2E59] hover:bg-[#082242] rounded shadow-xs"
                     >
                       New Version
                     </button>
                     <button
                       onClick={() => toggleVersions(doc.id)}
-                      className="px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-[#F4F6F8] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 rounded-[3px] hover:bg-slate-200 shadow-xs"
+                      className="px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-[#F4F6F8] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 rounded hover:bg-slate-200 shadow-xs"
                     >
                       {expandedVersions.has(doc.id) ? "Hide History" : "Version History"}
                     </button>
                     <button
                       onClick={() => handleDelete(doc.id)}
-                      className="px-2.5 py-1 text-xs font-semibold text-[#B32424] dark:text-rose-300 bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/40 rounded-[3px] hover:bg-[#FFCDD2] shadow-xs"
+                      className="px-2.5 py-1 text-xs font-semibold text-[#B32424] dark:text-rose-300 bg-[#FFEBEE] dark:bg-rose-950/40 border border-[#FFCDD2] dark:border-rose-800/40 rounded hover:bg-[#FFCDD2] shadow-xs"
                     >
                       Delete
                     </button>
@@ -356,7 +356,7 @@ export function DocumentRegister({
                 </div>
 
                 {versionUploadDocId === doc.id && (
-                  <div className="mt-3 p-3.5 border border-[#B8D5ED] dark:border-sky-800/40 bg-[#E6F0FA]/60 dark:bg-sky-950/20 rounded-[4px]">
+                  <div className="mt-3 p-3.5 border border-[#B8D5ED] dark:border-sky-800/40 bg-[#E6F0FA]/60 dark:bg-sky-950/20 rounded-md shadow-xs">
                     <h5 className="text-xs font-bold text-[#0B2E59] dark:text-sky-300 mb-1.5 uppercase font-mono">Upload Version {doc.current_version + 1}</h5>
                     {versionError && <div className="text-xs text-[#B32424] mb-2">{versionError}</div>}
                     <form onSubmit={(e) => handleVersionUpload(e, doc.id)} className="flex items-center gap-2.5 flex-wrap">
@@ -365,19 +365,19 @@ export function DocumentRegister({
                         required
                         accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
                         onChange={e => setVersionFile(e.target.files?.[0] || null)}
-                        className="text-xs text-slate-500 file:mr-3 file:py-1 file:px-2.5 file:rounded-[3px] file:border-0 file:text-xs file:font-semibold file:bg-white dark:file:bg-[#07080F] file:text-[#0B2E59] dark:file:text-sky-300 file:border file:border-[#DCE2E8] dark:file:border-white/10 hover:file:bg-[#F4F6F8]"
+                        className="text-xs text-slate-500 file:mr-3 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-white dark:file:bg-[#07080F] file:text-[#0B2E59] dark:file:text-sky-300 file:border file:border-[#DCE2E8] dark:file:border-white/10 hover:file:bg-[#F4F6F8]"
                       />
                       <button
                         type="submit"
                         disabled={versionUploading || !versionFile}
-                        className="px-3 py-1 bg-[#0B2E59] hover:bg-[#082242] text-white rounded-[3px] text-xs font-bold transition-colors disabled:opacity-50 shadow-xs cursor-pointer"
+                        className="px-3 py-1 bg-[#0B2E59] hover:bg-[#082242] text-white rounded text-xs font-bold transition-colors disabled:opacity-50 shadow-xs cursor-pointer"
                       >
                         {versionUploading ? "Uploading..." : "Submit Version"}
                       </button>
                       <button
                         type="button"
                         onClick={() => setVersionUploadDocId(null)}
-                        className="px-3 py-1 bg-white dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-[#DCE2E8] dark:border-white/10 rounded-[3px] text-xs font-semibold hover:bg-[#F4F6F8] dark:hover:bg-white/10 transition-colors shadow-xs"
+                        className="px-3 py-1 bg-white dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-[#DCE2E8] dark:border-white/10 rounded text-xs font-semibold hover:bg-[#F4F6F8] dark:hover:bg-white/10 transition-colors shadow-xs"
                       >
                         Cancel
                       </button>

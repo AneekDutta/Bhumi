@@ -81,20 +81,20 @@
 .font-devanagari { font-family: 'Noto Sans Devanagari', 'Noto Sans', sans-serif; }
 
 /* ==========================================================================
-   CARDS & CONTAINERS — Flat White with Crisp 1px #DCE2E8 Border & 4px Radius
+   CARDS & CONTAINERS — Subtle 6px Soft Radius with Clean 1px Border
    ========================================================================== */
 .card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 4px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
 }
 
 .glass {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 4px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
 }
 
 /* ==========================================================================
@@ -159,14 +159,14 @@ html.dark .gov-table tr:hover {
 }
 
 /* ==========================================================================
-   STATUS BADGES — Flat Bordered, High Legibility
+   STATUS BADGES — Flat Bordered, Subtle 4px Radius
    ========================================================================== */
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 2px 7px;
-  border-radius: 3px;
+  border-radius: 4px;
   font-size: 11px;
   font-weight: 600;
   font-family: 'Noto Sans', sans-serif;
@@ -219,13 +219,13 @@ html.dark .sidebar-active {
 }
 
 /* ==========================================================================
-   FORM INPUTS — Bureaucratic 4px Radius
+   FORM INPUTS — Bureaucratic 5px Subtle Soft Radius
    ========================================================================== */
 .input {
   background: #FFFFFF;
   border: 1px solid #CBD5E1;
   color: #333333;
-  border-radius: 4px;
+  border-radius: 5px;
   padding: 6px 10px;
   font-size: 13px;
   outline: none;
@@ -234,7 +234,7 @@ html.dark .sidebar-active {
 }
 .input:focus {
   border-color: #0B5FA5;
-  box-shadow: 0 0 0 2px rgba(11, 95, 165, 0.15);
+  box-shadow: 0 0 0 2px rgba(11, 95, 165, 0.12);
 }
 .input::placeholder { color: #94A3B8; }
 
@@ -245,17 +245,17 @@ html.dark .input {
 }
 html.dark .input:focus {
   border-color: #38BDF8;
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.18);
 }
 
 /* ==========================================================================
-   BUTTONS — Rectangular 4px Radius
+   BUTTONS — Rectangular with Subtle 5px Radius
    ========================================================================== */
 .btn-primary {
   background: #0B2E59;
   color: #FFFFFF;
   border: 1px solid #0A2647;
-  border-radius: 4px;
+  border-radius: 5px;
   padding: 7px 16px;
   font-size: 13px;
   font-weight: 700;
@@ -272,7 +272,7 @@ html.dark .input:focus {
   background: #FFFFFF;
   color: #0B2E59;
   border: 1px solid #0B2E59;
-  border-radius: 4px;
+  border-radius: 5px;
   padding: 6px 14px;
   font-size: 13px;
   font-weight: 600;
@@ -293,7 +293,7 @@ html.dark .input:focus {
   align-items: center;
   justify-content: center;
   padding: 6px 14px;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 12px;
   font-weight: 600;
   background: #F1F4F7;
@@ -328,5 +328,21 @@ html.dark .input:focus {
 
 .animate-gov-ticker:hover {
   animation-play-state: paused;
+}
+
+/* Authoritative thin scrollbar for Government Updates Live Feed */
+.gov-feed-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.gov-feed-scroll::-webkit-scrollbar-track {
+  background: rgba(11, 95, 165, 0.05);
+}
+.gov-feed-scroll::-webkit-scrollbar-thumb {
+  background: #0B5FA5;
+  border-radius: 2px;
+}
+.gov-feed-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #0B5FA5 rgba(11, 95, 165, 0.05);
 }
 
