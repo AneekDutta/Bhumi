@@ -12,8 +12,9 @@ import { RealtimeParcelHeader } from '@/components/parcels/RealtimeParcelHeader'
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   try {
-    const parcel = await apiClient.getParcel(id);
-    return { title: `Survey No. ${parcel.survey_no} | KOSH`, description: `Acquisition case details for Parcel ${parcel.survey_no}.` };
+    const parcel = (await apiClient.getParcel(id)) || (await apiClient.getSIHParcelDetail(id));
+    const sNo = parcel?.survey_no || parcel?.survey_number || id;
+    return { title: `Survey No. ${sNo} | KOSH`, description: `Acquisition case details for Parcel ${sNo}.` };
   } catch {
     return { title: 'Parcel Details | KOSH' };
   }
@@ -58,11 +59,11 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
   if (!parcel && !sihDetail) notFound();
 
   const activeParcel = sihDetail || parcel;
-  const acqCase = cases.length > 0 ? cases[0] : null;
+  const acqCase = cases.length > 0 ? cases[0] : (activeParcel.acquisition_case || null);
   let deadlineInfo: any = null;
   let auditLogs: any[] = [];
 
-  if (acqCase) {
+  if (acqCase?.id) {
     try {
       [deadlineInfo, auditLogs] = await Promise.all([
         apiClient.getCaseDeadline(acqCase.id),
@@ -71,12 +72,21 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
     } catch {}
   }
 
-  const currentStageIndex = acqCase ? getStageIndex(acqCase.current_stage) : 1;
+  const parcelId = activeParcel.id || activeParcel.parcel_id || id;
+  const surveyNo = activeParcel.survey_no || activeParcel.survey_number || parcelId;
+  const villageName = activeParcel.village_name || 'Alignment Corridor';
+  const projectId = String(activeParcel.project_id || parcel?.project_id || 'P-NH927A');
+  const areaHa = activeParcel.area_hectares != null ? Number(activeParcel.area_hectares) : (activeParcel.area_sqm != null ? Math.round((Number(activeParcel.area_sqm) / 10000) * 10000) / 10000 : 0.85);
+  const sqMeters = (areaHa * 10000).toLocaleString();
+  const acres = (areaHa * 2.47105).toFixed(2);
+  const estimatedValuation = (areaHa * 1.85).toFixed(2);
+  const classification = activeParcel.classification || activeParcel.land_type || 'Agricultural';
+  const ownerName = activeParcel.owner_name || activeParcel.title_holder || 'Owner of Record';
+  const blockerInfo = parcel?.blocker || activeParcel?.blocker || (activeParcel.unresolved_blockers > 0 ? { assumed_resolution_days: 20, type: 'Compensation Dispute' } : null);
+
+  const currentStageIndex = acqCase ? getStageIndex(acqCase.current_stage || acqCase.stage) : 1;
   const isLapsed = deadlineInfo?.status === 'LAPSED' || acqCase?.is_lapsed;
-  const daysRemaining = deadlineInfo?.days_remaining ?? -52;
-  const sqMeters = (activeParcel.area_hectares * 10000).toLocaleString();
-  const acres = (activeParcel.area_hectares * 2.47105).toFixed(2);
-  const estimatedValuation = (activeParcel.area_hectares * 1.85).toFixed(2);
+  const daysRemaining = deadlineInfo?.days_remaining ?? (isLapsed ? -52 : 30);
 
   return (
     <div className="flex flex-col gap-6">
@@ -88,7 +98,7 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
         <span>/</span>
         <Link href="/projects" className="hover:text-[#0B2E59] dark:hover:text-sky-300">Corridors</Link>
         <span>/</span>
-        <span className="text-[#14213D] dark:text-[#F0F4FF] font-semibold">Survey No. {activeParcel.survey_no || activeParcel.survey_number}</span>
+        <span className="text-[#14213D] dark:text-[#F0F4FF] font-semibold">Survey No. {surveyNo}</span>
       </nav>
 
       {/* Provenance Matrix Banner */}
@@ -117,24 +127,24 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div className="flex-1 min-w-[280px]">
             <RealtimeParcelHeader
-              parcelId={activeParcel.id || activeParcel.parcel_id}
-              surveyNo={parcel.survey_no || activeParcel.survey_number}
-              villageName={parcel.village_name || activeParcel.village_name || 'Kanhera Kalan'}
+              parcelId={parcelId}
+              surveyNo={surveyNo}
+              villageName={villageName}
               statutoryAct={acqCase?.statutory_act || 'RFCTLARR Act 2013'}
-              initialStatus={activeParcel.acquisition_status || parcel.status || 'UNRESOLVED'}
+              initialStatus={activeParcel.acquisition_status || activeParcel.status || 'UNRESOLVED'}
               isLapsed={isLapsed}
-              sourceType={activeParcel.source_type || 'SYNTHETIC'}
+              sourceType={activeParcel.source_type || 'MODEL_DERIVED'}
             />
           </div>
           <div className="flex items-center gap-2 pt-1">
             <Link
-              href={`/projects/${parcel.project_id || activeParcel.project_id || 'P-NH927A'}/spatial`}
+              href={`/projects/${projectId}/spatial`}
               className="px-3.5 py-1.5 rounded-[4px] text-xs font-bold bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-300 border border-[#C8E6C9] dark:border-emerald-800/40 flex items-center gap-1.5 hover:bg-[#C8E6C9]/50 transition-colors shadow-xs"
             >
               <MapPin className="w-3.5 h-3.5" /> GIS View
             </Link>
             <Link
-              href={`/projects/${parcel.project_id || activeParcel.project_id || 'P-NH927A'}/impact`}
+              href={`/projects/${projectId}/impact`}
               className="px-3.5 py-1.5 rounded-[4px] text-xs font-bold bg-[#E6F0FA] dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#B8D5ED] dark:border-sky-800/40 flex items-center gap-1.5 hover:bg-[#B8D5ED]/50 transition-colors shadow-xs"
             >
               <Scale className="w-3.5 h-3.5" /> CPM Path
@@ -265,11 +275,11 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
-              { label: 'Survey & Subdivision No.', val: parcel.survey_no, mono: true },
-              { label: 'Total Registered Area', val: `${parcel.area_hectares} Ha`, sub: `${acres} Acres · ${sqMeters} sq.m`, mono: true },
-              { label: 'Revenue Classification', val: parcel.classification || 'Agricultural', sub: 'Verified Land Record' },
-              { label: 'Title Holder(s)', val: parcel.owner_name || 'Owner of Record', sub: 'Title Record' },
-              { label: 'Cadastral Location', val: parcel.village_name || 'Alignment Corridor', sub: 'Corridor Alignment Record', mono: true },
+              { label: 'Survey & Subdivision No.', val: surveyNo, mono: true },
+              { label: 'Total Registered Area', val: `${areaHa} Ha`, sub: `${acres} Acres · ${sqMeters} sq.m`, mono: true },
+              { label: 'Revenue Classification', val: classification, sub: 'Verified Land Record' },
+              { label: 'Title Holder(s)', val: ownerName, sub: 'Title Record' },
+              { label: 'Cadastral Location', val: villageName, sub: 'Corridor Alignment Record', mono: true },
               { label: 'Statutory Valuation (Est.)', val: `₹${estimatedValuation} Cr`, sub: 'Market Factor 2.0 + 100% Solatium', colorClass: 'text-[#1E7E34] dark:text-emerald-400' },
             ].map((item) => (
               <div key={item.label} className="p-3 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px]">
@@ -288,7 +298,7 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
             </div>
             <p className="text-xs text-[#5A6A80] dark:text-slate-400 m-0">
               Special Land Acquisition Officer (SLAO) / Competent Authority Land Acquisition Office ·
-              <span className="font-mono text-[#14213D] dark:text-[#F0F4FF] ml-1 font-semibold">CALA-{parcel.project_id.substring(0, 8).toUpperCase()}-RECORD</span>
+              <span className="font-mono text-[#14213D] dark:text-[#F0F4FF] ml-1 font-semibold">CALA-{projectId.substring(0, 8).toUpperCase()}-RECORD</span>
             </p>
           </div>
         </div>
@@ -329,8 +339,8 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
 
               <div className="p-3 bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px]">
                 {[
-                  { label: 'CPM Downstream Impact', val: parcel.blocker ? `+${parcel.blocker.assumed_resolution_days} Days Delay` : (isLapsed ? '+20 Days Delay' : '0 Days Delay'), colorClass: isLapsed || parcel.blocker ? 'text-[#B32424] dark:text-rose-400' : 'text-[#1E7E34] dark:text-emerald-400' },
-                  { label: 'Blocked Activity', val: parcel.blocker ? parcel.blocker.type : (isLapsed ? 'Site Possession' : 'None'), colorClass: 'text-[#14213D] dark:text-[#F0F4FF]' },
+                  { label: 'CPM Downstream Impact', val: blockerInfo ? `+${blockerInfo.assumed_resolution_days} Days Delay` : (isLapsed ? '+20 Days Delay' : '0 Days Delay'), colorClass: isLapsed || blockerInfo ? 'text-[#B32424] dark:text-rose-400' : 'text-[#1E7E34] dark:text-emerald-400' },
+                  { label: 'Blocked Activity', val: blockerInfo ? blockerInfo.type : (isLapsed ? 'Site Possession' : 'None'), colorClass: 'text-[#14213D] dark:text-[#F0F4FF]' },
                   { label: 'Critical Float', val: isLapsed ? '0 Days (Critical Path)' : 'Within Float Thresholds', colorClass: isLapsed ? 'text-[#B32424] dark:text-rose-400' : 'text-[#1E7E34] dark:text-emerald-400' },
                 ].map((r, i) => (
                   <div key={r.label} className={`flex justify-between items-center py-1.5 ${i !== 2 ? 'border-b border-[#DCE2E8]/60 dark:border-white/5' : ''}`}>
@@ -345,7 +355,7 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
           )}
 
           <Link
-            href={`/projects/${parcel.project_id}/impact`}
+            href={`/projects/${projectId}/impact`}
             className="flex items-center justify-center gap-1.5 mt-2 p-2 rounded-[4px] text-xs font-bold bg-[#0B2E59] hover:bg-[#082242] text-white shadow-xs transition-colors"
           >
             Simulate Remediation <ArrowRight className="w-3.5 h-3.5" />
@@ -472,10 +482,10 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
       </div>
 
       {/* Field Incidents & On-Site Verification Review */}
-      <FieldIncidentReviewCard parcelId={parcel.id} projectId={parcel.project_id} />
+      <FieldIncidentReviewCard parcelId={parcelId} projectId={projectId} />
 
       {/* Citizen Landowner Grievances & Redressal */}
-      <LandownerGrievanceReviewCard parcelId={parcel.id} projectId={parcel.project_id} />
+      <LandownerGrievanceReviewCard parcelId={parcelId} projectId={projectId} />
 
       {/* Document Register */}
       <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-xs">
@@ -485,7 +495,7 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
         <div className="text-base font-bold text-[#14213D] dark:text-[#F0F4FF] mb-4">
           Statutory Gazette & Awards Archive
         </div>
-        <DocumentRegister parcelId={parcel.id} projectId={parcel.project_id} />
+        <DocumentRegister parcelId={parcelId} projectId={projectId} />
       </div>
     </div>
   );

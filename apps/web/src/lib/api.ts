@@ -101,7 +101,21 @@ export const authenticatedFetch = async (input: RequestInfo | URL, init?: Reques
     throw new Error(`AuthError: ${res.status}`);
   }
   if (!res.ok) {
-     throw new Error(`APIError: ${res.status}`);
+    let errorDetail = `APIError: ${res.status}`;
+    try {
+      const errData = await res.clone().json();
+      if (errData?.detail) {
+        errorDetail = typeof errData.detail === 'string' ? errData.detail : JSON.stringify(errData.detail);
+      } else if (errData?.message) {
+        errorDetail = errData.message;
+      }
+    } catch {
+      try {
+        const text = await res.clone().text();
+        if (text) errorDetail = text;
+      } catch {}
+    }
+    throw new Error(errorDetail);
   }
 
   return res;
@@ -578,24 +592,54 @@ export const apiClient = {
     if (id.startsWith('P-') || id === 'P-NH927A') {
       try {
         const sihRes = await fetch(`${API_URL}/sih26016/projects/${id}`, { cache: 'no-store' });
-        if (sihRes.ok) return await sihRes.json();
+        if (sihRes.ok) {
+          const data = await sihRes.json();
+          if (data) {
+            data.id = data.id || data.project_id || id;
+            data.total_length_km = data.total_length_km ?? 48.5;
+            data.state_name = data.state_name || 'Rajasthan';
+            return data;
+          }
+        }
       } catch {}
     }
     try {
       const res = await fetch(`${API_URL}/projects/${id}`, { cache: 'no-store' });
-      if (res.ok) return await res.json();
+      if (res.ok) {
+        const data = await res.json();
+        if (data) {
+          data.id = data.id || data.project_id || id;
+          return data;
+        }
+      }
     } catch {}
     const matched = NATIONAL_PROJECTS.find(p => p.id === id);
-    return matched || null;
+    if (matched) {
+      return { ...matched, id: matched.id || id };
+    }
+    return null;
   },
 
   getProjectParcels: async (id: string) => {
+    const normalizeParcels = (list: any[]) => {
+      return (list || []).map((p: any) => ({
+        ...p,
+        id: p.id || p.parcel_id,
+        project_id: p.project_id || id,
+        survey_no: p.survey_no || p.survey_number || p.parcel_id,
+        area_hectares: p.area_hectares != null ? Number(p.area_hectares) : (p.area_sqm != null ? Math.round((Number(p.area_sqm) / 10000) * 10000) / 10000 : 0),
+        status: (p.status || p.acquisition_status || 'PENDING').toUpperCase(),
+        village_name: p.village_name || 'Ramganj Mandi Alignment',
+        current_stage: p.current_stage || p.acquisition_stage || 'PRELIMINARY_NOTIFICATION',
+      }));
+    };
+
     if (id.startsWith('P-') || id === 'P-NH927A') {
       try {
         const sihRes = await fetch(`${API_URL}/sih26016/projects/${id}/parcels`, { cache: 'no-store' });
         if (sihRes.ok) {
           const data = await sihRes.json();
-          if (data && data.length > 0) return data;
+          if (data && data.length > 0) return normalizeParcels(data);
         }
       } catch {}
     }
@@ -603,13 +647,32 @@ export const apiClient = {
       const res = await fetch(`${API_URL}/projects/${id}/parcels`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (data && data.length > 0) return data;
+        if (data && data.length > 0) return normalizeParcels(data);
       }
     } catch {}
-    return MOCK_PARCELS.filter(p => p.project_id === id);
+    return normalizeParcels(MOCK_PARCELS.filter(p => p.project_id === id));
   },
 
   getParcel: async (id: string) => {
+    if (id.startsWith('P') || !id.includes('-') || id.length < 32) {
+      try {
+        const res = await fetch(`${API_URL}/sih26016/parcels/${id}`, { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          return {
+            ...data,
+            id: data.parcel_id || data.id,
+            survey_no: data.survey_number || data.survey_no || data.parcel_id,
+            area_hectares: data.area_hectares != null ? Number(data.area_hectares) : (data.area_sqm ? Math.round((Number(data.area_sqm)/10000)*10000)/10000 : 0.85),
+            project_id: data.project_id || 'P-NH927A',
+            village_name: data.village_name || 'Ramganj Mandi Alignment',
+            status: data.acquisition_status || data.status || 'UNRESOLVED',
+            classification: data.land_type || data.classification || 'Agricultural',
+            owner_name: data.title_holder || data.owner_name || 'Owner of Record',
+          };
+        }
+      } catch {}
+    }
     try {
       const res = await fetch(`${API_URL}/parcels/${id}`, { cache: 'no-store' });
       if (res.ok) return await res.json();
@@ -687,6 +750,48 @@ export const apiClient = {
   },
 
   getProjectImpact: async (id: string) => {
+    if (id.startsWith('P-') || id === 'P-NH927A' || !id.includes('-') || id.length < 32) {
+      try {
+        const res = await fetch(`${API_URL}/sih26016/projects/${id}/critical-path`, { cache: 'no-store' });
+        if (res.ok) {
+          const cp = await res.json();
+          const delay = cp.project_delay_days || 0;
+          return {
+            baseline: {
+              project_finish: cp.baseline_finish || '2028-03-31',
+              critical_path: [],
+              project_delay_days: 0,
+              impact_status: 'NO_BLOCKING_CONSTRAINT' as const
+            },
+            current_forecast: {
+              project_finish: cp.projected_finish || '2028-11-15',
+              critical_path: cp.critical_path_nodes || [],
+              project_delay_days: delay,
+              impact_status: (delay > 0 ? 'QUANTIFIED_IMPACT' : 'NO_BLOCKING_CONSTRAINT') as any
+            },
+            bottlenecks: (cp.bottlenecks || []).map((b: any) => ({
+              parcel_id: b.parcel_id,
+              survey_no: b.survey_number || b.survey_no || b.parcel_id,
+              delay_days: b.delay_days,
+              urgency: b.urgency || 'HIGH',
+              reason: b.active_blocker || b.recommended_action || 'Corridor critical path gate',
+              is_critical_path: Boolean(b.is_critical_path),
+              project_delay_days: b.delay_days,
+              impact_status: (b.delay_days > 0 ? 'QUANTIFIED_IMPACT' : 'NO_BLOCKING_CONSTRAINT') as any,
+              causal_path: (b.causal_chain || []).map((step: string, idx: number) => ({
+                source_type: idx === 0 ? 'BLOCKER' : 'INTERMEDIATE',
+                source_id: `${b.parcel_id}-${idx}`,
+                source_label: step,
+                relationship: 'CONSTRAINS',
+                target_type: idx === (b.causal_chain?.length || 1) - 1 ? 'CORRIDOR_FINISH' : 'TASK',
+                target_id: `${b.parcel_id}-${idx + 1}`,
+                target_label: `Step ${idx + 1}`
+              }))
+            }))
+          };
+        }
+      } catch {}
+    }
     try {
       const res = await fetch(`${API_URL}/impact/${id}`, { cache: 'no-store' });
       if (res.ok) return await res.json();
@@ -695,6 +800,35 @@ export const apiClient = {
   },
 
   simulateIntervention: async (id: string, payload: SimulationRequest) => {
+    if (id.startsWith('P-') || id === 'P-NH927A' || !id.includes('-') || id.length < 32) {
+      try {
+        const targetEntity = payload.parcel_id || (payload as any).entity_id || 'P00001';
+        const res = await fetch(`${API_URL}/sih26016/projects/${id}/simulate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            intervention_type: payload.type || 'RESOLVE_BLOCKER',
+            input_entity_ids: [targetEntity],
+            acceleration_factor: 1.0,
+            notes: 'Interactive What-If Simulation from Impact Workbench'
+          })
+        });
+        if (res.ok) {
+          const sim = await res.json();
+          return {
+            before: {
+              ...(sim.before || {}),
+              impact_status: (sim.before?.project_delay_days || 0) > 0 ? 'QUANTIFIED_IMPACT' : 'NO_BLOCKING_CONSTRAINT'
+            },
+            after: {
+              ...(sim.after || {}),
+              impact_status: (sim.after?.project_delay_days || 0) > 0 ? 'QUANTIFIED_IMPACT' : 'NO_BLOCKING_CONSTRAINT'
+            },
+            days_recovered: sim.delay_reduction_days || 0
+          };
+        }
+      } catch {}
+    }
     try {
       const res = await fetch(`${API_URL}/impact/${id}/simulate`, {
         method: 'POST',
@@ -712,6 +846,12 @@ export const apiClient = {
   },
 
   getSpatialGeojson: async (projectId: string) => {
+    if (projectId.startsWith('P-') || projectId === 'P-NH927A' || !projectId.includes('-') || projectId.length < 32) {
+      try {
+        const res = await fetch(`${API_URL}/sih26016/projects/${projectId}/parcels/geojson`, { cache: 'no-store' });
+        if (res.ok) return await res.json();
+      } catch {}
+    }
     try {
       const res = await fetch(`${API_URL}/spatial/${projectId}/geojson`, { cache: 'no-store' });
       if (res.ok) return await res.json();
@@ -1293,15 +1433,31 @@ export const apiClient = {
 
   getOfficerProceduralGuide: async () => {
     return cachedGet('officer_guide', 30000, async () => {
-      const res = await authenticatedFetch('/api/v1/legal/officer-guide');
-      return res.json();
+      try {
+        const res = await authenticatedFetch('/api/v1/legal/officer-guide');
+        return await res.json();
+      } catch {
+        try {
+          const res = await fetch(`${API_URL}/legal/officer-guide`, { cache: 'no-store' });
+          if (res.ok) return await res.json();
+        } catch {}
+        return [];
+      }
     });
   },
 
   getLandownerRightsGuide: async () => {
     return cachedGet('landowner_guide', 30000, async () => {
-      const res = await authenticatedFetch('/api/v1/legal/landowner-guide');
-      return res.json();
+      try {
+        const res = await authenticatedFetch('/api/v1/legal/landowner-guide');
+        return await res.json();
+      } catch {
+        try {
+          const res = await fetch(`${API_URL}/legal/landowner-guide`, { cache: 'no-store' });
+          if (res.ok) return await res.json();
+        } catch {}
+        return [];
+      }
     });
   },
 
@@ -1551,6 +1707,15 @@ export const apiClient = {
   getAssistantIntents: async () => {
     const res = await authenticatedFetch(`/api/v1/assistant/intents`);
     return res.json();
+  },
+
+  getAssistantProviderInfo: async () => {
+    try {
+      const res = await authenticatedFetch(`/api/v1/assistant/provider-info`);
+      return await res.json();
+    } catch {
+      return null;
+    }
   }
 };
 
@@ -1670,3 +1835,5 @@ export const synthesizeVoice = (payload: { text: string; voice?: string; languag
   apiClient.synthesizeVoice(payload);
 
 export const getAssistantIntents = () => apiClient.getAssistantIntents();
+
+export const getAssistantProviderInfo = () => apiClient.getAssistantProviderInfo();

@@ -97,7 +97,7 @@ export function Header() {
           {/* Quick Actions & Live Indicator */}
           <div className="hidden lg:flex items-center space-x-3">
             <Link
-              href="/projects/c0a80124-0001-4000-8000-000000000001/impact"
+              href="/projects/P-NH927A/impact"
               className="px-3 py-1.5 rounded-[3px] bg-white hover:bg-slate-100 text-gov-navy text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5"
             >
               <Activity className="w-3.5 h-3.5 text-gov-navy" />
@@ -143,7 +143,7 @@ export function Header() {
           })}
           <div className="pt-2 border-t border-white/10">
             <Link
-              href="/projects/c0a80124-0001-4000-8000-000000000001/impact"
+              href="/projects/P-NH927A/impact"
               className="block text-center w-full px-3 py-2 rounded-[3px] bg-white text-gov-navy text-sm font-bold shadow-xs"
             >
               Simulate Counterfactual Interventions

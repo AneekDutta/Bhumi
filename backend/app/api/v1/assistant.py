@@ -89,6 +89,27 @@ async def list_predefined_intents():
     return PREDEFINED_INTENTS
 
 
+@router.get("/provider-info", response_model=Dict[str, Any])
+async def get_provider_info(
+    identity: TrustedIdentity = Depends(get_current_user_context),
+):
+    """
+    Returns the currently active AI provider and model metadata.
+    Enforces transparency regarding whether a real generative model or local/mock engine is running.
+    """
+    from app.core.config import settings
+    from app.services.ai.providers.gemini_provider import GeminiAIProvider
+
+    prov = ai_orchestration_service.provider
+    is_gemini = isinstance(prov, GeminiAIProvider)
+    return {
+        "provider": "gemini" if is_gemini else getattr(prov, "provider_name", getattr(prov, "name", settings.AI_PROVIDER)),
+        "model": getattr(prov, "model_name", settings.GEMINI_MODEL if is_gemini else "deterministic-rule-engine"),
+        "is_generative": is_gemini,
+        "is_configured": getattr(prov, "is_configured", True),
+    }
+
+
 @router.post("/query", response_model=AIAnswer)
 async def ask_assistant(
     req: AIAssistantQueryRequest,

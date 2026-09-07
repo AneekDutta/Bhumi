@@ -150,6 +150,12 @@ class AIAnswer(BaseModel):
     whatif_preview: Optional[NLWhatIfResult] = None
     assumptions: List[str] = Field(default_factory=list)
     unanswered_questions: List[str] = Field(default_factory=list)
+    provider: str = Field("mock", description="Executing AI provider: gemini | local | mock")
+    model: Optional[str] = Field(None, description="Exact generative model invoked, e.g. gemini-2.5-flash")
+    grounded: bool = Field(True, description="True if grounded in verified system context")
+    factual_basis: List[str] = Field(default_factory=list, description="Authoritative system facts")
+    claims: List[str] = Field(default_factory=list, description="Contested claims or assertions")
+    uncertainty: List[str] = Field(default_factory=list, description="Uncertainty or missing evidence items")
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     disclaimer: str = (
         "AI-Generated Advisory Output. Grounded in KOSH registered project state. "

@@ -27,10 +27,14 @@ from app.services.voice.service import voice_assistant_service
 
 
 @pytest.fixture(autouse=True)
-def ensure_sih_data_loaded():
+def configure_test_provider():
     sih_service._load_data()
     sih_service._enrich_and_compute()
+    from app.services.ai.providers.mock_provider import MockAIProvider
+    original_provider = ai_orchestration_service.provider
+    ai_orchestration_service.set_provider(MockAIProvider())
     yield
+    ai_orchestration_service.set_provider(original_provider)
 
 
 @pytest.mark.asyncio

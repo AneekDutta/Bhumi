@@ -22,6 +22,7 @@ import {
   ExternalLink,
   ChevronRight,
   ShieldAlert,
+  AlertOctagon,
 } from 'lucide-react';
 import {
   uploadDocumentForIntelligence,
@@ -84,37 +85,6 @@ export default function DocumentIntelligencePage() {
   const [appliedResult, setAppliedResult] = useState<any | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Sample pre-load for quick exploration
-  const handleLoadSample = async (cat: string) => {
-    setCategory(cat);
-    setUploading(true);
-    setErrorMsg(null);
-    setAppliedResult(null);
-    try {
-      const sampleContent = cat === 'SECTION_11_NOTIFICATION'
-        ? 'GOVERNMENT OF BIHAR - NOTIFICATION UNDER SECTION 11(1) RFCTLARR ACT 2013\nNotification No: LA-2026-PAT-091\nGazette Date: 2026-03-01\nVillage: Rampur\nDistrict: Patna\nTotal Area Hectares: 14.50\nPublic Purpose: NH-927A Corridor Widening'
-        : 'AWARD STATEMENT UNDER SECTION 23/25 RFCTLARR ACT 2013\nAward Number: AWD-2026-NH927A-044\nDate: 2026-06-15\nParcel: P00001\nMarket Value: INR 5,200,000\nSolatium 100%: INR 5,200,000\nTotal Award: INR 10,400,000';
-
-      const blob = new Blob([sampleContent], { type: 'text/plain' });
-      const sampleFile = new File([blob], `${cat.toLowerCase()}_sample.txt`, { type: 'text/plain' });
-
-      const formData = new FormData();
-      formData.append('file', sampleFile);
-      formData.append('category', cat);
-      formData.append('ocr_provider', 'mock');
-      formData.append('use_mock_ocr', 'true');
-
-      const job = await uploadDocumentForIntelligence(formData);
-      if (job && job.document_id) {
-        const detail = await getDocumentExtraction(job.document_id);
-        setDocDetail(detail);
-      }
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to ingest sample document');
-    } finally {
-      setUploading(false);
-    }
-  };
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -214,7 +184,7 @@ export default function DocumentIntelligencePage() {
         {/* Header Breadcrumb & Title */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-white/[0.08] pb-6">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-600 dark:text-indigo-400 mb-1">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#0B2E59] dark:text-sky-400 mb-1">
               <ScanLine className="w-4 h-4" />
               Intelligence Studio · SIH26016
             </div>
@@ -232,11 +202,11 @@ export default function DocumentIntelligencePage() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/intelligence/golden-demo"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-sm font-medium shadow-lg shadow-indigo-500/20 transition-all"
+              href="/action-center"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0B2E59] hover:bg-[#0B2E59]/90 text-white text-sm font-medium shadow-sm transition-all"
             >
-              <Sparkles className="w-4 h-4" />
-              Try Golden Demo Flow
+              <FileCheck2 className="w-4 h-4" />
+              Officer Action Center
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -255,7 +225,7 @@ export default function DocumentIntelligencePage() {
           {/* Left Column: Upload Form */}
           <div className="lg:col-span-1 bg-white dark:bg-[#0c0e1e] p-6 rounded-2xl border border-slate-200 dark:border-white/[0.08] shadow-sm space-y-6">
             <h2 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-              <Upload className="w-4 h-4 text-indigo-500" />
+              <Upload className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
               Ingest Statutory Document
             </h2>
 
@@ -267,7 +237,7 @@ export default function DocumentIntelligencePage() {
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full text-sm bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] rounded-xl px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full text-sm bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] rounded-xl px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0B2E59]"
                 >
                   {CATEGORIES.map((c) => (
                     <option key={c.value} value={c.value}>
@@ -285,7 +255,7 @@ export default function DocumentIntelligencePage() {
                   type="file"
                   accept=".pdf,.png,.jpg,.jpeg,.txt"
                   onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  className="w-full text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 dark:file:bg-indigo-950/40 file:text-indigo-600 dark:file:text-indigo-400 hover:file:bg-indigo-100 cursor-pointer border border-slate-200 dark:border-white/[0.08] rounded-xl p-2"
+                  className="w-full text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-50 dark:file:bg-sky-950/40 file:text-[#0B2E59] dark:file:text-sky-400 hover:file:bg-sky-100 cursor-pointer border border-slate-200 dark:border-white/[0.08] rounded-xl p-2"
                 />
               </div>
 
@@ -300,7 +270,7 @@ export default function DocumentIntelligencePage() {
                     setSelectedProvider(val);
                     setUseMockOCR(val === 'mock');
                   }}
-                  className="w-full text-sm bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] rounded-xl px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full text-sm bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] rounded-xl px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0B2E59]"
                 >
                   <option value="ocrspace">OCR.Space Cloud OCR (Engine 3)</option>
                   <option value="local">Local Headless OCR (On-Premises)</option>
@@ -316,7 +286,7 @@ export default function DocumentIntelligencePage() {
               <button
                 type="submit"
                 disabled={!file || uploading}
-                className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-md shadow-indigo-600/20"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#0B2E59] hover:bg-[#0B2E59]/90 text-white font-medium text-sm disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-md shadow-[#0B2E59]/20"
               >
                 {uploading ? (
                   <>
@@ -332,29 +302,17 @@ export default function DocumentIntelligencePage() {
               </button>
             </form>
 
-            {/* Quick Demo Pre-loaders */}
-            <div className="border-t border-slate-200 dark:border-white/[0.06] pt-4 space-y-2">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                Or Load Synthetic Prototype Scan (NH-927A)
+            {/* Ingestion Guidelines */}
+            <div className="border-t border-slate-200 dark:border-white/[0.06] pt-4 space-y-2 text-[11px] text-slate-500 dark:text-slate-400">
+              <span className="font-semibold uppercase tracking-wider text-slate-400 block">
+                Supported File Formats & Guidance
               </span>
-              <div className="grid grid-cols-1 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleLoadSample('SECTION_11_NOTIFICATION')}
-                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] hover:bg-indigo-50 dark:hover:bg-indigo-950/30 border border-slate-200 dark:border-white/[0.06] text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors flex items-center justify-between"
-                >
-                  <span>Section 11(1) Preliminary Gazette</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleLoadSample('AWARD_STATEMENT')}
-                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] hover:bg-indigo-50 dark:hover:bg-indigo-950/30 border border-slate-200 dark:border-white/[0.06] text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors flex items-center justify-between"
-                >
-                  <span>Section 23/25 Award Statement</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-                </button>
-              </div>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Gazette notifications under Section 11(1) &amp; Section 19</li>
+                <li>Valuation and Award statements under Section 23/30</li>
+                <li>Judicial stay orders from High Court / LARR Authority</li>
+                <li>Clear scans or digital PDFs yield optimal OCR accuracy</li>
+              </ul>
             </div>
 
             {errorMsg && (
@@ -377,7 +335,7 @@ export default function DocumentIntelligencePage() {
                         Document ID: {docDetail.document_id}
                       </span>
                       <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 mt-0.5">
-                        <FileText className="w-4 h-4 text-indigo-500" />
+                        <FileText className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
                         {docDetail.filename}
                       </h3>
                     </div>
@@ -432,42 +390,63 @@ export default function DocumentIntelligencePage() {
                   </div>
 
                   {/* OCR Provenance Indicator */}
-                  <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/[0.06] grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
-                      <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
-                        OCR Provider
-                      </div>
-                      <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mt-0.5 flex items-center gap-1.5">
-                        <Cpu className="w-3.5 h-3.5" />
-                        {docDetail.ocr_provider || 'OCR.Space'}
-                      </div>
+                  <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/[0.06] space-y-3">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                        Authoritative Ingestion Provenance:
+                      </span>
+                      {docDetail.ocr_provider === 'OCR.Space' ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> REAL OCR RESULT (OCR.Space Engine 3)
+                        </span>
+                      ) : docDetail.ocr_provider === 'Local OCR' ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30">
+                          <Cpu className="w-3.5 h-3.5" /> LOCAL OCR PROVIDER (On-Premises Pipeline)
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                          <Clock className="w-3.5 h-3.5" /> LOCAL / MOCK BENCHMARK PROVIDER
+                        </span>
+                      )}
                     </div>
 
-                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
-                      <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
-                        Engine
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
+                        <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
+                          OCR Provider
+                        </div>
+                        <div className="text-xs font-bold text-[#0B2E59] dark:text-sky-400 mt-0.5 flex items-center gap-1.5">
+                          <Cpu className="w-3.5 h-3.5" />
+                          {docDetail.ocr_provider || 'OCR.Space'}
+                        </div>
                       </div>
-                      <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-0.5">
-                        {docDetail.ocr_engine || '3'}
-                      </div>
-                    </div>
 
-                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
-                      <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
-                        Status
+                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
+                        <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
+                          Engine
+                        </div>
+                        <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+                          {docDetail.ocr_engine || '3'}
+                        </div>
                       </div>
-                      <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 flex items-center gap-1">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        {docDetail.ocr_status || 'OCR complete'}
-                      </div>
-                    </div>
 
-                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
-                      <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
-                        Source
+                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
+                        <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
+                          Status
+                        </div>
+                        <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          {docDetail.ocr_status || 'OCR complete'}
+                        </div>
                       </div>
-                      <div className="text-xs font-bold text-slate-700 dark:text-slate-300 mt-0.5">
-                        {docDetail.ocr_source || 'External OCR'}
+
+                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
+                        <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
+                          Source
+                        </div>
+                        <div className="text-xs font-bold text-slate-700 dark:text-slate-300 mt-0.5">
+                          {docDetail.ocr_source || 'External OCR'}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -520,7 +499,7 @@ export default function DocumentIntelligencePage() {
                                 type="text"
                                 value={editValue}
                                 onChange={(e) => setEditValue(e.target.value)}
-                                className="px-2.5 py-1 text-xs rounded-lg bg-slate-50 dark:bg-[#1b1f3b] border border-slate-300 dark:border-white/20 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                className="px-2.5 py-1 text-xs rounded-lg bg-slate-50 dark:bg-[#1b1f3b] border border-slate-300 dark:border-white/20 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#0B2E59]"
                               />
                               <button
                                 onClick={() => handleSaveFieldEdit(f.field_name)}
@@ -583,7 +562,7 @@ export default function DocumentIntelligencePage() {
                         value={reviewNotes}
                         onChange={(e) => setReviewNotes(e.target.value)}
                         placeholder="e.g., Verified against physical Bihar Gazette notification issue dated 01-March-2026."
-                        className="w-full text-xs bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] rounded-xl p-2.5 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full text-xs bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] rounded-xl p-2.5 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0B2E59]"
                       />
                     </div>
                   )}
@@ -642,13 +621,13 @@ export default function DocumentIntelligencePage() {
                     <div className="pt-2 flex items-center gap-4 text-xs font-semibold">
                       <Link
                         href="/action-center"
-                        className="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+                        className="text-[#0B2E59] dark:text-sky-400 hover:underline flex items-center gap-1"
                       >
                         View in Officer Action Center <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                       <Link
                         href="/legal-rights"
-                        className="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+                        className="text-[#0B2E59] dark:text-sky-400 hover:underline flex items-center gap-1"
                       >
                         View Legal Provisions <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
@@ -656,10 +635,55 @@ export default function DocumentIntelligencePage() {
                   </div>
                 )}
               </div>
+            ) : errorMsg ? (
+              /* Dedicated OCR FAILED state card */
+              <div className="bg-white dark:bg-[#0c0e1e] p-8 rounded-2xl border border-rose-200 dark:border-rose-900/40 shadow-sm space-y-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                    <AlertOctagon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800">
+                      OCR FAILED
+                    </span>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1">
+                      Document Processing Was Unsuccessful
+                    </h3>
+                  </div>
+                </div>
+                <div className="p-4 rounded-xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/80 dark:border-rose-800/30 text-xs text-rose-700 dark:text-rose-300 space-y-1.5">
+                  <div className="font-semibold font-mono">Error Details:</div>
+                  <div className="font-mono text-[11px] break-all">{errorMsg}</div>
+                </div>
+                <div className="text-xs text-slate-600 dark:text-slate-400 space-y-1.5">
+                  <div className="font-semibold text-slate-700 dark:text-slate-300">Statutory Pipeline Diagnostics:</div>
+                  <ul className="list-disc list-inside space-y-1 text-[11px]">
+                    <li><strong>OCR Provider Used:</strong> {selectedProvider === 'ocrspace' ? 'OCR.Space Cloud Engine' : selectedProvider === 'local' ? 'Local Headless OCR' : 'Mock Benchmark Engine'}</li>
+                    <li>If using OCR.Space free tier, ensure the file is &le; 1 MB and &le; 3 pages, and the server has network egress.</li>
+                    <li>If the remote OCR provider fails or times out, you can switch the OCR Provider dropdown on the left to <strong>Local Headless OCR</strong>.</li>
+                    <li>In accordance with KOSH policy, failed OCR never fabricates or synthesizes statutory extractions.</li>
+                  </ul>
+                </div>
+                <div className="pt-2 flex items-center gap-3">
+                  <button
+                    onClick={() => setErrorMsg(null)}
+                    className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-200 transition-colors"
+                  >
+                    Dismiss
+                  </button>
+                  <button
+                    onClick={(e) => handleUpload(e)}
+                    disabled={!file || uploading}
+                    className="px-4 py-2 rounded-xl bg-[#0B2E59] hover:bg-[#0B2E59]/90 text-white text-xs font-semibold transition-colors flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
+                  >
+                    <Cpu className="w-3.5 h-3.5" /> Retry Processing
+                  </button>
+                </div>
+              </div>
             ) : (
               /* Empty State Placeholder */
               <div className="bg-white dark:bg-[#0c0e1e] p-12 rounded-2xl border border-dashed border-slate-300 dark:border-white/[0.1] text-center space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-[#0B2E59] dark:text-sky-400 flex items-center justify-center mx-auto">
                   <ScanLine className="w-6 h-6" />
                 </div>
                 <div className="space-y-1">
@@ -667,8 +691,7 @@ export default function DocumentIntelligencePage() {
                     No Document Ingested Yet
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
-                    Upload a gazette notification, award statement, or judicial stay order on the left,
-                    or click one of the pre-loaded prototype scans to view the extraction & verification workflow.
+                    Upload an official gazette notification, award statement, or judicial stay order on the left to process through the authoritative OCR and human review pipeline.
                   </p>
                 </div>
               </div>

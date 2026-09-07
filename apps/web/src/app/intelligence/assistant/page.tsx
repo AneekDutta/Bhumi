@@ -21,7 +21,8 @@ import {
   Layers,
   Activity,
   AlertOctagon,
-  ChevronRight
+  ChevronRight,
+  Cpu
 } from 'lucide-react';
 
 import {
@@ -29,7 +30,8 @@ import {
   summarizeDispute,
   transcribeVoice,
   synthesizeVoice,
-  getAssistantIntents
+  getAssistantIntents,
+  getAssistantProviderInfo
 } from '@/lib/api';
 
 interface PredefinedIntent {
@@ -106,7 +108,13 @@ interface AIAnswer {
   whatif_result?: NLWhatIfResult;
   recommended_actions: RecommendedAction[];
   dispute_summary?: DisputeSummary;
-  statutory_disclaimers: string[];
+  statutory_disclaimers?: string[];
+  provider?: string;
+  model?: string;
+  grounded?: boolean;
+  factual_basis?: string[];
+  claims?: string[];
+  uncertainty?: string[];
 }
 
 const DEFAULT_INTENTS: PredefinedIntent[] = [
@@ -171,6 +179,12 @@ export default function IntelligenceAssistantPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AIAnswer | null>(null);
+  const [serverProvider, setServerProvider] = useState<{
+    provider: string;
+    model: string;
+    is_generative: boolean;
+    is_configured: boolean;
+  } | null>(null);
 
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
@@ -178,21 +192,28 @@ export default function IntelligenceAssistantPage() {
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
-    async function fetchIntents() {
+    async function initData() {
       try {
-        const data = await getAssistantIntents();
-        if (Array.isArray(data) && data.length > 0) {
-          setIntents(data);
+        const [intentData, provData] = await Promise.all([
+          getAssistantIntents().catch(() => null),
+          getAssistantProviderInfo().catch(() => null),
+        ]);
+        if (Array.isArray(intentData) && intentData.length > 0) {
+          setIntents(intentData);
+        }
+        if (provData) {
+          setServerProvider(provData);
         }
       } catch (err) {}
     }
-    fetchIntents();
+    initData();
   }, []);
 
   // User-driven query execution (no unprompted network storms on mount)
   const handleRunQuery = async (targetQuery: string, targetParcel: string = selectedParcel) => {
-    if (!targetQuery.trim()) return;
+    if (isLoading || !targetQuery.trim()) return;
     setIsLoading(true);
+    setResult(null);
     setError(null);
     setVoiceNotice(null);
 
@@ -425,9 +446,22 @@ export default function IntelligenceAssistantPage() {
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
               KOSH Intelligence Assistant
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-500/10 text-[#0B5FA5] dark:text-sky-400 border border-sky-500/20">
-                Evidence-Grounded AI
-              </span>
+              {serverProvider?.provider === 'gemini' ? (
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-sky-500" />
+                  REAL GENERATIVE AI · {serverProvider?.model || 'gemini-flash-latest'}
+                </span>
+              ) : serverProvider?.provider === 'local' ? (
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1">
+                  <Cpu className="w-3 h-3 text-amber-500" />
+                  LOCAL RULE ENGINE · Deterministic Pattern Matcher
+                </span>
+              ) : (
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-500/10 text-slate-700 dark:text-slate-300 border border-slate-500/30 flex items-center gap-1">
+                  <ShieldCheck className="w-3 h-3 text-slate-500" />
+                  MOCK BENCHMARK · Deterministic Test Fixture
+                </span>
+              )}
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-3xl">
               Natural language explanation and voice assistance strictly bounded to deterministic system truth:
@@ -641,7 +675,23 @@ export default function IntelligenceAssistantPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  {result.provider === 'gemini' ? (
+                    <span className="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-sky-500" />
+                      AI: {result.model || 'gemini-flash-latest'}
+                    </span>
+                  ) : result.provider === 'local' ? (
+                    <span className="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1">
+                      <Cpu className="w-3 h-3 text-amber-500" />
+                      LOCAL ENGINE
+                    </span>
+                  ) : (
+                    <span className="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/30 flex items-center gap-1">
+                      MOCK BENCHMARK
+                    </span>
+                  )}
+
                   <span
                     className={`px-2.5 py-1 rounded-full text-xs font-mono font-bold flex items-center gap-1 ${
                       result.confidence === 'HIGH'
@@ -675,6 +725,64 @@ export default function IntelligenceAssistantPage() {
               <div className="prose prose-sm dark:prose-invert max-w-none text-slate-800 dark:text-slate-200 text-sm leading-relaxed bg-slate-50/50 dark:bg-[#14172b]/50 p-4 rounded-xl border border-slate-200/50 dark:border-white/[0.04]">
                 {result.answer}
               </div>
+
+              {/* Epistemological Separation: Facts vs Claims vs Uncertainty */}
+              {Boolean((result.factual_basis && result.factual_basis.length > 0) ||
+                (result.claims && result.claims.length > 0) ||
+                (result.uncertainty && result.uncertainty.length > 0)) && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+                  {result.factual_basis && result.factual_basis.length > 0 && (
+                    <div className="p-3 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40">
+                      <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5 mb-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        Verified Facts ({result.factual_basis.length})
+                      </div>
+                      <ul className="space-y-1 text-xs text-emerald-950 dark:text-emerald-200">
+                        {result.factual_basis.map((f, i) => (
+                          <li key={i} className="flex items-start gap-1.5">
+                            <span className="text-emerald-500 font-bold">•</span>
+                            <span>{f}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {result.claims && result.claims.length > 0 && (
+                    <div className="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40">
+                      <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300 flex items-center gap-1.5 mb-1.5">
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                        Contested Claims ({result.claims.length})
+                      </div>
+                      <ul className="space-y-1 text-xs text-amber-950 dark:text-amber-200">
+                        {result.claims.map((c, i) => (
+                          <li key={i} className="flex items-start gap-1.5">
+                            <span className="text-amber-500 font-bold">•</span>
+                            <span>{c}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {result.uncertainty && result.uncertainty.length > 0 && (
+                    <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-white/[0.08]">
+                      <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5 mb-1.5">
+                        <AlertOctagon className="w-3.5 h-3.5 text-slate-500" />
+                        Uncertainty / Flags ({result.uncertainty.length})
+                      </div>
+                      <ul className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                        {result.uncertainty.map((u, i) => (
+                          <li key={i} className="flex items-start gap-1.5">
+                            <span className="text-slate-400 font-bold">•</span>
+                            <span>{u}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {result.evidence_citations && result.evidence_citations.length > 0 && (
                 <div className="space-y-2 pt-2">

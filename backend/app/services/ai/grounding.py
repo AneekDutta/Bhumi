@@ -3,6 +3,7 @@ Grounding Service & Context Minimization
 SIH26016 Land Acquisition Platform - KOSH
 Constructs normalized, privacy-sanitized AIContext strictly grounded in system data.
 """
+import asyncio
 import re
 from typing import Any, Dict, List, Optional
 from fastapi import HTTPException, status
@@ -185,53 +186,76 @@ class GroundingService:
                 )
             )
 
-        # 5. Explainable Risk Summary
+        # 5, 6, 7. Explainable Risk, Statutory Deadlines & Valuation (Parallelized for low latency)
         risk_summary = {}
+        statutory_clocks = []
+        compensation_summary = {}
+
         if parcel_id:
-            try:
-                risk_dossier = await acquisition_risk_engine.evaluate_parcel_risk(parcel_id.strip().upper(), db=db)
+            norm_pid = parcel_id.strip().upper()
+
+            async def _fetch_risk():
+                try:
+                    return await acquisition_risk_engine.evaluate_parcel_risk(norm_pid, db=db)
+                except Exception as e:
+                    return e
+
+            async def _fetch_deadlines():
+                try:
+                    return await statutory_deadline_engine.get_parcel_deadlines(norm_pid, db=db)
+                except Exception:
+                    return []
+
+            async def _fetch_valuation():
+                try:
+                    return await valuation_engine.get_or_calculate_valuation(norm_pid, db=db)
+                except Exception:
+                    return None
+
+            risk_res, dls, val = await asyncio.gather(
+                _fetch_risk(),
+                _fetch_deadlines(),
+                _fetch_valuation(),
+            )
+
+            # Process Risk Dossier
+            if isinstance(risk_res, Exception):
+                risk_summary = {"notice": f"Risk engine evaluation: {risk_res}"}
+            elif risk_res:
                 risk_summary = {
-                    "composite_score": risk_dossier.composite_score,
-                    "overall_severity": risk_dossier.overall_severity.value,
-                    "critical_dimensions_count": len(risk_dossier.critical_dimensions),
-                    "primary_bottleneck_reason": risk_dossier.primary_bottleneck_reason,
-                    "recommended_action": risk_dossier.recommended_action,
+                    "overall_severity": str(getattr(risk_res, "overall_highest_severity", "MEDIUM")),
+                    "primary_bottleneck_reason": getattr(risk_res, "why_explanation_summary", "Active risk condition on parcel"),
+                    "primary_dimension": getattr(risk_res, "primary_risk_dimension", "TENURE"),
+                    "total_float_days": getattr(risk_res, "total_float_days", 0),
                     "dimensions": [
                         {
-                            "type": d.dimension_type.value,
-                            "severity": d.severity.value,
-                            "score": d.score,
-                            "why": d.why,
-                            "legal_basis": d.legal_basis,
-                            "cpm_float_days": d.cpm_schedule_float_days,
-                            "mitigation": d.mitigation_action,
+                            "type": getattr(d, "dimension", str(d)),
+                            "severity": getattr(d, "severity", "MEDIUM"),
+                            "score": getattr(d, "risk_score", 50),
+                            "why": getattr(d, "explanation", ""),
+                            "legal_basis": getattr(d, "statutory_governance", ""),
+                            "mitigation": getattr(d, "mitigation_action", ""),
                         }
-                        for d in risk_dossier.dimension_evaluations
-                        if d.severity.value in ["CRITICAL", "HIGH"]
+                        for d in getattr(risk_res, "dimensions", [])
                     ]
                 }
-                for dim in risk_dossier.dimension_evaluations:
-                    if dim.severity.value in ["CRITICAL", "HIGH"]:
+                for dim in getattr(risk_res, "dimensions", []):
+                    sev = str(getattr(dim, "severity", "")).upper()
+                    if "CRITICAL" in sev or "HIGH" in sev:
                         evidence_refs.append(
                             EvidenceRef(
                                 source_type=SourceType.RISK_DIMENSION,
-                                source_id=dim.dimension_type.value,
-                                label=f"Risk Trigger: {dim.dimension_type.value} ({dim.why})",
-                                parcel_id=parcel_id.strip().upper(),
+                                source_id=str(getattr(dim, "dimension", "RISK")),
+                                label=f"Risk Trigger: {getattr(dim, 'dimension', 'RISK')} ({getattr(dim, 'explanation', '')})",
+                                parcel_id=norm_pid,
                                 project_id=project_id,
                                 verification_status="VERIFIED",
-                                url_or_route=f"/risk"
+                                url_or_route="/risk"
                             )
                         )
-            except Exception as e:
-                risk_summary = {"notice": f"Risk engine evaluation: {e}"}
 
-        # 6. Statutory Deadlines & Limitation Clocks
-        statutory_clocks = []
-        if parcel_id:
-            try:
-                norm_pid = parcel_id.strip().upper()
-                dls = await statutory_deadline_engine.get_parcel_deadlines(norm_pid, db=db)
+            # Process Statutory Deadlines
+            if dls:
                 for dl in dls:
                     statutory_clocks.append({
                         "deadline_id": dl.get("deadline_id"),
@@ -253,72 +277,72 @@ class GroundingService:
                             url_or_route=f"/deadlines/parcels/{norm_pid}"
                         )
                     )
-            except Exception:
-                pass
 
-        # 7. Compensation & Valuation State
-        compensation_summary = {}
-        if parcel_id:
-            try:
-                norm_pid = parcel_id.strip().upper()
-                val = await valuation_engine.get_or_calculate_valuation(norm_pid, db=db)
-                if val:
-                    calc = val.get("calculation") or {}
-                    steps = calc.get("steps") or {}
-                    compensation_summary = {
-                        "compensation_id": val.get("compensation_id"),
-                        "status": val.get("status"),
-                        "total_compensation": calc.get("total_compensation"),
-                        "base_market_value": steps.get("step1_base_market_value", {}).get("result_inr"),
-                        "multiplier": steps.get("step2_multiplier", {}).get("result_inr"),
-                        "solatium_100pct": steps.get("step4_solatium", {}).get("result_inr"),
-                        "additional_statutory_amount_12pct": steps.get("step5_additional_amount", {}).get("result_inr"),
-                        "is_disputed": val.get("status") in ["DISPUTED", "ON_HOLD"],
-                    }
-                    label_amt = float(calc.get("total_compensation") or 0)
-                    evidence_refs.append(
-                        EvidenceRef(
-                            source_type=SourceType.AWARD,
-                            source_id=val.get("compensation_id", f"COMP-{norm_pid}"),
-                            label=f"Valuation Award: ₹{label_amt:,.2f} ({val.get('status')})",
-                            parcel_id=norm_pid,
-                            project_id=project_id,
-                            verification_status="VERIFIED" if val.get("status") in ["APPROVED", "PAID"] else "CALCULATED",
-                            url_or_route=f"/valuation/parcels/{norm_pid}"
-                        )
+            # Process Valuation
+            if val:
+                calc = val.get("calculation") or {}
+                steps = calc.get("steps") or {}
+                compensation_summary = {
+                    "compensation_id": val.get("compensation_id"),
+                    "status": val.get("status"),
+                    "total_compensation": calc.get("total_compensation"),
+                    "base_market_value": steps.get("step1_base_market_value", {}).get("result_inr"),
+                    "multiplier": steps.get("step2_multiplier", {}).get("result_inr"),
+                    "solatium_100pct": steps.get("step4_solatium", {}).get("result_inr"),
+                    "additional_statutory_amount_12pct": steps.get("step5_additional_amount", {}).get("result_inr"),
+                    "is_disputed": val.get("status") in ["DISPUTED", "ON_HOLD"],
+                }
+                label_amt = float(calc.get("total_compensation") or 0)
+                evidence_refs.append(
+                    EvidenceRef(
+                        source_type=SourceType.AWARD,
+                        source_id=val.get("compensation_id", f"COMP-{norm_pid}"),
+                        label=f"Valuation Award: ₹{label_amt:,.2f} ({val.get('status')})",
+                        parcel_id=norm_pid,
+                        project_id=project_id,
+                        verification_status="VERIFIED" if val.get("status") in ["APPROVED", "PAID"] else "CALCULATED",
+                        url_or_route=f"/valuation/parcels/{norm_pid}"
                     )
-            except Exception:
-                pass
+                )
 
-        # 8. Applicable Legal Provisions from Knowledge Center
+        # 8. Applicable Legal Provisions from Knowledge Center (Curated for query/parcel relevance)
         legal_references = []
         try:
-            # Add essential core RFCTLARR provisions
-            sections_to_fetch = ["SEC-15", "SEC-19", "SEC-21", "SEC-23", "SEC-25", "SEC-26", "SEC-30", "SEC-38", "SEC-64", "SEC-80"]
-            for sec_id in sections_to_fetch:
-                prov = legal_service.get_provision(sec_id)
-                if prov:
+            provs = await legal_service.get_all_provisions(db=db)
+            # Baseline core acquisition sections: 19 (Declaration), 23/25 (Award), 38 (Possession & Payment Prerequisite)
+            relevant_secs = {"19", "23", "25", "38"}
+            if active_issues or (parcel_summary and parcel_summary.get("ownership_conflict")):
+                relevant_secs.update({"15", "64"})
+            if compensation_summary.get("is_disputed") or (parcel_summary and "compensation" in str(parcel_summary.get("acquisition_status", ""))):
+                relevant_secs.update({"26", "30", "77-80"})
+
+            for prov in provs:
+                sec_num = str(prov.get("section_number"))
+                if sec_num in relevant_secs or any(rs in sec_num for rs in relevant_secs):
+                    sec_id = prov.get("id") or f"SEC-{sec_num}"
+                    title = prov.get("title", "")
+                    summary = prov.get("plain_language_summary") or prov.get("officer_guidance") or ""
                     legal_references.append({
-                        "section_id": prov.section_id,
-                        "title": prov.title,
-                        "chapter": prov.chapter,
-                        "legal_text_summary": prov.legal_text[:250] + "...",
-                        "time_limit": prov.time_limit,
-                        "statutory_consequence": prov.consequence_of_failure,
-                        "official_source": prov.official_source_citation,
+                        "section_id": f"Section {sec_num}",
+                        "title": title,
+                        "chapter": prov.get("acquisition_stage", ""),
+                        "legal_text_summary": summary[:280],
+                        "time_limit": f"{prov.get('deadline_days')} days" if prov.get("deadline_days") else None,
+                        "statutory_consequence": prov.get("consequence_if_overdue"),
+                        "official_source": prov.get("source_document", "RFCTLARR Act 2013"),
                     })
                     evidence_refs.append(
                         EvidenceRef(
                             source_type=SourceType.LEGAL_SECTION,
-                            source_id=prov.section_id,
-                            label=f"Statutory Provision: {prov.section_id} - {prov.title}",
+                            source_id=str(sec_id),
+                            label=f"Statutory Provision: Section {sec_num} - {title}",
                             project_id=project_id,
                             verification_status="VERIFIED",
-                            url_or_route=f"/legal-rights"
+                            url_or_route="/legal-rights"
                         )
                     )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"Error fetching legal provisions for grounding: {e}")
 
         # 9. Available Officer Actions
         available_actions = []

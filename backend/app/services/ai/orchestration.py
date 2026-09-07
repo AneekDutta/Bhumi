@@ -9,10 +9,10 @@ from typing import Any, Dict, List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import TrustedIdentity
+from app.core.config import settings
 from app.services.ai.grounding import grounding_service
 from app.services.ai.prompts import sanitize_untrusted_input
 from app.services.ai.providers.base import AIProvider
-from app.services.ai.providers.mock_provider import MockAIProvider
 from app.services.ai.schemas import (
     AIAnswer,
     AIContext,
@@ -21,8 +21,135 @@ from app.services.ai.schemas import (
     NLWhatIfResult,
     NLWhatIfScenario,
     RecommendedAction,
+    SourceType,
 )
 from app.services.sih26016_service import sih_service
+
+
+def _detect_whatif_intent(query: str, parcel_id: Optional[str] = None) -> Optional[NLWhatIfScenario]:
+    """
+    Deterministic intent recognition for standard registered KOSH simulator interventions.
+    Avoids a redundant LLM round-trip while keeping the simulation strictly deterministic.
+    """
+    q_norm = query.strip().lower()
+    target_pid = parcel_id.strip().upper() if parcel_id else "P00001"
+
+    # 1. Compensation intervention
+    if any(k in q_norm for k in [
+        "compensation blocker is resolved",
+        "compensation issue is resolved",
+        "compensation is resolved",
+        "compensation resolved",
+        "compensation blocker resolved",
+        "compensation is paid",
+        "compensation paid",
+        "disburse compensation",
+        "clear compensation",
+        "pay compensation",
+    ]):
+        return NLWhatIfScenario(
+            raw_query=query,
+            is_supported=True,
+            intervention_type="process_compensation",
+            target_entity_ids=[target_pid],
+            acceleration_factor=1.0,
+            parsed_intent=f"Simulate clearing compensation blocker and paying award on Parcel {target_pid}",
+        )
+
+    # 2. Expedite award intervention
+    if any(k in q_norm for k in [
+        "expedite award",
+        "fast track award",
+        "early award",
+        "accelerate award",
+        "speed up award",
+        "pronounce award early",
+    ]):
+        return NLWhatIfScenario(
+            raw_query=query,
+            is_supported=True,
+            intervention_type="expedite_award",
+            target_entity_ids=[target_pid],
+            acceleration_factor=1.5,
+            parsed_intent=f"Simulate expediting Section 23/25 award pronouncement on Parcel {target_pid}",
+        )
+
+    # 3. Dispute resolution intervention
+    if any(k in q_norm for k in [
+        "resolve dispute",
+        "clear dispute",
+        "settle dispute",
+        "resolve title",
+        "resolve boundary clash",
+        "clear ownership dispute",
+    ]):
+        return NLWhatIfScenario(
+            raw_query=query,
+            is_supported=True,
+            intervention_type="resolve_dispute",
+            target_entity_ids=[target_pid],
+            acceleration_factor=1.0,
+            parsed_intent=f"Simulate resolving boundary or ownership dispute on Parcel {target_pid}",
+        )
+
+    # 4. Court stay vacated intervention
+    if any(k in q_norm for k in [
+        "stay is lifted",
+        "stay vacated",
+        "court stay vacated",
+        "lift court stay",
+        "vacate injunction",
+        "stay order vacated",
+    ]):
+        return NLWhatIfScenario(
+            raw_query=query,
+            is_supported=True,
+            intervention_type="court_stay_vacated",
+            target_entity_ids=[target_pid],
+            acceleration_factor=1.0,
+            parsed_intent=f"Simulate vacation of judicial stay order on Parcel {target_pid}",
+        )
+
+    # 5. Explicit unsupported scenarios
+    if any(k in q_norm for k in [
+        "double the budget",
+        "increase funding",
+        "reroute corridor",
+        "change highway route",
+        "hire more workers",
+        "hire more contractors",
+    ]):
+        return NLWhatIfScenario(
+            raw_query=query,
+            is_supported=False,
+            unsupported_reason="Corridor budget modifications and highway alignment re-routing are outside the registered CPM cadastral dependency model.",
+            intervention_type="unsupported",
+            target_entity_ids=[target_pid],
+            acceleration_factor=1.0,
+            parsed_intent="Unsupported corridor intervention",
+        )
+
+    return None
+
+
+def resolve_ai_provider(provider_type: Optional[str] = None) -> AIProvider:
+    """
+    Resolves the canonical AIProvider implementation based on system configuration.
+    Production explicitly defaults to GeminiAIProvider.
+    """
+    prov_key = (provider_type or settings.AI_PROVIDER or "gemini").lower().strip()
+    if prov_key == "gemini":
+        from app.services.ai.providers.gemini_provider import GeminiAIProvider
+        return GeminiAIProvider()
+    elif prov_key == "local":
+        from app.services.ai.providers.local_provider import LocalAIProvider
+        return LocalAIProvider()
+    elif prov_key == "mock":
+        from app.services.ai.providers.mock_provider import MockAIProvider
+        return MockAIProvider()
+    else:
+        from app.services.ai.providers.gemini_provider import GeminiAIProvider
+        return GeminiAIProvider()
 
 
 class AIOrchestrationService:
@@ -32,8 +159,13 @@ class AIOrchestrationService:
     """
 
     def __init__(self, provider: Optional[AIProvider] = None):
-        self._provider: AIProvider = provider or MockAIProvider()
+        self._provider: AIProvider = provider or resolve_ai_provider()
         self._audit_log: List[Dict[str, Any]] = []
+
+    @property
+    def provider(self) -> AIProvider:
+        """Returns the currently active AI provider instance."""
+        return self._provider
 
     def set_provider(self, provider: AIProvider) -> None:
         """Allows hot-swapping AI providers without altering domain logic."""
@@ -108,9 +240,34 @@ class AIOrchestrationService:
             whatif_invoked = True
 
         # 3. Generate Answer
-        answer = await self._provider.generate_answer(context, clean_query)
-        if whatif_result:
-            answer.whatif_preview = whatif_result
+        if whatif_result and whatif_result.explanation:
+            source_refs = list(context.verified_evidence)
+            answer = AIAnswer(
+                query=clean_query,
+                answer=whatif_result.explanation,
+                confidence=ConfidenceLevel.HIGH if whatif_result.scenario.is_supported else ConfidenceLevel.INSUFFICIENT_EVIDENCE,
+                source_refs=source_refs,
+                legal_refs=[ref.get("section_id", "RFCTLARR") for ref in context.legal_references],
+                evidence_refs=[r for r in source_refs if r.source_type in [SourceType.DOCUMENT, SourceType.AWARD, SourceType.CPM_NODE]],
+                recommended_actions=[],
+                assumptions=[f"Simulation assumes: {whatif_result.scenario.parsed_intent}"],
+                unanswered_questions=[] if whatif_result.scenario.is_supported else [whatif_result.explanation],
+                provider=self._provider.provider_name,
+                model=getattr(self._provider, "active_model_name", getattr(self._provider, "model_name", "gemini-flash-latest")),
+                grounded=True,
+                factual_basis=[
+                    f"Baseline Corridor Delay: {whatif_result.baseline_delay_days} days",
+                    f"Counterfactual Corridor Delay: {whatif_result.scenario_delay_days} days",
+                    f"Modeled Delay Reduction: {whatif_result.delay_reduction_days} days",
+                ],
+                claims=[],
+                uncertainty=["Simulation modeled on currently registered CPM topological dependency graph."],
+                whatif_preview=whatif_result,
+            )
+        else:
+            answer = await self._provider.generate_answer(context, clean_query)
+            if whatif_result:
+                answer.whatif_preview = whatif_result
 
         # 4. Audit Trail
         self._log_audit(
@@ -187,13 +344,16 @@ class AIOrchestrationService:
         Parses natural language scenario -> Runs deterministic What-If engine -> Explains result.
         The LLM NEVER computes CPM values; numbers are produced strictly by WhatIfSimulator.
         """
-        context = await grounding_service.build_context(
-            parcel_id=parcel_id,
-            project_id=project_id,
-            user=user,
-            db=db,
-        )
-        scenario = await self._provider.parse_whatif_scenario(query, context)
+        # 1. Deterministic intent recognition first to eliminate redundant LLM round-trip
+        scenario = _detect_whatif_intent(query, parcel_id)
+        if scenario is None:
+            context = await grounding_service.build_context(
+                parcel_id=parcel_id,
+                project_id=project_id,
+                user=user,
+                db=db,
+            )
+            scenario = await self._provider.parse_whatif_scenario(query, context)
 
         if not scenario.is_supported:
             return NLWhatIfResult(

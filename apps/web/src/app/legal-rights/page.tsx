@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import {
   Scale,
   BookOpen,
@@ -21,7 +22,6 @@ import {
   ArrowRight,
   Filter,
   X,
-  Info,
   Calendar,
   Zap,
 } from 'lucide-react';
@@ -60,6 +60,7 @@ export default function LegalRightsPage() {
     7: true,
     11: true,
     12: true,
+    14: true,
   });
 
   // Selected provision for modal
@@ -85,19 +86,21 @@ export default function LegalRightsPage() {
         const [discRes, provRes, offRes, loRes, rulesRes, sumRes] = await Promise.all([
           getLegalDisclaimer().catch(() => ({
             disclaimer:
-              'KOSH provides statutory information and workflow guidance based on configured legal sources. It does not provide legal advice or determine legal rights. Verify the current applicable law with the competent authority.',
+              'KOSH provides statutory information and workflow guidance based on configured legal sources. It does not provide legal advice or determine legal rights. Verify current applicable law with the competent authority or a qualified legal professional.',
           })),
           getLegalProvisions().catch(() => []),
-          getOfficerProceduralGuide().catch(() => ({ stages: [] })),
-          getLandownerRightsGuide().catch(() => ({ sections: [] })),
+          getOfficerProceduralGuide().catch(() => []),
+          getLandownerRightsGuide().catch(() => []),
           getDeadlineRules().catch(() => []),
           getCorridorDeadlineSummary().catch(() => null),
         ]);
 
         setDisclaimer(discRes?.disclaimer || '');
         setProvisions(provRes || []);
-        setOfficerStages(offRes?.stages || []);
-        setLandownerSections(loRes?.sections || []);
+        const stages = Array.isArray(offRes) ? offRes : (offRes?.stages || []);
+        const sections = Array.isArray(loRes) ? loRes : (loRes?.sections || []);
+        setOfficerStages(stages);
+        setLandownerSections(sections);
         setDeadlineRules(rulesRes || []);
         setCorridorSummary(sumRes);
       } catch (err) {
@@ -152,15 +155,12 @@ export default function LegalRightsPage() {
   // Filtered provisions
   const filteredProvisions = useMemo(() => {
     return provisions.filter((p) => {
-      // Category filter
       if (selectedCategory !== 'ALL' && p.category !== selectedCategory) {
         return false;
       }
-      // Jurisdiction filter
       if (selectedJurisdiction !== 'ALL' && p.jurisdiction !== selectedJurisdiction) {
         return false;
       }
-      // Search query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const matchTitle = (p.title || '').toLowerCase().includes(q);
@@ -175,57 +175,56 @@ export default function LegalRightsPage() {
   }, [provisions, selectedCategory, selectedJurisdiction, searchQuery]);
 
   return (
-    <div className="space-y-8 pb-16 bg-[#07080F] rounded-xl -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-6">
+    <div className="space-y-6 text-slate-800 dark:text-[#f0f4ff]">
       {/* Header Banner */}
-      <div className="rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/60 to-slate-900 border border-slate-800/80 p-6 md:p-8 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+      <div className="rounded-2xl bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/[0.08] p-6 md:p-8 shadow-sm relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-3xl">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#0B2E59]/10 dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 border border-[#0B2E59]/20 dark:border-sky-800/40">
                 <Scale className="w-3.5 h-3.5" /> Statutory Knowledge Center
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30">
                 <Clock className="w-3.5 h-3.5" /> Deterministic Deadline Engine
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                <CheckCircle2 className="w-3.5 h-3.5" /> India Code & Rajasthan Gazette Verified
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                <CheckCircle2 className="w-3.5 h-3.5" /> India Code &amp; Rajasthan Gazette Verified
               </span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-              Land Acquisition Law & Rights
+            <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight font-display">
+              Land Acquisition Law &amp; Rights
             </h1>
-            <p className="text-sm md:text-base text-slate-300 leading-relaxed">
-              Statutory reference, citizen entitlements, procedural duties, and evidence rules under the{' '}
-              <strong className="text-white">RFCTLARR Act, 2013</strong> (Act No. 30 of 2013) and{' '}
-              <strong className="text-white">Rajasthan RFCTLARR Rules, 2016</strong>.
+            <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+              Authoritative statutory reference, citizen entitlements, procedural duties, and evidence rules under the{' '}
+              <strong className="text-slate-900 dark:text-white">RFCTLARR Act, 2013</strong> (Act No. 30 of 2013) and{' '}
+              <strong className="text-slate-900 dark:text-white">Rajasthan RFCTLARR Rules, 2016</strong>.
             </p>
           </div>
 
-          <div className="flex items-center gap-3 self-start md:self-auto flex-wrap">
+          <div className="flex items-center gap-4 self-start md:self-auto flex-wrap">
             <div className="text-right hidden sm:block">
-              <div className="text-xs text-slate-400">Statutory Stages</div>
-              <div className="text-xl font-bold font-mono text-indigo-400">17 Stages</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">Statutory Stages</div>
+              <div className="text-xl font-bold font-mono text-[#0B2E59] dark:text-sky-400">17 Stages</div>
             </div>
-            <div className="h-8 w-px bg-slate-800 hidden sm:block" />
+            <div className="h-8 w-px bg-slate-200 dark:bg-white/10 hidden sm:block" />
             <div className="text-right hidden sm:block">
-              <div className="text-xs text-slate-400">Statutory Clocks</div>
-              <div className="text-xl font-bold font-mono text-amber-400">{deadlineRules.length || 11} Rules</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">Statutory Clocks</div>
+              <div className="text-xl font-bold font-mono text-amber-600 dark:text-amber-400">{deadlineRules.length || 11} Rules</div>
             </div>
-            <div className="h-8 w-px bg-slate-800 hidden sm:block" />
+            <div className="h-8 w-px bg-slate-200 dark:bg-white/10 hidden sm:block" />
             <div className="text-right hidden sm:block">
-              <div className="text-xs text-slate-400">Seeded Provisions</div>
-              <div className="text-xl font-bold font-mono text-emerald-400">19 Authoritative</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">Provisions</div>
+              <div className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400">{provisions.length || 19} Verified</div>
             </div>
           </div>
         </div>
 
         {/* Restrained Statutory Disclaimer */}
-        <div className="mt-6 rounded-xl bg-amber-500/10 border border-amber-500/20 p-4 text-xs text-amber-200/90 leading-relaxed flex items-start gap-3">
-          <ShieldAlert className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+        <div className="mt-6 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 p-4 text-xs text-amber-800 dark:text-amber-300 leading-relaxed flex items-start gap-3">
+          <ShieldAlert className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
           <div>
-            <span className="font-bold text-amber-300 uppercase tracking-wider text-[11px] block mb-0.5">
-              Decision-Support & Statutory Information Notice
+            <span className="font-bold uppercase tracking-wider text-[11px] block mb-0.5">
+              Decision-Support &amp; Statutory Information Notice
             </span>
             {disclaimer ||
               'KOSH provides statutory information and workflow guidance based on configured legal sources. It does not provide legal advice or determine legal rights. Verify current applicable law with the competent authority or a qualified legal professional.'}
@@ -234,15 +233,15 @@ export default function LegalRightsPage() {
       </div>
 
       {/* Role Navigation & Search Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-700 pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-white/[0.08] pb-4">
         {/* Role Tabs */}
-        <div className="flex items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800 flex-wrap">
+        <div className="flex items-center gap-2 bg-slate-100 dark:bg-[#0C111D] p-1.5 rounded-xl border border-slate-200 dark:border-white/[0.08] flex-wrap">
           <button
             onClick={() => setActiveTab('landowner')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all ${
               activeTab === 'landowner'
-                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                ? 'bg-emerald-600 text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.05]'
             }`}
           >
             <UserCheck className="w-4 h-4" />
@@ -252,8 +251,8 @@ export default function LegalRightsPage() {
             onClick={() => setActiveTab('officer')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all ${
               activeTab === 'officer'
-                ? 'bg-[#0B2E59] text-white shadow-lg shadow-[#0B2E59]/30'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                ? 'bg-[#0B2E59] text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.05]'
             }`}
           >
             <Compass className="w-4 h-4" />
@@ -263,19 +262,19 @@ export default function LegalRightsPage() {
             onClick={() => setActiveTab('deadlines')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all ${
               activeTab === 'deadlines'
-                ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/20'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                ? 'bg-amber-600 text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.05]'
             }`}
           >
             <Clock className="w-4 h-4" />
-            <span>Statutory Clocks & Deadlines</span>
+            <span>Statutory Clocks &amp; Deadlines</span>
           </button>
           <button
             onClick={() => setActiveTab('provisions')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all ${
               activeTab === 'provisions'
-                ? 'bg-sky-600 text-white shadow-lg shadow-sky-600/20'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                ? 'bg-sky-600 text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.05]'
             }`}
           >
             <BookOpen className="w-4 h-4" />
@@ -285,18 +284,18 @@ export default function LegalRightsPage() {
 
         {/* Global Search */}
         <div className="relative w-full md:w-80">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search sections, solatium, clocks..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+            className="w-full pl-9 pr-8 py-2 rounded-xl bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0B2E59] transition-all"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -307,15 +306,15 @@ export default function LegalRightsPage() {
       {/* Filter Chips Bar */}
       <div className="flex items-center justify-between flex-wrap gap-3 text-xs">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-slate-500 flex items-center gap-1 font-mono text-[11px]">
+          <span className="text-slate-500 font-mono text-[11px] flex items-center gap-1">
             <Filter className="w-3 h-3" /> Jurisdiction:
           </span>
           <button
             onClick={() => setSelectedJurisdiction('ALL')}
             className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors ${
               selectedJurisdiction === 'ALL'
-                ? 'bg-slate-700 text-white'
-                : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                ? 'bg-[#0B2E59] text-white'
+                : 'bg-white dark:bg-[#0C111D] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10'
             }`}
           >
             All
@@ -324,8 +323,8 @@ export default function LegalRightsPage() {
             onClick={() => setSelectedJurisdiction('CENTRAL')}
             className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors ${
               selectedJurisdiction === 'CENTRAL'
-                ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/40'
-                : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                ? 'bg-[#0B2E59] text-white'
+                : 'bg-white dark:bg-[#0C111D] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10'
             }`}
           >
             Central Baseline (RFCTLARR 2013)
@@ -334,8 +333,8 @@ export default function LegalRightsPage() {
             onClick={() => setSelectedJurisdiction('RAJASTHAN')}
             className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors ${
               selectedJurisdiction === 'RAJASTHAN'
-                ? 'bg-amber-600/30 text-amber-300 border border-amber-500/40'
-                : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                ? 'bg-amber-600 text-white'
+                : 'bg-white dark:bg-[#0C111D] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10'
             }`}
           >
             Rajasthan State Rules (2016)
@@ -352,7 +351,7 @@ export default function LegalRightsPage() {
                 className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase transition-colors ${
                   selectedCategory === cat
                     ? 'bg-sky-600 text-white font-bold'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                    : 'bg-white dark:bg-[#0C111D] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10'
                 }`}
               >
                 {cat}
@@ -364,22 +363,22 @@ export default function LegalRightsPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-20 text-slate-500 gap-3">
-          <div className="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-          <span>Loading verified statutory provisions from PostgreSQL...</span>
+          <div className="w-5 h-5 border-2 border-[#0B2E59] border-t-transparent rounded-full animate-spin" />
+          <span>Loading verified statutory provisions from legal repository...</span>
         </div>
       ) : (
         <>
           {/* TAB 1: LANDOWNER VIEW */}
           {activeTab === 'landowner' && (
             <div className="space-y-6">
-              <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-emerald-200/90 text-xs leading-relaxed flex items-center justify-between flex-wrap gap-3">
+              <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 text-emerald-800 dark:text-emerald-200 text-xs leading-relaxed flex items-center justify-between flex-wrap gap-3">
                 <div className="flex items-center gap-2.5">
-                  <UserCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                  <UserCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
                   <span>
-                    <strong>Landowner Empowerment Module:</strong> Practical explanations of your rights, notices, how compensation is calculated, and steps if you disagree.
+                    <strong>Landowner Empowerment Module:</strong> Practical explanations of your statutory rights, notices, how compensation is calculated, and procedure if you disagree with an award or demarcation.
                   </span>
                 </div>
-                <div className="text-[11px] font-mono text-emerald-400">
+                <div className="text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">
                   6 Core Protection Areas
                 </div>
               </div>
@@ -393,22 +392,22 @@ export default function LegalRightsPage() {
                 return (
                   <div
                     key={sec.section_key}
-                    className="rounded-xl bg-slate-900 border border-slate-800 overflow-hidden shadow-lg transition-all"
+                    className="rounded-xl bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/[0.08] overflow-hidden shadow-xs transition-all"
                   >
                     <button
                       onClick={() => toggleSection(sec.section_key)}
-                      className="w-full p-5 flex items-center justify-between text-left hover:bg-slate-800/40 transition-colors"
+                      className="w-full p-5 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center gap-3">
-                          <span className="text-base md:text-lg font-bold text-white">
+                          <span className="text-base md:text-lg font-bold text-slate-900 dark:text-white font-display">
                             {sec.title}
                           </span>
-                          <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-mono border border-emerald-500/20">
+                          <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-mono border border-emerald-500/20 font-semibold">
                             {sec.questions.length} Practical Questions
                           </span>
                         </div>
-                        <p className="text-xs text-slate-400">{sec.subtitle}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{sec.subtitle}</p>
                       </div>
                       <div className="text-slate-400 ml-4 flex-shrink-0">
                         {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
@@ -416,30 +415,30 @@ export default function LegalRightsPage() {
                     </button>
 
                     {isExpanded && (
-                      <div className="p-5 border-t border-slate-800/80 bg-slate-950/40 space-y-6">
+                      <div className="p-5 border-t border-slate-100 dark:border-white/[0.06] bg-slate-50/50 dark:bg-[#101424] space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {sec.questions.map((q: any, qIdx: number) => (
                             <div
                               key={qIdx}
-                              className="rounded-xl bg-slate-900/90 border border-slate-800 p-4 space-y-3 flex flex-col justify-between"
+                              className="rounded-xl bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/[0.08] p-4 space-y-3 flex flex-col justify-between shadow-xs"
                             >
                               <div className="space-y-2">
                                 <div className="flex items-start justify-between gap-2">
-                                  <h4 className="text-sm font-semibold text-slate-100 flex items-start gap-2">
-                                    <HelpCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                                  <h4 className="text-sm font-semibold text-slate-900 dark:text-white flex items-start gap-2">
+                                    <HelpCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
                                     <span>{q.question}</span>
                                   </h4>
-                                  <span className="text-[10px] font-mono text-indigo-400 px-2 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20 flex-shrink-0">
+                                  <span className="text-[10px] font-mono font-bold text-[#0B2E59] dark:text-sky-300 px-2 py-0.5 rounded bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/40 flex-shrink-0">
                                     {q.linked_section}
                                   </span>
                                 </div>
-                                <p className="text-xs text-slate-300 leading-relaxed">
+                                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                                   {q.answer}
                                 </p>
                               </div>
 
-                              <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/20 p-2.5 text-xs text-emerald-300/90 flex items-start gap-2">
-                                <span className="font-bold text-emerald-400 uppercase text-[10px] flex-shrink-0 mt-0.5">
+                              <div className="rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 p-2.5 text-xs text-emerald-800 dark:text-emerald-200 flex items-start gap-2">
+                                <span className="font-bold uppercase text-[10px] flex-shrink-0 mt-0.5">
                                   Action:
                                 </span>
                                 <span>{q.action_needed}</span>
@@ -449,9 +448,9 @@ export default function LegalRightsPage() {
                         </div>
 
                         {secProvisions.length > 0 && (
-                          <div className="pt-2 border-t border-slate-800/60">
-                            <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                              <BookOpen className="w-3.5 h-3.5 text-indigo-400" />
+                          <div className="pt-2 border-t border-slate-200 dark:border-white/[0.06]">
+                            <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5 font-semibold">
+                              <BookOpen className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
                               Authoritative Governing Provisions
                             </div>
                             <div className="flex flex-wrap gap-2">
@@ -459,15 +458,15 @@ export default function LegalRightsPage() {
                                 <button
                                   key={p.id}
                                   onClick={() => setSelectedProvision(p)}
-                                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs text-slate-200 transition-colors text-left"
+                                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white dark:bg-[#0C111D] hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-white/10 text-xs text-slate-800 dark:text-slate-200 transition-colors text-left shadow-xs"
                                 >
-                                  <span className="font-mono font-bold text-indigo-400">
+                                  <span className="font-mono font-bold text-[#0B2E59] dark:text-sky-400">
                                     Sec {p.section_number}
                                   </span>
-                                  <span className="truncate max-w-[260px] text-slate-300">
+                                  <span className="truncate max-w-[260px] text-slate-700 dark:text-slate-300">
                                     {p.title}
                                   </span>
-                                  <ExternalLink className="w-3 h-3 text-slate-500 flex-shrink-0" />
+                                  <ExternalLink className="w-3 h-3 text-slate-400 flex-shrink-0" />
                                 </button>
                               ))}
                             </div>
@@ -481,17 +480,17 @@ export default function LegalRightsPage() {
             </div>
           )}
 
-          {/* TAB 2: FIELD OFFICER VIEW */}
+          {/* TAB 2: FIELD OFFICER VIEW (17 STAGES) */}
           {activeTab === 'officer' && (
             <div className="space-y-6">
-              <div className="p-4 rounded-xl bg-indigo-950/20 border border-indigo-500/20 text-indigo-200/90 text-xs leading-relaxed flex items-center justify-between flex-wrap gap-3">
+              <div className="p-4 rounded-xl bg-sky-50 dark:bg-sky-950/20 border border-sky-200 dark:border-sky-800/40 text-xs leading-relaxed flex items-center justify-between flex-wrap gap-3 text-slate-800 dark:text-sky-200">
                 <div className="flex items-center gap-2.5">
-                  <Compass className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+                  <Compass className="w-4 h-4 text-[#0B2E59] dark:text-sky-400 flex-shrink-0" />
                   <span>
                     <strong>Statutory Procedural Roadmap:</strong> The 17 sequential stages of land acquisition under RFCTLARR Act, 2013 and Rajasthan Rules 2016. Ensure all statutory clocks and evidentiary requirements are met to prevent legal lapse.
                   </span>
                 </div>
-                <div className="text-[11px] font-mono text-indigo-400">
+                <div className="text-[11px] font-mono text-[#0B2E59] dark:text-sky-400 font-bold">
                   17 Sequential Statutory Stages
                 </div>
               </div>
@@ -500,7 +499,7 @@ export default function LegalRightsPage() {
                 {officerStages.map((stage) => {
                   const isExpanded = expandedStages[stage.stage_number] ?? false;
                   const isHardLapse =
-                    stage.risk_if_overdue.toLowerCase().includes('lapse') ||
+                    stage.risk_if_overdue?.toLowerCase().includes('lapse') ||
                     stage.stage_number === 7 ||
                     stage.stage_number === 12;
 
@@ -509,39 +508,39 @@ export default function LegalRightsPage() {
                       key={stage.stage_number}
                       className={`rounded-xl border transition-all ${
                         isHardLapse
-                          ? 'bg-slate-900 border-rose-900/40 shadow-rose-950/20'
-                          : 'bg-slate-900 border-slate-800'
+                          ? 'bg-white dark:bg-[#0C111D] border-rose-300 dark:border-rose-900/40 shadow-xs'
+                          : 'bg-white dark:bg-[#0C111D] border-slate-200 dark:border-white/[0.08] shadow-xs'
                       }`}
                     >
                       <button
                         onClick={() => toggleStage(stage.stage_number)}
-                        className="w-full p-5 flex items-center justify-between text-left hover:bg-slate-800/30 transition-colors"
+                        className="w-full p-5 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors"
                       >
                         <div className="flex items-start md:items-center gap-4">
                           <div
                             className={`w-9 h-9 rounded-xl font-mono font-bold text-sm flex items-center justify-center flex-shrink-0 ${
                               isHardLapse
-                                ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
-                                : 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
+                                ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/40'
+                                : 'bg-slate-100 dark:bg-slate-800 text-[#0B2E59] dark:text-sky-400 border border-slate-200 dark:border-white/10'
                             }`}
                           >
                             {stage.stage_number}
                           </div>
                           <div className="space-y-1">
                             <div className="flex items-center gap-2.5 flex-wrap">
-                              <h3 className="text-base font-bold text-white">
+                              <h3 className="text-base font-bold text-slate-900 dark:text-white">
                                 {stage.stage_name}
                               </h3>
                               {isHardLapse && (
-                                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/30">
+                                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/40">
                                   CRITICAL STATUTORY CLOCK (LAPSE RISK)
                                 </span>
                               )}
                             </div>
-                            <div className="flex items-center gap-3 text-xs text-slate-400 flex-wrap">
-                              <span>Clock: <strong className="text-slate-300">{stage.statutory_clock}</strong></span>
+                            <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
+                              <span>Clock: <strong className="text-slate-800 dark:text-slate-200 font-medium">{stage.statutory_clock}</strong></span>
                               <span>•</span>
-                              <span>Milestone: <strong className="text-indigo-300 font-mono">{stage.related_milestone}</strong></span>
+                              <span>Milestone: <strong className="text-[#0B2E59] dark:text-sky-300 font-mono font-semibold">{stage.related_milestone}</strong></span>
                             </div>
                           </div>
                         </div>
@@ -551,26 +550,26 @@ export default function LegalRightsPage() {
                       </button>
 
                       {isExpanded && (
-                        <div className="p-5 border-t border-slate-800/80 bg-slate-950/50 space-y-4">
+                        <div className="p-5 border-t border-slate-100 dark:border-white/[0.06] bg-slate-50/50 dark:bg-[#101424] space-y-4">
                           <div className="space-y-1.5">
-                            <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
+                            <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">
                               Officer Statutory Responsibility
                             </div>
-                            <p className="text-xs text-slate-200 leading-relaxed">
+                            <p className="text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-normal">
                               {stage.officer_responsibility}
                             </p>
                           </div>
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                            <div className="rounded-lg bg-slate-900/90 border border-slate-800 p-3.5 space-y-2">
-                              <div className="font-semibold text-slate-200 flex items-center gap-1.5 font-mono text-[11px]">
-                                <FileText className="w-3.5 h-3.5 text-indigo-400" />
+                            <div className="rounded-lg bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/[0.08] p-3.5 space-y-2">
+                              <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5 font-mono text-[11px]">
+                                <FileText className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
                                 Mandatory Evidentiary Records
                               </div>
-                              <ul className="space-y-1.5 text-slate-300">
-                                {stage.required_evidence.map((doc: string, dIdx: number) => (
+                              <ul className="space-y-1.5 text-slate-700 dark:text-slate-300">
+                                {stage.required_evidence?.map((doc: string, dIdx: number) => (
                                   <li key={dIdx} className="flex items-start gap-2">
-                                    <span className="text-indigo-400 text-sm leading-none">•</span>
+                                    <span className="text-[#0B2E59] dark:text-sky-400 text-sm leading-none">•</span>
                                     <span>{doc}</span>
                                   </li>
                                 ))}
@@ -580,13 +579,13 @@ export default function LegalRightsPage() {
                             <div
                               className={`rounded-lg p-3.5 space-y-2 border ${
                                 isHardLapse
-                                  ? 'bg-rose-950/20 border-rose-500/30 text-rose-200/90'
-                                  : 'bg-amber-950/20 border-amber-500/20 text-amber-200/90'
+                                  ? 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-800/40 text-rose-800 dark:text-rose-200'
+                                  : 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/40 text-amber-800 dark:text-amber-200'
                               }`}
                             >
                               <div className="font-semibold flex items-center gap-1.5 font-mono text-[11px]">
                                 <AlertTriangle
-                                  className={`w-3.5 h-3.5 ${isHardLapse ? 'text-rose-400' : 'text-amber-400'}`}
+                                  className={`w-3.5 h-3.5 ${isHardLapse ? 'text-rose-600 dark:text-rose-400' : 'text-amber-600 dark:text-amber-400'}`}
                                 />
                                 Downstream Consequence if Overdue
                               </div>
@@ -596,33 +595,42 @@ export default function LegalRightsPage() {
                             </div>
                           </div>
 
-                          <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between flex-wrap gap-2">
+                          <div className="pt-2 border-t border-slate-200 dark:border-white/[0.06] flex items-center justify-between flex-wrap gap-3">
                             <div className="flex items-center gap-2 flex-wrap">
                               <span className="text-[11px] font-mono text-slate-500">Applicable Laws:</span>
-                              {stage.applicable_laws.map((law: string, lIdx: number) => (
+                              {stage.applicable_laws?.map((law: string, lIdx: number) => (
                                 <span
                                   key={lIdx}
-                                  className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700"
+                                  className="text-[10px] font-mono px-2 py-0.5 rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10"
                                 >
                                   {law}
                                 </span>
                               ))}
                             </div>
 
-                            {stage.provisions && stage.provisions.length > 0 && (
-                              <div className="flex items-center gap-2 flex-wrap">
-                                {stage.provisions.map((prov: any) => (
-                                  <button
-                                    key={prov.id}
-                                    onClick={() => setSelectedProvision(prov)}
-                                    className="text-[11px] font-mono px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 border border-indigo-500/30 flex items-center gap-1.5"
-                                  >
-                                    <span>Sec {prov.section_number}</span>
-                                    <ExternalLink className="w-3 h-3 text-indigo-400" />
-                                  </button>
-                                ))}
-                              </div>
-                            )}
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Link
+                                href="/action-center"
+                                className="text-[11px] font-medium px-3 py-1 rounded-md bg-[#0B2E59] text-white hover:bg-[#0B2E59]/90 flex items-center gap-1 shadow-xs transition-colors"
+                              >
+                                <span>Action Center</span>
+                                <ArrowRight className="w-3 h-3" />
+                              </Link>
+                              {stage.provisions && stage.provisions.length > 0 && (
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  {stage.provisions.map((prov: any) => (
+                                    <button
+                                      key={prov.id}
+                                      onClick={() => setSelectedProvision(prov)}
+                                      className="text-[11px] font-mono px-2.5 py-1 rounded-md bg-sky-50 dark:bg-sky-950/40 text-[#0B2E59] dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/40 border border-sky-200 dark:border-sky-800/40 flex items-center gap-1.5 transition-colors"
+                                    >
+                                      <span>Sec {prov.section_number}</span>
+                                      <ExternalLink className="w-3 h-3 text-[#0B2E59] dark:text-sky-400" />
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                       )}
@@ -639,27 +647,27 @@ export default function LegalRightsPage() {
               {/* Corridor Clocks Summary */}
               {corridorSummary && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-                    <div className="text-xs text-slate-400 font-mono">Total Clocks</div>
-                    <div className="text-2xl font-bold font-mono text-slate-100 mt-1">
+                  <div className="p-4 rounded-xl bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/[0.08] shadow-xs">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">Total Clocks</div>
+                    <div className="text-2xl font-bold font-mono text-slate-900 dark:text-white mt-1">
                       {corridorSummary.total_deadlines}
                     </div>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-900 border border-emerald-500/20">
-                    <div className="text-xs text-emerald-400 font-mono">Upcoming / On Track</div>
-                    <div className="text-2xl font-bold font-mono text-emerald-400 mt-1">
+                  <div className="p-4 rounded-xl bg-white dark:bg-[#0C111D] border border-emerald-300 dark:border-emerald-800/40 shadow-xs">
+                    <div className="text-xs text-emerald-600 dark:text-emerald-400 font-mono">Upcoming / On Track</div>
+                    <div className="text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-1">
                       {corridorSummary.upcoming_count}
                     </div>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-900 border border-amber-500/20">
-                    <div className="text-xs text-amber-400 font-mono">Due Soon (&le; 30d)</div>
-                    <div className="text-2xl font-bold font-mono text-amber-400 mt-1">
+                  <div className="p-4 rounded-xl bg-white dark:bg-[#0C111D] border border-amber-300 dark:border-amber-800/40 shadow-xs">
+                    <div className="text-xs text-amber-600 dark:text-amber-400 font-mono">Due Soon (&le; 30d)</div>
+                    <div className="text-2xl font-bold font-mono text-amber-600 dark:text-amber-400 mt-1">
                       {corridorSummary.due_soon_count}
                     </div>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-900 border border-rose-500/30">
-                    <div className="text-xs text-rose-400 font-mono">Mandatory Lapse Risks</div>
-                    <div className="text-2xl font-bold font-mono text-rose-400 mt-1">
+                  <div className="p-4 rounded-xl bg-white dark:bg-[#0C111D] border border-rose-300 dark:border-rose-800/40 shadow-xs">
+                    <div className="text-xs text-rose-600 dark:text-rose-400 font-mono">Mandatory Lapse Risks</div>
+                    <div className="text-2xl font-bold font-mono text-rose-600 dark:text-rose-400 mt-1">
                       {corridorSummary.mandatory_lapse_risks_count}
                     </div>
                   </div>
@@ -667,18 +675,18 @@ export default function LegalRightsPage() {
               )}
 
               {/* Interactive Statutory Deadline Calculator */}
-              <div className="rounded-2xl bg-slate-900/90 border border-amber-500/30 p-6 md:p-8 space-y-6 shadow-xl">
-                <div className="flex items-center justify-between flex-wrap gap-4 border-b border-slate-800 pb-4">
+              <div className="rounded-2xl bg-white dark:bg-[#0C111D] border border-amber-300 dark:border-amber-800/40 p-6 md:p-8 space-y-6 shadow-sm">
+                <div className="flex items-center justify-between flex-wrap gap-4 border-b border-slate-200 dark:border-white/[0.08] pb-4">
                   <div>
-                    <h3 className="text-lg md:text-xl font-extrabold text-white flex items-center gap-2">
-                      <Zap className="w-5 h-5 text-amber-400" />
+                    <h3 className="text-lg md:text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2 font-display">
+                      <Zap className="w-5 h-5 text-amber-500" />
                       Deterministic Statutory Deadline Calculator
                     </h3>
-                    <p className="text-xs text-slate-300 mt-1">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
                       Calculate exact due dates, statutory lapse windows, and CPM delays under the RFCTLARR Act 2013 rules.
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 font-bold">
+                  <span className="text-[10px] font-mono px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30 font-bold">
                     RULE-BASED CALCULATION ENGINE
                   </span>
                 </div>
@@ -686,13 +694,13 @@ export default function LegalRightsPage() {
                 {/* Input Controls */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <div>
-                    <label className="block text-xs font-mono text-slate-300 mb-1.5 uppercase">
+                    <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1.5 uppercase font-semibold">
                       Select Statutory Rule:
                     </label>
                     <select
                       value={calcRuleId}
                       onChange={(e) => setCalcRuleId(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-amber-500"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
                     >
                       {deadlineRules.map((r) => (
                         <option key={r.id} value={r.id}>
@@ -703,19 +711,19 @@ export default function LegalRightsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono text-slate-300 mb-1.5 uppercase">
+                    <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1.5 uppercase font-semibold">
                       Statutory Trigger Date:
                     </label>
                     <input
                       type="date"
                       value={calcTriggerDate}
                       onChange={(e) => setCalcTriggerDate(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-amber-500 font-mono"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono text-slate-300 mb-1.5 uppercase">
+                    <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1.5 uppercase font-semibold">
                       Court Stay / Extension Days:
                     </label>
                     <input
@@ -723,25 +731,25 @@ export default function LegalRightsPage() {
                       min="0"
                       value={calcExtensionDays}
                       onChange={(e) => setCalcExtensionDays(Number(e.target.value) || 0)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-amber-500 font-mono"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
                       placeholder="e.g. 90 (Court injunction)"
                     />
                   </div>
 
                   {calcExtensionDays > 0 && (
                     <div className="md:col-span-3">
-                      <label className="block text-xs font-mono text-amber-300 mb-1.5 uppercase flex items-center gap-1.5">
-                        <Scale className="w-3.5 h-3.5 text-amber-400" />
+                      <label className="block text-xs font-mono text-amber-700 dark:text-amber-300 mb-1.5 uppercase flex items-center gap-1.5 font-semibold">
+                        <Scale className="w-3.5 h-3.5 text-amber-500" />
                         Court Order Reference / Case Citation (Required under Sec 19(7)/25):
                       </label>
                       <input
                         type="text"
                         value={calcCourtOrderRef}
                         onChange={(e) => setCalcCourtOrderRef(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-amber-500/40 text-xs text-slate-200 focus:outline-none focus:border-amber-400 font-mono"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-amber-300 dark:border-amber-500/40 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
                         placeholder="e.g. DB Special Appeal No. 1042/2025 (Rajasthan High Court)"
                       />
-                      <p className="text-[10px] text-amber-400/80 mt-1">
+                      <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1">
                         Statutory court stay exclusions require case-specific judicial verification and cannot be generically applied.
                       </p>
                     </div>
@@ -749,7 +757,7 @@ export default function LegalRightsPage() {
 
                   {calcRuleId === 'RULE-SEC-80-DELAY-INTEREST' && (
                     <div className="md:col-span-3">
-                      <label className="block text-xs font-mono text-slate-300 mb-1.5 uppercase">
+                      <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1.5 uppercase font-semibold">
                         Unpaid / Undeposited Compensation Balance (₹):
                       </label>
                       <input
@@ -757,47 +765,47 @@ export default function LegalRightsPage() {
                         min="0"
                         value={calcUnpaidBalance ?? ''}
                         onChange={(e) => setCalcUnpaidBalance(e.target.value ? Number(e.target.value) : undefined)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-amber-500 font-mono"
-                        placeholder="e.g. 1500000 (Section 80 penal interest applies only to unpaid amount)"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
+                        placeholder="e.g. 1500000 (Section 80 penal interest applies only to unpaid balance)"
                       />
                     </div>
                   )}
 
                   {calcRuleId === 'RULE-SEC-64-REFERENCE-ABSENT' && (
                     <div className="md:col-span-3">
-                      <label className="block text-xs font-mono text-slate-300 mb-1.5 uppercase">
-                        Section 23/25 Award Pronouncement Date:
+                      <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1.5 uppercase font-semibold">
+                        Section 23/30 Award Pronouncement Date:
                       </label>
                       <input
                         type="date"
                         value={calcAwardDate}
                         onChange={(e) => setCalcAwardDate(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-amber-500 font-mono"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
                       />
-                      <p className="text-[10px] text-slate-400 mt-1">
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
                         Section 64(2)(b) calculates the earlier of 6 weeks from notice receipt or 6 months from award date. Discretionary condonation up to 1 additional year may be granted by the Collector under Section 64(2) further proviso upon sufficient cause.
                       </p>
                     </div>
                   )}
 
                   {(calcRuleId === 'RULE-SEC-64-REFERENCE-PRESENT' || calcRuleId === 'RULE-SEC-64-REFERENCE-ABSENT') && (
-                    <div className="md:col-span-3 p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3">
+                    <div className="md:col-span-3 p-4 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.08] space-y-3">
                       <div className="flex items-center justify-between">
-                        <label className="flex items-center gap-2 text-xs font-mono text-slate-300 cursor-pointer">
+                        <label className="flex items-center gap-2 text-xs font-mono text-slate-800 dark:text-slate-200 cursor-pointer font-semibold">
                           <input
                             type="checkbox"
                             checked={calcCondonationGranted}
                             onChange={(e) => setCalcCondonationGranted(e.target.checked)}
-                            className="rounded border-slate-700 bg-slate-900 text-amber-500 focus:ring-0"
+                            className="rounded border-slate-300 text-amber-600 focus:ring-amber-500"
                           />
                           <span>Collector Delay Condonation Granted (Section 64(2) Further Proviso)</span>
                         </label>
-                        <span className="text-[10px] font-mono text-slate-400">Statutory Max 1 Year (365 days)</span>
+                        <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">Statutory Max 1 Year (365 days)</span>
                       </div>
                       {calcCondonationGranted && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                           <div>
-                            <label className="block text-[11px] font-mono text-slate-400 mb-1">
+                            <label className="block text-[11px] font-mono text-slate-600 dark:text-slate-400 mb-1">
                               Condoned Days (Max 365):
                             </label>
                             <input
@@ -806,11 +814,11 @@ export default function LegalRightsPage() {
                               max="365"
                               value={calcCondonationDays}
                               onChange={(e) => setCalcCondonationDays(Math.min(365, Math.max(1, Number(e.target.value) || 0)))}
-                              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-amber-500 font-mono"
+                              className="w-full px-3 py-2 rounded-lg bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
                             />
                           </div>
                           <div>
-                            <label className="block text-[11px] font-mono text-slate-400 mb-1">
+                            <label className="block text-[11px] font-mono text-slate-600 dark:text-slate-400 mb-1">
                               Recorded Sufficient Cause / Reason:
                             </label>
                             <input
@@ -818,7 +826,7 @@ export default function LegalRightsPage() {
                               value={calcCondonationReason}
                               onChange={(e) => setCalcCondonationReason(e.target.value)}
                               placeholder="e.g. Hospitalization during primary limitation period"
-                              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-amber-500 font-mono"
+                              className="w-full px-3 py-2 rounded-lg bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
                             />
                           </div>
                         </div>
@@ -829,19 +837,19 @@ export default function LegalRightsPage() {
 
                 {/* Calculated Result Card */}
                 {calcResult && (
-                  <div className="rounded-xl bg-slate-950 border border-slate-800 p-5 space-y-4">
-                    <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-800/80 pb-3">
+                  <div className="rounded-xl bg-slate-50/70 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.08] p-5 space-y-4">
+                    <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-200 dark:border-white/[0.08] pb-3">
                       <div>
-                        <div className="text-xs text-slate-400 font-mono">Calculated Statutory Due Date</div>
-                        <div className="text-2xl md:text-3xl font-extrabold font-mono text-amber-400 mt-0.5">
+                        <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">Calculated Statutory Due Date</div>
+                        <div className="text-2xl md:text-3xl font-extrabold font-mono text-amber-600 dark:text-amber-400 mt-0.5">
                           {calcResult.calculated_due_date}
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3">
                         <div className="text-right">
-                          <div className="text-xs text-slate-400 font-mono">Days Remaining</div>
-                          <div className={`text-xl font-bold font-mono ${calcResult.days_remaining < 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
+                          <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">Days Remaining</div>
+                          <div className={`text-xl font-bold font-mono ${calcResult.days_remaining < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
                             {calcResult.days_remaining}d
                           </div>
                         </div>
@@ -849,10 +857,10 @@ export default function LegalRightsPage() {
                         <span
                           className={`px-3 py-1 rounded-md text-xs font-mono font-bold border ${
                             calcResult.status === 'OVERDUE' || calcResult.status === 'LAPSED'
-                              ? 'bg-rose-500/15 text-rose-400 border-rose-500/40'
+                              ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-300 dark:border-rose-800'
                               : calcResult.status === 'DUE_SOON'
-                              ? 'bg-amber-500/15 text-amber-400 border-amber-500/40'
-                              : 'bg-emerald-500/15 text-emerald-400 border-emerald-500/40'
+                              ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                              : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
                           }`}
                         >
                           {calcResult.status}
@@ -862,28 +870,28 @@ export default function LegalRightsPage() {
 
                     {/* Decoupled Legal Effect vs KOSH CPM Model */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-                      <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
-                        <div className="text-[10px] font-mono text-indigo-400 uppercase tracking-wider flex items-center gap-1.5 font-bold">
+                      <div className="p-3.5 rounded-lg bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/[0.08] space-y-1">
+                        <div className="text-[10px] font-mono text-[#0B2E59] dark:text-sky-400 uppercase tracking-wider flex items-center gap-1.5 font-bold">
                           <Scale className="w-3.5 h-3.5" /> Statutory Legal Consequence
                         </div>
-                        <div className="text-xs font-bold text-white font-mono">
+                        <div className="text-xs font-bold text-slate-900 dark:text-white font-mono">
                           {calcResult.legal_effect || 'ACTION_REQUIRED'}
                         </div>
-                        <div className="text-[11px] text-slate-300">
+                        <div className="text-[11px] text-slate-600 dark:text-slate-300">
                           {calcResult.calculation_trace.consequence_if_overdue}
                         </div>
                       </div>
 
-                      <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
-                        <div className="text-[10px] font-mono text-amber-400 uppercase tracking-wider flex items-center gap-1.5 font-bold">
+                      <div className="p-3.5 rounded-lg bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/[0.08] space-y-1">
+                        <div className="text-[10px] font-mono text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5 font-bold">
                           <Clock className="w-3.5 h-3.5" /> KOSH Project Impact Model
                         </div>
-                        <div className="text-xs font-bold text-amber-400 font-mono">
+                        <div className="text-xs font-bold text-amber-600 dark:text-amber-400 font-mono">
                           {calcResult.operational_delay_cpm_days > 0
                             ? `+${calcResult.operational_delay_cpm_days} days schedule delay`
                             : 'No active schedule delay'}
                         </div>
-                        <div className="text-[11px] text-slate-400 italic">
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 italic">
                           Operational CPM simulation heuristic: represents estimated schedule delay if stage lapses, NOT a statutory legal mandate.
                         </div>
                       </div>
@@ -891,19 +899,19 @@ export default function LegalRightsPage() {
 
                     {/* Section 80 Penal Interest Display */}
                     {calcResult.calculation_trace.penal_interest_rate_percent && (
-                      <div className="p-3.5 rounded-lg bg-amber-950/20 border border-amber-500/30 text-xs space-y-1 font-mono text-amber-200">
-                        <div className="font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                          <Landmark className="w-4 h-4 text-amber-400" /> Section 80 Penal Interest Slabs:
+                      <div className="p-3.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 text-xs space-y-1 font-mono text-amber-800 dark:text-amber-200">
+                        <div className="font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+                          <Landmark className="w-4 h-4" /> Section 80 Penal Interest Slabs:
                         </div>
                         <div>
                           <strong>Applicable Rate:</strong> {calcResult.calculation_trace.penal_interest_rate_percent}% per annum (unpaid balance).
                         </div>
                         {calcResult.calculation_trace.penal_interest_estimated_amount !== null && (
-                          <div className="text-amber-300 font-bold">
+                          <div className="text-amber-800 dark:text-amber-300 font-bold">
                             <strong>Estimated Penal Interest:</strong> ₹{calcResult.calculation_trace.penal_interest_estimated_amount?.toLocaleString('en-IN')}
                           </div>
                         )}
-                        <div className="text-[10px] text-amber-400/80 italic pt-1">
+                        <div className="text-[10px] text-amber-700/80 dark:text-amber-400/80 italic pt-1">
                           Note: Section 80 penal interest runs strictly from date of physical possession on unpaid compensation and is distinct from Section 30(3) 12% additional statutory amount.
                         </div>
                       </div>
@@ -911,15 +919,15 @@ export default function LegalRightsPage() {
 
                     {/* Section 64 Delay Condonation Proviso Notice */}
                     {calcResult.calculation_trace.condonation_notes && (
-                      <div className="p-3.5 rounded-lg bg-indigo-950/20 border border-indigo-500/30 text-xs space-y-1 font-mono text-indigo-200">
-                        <div className="font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5">
-                          <Scale className="w-4 h-4 text-indigo-400" /> Section 64(2) Delay Condonation Proviso:
+                      <div className="p-3.5 rounded-lg bg-sky-50 dark:bg-sky-950/20 border border-sky-200 dark:border-sky-800/40 text-xs space-y-1 font-mono text-[#0B2E59] dark:text-sky-200">
+                        <div className="font-bold uppercase tracking-wider text-[#0B2E59] dark:text-sky-400 flex items-center gap-1.5">
+                          <Scale className="w-4 h-4" /> Section 64(2) Delay Condonation Proviso:
                         </div>
-                        <div className="text-[11px] text-indigo-300">
+                        <div className="text-[11px] text-slate-700 dark:text-sky-300">
                           {calcResult.calculation_trace.condonation_notes}
                         </div>
                         {calcResult.calculation_trace.condonation_window_expires && (
-                          <div className="text-[10px] text-indigo-400/80">
+                          <div className="text-[10px] text-slate-600 dark:text-sky-400">
                             <strong>Statutory 1-Year Condonation Window Expires:</strong> {calcResult.calculation_trace.condonation_window_expires}
                           </div>
                         )}
@@ -928,15 +936,15 @@ export default function LegalRightsPage() {
 
                     {/* Step-by-Step Explainable Trace */}
                     <div className="space-y-2 text-xs">
-                      <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
-                        Explainable Calculation Trace & Citations
+                      <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">
+                        Explainable Calculation Trace &amp; Citations
                       </div>
-                      <div className="p-3 rounded-lg bg-slate-900 border border-slate-800/80 space-y-1.5 text-slate-300 font-mono">
+                      <div className="p-3 rounded-lg bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/[0.08] space-y-1.5 text-slate-700 dark:text-slate-300 font-mono">
                         <div><strong>Formula:</strong> {calcResult.calculation_trace.formula}</div>
                         <div><strong>Calendar Logic:</strong> {calcResult.calculation_trace.calendar_logic}</div>
                         <div><strong>Authority Citation:</strong> {calcResult.calculation_trace.statutory_citation}</div>
                         {calcResult.calculation_trace.court_order_reference && (
-                          <div className="text-indigo-300">
+                          <div className="text-[#0B2E59] dark:text-sky-300 font-semibold">
                             <strong>Court Order Citation:</strong> {calcResult.calculation_trace.court_order_reference} (Verified: {calcResult.calculation_trace.court_stay_verified ? 'YES' : 'PENDING'})
                           </div>
                         )}
@@ -948,8 +956,8 @@ export default function LegalRightsPage() {
 
               {/* Statutory Rules Directory */}
               <div className="space-y-4">
-                <h3 className="text-base font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-indigo-400" />
+                <h3 className="text-base font-bold text-slate-900 dark:text-white font-mono uppercase tracking-wider flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
                   Statutory Deadline Rules Directory ({deadlineRules.length})
                 </h3>
 
@@ -957,43 +965,43 @@ export default function LegalRightsPage() {
                   {deadlineRules.map((rule) => (
                     <div
                       key={rule.id}
-                      className="rounded-xl bg-slate-900/80 border border-slate-800 p-5 space-y-3 flex flex-col justify-between"
+                      className="rounded-xl bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/[0.08] p-5 space-y-3 flex flex-col justify-between shadow-xs"
                     >
                       <div className="space-y-2">
                         <div className="flex items-start justify-between gap-2 flex-wrap">
-                          <span className="font-mono text-xs font-bold text-indigo-400">
+                          <span className="font-mono text-xs font-bold text-[#0B2E59] dark:text-sky-400">
                             {rule.id}
                           </span>
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                            <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10">
                               {rule.rule_type || 'PROCEDURAL'}
                             </span>
                             {rule.is_mandatory_lapse && (
-                              <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/30">
+                              <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/40">
                                 Mandatory Lapse
                               </span>
                             )}
                           </div>
                         </div>
 
-                        <h4 className="text-sm font-bold text-white">{rule.rule_name}</h4>
-                        <p className="text-xs text-slate-300 leading-relaxed">{rule.description}</p>
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white">{rule.rule_name}</h4>
+                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{rule.description}</p>
                       </div>
 
-                      <div className="pt-3 border-t border-slate-800/80 space-y-2 text-xs text-slate-400">
+                      <div className="pt-3 border-t border-slate-100 dark:border-white/[0.06] space-y-2 text-xs text-slate-500 dark:text-slate-400">
                         <div className="flex justify-between items-center">
                           <span>Clock:</span>
-                          <strong className="text-slate-200 font-mono">
+                          <strong className="text-slate-800 dark:text-slate-200 font-mono">
                             {rule.duration_value ? `${rule.duration_value} ${rule.duration_unit}` : rule.clock_type}
                           </strong>
                         </div>
                         <div className="flex justify-between items-center">
                           <span>Legal Effect:</span>
-                          <strong className="text-indigo-300 font-mono">{rule.legal_effect || 'ACTION_REQUIRED'}</strong>
+                          <strong className="text-[#0B2E59] dark:text-sky-300 font-mono">{rule.legal_effect || 'ACTION_REQUIRED'}</strong>
                         </div>
                         <div className="flex justify-between items-center">
                           <span>KOSH CPM Heuristic:</span>
-                          <strong className="text-amber-400 font-mono">+{rule.operational_delay_cpm_days || rule.cpm_delay_weight_days}d</strong>
+                          <strong className="text-amber-600 dark:text-amber-400 font-mono">+{rule.operational_delay_cpm_days || rule.cpm_delay_weight_days}d</strong>
                         </div>
                       </div>
                     </div>
@@ -1006,7 +1014,7 @@ export default function LegalRightsPage() {
           {/* TAB 4: ALL STATUTORY PROVISIONS */}
           {activeTab === 'provisions' && (
             <div className="space-y-4">
-              <div className="text-xs text-slate-400 flex items-center justify-between">
+              <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between">
                 <span>Showing {filteredProvisions.length} authoritative statutory provision(s)</span>
                 {filteredProvisions.length !== provisions.length && (
                   <button
@@ -1015,7 +1023,7 @@ export default function LegalRightsPage() {
                       setSelectedCategory('ALL');
                       setSelectedJurisdiction('ALL');
                     }}
-                    className="text-indigo-400 hover:underline"
+                    className="text-[#0B2E59] dark:text-sky-400 hover:underline font-medium"
                   >
                     Reset all filters
                   </button>
@@ -1027,43 +1035,43 @@ export default function LegalRightsPage() {
                   <div
                     key={prov.id}
                     onClick={() => setSelectedProvision(prov)}
-                    className="cursor-pointer rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 p-5 space-y-3 transition-all group flex flex-col justify-between"
+                    className="cursor-pointer rounded-xl bg-white dark:bg-[#0C111D] hover:bg-slate-50 dark:hover:bg-white/[0.02] border border-slate-200 dark:border-white/[0.08] hover:border-[#0B2E59]/30 dark:hover:border-white/20 p-5 space-y-3 transition-all group flex flex-col justify-between shadow-xs"
                   >
                     <div className="space-y-2">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-mono font-bold text-sm text-indigo-400 group-hover:text-indigo-300">
+                          <span className="font-mono font-bold text-sm text-[#0B2E59] dark:text-sky-400 group-hover:underline">
                             Section {prov.section_number}
                           </span>
                           <span
                             className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
                               prov.jurisdiction === 'RAJASTHAN'
-                                ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
-                                : 'bg-slate-800 text-slate-300 border-slate-700'
+                                ? 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10'
                             }`}
                           >
                             {prov.jurisdiction === 'RAJASTHAN' ? 'Rajasthan Rules' : 'Central Act'}
                           </span>
                         </div>
-                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-500/10 text-sky-700 dark:text-sky-300 border border-sky-500/20 font-semibold">
                           {prov.category}
                         </span>
                       </div>
 
-                      <h4 className="text-sm font-bold text-white group-hover:text-indigo-200 line-clamp-2">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#0B2E59] dark:group-hover:text-sky-300 line-clamp-2">
                         {prov.title}
                       </h4>
 
-                      <p className="text-xs text-slate-300 leading-relaxed line-clamp-3">
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
                         {prov.plain_language_summary}
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                      <span className="font-mono text-[11px] text-slate-500 truncate max-w-[200px]">
+                    <div className="pt-3 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                      <span className="font-mono text-[11px] truncate max-w-[200px]">
                         {prov.act_short_name}
                       </span>
-                      <span className="text-indigo-400 font-medium group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                      <span className="text-[#0B2E59] dark:text-sky-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
                         View Full Text <ArrowRight className="w-3 h-3" />
                       </span>
                     </div>
@@ -1075,75 +1083,75 @@ export default function LegalRightsPage() {
         </>
       )}
 
-      {/* DETAIL MODAL / INDIA CODE SOURCE VIEWER */}
+      {/* DETAIL MODAL / LEGISLATIVE SOURCE VIEWER */}
       {selectedProvision && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
           onClick={() => setSelectedProvision(null)}
         >
           <div
-            className="w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-700 shadow-2xl p-6 md:p-8 space-y-6"
+            className="w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl bg-white dark:bg-[#0C111D] border border-slate-200 dark:border-white/[0.1] shadow-2xl p-6 md:p-8 space-y-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-start justify-between gap-4 border-b border-slate-800 pb-4">
+            <div className="flex items-start justify-between gap-4 border-b border-slate-200 dark:border-white/[0.08] pb-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-base font-bold font-mono text-indigo-400">
+                  <span className="text-base font-bold font-mono text-[#0B2E59] dark:text-sky-400">
                     Section {selectedProvision.section_number}
                     {selectedProvision.subsection ? `(${selectedProvision.subsection})` : ''}
                   </span>
                   <span
                     className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
                       selectedProvision.jurisdiction === 'RAJASTHAN'
-                        ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
-                        : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30'
+                        ? 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30'
+                        : 'bg-[#0B2E59]/10 text-[#0B2E59] dark:text-sky-400 border-[#0B2E59]/20'
                     }`}
                   >
                     {selectedProvision.jurisdiction === 'RAJASTHAN' ? 'Rajasthan State Rules' : 'Central Baseline'}
                   </span>
-                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-500/10 text-sky-700 dark:text-sky-300 border border-sky-500/20 font-semibold">
                     {selectedProvision.category}
                   </span>
                 </div>
-                <h3 className="text-lg md:text-xl font-extrabold text-white">
+                <h3 className="text-lg md:text-xl font-extrabold text-slate-900 dark:text-white">
                   {selectedProvision.title}
                 </h3>
-                <div className="text-xs text-slate-400 font-mono">
+                <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                   {selectedProvision.act_name}
                 </div>
               </div>
               <button
                 onClick={() => setSelectedProvision(null)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="space-y-1.5">
-              <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
+              <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">
                 Statutory Summary
               </div>
-              <p className="text-sm text-slate-200 leading-relaxed">
+              <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
                 {selectedProvision.plain_language_summary}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="rounded-xl bg-emerald-950/20 border border-emerald-500/20 p-4 space-y-2">
-                <div className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+              <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 p-4 space-y-2">
+                <div className="text-xs font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
                   <UserCheck className="w-3.5 h-3.5" /> For Landowners
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                   {selectedProvision.landowner_guidance || 'General statutory provision applying to land acquisition.'}
                 </p>
               </div>
 
-              <div className="rounded-xl bg-indigo-950/20 border border-indigo-500/20 p-4 space-y-2">
-                <div className="text-xs font-bold text-indigo-400 flex items-center gap-1.5">
+              <div className="rounded-xl bg-sky-50 dark:bg-sky-950/20 border border-sky-200 dark:border-sky-800/40 p-4 space-y-2">
+                <div className="text-xs font-bold text-[#0B2E59] dark:text-sky-400 flex items-center gap-1.5">
                   <Compass className="w-3.5 h-3.5" /> For Acquisition Officers
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                   {selectedProvision.officer_guidance || 'Official procedural duty under statutory rules.'}
                 </p>
               </div>
@@ -1151,15 +1159,15 @@ export default function LegalRightsPage() {
 
             {selectedProvision.required_documents && selectedProvision.required_documents.length > 0 && (
               <div className="space-y-2">
-                <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <FileText className="w-3.5 h-3.5 text-indigo-400" />
-                  Mandatory Documents & Evidence
+                <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5 font-semibold">
+                  <FileText className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
+                  Mandatory Documents &amp; Evidence
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {selectedProvision.required_documents.map((doc: string, idx: number) => (
                     <span
                       key={idx}
-                      className="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700"
+                      className="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10"
                     >
                       {doc}
                     </span>
@@ -1168,30 +1176,37 @@ export default function LegalRightsPage() {
               </div>
             )}
 
-            <div className="rounded-xl bg-slate-950 border border-slate-800 p-4 space-y-3">
+            <div className="rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.08] p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Landmark className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5 font-semibold">
+                  <Landmark className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                   Official Legislative Source
                 </div>
-                <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+                <span className="text-[10px] font-mono text-emerald-700 dark:text-emerald-400 flex items-center gap-1 font-semibold">
                   <CheckCircle2 className="w-3 h-3" /> Authoritative Grounding
                 </span>
               </div>
-              <div className="space-y-1 text-xs text-slate-300">
-                <div>Document: <strong className="text-white">{selectedProvision.source_document}</strong></div>
-                <div>Version: <span className="font-mono text-slate-400">{selectedProvision.source_version}</span></div>
+              <div className="space-y-1 text-xs text-slate-700 dark:text-slate-300">
+                <div>Document: <strong className="text-slate-900 dark:text-white">{selectedProvision.source_document}</strong></div>
+                <div>Version: <span className="font-mono text-slate-500 dark:text-slate-400">{selectedProvision.source_version}</span></div>
               </div>
-              <div className="pt-2">
+              <div className="pt-2 flex items-center gap-3">
                 <a
                   href={selectedProvision.source_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-colors"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0B2E59] hover:bg-[#0B2E59]/90 text-white text-xs font-semibold transition-colors shadow-xs"
                 >
                   <span>Open Official Legislative Record</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
+                <Link
+                  href="/action-center"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-[#0C111D] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 text-xs font-semibold transition-colors"
+                >
+                  <span>Go to Action Center</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
           </div>

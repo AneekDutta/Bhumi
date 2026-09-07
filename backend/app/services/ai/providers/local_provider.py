@@ -23,7 +23,7 @@ class LocalAIProvider(AIProvider):
     """
 
     def __init__(self):
-        self._mock = MockAIProvider()
+        self._mock = MockAIProvider(provider_name="local", model_name="local-rule-engine")
 
     async def generate_answer(self, context: AIContext, query: str) -> AIAnswer:
         return await self._mock.generate_answer(context, query)

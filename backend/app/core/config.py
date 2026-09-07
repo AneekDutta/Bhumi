@@ -41,6 +41,12 @@ class Settings(BaseSettings):
     OCRSPACE_ENGINE: str = os.getenv("OCRSPACE_ENGINE", "3")
     OCRSPACE_TIMEOUT_SECONDS: int = int(os.getenv("OCRSPACE_TIMEOUT_SECONDS", "60"))
 
+    # AI Provider Configuration
+    AI_PROVIDER: str = os.getenv("AI_PROVIDER", "gemini")  # gemini, local, mock
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
+    GEMINI_TIMEOUT_SECONDS: int = int(os.getenv("GEMINI_TIMEOUT_SECONDS", "30"))
+
     # CORS
     ALLOWED_ORIGINS: str = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000")
 

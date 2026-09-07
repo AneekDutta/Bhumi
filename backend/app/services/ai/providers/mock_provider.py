@@ -28,6 +28,10 @@ class MockAIProvider(AIProvider):
     Produces strictly grounded outputs derived from the supplied AIContext.
     """
 
+    def __init__(self, provider_name: str = "mock", model_name: str = "deterministic-rule-engine"):
+        self.provider_name = provider_name
+        self.model_name = model_name
+
     async def generate_answer(self, context: AIContext, query: str) -> AIAnswer:
         # 1. Defang adversarial prompt injections in query
         clean_query, was_injected = sanitize_untrusted_input(query)
@@ -49,6 +53,12 @@ class MockAIProvider(AIProvider):
                 recommended_actions=[],
                 assumptions=[],
                 unanswered_questions=["Verify parcel identifier and ensure project boundary enrollment."],
+                provider=self.provider_name,
+                model=self.model_name,
+                grounded=False,
+                factual_basis=[],
+                claims=[],
+                uncertainty=["Target record not found in system state."],
             )
 
         pid = context.parcel_id or "P00001"
@@ -90,6 +100,12 @@ class MockAIProvider(AIProvider):
                 recommended_actions=actions,
                 assumptions=["Evaluated using registered project dependency graph and CPM topology."],
                 unanswered_questions=[],
+                provider=self.provider_name,
+                model=self.model_name,
+                grounded=True,
+                factual_basis=reasons,
+                claims=["Claimant contestation recorded on parcel survey."] if p_info.get("ownership_conflict") else [],
+                uncertainty=[],
             )
 
         # Intent 2: "Summarize this dispute"
@@ -114,6 +130,12 @@ class MockAIProvider(AIProvider):
                 recommended_actions=actions,
                 assumptions=["Derived from registered field verification memoranda and citizen complaint submissions."],
                 unanswered_questions=dispute.missing_evidence_checklist,
+                provider=self.provider_name,
+                model=self.model_name,
+                grounded=True,
+                factual_basis=dispute.facts,
+                claims=dispute.interpretations,
+                uncertainty=dispute.missing_evidence_checklist,
             )
 
         # Intent 3: "What deadlines are at risk?"
@@ -136,6 +158,12 @@ class MockAIProvider(AIProvider):
                 legal_refs=legal_refs,
                 evidence_refs=evidence_refs,
                 recommended_actions=await self.recommend_actions(context),
+                provider=self.provider_name,
+                model=self.model_name,
+                grounded=True,
+                factual_basis=[f"Statutory clock {c.get('rule_name')} status: {c.get('status')}" for c in clocks],
+                claims=[],
+                uncertainty=[],
             )
 
         # Intent 4: "What does Section 38 require?"
@@ -154,6 +182,12 @@ class MockAIProvider(AIProvider):
                 legal_refs=["Section 38(1) & (2)", "Section 80"],
                 evidence_refs=[],
                 recommended_actions=await self.recommend_actions(context),
+                provider=self.provider_name,
+                model=self.model_name,
+                grounded=True,
+                factual_basis=["RFCTLARR Section 38(1) requires full payment of compensation before possession."],
+                claims=[],
+                uncertainty=[],
             )
 
         # Intent 5: "What actions are available?"
@@ -169,6 +203,12 @@ class MockAIProvider(AIProvider):
                 legal_refs=legal_refs,
                 evidence_refs=evidence_refs,
                 recommended_actions=actions,
+                provider=self.provider_name,
+                model=self.model_name,
+                grounded=True,
+                factual_basis=[f"Authorized action: {a.title}" for a in actions],
+                claims=[],
+                uncertainty=[],
             )
 
         # Default grounded response
@@ -185,6 +225,12 @@ class MockAIProvider(AIProvider):
             legal_refs=legal_refs,
             evidence_refs=evidence_refs,
             recommended_actions=await self.recommend_actions(context),
+            provider=self.provider_name,
+            model=self.model_name,
+            grounded=True,
+            factual_basis=[f"Parcel {pid} status is {p_info.get('acquisition_status')}"],
+            claims=[],
+            uncertainty=[],
         )
 
     async def summarize_dispute(self, context: AIContext) -> DisputeSummary:

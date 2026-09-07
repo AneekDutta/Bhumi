@@ -164,7 +164,9 @@ export default async function NationalDashboardPage() {
                   </span>
                 </div>
                 <div className="text-sm font-bold text-[#14213D] dark:text-[#F0F4FF] leading-snug">
-                  {p.name}
+                  <Link href={`/projects/${p.id}`} className="hover:underline hover:text-[#0B5FA5] dark:hover:text-sky-300">
+                    {p.name}
+                  </Link>
                 </div>
                 <div className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
                   {p.state} &middot; {p.acquisition_progress_pct}% Acquired
@@ -175,13 +177,22 @@ export default async function NationalDashboardPage() {
                 <span className="text-[11px] text-[#5A6A80] dark:text-slate-400 font-mono">
                   Target: {p.timeline_target}
                 </span>
-                <Link
-                  href={`/projects/gis?id=${p.id}`}
-                  className="text-xs font-bold text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1"
-                >
-                  <span>View Corridor GIS</span>
-                  <ArrowRight className="w-3 h-3" />
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/projects/${p.id}`}
+                    className="text-xs font-bold text-[#0B2E59] dark:text-sky-300 hover:underline"
+                  >
+                    Dossier
+                  </Link>
+                  <span className="text-[#DCE2E8] dark:text-white/20">|</span>
+                  <Link
+                    href={`/projects/gis?id=${p.id}`}
+                    className="text-xs font-bold text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1"
+                  >
+                    <span>GIS</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
               </div>
             </div>
           ))}

@@ -396,6 +396,51 @@ class StatutoryDeadlineEngine:
 
         return rules
 
+    async def get_parcel_deadlines(
+        self,
+        parcel_id: str,
+        db: Optional[AsyncSession] = None,
+    ) -> list[dict[str, Any]]:
+        """
+        Retrieves active statutory deadlines associated with a cadastral parcel.
+        Auto-derives from the parcel acquisition case dossier in sub-5ms if DB rows are absent.
+        """
+        norm_pid = parcel_id.strip().upper()
+        if db is not None:
+            try:
+                stmt = select(SIHStatutoryDeadline).where(SIHStatutoryDeadline.parcel_id == norm_pid).order_by(SIHStatutoryDeadline.calculated_due_date)
+                res = await db.execute(stmt)
+                rows = res.scalars().all()
+                if rows:
+                    return [r.to_dict() for r in rows]
+            except Exception:
+                pass
+
+        p_detail = sih_service.get_parcel_detail(norm_pid)
+        if not p_detail:
+            return []
+
+        case_info = p_detail.get("acquisition_case") or {}
+        notif_str = case_info.get("notification_date")
+        decl_str = case_info.get("declaration_date")
+        award_str = case_info.get("award_date")
+        poss_str = case_info.get("possession_date")
+
+        notif_d = date.fromisoformat(notif_str) if notif_str else date(2025, 4, 1)
+        decl_d = date.fromisoformat(decl_str) if decl_str else None
+        award_d = date.fromisoformat(award_str) if award_str else None
+        poss_d = date.fromisoformat(poss_str) if poss_str else None
+
+        return await self.generate_deadlines_for_case(
+            case_id=case_info.get("case_id", f"CASE-{norm_pid}"),
+            parcel_id=norm_pid,
+            notification_date=notif_d,
+            declaration_date=decl_d,
+            award_date=award_d,
+            possession_date=poss_d,
+            db=db,
+        )
+
     async def generate_deadlines_for_case(
         self,
         case_id: str,
@@ -435,12 +480,16 @@ class StatutoryDeadlineEngine:
                 generated_deadlines.append({
                     "id": f"DL-{case_id}-SEC15",
                     "rule_id": r15["id"],
+                    "rule_name": r15.get("title") or r15["id"],
+                    "title": r15.get("title") or r15["id"],
                     "acquisition_case_id": case_id,
                     "parcel_id": parcel_id,
                     "milestone_id": "MS-05",
                     "trigger_event": "SECTION_11_PUBLICATION",
                     "trigger_date": notification_date,
                     "calculated_due_date": date.fromisoformat(res15["calculated_due_date"]),
+                    "days_remaining": res15.get("days_remaining"),
+                    "is_mandatory_lapse": res15.get("is_mandatory_lapse", r15.get("is_mandatory_lapse", False)),
                     "status": res15["status"],
                     "responsible_role": r15["responsible_role"],
                     "source_snapshot": r15,
@@ -458,6 +507,8 @@ class StatutoryDeadlineEngine:
                 generated_deadlines.append({
                     "id": f"DL-{case_id}-SEC19",
                     "rule_id": r19["id"],
+                    "rule_name": r19.get("title") or r19["id"],
+                    "title": r19.get("title") or r19["id"],
                     "acquisition_case_id": case_id,
                     "parcel_id": parcel_id,
                     "milestone_id": "MS-07",
@@ -465,6 +516,8 @@ class StatutoryDeadlineEngine:
                     "trigger_date": notification_date,
                     "calculated_due_date": date.fromisoformat(res19["calculated_due_date"]),
                     "completed_date": completed19,
+                    "days_remaining": res19.get("days_remaining"),
+                    "is_mandatory_lapse": res19.get("is_mandatory_lapse", r19.get("is_mandatory_lapse", True)),
                     "status": res19["status"],
                     "responsible_role": r19["responsible_role"],
                     "source_snapshot": r19,
@@ -484,6 +537,8 @@ class StatutoryDeadlineEngine:
                 generated_deadlines.append({
                     "id": f"DL-{case_id}-SEC25",
                     "rule_id": r25["id"],
+                    "rule_name": r25.get("title") or r25["id"],
+                    "title": r25.get("title") or r25["id"],
                     "acquisition_case_id": case_id,
                     "parcel_id": parcel_id,
                     "milestone_id": "MS-12",
@@ -491,6 +546,8 @@ class StatutoryDeadlineEngine:
                     "trigger_date": declaration_date,
                     "calculated_due_date": date.fromisoformat(res25["calculated_due_date"]),
                     "completed_date": completed25,
+                    "days_remaining": res25.get("days_remaining"),
+                    "is_mandatory_lapse": res25.get("is_mandatory_lapse", r25.get("is_mandatory_lapse", True)),
                     "status": res25["status"],
                     "responsible_role": r25["responsible_role"],
                     "source_snapshot": r25,
@@ -509,12 +566,16 @@ class StatutoryDeadlineEngine:
                 generated_deadlines.append({
                     "id": f"DL-{case_id}-SEC38-COMP",
                     "rule_id": r38_comp["id"],
+                    "rule_name": r38_comp.get("title") or r38_comp["id"],
+                    "title": r38_comp.get("title") or r38_comp["id"],
                     "acquisition_case_id": case_id,
                     "parcel_id": parcel_id,
                     "milestone_id": "MS-13",
                     "trigger_event": "AWARD_PRONOUNCEMENT",
                     "trigger_date": award_date,
                     "calculated_due_date": date.fromisoformat(res38_comp["calculated_due_date"]),
+                    "days_remaining": res38_comp.get("days_remaining"),
+                    "is_mandatory_lapse": res38_comp.get("is_mandatory_lapse", r38_comp.get("is_mandatory_lapse", False)),
                     "status": res38_comp["status"],
                     "responsible_role": r38_comp["responsible_role"],
                     "source_snapshot": r38_comp,
@@ -531,12 +592,16 @@ class StatutoryDeadlineEngine:
                 generated_deadlines.append({
                     "id": f"DL-{case_id}-SEC38-RR",
                     "rule_id": r38_rr["id"],
+                    "rule_name": r38_rr.get("title") or r38_rr["id"],
+                    "title": r38_rr.get("title") or r38_rr["id"],
                     "acquisition_case_id": case_id,
                     "parcel_id": parcel_id,
                     "milestone_id": "MS-13",
                     "trigger_event": "AWARD_PRONOUNCEMENT",
                     "trigger_date": award_date,
                     "calculated_due_date": date.fromisoformat(res38_rr["calculated_due_date"]),
+                    "days_remaining": res38_rr.get("days_remaining"),
+                    "is_mandatory_lapse": res38_rr.get("is_mandatory_lapse", r38_rr.get("is_mandatory_lapse", False)),
                     "status": res38_rr["status"],
                     "responsible_role": r38_rr["responsible_role"],
                     "source_snapshot": r38_rr,
@@ -553,6 +618,8 @@ class StatutoryDeadlineEngine:
                 generated_deadlines.append({
                     "id": f"DL-{case_id}-SEC38-POS",
                     "rule_id": r38_pos["id"],
+                    "rule_name": r38_pos.get("title") or r38_pos["id"],
+                    "title": r38_pos.get("title") or r38_pos["id"],
                     "acquisition_case_id": case_id,
                     "parcel_id": parcel_id,
                     "milestone_id": "MS-13",
@@ -560,6 +627,8 @@ class StatutoryDeadlineEngine:
                     "trigger_date": award_date,
                     "calculated_due_date": date.fromisoformat(res38_pos["calculated_due_date"]),
                     "completed_date": possession_date,
+                    "days_remaining": res38_pos.get("days_remaining"),
+                    "is_mandatory_lapse": res38_pos.get("is_mandatory_lapse", r38_pos.get("is_mandatory_lapse", True)),
                     "status": res38_pos["status"],
                     "responsible_role": r38_pos["responsible_role"],
                     "source_snapshot": r38_pos,
@@ -576,12 +645,16 @@ class StatutoryDeadlineEngine:
                 generated_deadlines.append({
                     "id": f"DL-{case_id}-SEC64-PRES",
                     "rule_id": r64_pres["id"],
+                    "rule_name": r64_pres.get("title") or r64_pres["id"],
+                    "title": r64_pres.get("title") or r64_pres["id"],
                     "acquisition_case_id": case_id,
                     "parcel_id": parcel_id,
                     "milestone_id": "MS-16",
                     "trigger_event": "AWARD_PRONOUNCEMENT",
                     "trigger_date": award_date,
                     "calculated_due_date": date.fromisoformat(res64_pres["calculated_due_date"]),
+                    "days_remaining": res64_pres.get("days_remaining"),
+                    "is_mandatory_lapse": res64_pres.get("is_mandatory_lapse", r64_pres.get("is_mandatory_lapse", False)),
                     "status": res64_pres["status"],
                     "responsible_role": r64_pres["responsible_role"],
                     "source_snapshot": r64_pres,

@@ -132,7 +132,9 @@ export default function ProjectsPage() {
 
                 {/* Project Title */}
                 <h3 className="text-sm font-bold text-[#14213D] dark:text-[#F0F4FF] m-0 leading-snug">
-                  {p.name}
+                  <Link href={`/projects/${p.id}`} className="hover:underline hover:text-[#0B5FA5] dark:hover:text-sky-300">
+                    {p.name}
+                  </Link>
                 </h3>
                 <div className="text-xs text-[#64748B] dark:text-slate-400 font-mono mt-1 mb-2">
                   {p.code} &middot; {p.state} ({p.district})
@@ -176,16 +178,20 @@ export default function ProjectsPage() {
                 </div>
               </div>
 
-              {/* Action Link */}
+              {/* Action Links */}
               <div className="pt-2.5 border-t border-[#DCE2E8] dark:border-white/10 flex justify-between items-center text-xs">
-                <span className="text-[#64748B] dark:text-slate-400 font-mono">
-                  Target: {p.timeline_target}
-                </span>
                 <Link
                   href={`/projects/gis?id=${p.id}`}
-                  className="font-bold text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1"
+                  className="font-medium text-[#5A6A80] dark:text-slate-400 hover:text-[#0B5FA5] dark:hover:text-sky-300 flex items-center gap-1"
                 >
-                  <span>Inspect Spatial Corridor</span>
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>GIS Map</span>
+                </Link>
+                <Link
+                  href={`/projects/${p.id}`}
+                  className="font-bold text-[#0B2E59] dark:text-sky-300 hover:underline flex items-center gap-1"
+                >
+                  <span>View Dossier</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>

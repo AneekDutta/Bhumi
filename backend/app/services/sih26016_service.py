@@ -310,6 +310,9 @@ class SIH26016Service:
         result = []
         for p in projects:
             p_copy = dict(p)
+            p_copy["id"] = p.get("project_id")
+            p_copy["total_length_km"] = p.get("total_length_km", 48.5)
+            p_copy["state_name"] = p.get("state_name", "Rajasthan")
             p_copy["total_parcels"] = len(parcels)
             p_copy["unresolved_parcels"] = len(unresolved)
             if self._cpm_cache:
@@ -322,7 +325,7 @@ class SIH26016Service:
     def get_project_by_id(self, project_id: str) -> dict[str, Any] | None:
         projects = self.get_projects()
         for p in projects:
-            if p["project_id"] == project_id:
+            if p.get("project_id") == project_id or p.get("id") == project_id:
                 return p
         return projects[0] if projects else None
 
@@ -330,9 +333,19 @@ class SIH26016Service:
         if not self._data_cache:
             self._load_data()
         parcels = self._data_cache.get("parcels", [])
-        if project_id:
-            return [p for p in parcels if p.get("project_id") == project_id]
-        return parcels
+        villages = {v["village_id"]: v.get("village_name", v["village_id"]) for v in self._data_cache.get("villages", [])}
+        filtered = [p for p in parcels if p.get("project_id") == project_id] if project_id else parcels
+        res = []
+        for p in filtered:
+            p_copy = dict(p)
+            p_copy["id"] = p.get("parcel_id")
+            p_copy["survey_no"] = p.get("survey_number", p.get("parcel_id"))
+            p_copy["area_hectares"] = round(p.get("area_sqm", 0) / 10000.0, 4)
+            p_copy["status"] = (p.get("acquisition_status") or "pending").upper()
+            p_copy["village_name"] = villages.get(p.get("village_id"), "Ramganj Mandi Alignment")
+            p_copy["current_stage"] = p.get("acquisition_stage") or "PRELIMINARY_NOTIFICATION"
+            res.append(p_copy)
+        return res
 
     def get_parcel_detail(self, parcel_id: str) -> dict[str, Any] | None:
         if not self._data_cache:
