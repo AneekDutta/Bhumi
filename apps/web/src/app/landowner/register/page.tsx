@@ -18,6 +18,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { createOrUpdateLandownerProfile } from "@/lib/api";
 import { toUuid } from "@/lib/supabase/supabaseService";
+import { KoshLogo } from "@/components/common/KoshLogo";
 
 export default function LandownerRegisterPage() {
   const router = useRouter();
@@ -140,9 +141,7 @@ export default function LandownerRegisterPage() {
         {/* Top bar with Theme Toggle */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-[4px] bg-[#0B2E59] text-amber-400 flex items-center justify-center font-black text-xs border border-[#0B2E59]">
-              क
-            </div>
+            <KoshLogo size={22} variant="badge" />
             <span className="text-[11px] font-bold tracking-wider uppercase text-[#5A6A80] dark:text-slate-400">
               CALA · Landowner Portal
             </span>
@@ -154,9 +153,7 @@ export default function LandownerRegisterPage() {
 
         {/* Header Branding */}
         <div className="text-center space-y-1.5 pt-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-[4px] bg-[#0B2E59] text-amber-400 shadow-sm mb-1 border border-[#082242]">
-            <UserPlus className="w-6 h-6" />
-          </div>
+          <KoshLogo size={46} variant="badge" className="mx-auto mb-1" />
           <div className="text-[10px] font-bold uppercase tracking-widest text-[#B36B00] dark:text-amber-400">
             RFCTLARR 2013 Statutory Compliance
           </div>

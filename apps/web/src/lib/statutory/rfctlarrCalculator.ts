@@ -1,6 +1,6 @@
 /**
  * RFCTLARR Act 2013 Canonical Statutory Compensation Calculator
- * SIH26016 / BHUMI Decision-Support Platform
+ * SIH26016 / KOSH Decision-Support Platform
  *
  * Implements Section 26 to Section 30 statutory compensation formulas matching
  * backend/app/services/valuation_engine.py:

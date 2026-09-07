@@ -161,7 +161,7 @@ export default async function StatusPage() {
         <div className="mt-3.5 p-3 bg-slate-50 dark:bg-white/[0.02] rounded-[4px] border border-[#DCE2E8] dark:border-white/10 flex items-center justify-between flex-wrap gap-2 text-xs">
           <div className="flex items-center gap-2 text-[#555555] dark:text-slate-300">
             <Terminal className="w-3.5 h-3.5 text-[#64748B]" />
-            <span>Core Daemon: <strong className="font-mono text-[#14213D] dark:text-white">bhumi-chronos-daemon (Active)</strong></span>
+            <span>Core Daemon: <strong className="font-mono text-[#14213D] dark:text-white">kosh-chronos-daemon (Active)</strong></span>
           </div>
           <span className="text-[11px] font-mono text-[#64748B]">Lapse Check: 12h interval &bull; Next in 4h 12m</span>
         </div>

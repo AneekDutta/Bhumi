@@ -23,6 +23,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
+import { KoshLogo } from "@/components/common/KoshLogo";
 import { getFieldOfficers } from "@/lib/api";
 import { offlineStore } from "@/lib/offlineStore";
 import { createClient } from "@/lib/supabase/client";
@@ -158,9 +159,7 @@ function FieldLoginContent() {
         
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-[4px] bg-[#0B2E59] text-white shadow-xs mb-1 border border-white/20">
-            <Smartphone className="w-7 h-7" />
-          </div>
+          <KoshLogo size={46} variant="badge" className="mx-auto mb-1" />
           <h1 className="text-2xl font-black font-display tracking-tight text-[#14213D] dark:text-white">
             KOSH Field Surveyor Portal
           </h1>

@@ -1,13 +1,13 @@
 import React from "react";
 import Link from "next/link";
+import { KoshLogo } from "@/components/common/KoshLogo";
 
 interface DigitalCorridorMarkProps {
   className?: string;
 }
 
 /**
- * Fictional generic program mark for "CALA Digital Corridor Directorate".
- * Replaces any real central PSU or national program marks.
+ * Program mark for "CALA Digital Corridor Directorate — KOSH".
  */
 export function DigitalCorridorMark({ className = "" }: DigitalCorridorMarkProps) {
   return (
@@ -20,9 +20,7 @@ export function DigitalCorridorMark({ className = "" }: DigitalCorridorMarkProps
           Digital Corridor System
         </div>
       </div>
-      <div className="w-8 h-8 rounded-none bg-white/10 border border-white/20 flex items-center justify-center text-amber-300 font-bold font-devanagari text-base shadow-xs group-hover:bg-amber-400 group-hover:text-[#0B2E59] group-hover:border-amber-400 transition-all">
-        क
-      </div>
+      <KoshLogo size={30} variant="badge" className="group-hover:scale-105 transition-transform" />
     </Link>
   );
 }

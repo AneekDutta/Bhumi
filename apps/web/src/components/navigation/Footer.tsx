@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ShieldCheck, GitBranch, Scale, Database } from 'lucide-react';
+import { KoshLogo } from '@/components/common/KoshLogo';
 
 export function Footer() {
   return (
@@ -9,7 +10,8 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pb-6 border-b border-slate-800">
           <div className="md:col-span-2 space-y-2">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2.5">
+              <KoshLogo size={24} variant="badge" />
               <span className="font-extrabold text-base tracking-tight text-white">KOSH</span>
               <span className="text-amber-400 font-sans font-semibold text-xs">कोष</span>
               <span className="text-slate-600">|</span>

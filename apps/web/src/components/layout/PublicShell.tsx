@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n/I18nContext";
 import { CalaSealLogo } from "@/components/common/CalaSealLogo";
+import { KoshLogo } from "@/components/common/KoshLogo";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { Phone, Bell } from "lucide-react";
 
@@ -246,6 +247,8 @@ export function PublicShell({ children, onOfficerLoginClick }: PublicShellProps)
               Officer Login
             </Link>
           </div>
+
+          <KoshLogo size={24} variant="badge" className="mx-auto" />
 
           <p className="font-medium text-slate-200">
             Designed and Developed for CALA — Central Authority of Land Acquisition
