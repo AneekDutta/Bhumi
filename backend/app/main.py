@@ -16,7 +16,8 @@ app = FastAPI(
 app.add_middleware(GlobalSecurityMiddleware)
 
 # Use explicit origins rather than wildcard with credentials
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+raw_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,https://bhumi-wine.vercel.app,https://sih26-ivory.vercel.app").split(",")
+ALLOWED_ORIGINS = list({o.strip().rstrip("/") for o in raw_origins if o.strip()} | {"https://bhumi-wine.vercel.app", "https://sih26-ivory.vercel.app", "http://localhost:3000"})
 
 app.add_middleware(
     CORSMiddleware,

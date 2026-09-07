@@ -144,3 +144,8 @@
 *.stl                filter=lfs diff=lfs merge=lfs -text
 *.nc                 filter=lfs diff=lfs merge=lfs -text
 *.mat                filter=lfs diff=lfs merge=lfs -text
+
+# ---------------------------------------------------------------------------
+# Exemptions: Web Public Assets (Must be raw binaries for Vercel deployment)
+# ---------------------------------------------------------------------------
+apps/web/public/**   -filter -diff -merge text=auto

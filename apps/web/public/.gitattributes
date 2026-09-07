@@ -1,0 +1,2 @@
+# Keep all public web assets as standard git binaries without LFS
+* -filter -diff -merge text=auto
