@@ -99,6 +99,22 @@ async def simulate_intervention(
     Executes Section 12 What-If simulation by mutating the in-memory dependency graph
     and computing the CPM delay reduction diff without mutating production database.
     """
+    proj = sih_service.get_project_by_id(project_id)
+    if not proj:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Project '{project_id}' not found.",
+        )
+
+    if req.input_entity_ids:
+        proj_parcels = {p["parcel_id"] for p in sih_service.get_parcels(project_id)}
+        valid_ids = [pid for pid in req.input_entity_ids if pid in proj_parcels]
+        if not valid_ids:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"None of the target parcel entities {req.input_entity_ids} exist in project '{project_id}'.",
+            )
+
     res = sih_service.simulate(
         project_id=project_id,
         intervention_type=req.intervention_type,
