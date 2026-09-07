@@ -241,3 +241,53 @@ def test_circular_dependency():
     except ValueError as e:
         assert "cycle" in str(e).lower()
 
+
+def test_simulate_intervention_404_validation():
+    import asyncio
+    from app.api.v1.sih26016 import simulate_intervention
+    from app.schemas.sih26016 import SimulationRequest
+    from fastapi import HTTPException
+
+    # 1. Non-existent project raises 404
+    try:
+        asyncio.run(
+            simulate_intervention(
+                "NONEXISTENT_PROJECT",
+                SimulationRequest(
+                    intervention_type="process_compensation",
+                    input_entity_ids=["P00001"]
+                )
+            )
+        )
+        assert False, "Should have raised HTTPException 404 for project"
+    except HTTPException as e:
+        assert e.status_code == 404
+
+    # 2. Non-existent parcel raises 404
+    try:
+        asyncio.run(
+            simulate_intervention(
+                "P-NH927A",
+                SimulationRequest(
+                    intervention_type="process_compensation",
+                    input_entity_ids=["NONEXISTENT_PARCEL"]
+                )
+            )
+        )
+        assert False, "Should have raised HTTPException 404 for parcel"
+    except HTTPException as e:
+        assert e.status_code == 404
+
+    # 3. Valid parcel returns simulation dict
+    res = asyncio.run(
+        simulate_intervention(
+            "P-NH927A",
+            SimulationRequest(
+                intervention_type="process_compensation",
+                input_entity_ids=["P00001"]
+            )
+        )
+    )
+    assert res["target_entities"] == ["P00001"]
+    assert "delay_reduction_days" in res
+
