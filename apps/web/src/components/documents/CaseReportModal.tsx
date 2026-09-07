@@ -68,7 +68,7 @@ export function CaseReportModal({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-[#14213D] dark:text-white">KOSH SIH26016 · Demonstration Decision-Support Report</h2>
+                <h2 className="text-base font-bold text-[#14213D] dark:text-white">BHUMI SIH26016 · Demonstration Decision-Support Report</h2>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-[2px] bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-300 border border-[#C8E6C9] dark:border-emerald-800/40 font-semibold uppercase">
                   {reportData.currentStatus || "FIELD VERIFIED"}
                 </span>
@@ -111,7 +111,7 @@ export function CaseReportModal({
               COMPETENT AUTHORITY LAND ACQUISITION DIVISION
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400">
-              National Infrastructure Corridor Acquisition Directorate &middot; KOSH Platform (SIH26016)
+              National Infrastructure Corridor Acquisition Directorate &middot; BHUMI Platform (SIH26016)
             </div>
           </div>
 

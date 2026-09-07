@@ -206,7 +206,6 @@ export function PortfolioMap({
                         : 'bg-[#0B2E59] text-white'
                 }`}>
                   <MapPin className="w-4 h-4" />
-                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#0B2E59] dark:bg-sky-400 rounded-full animate-ping" />
                 </div>
 
                 {/* Parcel Tag Pill */}

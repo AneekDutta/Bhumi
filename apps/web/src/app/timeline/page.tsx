@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { AlertTriangle, CheckCircle2, Clock, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Acquisition Timeline | KOSH',
+  title: 'Acquisition Timeline | BHUMI',
   description: 'RFCTLARR statutory pipeline funnel, time-limit grid, and filterable cases table.',
 };
 

@@ -109,16 +109,14 @@ export function Sidebar() {
       <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
         {/* Brand */}
         <div className="p-4 pb-3 border-b border-[#DCE2E8] dark:border-white/[0.06] flex items-center justify-between flex-shrink-0">
-          <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="w-[34px] h-[34px] rounded bg-[#0B2E59] border border-amber-400/30 flex-shrink-0 flex items-center justify-center text-amber-300 font-devanagari font-bold text-base shadow-xs">
-              क
-            </div>
+          <Link href="/dashboard" className="flex items-center gap-2.5 group" title="BHUMI Operations Console">
+            <CalaSealLogo size={32} className="w-8 h-8 flex-shrink-0 drop-shadow-xs" variant="light" />
             <div>
               <div className="font-bold text-[#14213D] dark:text-white text-[15px] leading-tight">
-                KOSH Console
+                BHUMI Console
               </div>
               <div className="text-[10px] text-[#64748B] dark:text-[#94A3B8] font-mono">
-                SIH26016 Prototype · Kota
+                CALA Directorate · Kota
               </div>
             </div>
           </Link>
@@ -150,7 +148,7 @@ export function Sidebar() {
                       key={item.id}
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
-                      className={`flex items-center gap-2.5 px-3 py-2 text-xs rounded-[4px] transition-all ${
+                      className={`flex items-center gap-2.5 px-3 py-2 text-xs rounded-[4px] transition-all duration-150 ease-out ${
                         active
                           ? "bg-[#E6F0FA] dark:bg-[#0B5FA5]/20 text-[#0B2E59] dark:text-[#38BDF8] font-bold border-l-[3px] border-[#0B5FA5] shadow-xs"
                           : "text-[#333333] dark:text-[#CBD5E1] hover:text-[#0B2E59] hover:bg-[#F1F4F7] dark:hover:bg-white/[0.04] font-medium"
@@ -174,11 +172,13 @@ export function Sidebar() {
 
       {/* Footer Controls: Theme Toggle & User Profile */}
       <div className="p-3 border-t border-[#DCE2E8] dark:border-white/[0.06] bg-[#F8FAFC] dark:bg-black/20 space-y-2.5 flex-shrink-0">
-        {/* Theme Switcher Pill */}
-        <div className="flex items-center justify-between px-2 py-1 rounded-[4px] bg-white dark:bg-slate-900/60 border border-[#DCE2E8] dark:border-white/[0.05]">
-          <span className="text-[11px] font-semibold text-[#64748B] dark:text-slate-400">
-            {t("nav.appearance")}
-          </span>
+        {/* Theme Switcher Pill (Stacked layout so Auto button never overflows) */}
+        <div className="p-2 rounded-[4px] bg-white dark:bg-slate-900/60 border border-[#DCE2E8] dark:border-white/[0.05] space-y-1.5">
+          <div className="flex items-center justify-between px-0.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
+              {t("nav.appearance")}
+            </span>
+          </div>
           <ThemeToggle variant="pill" />
         </div>
 

@@ -134,7 +134,7 @@ const GOV_UPDATES: GovUpdateItem[] = [
     badgeBg: "bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700",
     badgeText: "text-slate-800 dark:text-slate-200",
     date: "Central Act",
-    authority: "Ministry of Rural Development, Govt of India",
+    authority: "Statutory Law · Central Act No. 30 of 2013",
     title: "RFCTLARR Act, 2013: Mandatory SIA & Prior Consent Safeguards",
     reference: "Central Act No. 30 of 2013 · Schedules I, II, & III",
     summary: "Guarantees mandatory Social Impact Assessment (SIA), statutory consent thresholds (70% for PPP projects, 80% for private projects), 100% Solatium, and rural multipliers (1.25x to 2.0x) on market valuation.",
@@ -416,17 +416,17 @@ export default function LandingPage() {
                 <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">NH-927A Kota–Jhalawar</div>
               </div>
               <div className="py-3 px-4">
-                <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">181</div>
+                <div className="text-2xl font-bold text-[#14213D] dark:text-white tracking-tight">181</div>
                 <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">Cadastral Parcels</div>
                 <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">3 Revenue Villages</div>
               </div>
               <div className="py-3 px-4">
-                <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 tracking-tight">39.54 Ha</div>
+                <div className="text-2xl font-bold text-[#14213D] dark:text-white tracking-tight">39.54 Ha</div>
                 <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">{t("kpi.area_acquired")}</div>
                 <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">Section 3D / 3E RoW</div>
               </div>
               <div className="py-3 px-4">
-                <div className="text-2xl font-bold text-[#B36B00] dark:text-amber-400 tracking-tight">₹ 28.4 Cr</div>
+                <div className="text-2xl font-bold text-[#14213D] dark:text-white tracking-tight">₹ 28.4 Cr</div>
                 <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">{t("kpi.compensation")}</div>
                 <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">PFMS Direct Benefit Transfer</div>
               </div>
@@ -441,7 +441,7 @@ export default function LandingPage() {
                       ACTIVE LINEAR CORRIDOR
                     </span>
                     <span className="text-xs font-mono text-[#0B5FA5] dark:text-sky-400 font-bold">
-                      MoRTH / NHAI PID-2024-927A
+                      CALA PID-2024-927A
                     </span>
                   </div>
                   <h3 className="text-sm font-bold text-[#14213D] dark:text-white mt-1">
@@ -558,9 +558,8 @@ export default function LandingPage() {
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[10px] font-mono font-bold tracking-wider uppercase rounded">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                      LIVE FEED
+                    <span className="inline-flex items-center px-2 py-0.5 bg-white/10 text-slate-200 border border-white/20 text-[10px] font-mono font-bold tracking-wider uppercase rounded">
+                      OFFICIAL BULLETINS
                     </span>
                   </div>
                 </div>

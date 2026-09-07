@@ -7,8 +7,8 @@ import { LanguageProvider } from '@/context/LanguageContext';
 
 export const metadata: Metadata = {
   title: {
-    default: 'KOSH — SIH26016 · Land Acquisition Decision Support Prototype',
-    template: '%s | KOSH',
+    default: 'BHUMI — SIH26016 · National Land Acquisition Decision Support Prototype',
+    template: '%s | BHUMI',
   },
   description: 'Demonstration decision-support prototype for infrastructure land acquisition, statutory workflows, and critical path risk monitoring.',
   icons: {
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'KOSH Field',
+    title: 'BHUMI Field',
   },
 };
 
@@ -26,7 +26,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#059669',
+  themeColor: '#0B2E59',
 };
 
 import { I18nProvider } from '@/lib/i18n/I18nContext';
@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             __html: `
               (function() {
                 try {
-                  var saved = localStorage.getItem('kosh-theme') || localStorage.getItem('bhumi-theme');
+                  var saved = localStorage.getItem('bhumi-theme') || localStorage.getItem('kosh-theme');
                   var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                   var isDark = saved === 'dark' || (saved === 'system' && prefersDark);
                   var root = document.documentElement;

@@ -119,7 +119,7 @@ export default function HighwayRegisterPage() {
           </div>
 
           <div className="py-3 px-4">
-            <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-white tracking-tight">
               {totalAreaHa.toFixed(2)} Ha
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
@@ -158,9 +158,8 @@ export default function HighwayRegisterPage() {
         {/* Filter and Search Bar */}
         <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-3 rounded-md shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DCE2E8] dark:border-white/10 pb-3">
-            <div className="font-bold text-xs uppercase tracking-wide text-[#14213D] dark:text-white flex items-center gap-2">
-              <FileSpreadsheet className="w-4 h-4 text-[#0B5FA5]" />
-              <span>Search and Filter Land Acquisition Records</span>
+            <div className="font-bold text-xs uppercase tracking-wide text-[#14213D] dark:text-white">
+              Search and Filter Land Acquisition Records
             </div>
             <div className="text-xs font-mono text-[#0B5FA5] dark:text-sky-400">
               Showing {filteredParcels.length} of {normalizedParcels.length} Parcels

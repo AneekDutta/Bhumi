@@ -122,13 +122,13 @@ export function generateCaseReportPdf(data: CaseReportData): void {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
   doc.setTextColor(255, 255, 255);
-  doc.text("KOSH SIH26016 · DEMONSTRATION DECISION-SUPPORT REPORT", margin + 6, y + 8);
+  doc.text("BHUMI SIH26016 · DEMONSTRATION DECISION-SUPPORT REPORT", margin + 6, y + 8);
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(203, 213, 225);
   doc.text("Right to Fair Compensation and Transparency in Land Acquisition, Rehabilitation and Resettlement Act, 2013", margin + 6, y + 14);
-  doc.text("KOSH Decision Intelligence Engine · SIH26016 Land Acquisition Decision Support Prototype", margin + 6, y + 19);
+  doc.text("BHUMI Decision Intelligence Engine · SIH26016 Land Acquisition Decision Support Prototype", margin + 6, y + 19);
 
   y += 30;
 
@@ -351,7 +351,7 @@ export function generateCaseReportPdf(data: CaseReportData): void {
   doc.text("District Competent Authority / Land Acquisition Officer", margin + 110, y);
   y += 4;
   doc.text("Field Verification Unit · Revenue Division", margin + 5, y);
-  doc.text("Modeled after MoRTH / NHAI Corridor Workflows · SIH26016", margin + 110, y);
+  doc.text("CALA Corridor Land Acquisition Directorate · SIH26016", margin + 110, y);
 
   // Footer page numbers
   const totalPages = doc.getNumberOfPages();
@@ -361,7 +361,7 @@ export function generateCaseReportPdf(data: CaseReportData): void {
     doc.setFontSize(7);
     doc.setTextColor(148, 163, 184);
     doc.text(
-      `KOSH SIH26016 · Demonstration Decision-Support Report · Page ${i} of ${totalPages}`,
+      `BHUMI SIH26016 · Demonstration Decision-Support Report · Page ${i} of ${totalPages}`,
       pageWidth / 2,
       pageHeight - 8,
       { align: "center" }
@@ -369,7 +369,7 @@ export function generateCaseReportPdf(data: CaseReportData): void {
   }
 
   // Save the PDF
-  doc.save(`KOSH_Case_Report_${data.complaintId}.pdf`);
+  doc.save(`BHUMI_Case_Report_${data.complaintId}.pdf`);
 
   // Helper functions
   function renderSectionHeader(title: string) {
@@ -448,7 +448,7 @@ export function generateLandownerNoticePdf(data: LandownerNoticeData): void {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.setTextColor(15, 23, 42);
-  doc.text("KOSH — SIH26016 PROTOTYPE DEMONSTRATION", pageWidth / 2, y, { align: "center" });
+  doc.text("BHUMI — SIH26016 PROTOTYPE DEMONSTRATION", pageWidth / 2, y, { align: "center" });
   y += 5;
   doc.setFontSize(10);
   doc.text("COMPETENT AUTHORITY LAND ACQUISITION (CALA) SIMULATION MODEL", pageWidth / 2, y, { align: "center" });
@@ -585,10 +585,10 @@ export function generateLandownerNoticePdf(data: LandownerNoticeData): void {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7);
   doc.setTextColor(148, 163, 184);
-  doc.text("KOSH — SIH26016 · Demonstration Decision-Support Notice. Intended solely for academic hackathon simulation and decision support.", pageWidth / 2, pageHeight - 12, { align: "center" });
+  doc.text("BHUMI — SIH26016 · Demonstration Decision-Support Notice. Intended solely for academic hackathon simulation and decision support.", pageWidth / 2, pageHeight - 12, { align: "center" });
 
   // Save the PDF
-  doc.save(`KOSH_Notice_${data.complaintId}.pdf`);
+  doc.save(`BHUMI_Notice_${data.complaintId}.pdf`);
 }
 
 /**
@@ -694,7 +694,7 @@ export function buildLandownerNoticeData(complaint: any): LandownerNoticeData {
     statutoryAwardInr: awardInr,
     nextSteps: [
       "Submit updated bank account details and cancelled cheque to the CALA disbursement portal.",
-      "Verify updated parcel geometry on the KOSH GIS Landowner portal.",
+      "Verify updated parcel geometry on the BHUMI GIS Landowner portal.",
       "Receive formal mutated Naksha / Khasra passbook from Patwari upon final acquisition gazette."
     ],
     authorityName: res.admin_name || "Competent Authority for Land Acquisition (CALA)"

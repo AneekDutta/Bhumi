@@ -1,6 +1,6 @@
 /**
  * Comprehensive Unit Tests for Canonical RFCTLARR Compensation Calculator
- * SIH26016 / KOSH Decision-Support Platform
+ * SIH26016 / BHUMI Decision-Support Platform
  */
 import {
   calculateStatutoryAward,

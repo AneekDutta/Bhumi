@@ -201,7 +201,7 @@ export default function GazetteSearchPage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#0B2E59] text-white uppercase">
-              THE GAZETTE OF INDIA &bull; STATUTORY NOTICES
+              OFFICIAL STATUTORY GAZETTE &bull; EXTRAORDINARY NOTICES
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#14213D] dark:text-white leading-tight">
@@ -215,9 +215,8 @@ export default function GazetteSearchPage() {
         {/* Filter Controls Bar */}
         <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-3 rounded-md shadow-xs">
           <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-2">
-            <div className="font-bold text-xs uppercase tracking-wide text-[#14213D] dark:text-white flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#0B5FA5]" />
-              <span>Search Gazette Notices</span>
+            <div className="font-bold text-xs uppercase tracking-wide text-[#14213D] dark:text-white">
+              Search Gazette Notices
             </div>
             <span className="text-xs font-mono text-[#0B5FA5] dark:text-sky-400">
               {filteredGazettes.length} Notifications Found

@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   KOSH — SIH26016 · LAND ACQUISITION DECISION SUPPORT PROTOTYPE
+   BHUMI — SIH26016 · LAND ACQUISITION DECISION SUPPORT PROTOTYPE
    ========================================================================== */
 @layer base {
   html.text-size-sm { font-size: 14px; }

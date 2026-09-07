@@ -116,7 +116,7 @@ export default function ReportsPage() {
         return v.includes(',') || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v;
       }).join(','))].join('\n');
       const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
-      const a = document.createElement('a'); a.href = url; a.download = `kosh_${reportType}_${new Date().toISOString().split('T')[0]}.csv`;
+      const a = document.createElement('a'); a.href = url; a.download = `bhumi_${reportType}_${new Date().toISOString().split('T')[0]}.csv`;
       document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
       setNotification({ type: 'success', message: `Exported ${rows.length} rows to CSV` });
     } catch { setNotification({ type: 'error', message: 'Export failed.' }); }
@@ -128,7 +128,7 @@ export default function ReportsPage() {
     setExporting('json');
     try {
       const url = URL.createObjectURL(new Blob([JSON.stringify(rows, null, 2)], { type: 'application/json' }));
-      const a = document.createElement('a'); a.href = url; a.download = `kosh_${reportType}_${new Date().toISOString().split('T')[0]}.json`;
+      const a = document.createElement('a'); a.href = url; a.download = `bhumi_${reportType}_${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
       setNotification({ type: 'success', message: `Exported ${rows.length} records to JSON` });
     } catch { setNotification({ type: 'error', message: 'Export failed.' }); }

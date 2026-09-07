@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   try {
     const project = await apiClient.getProject(id);
     return { title: `${project.name} | Bottleneck Intelligence`, description: `Dependency graph for ${project.name}.` };
-  } catch { return { title: 'Bottleneck Intelligence | KOSH' }; }
+  } catch { return { title: 'Bottleneck Intelligence | BHUMI' }; }
 }
 
 export default async function IntelligencePage({ params }: { params: Promise<{ id: string }> }) {

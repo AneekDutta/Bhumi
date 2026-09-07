@@ -37,18 +37,18 @@ const DICTIONARY: Record<string, { en: string; hi: string }> = {
   'nav.appearance': { en: 'Appearance', hi: 'स्वरूप' },
 
   // Header & Brand
-  'app.title': { en: 'KOSH', hi: 'कोष' },
+  'app.title': { en: 'BHUMI', hi: 'भूमि' },
   'app.prototype_tag': { en: 'SIH26016 Decision Support Prototype', hi: 'SIH26016 निर्णय सहयोग प्रोटोटाइप' },
-  'app.emergency_helpline': { en: 'Evaluation Helpdesk', hi: 'मूल्यांकन सहायता डेस्क' },
+  'app.emergency_helpline': { en: 'Emergency Helpdesk', hi: 'आपातकालीन सहायता डेस्क' },
   'app.welcome': { en: 'Welcome, ', hi: 'स्वागत है, ' },
   'app.cala_officer': { en: 'CALA Officer · Competent Authority', hi: 'सक्षम प्राधिकारी (CALA)' },
   'app.whatif_workbench': { en: 'What-If Workbench', hi: 'व्हाट-इफ़ कार्यक्षेत्र' },
 
   // Dashboard & Operations
-  'dash.title': { en: 'Land Acquisition Decision Support Console', hi: 'भूमि अधिग्रहण निर्णय सहायता कंसोल' },
+  'dash.title': { en: 'Land Acquisition Operations Console', hi: 'भूमि अधिग्रहण परिचालन कंसोल' },
   'dash.subtitle': { en: 'Strategic Infrastructure Corridors and Cadastral Cases under RFCTLARR Act 2013 & NH Act 1956', hi: 'आरएफसीटीएलएआरआर 2013 और एनएच अधिनियम 1956 के तहत रणनीतिक गलियारे और भूखंड मामले' },
-  'dash.command_ops': { en: 'MoRTH / CALA Command Operations', hi: 'सड़क परिवहन एवं राजमार्ग / CALA कमान परिचालन' },
-  'dash.synthetic_stream': { en: 'Synthetic Rajasthan Benchmark Stream', hi: 'सिंथेटिक राजस्थान बेंचमार्क स्ट्रीम' },
+  'dash.command_ops': { en: 'CALA Directorate Operations', hi: 'CALA निदेशालय परिचालन' },
+  'dash.synthetic_stream': { en: 'Rajasthan Corridor Benchmark Stream', hi: 'राजस्थान कॉरिडोर बेंचमार्क स्ट्रीम' },
   'dash.spatial_map': { en: 'Project Spatial Map', hi: 'परियोजना स्थानिक मानचित्र' },
   'dash.parcel_map': { en: 'Land Parcel Map', hi: 'भूखंड मानचित्र' },
   'dash.section_a_title': { en: 'Government Infrastructure Project Portfolio', hi: 'सरकारी अवसंरचना परियोजना पोर्टफोलियो' },
@@ -102,14 +102,14 @@ const DICTIONARY: Record<string, { en: string; hi: string }> = {
   'status.active': { en: 'ACTIVE', hi: 'सक्रिय' },
 
   // Disclaimers & Alerts
-  'disclaimer.synthetic': { en: 'SYNTHETIC DEMO DATA · PROTOTYPE BENCHMARK', hi: 'सिंथेटिक डेमो डेटा · प्रोटोटाइप बेंचमार्क' },
+  'disclaimer.synthetic': { en: 'BENCHMARK DEMO DATA · PROTOTYPE EVALUATION', hi: 'बेंचमार्क डेमो डेटा · प्रोटोटाइप मूल्यांकन' },
   'disclaimer.ai_advisory': { en: 'AI-GENERATED ADVISORY SUMMARY · DECISIONS REQUIRE AUTHORIZED OFFICER REVIEW', hi: 'एआई-जनित परामर्श सारांश · निर्णय के लिए अधिकृत अधिकारी की समीक्षा आवश्यक है' },
   'alert.overdue_warning': { en: 'Statutory deadline notice: Section 15 objection window on P00001 closes in 14 days.', hi: 'वैधानिक समय-सीमा सूचना: P00001 पर धारा 15 आपत्ति अवधि 14 दिनों में समाप्त होगी।' },
 
   // Home Page 30-Second Overview
   'home.hero_title': { en: 'Deterministic Land Acquisition Intelligence for Strategic Infrastructure', hi: 'रणनीतिक अवसंरचना के लिए निश्चित भूमि अधिग्रहण निर्णय सहायता' },
-  'home.hero_sub': { en: 'Operational decision-support twin for MoRTH, NHAI, and CALA authorities under RFCTLARR Act 2013 & NH Act 1956.', hi: 'सड़क परिवहन एवं राजमार्ग मंत्रालय, एनएचएआई और सक्षम प्राधिकारियों के लिए परिचालन निर्णय सहायता प्रणाली।' },
-  'home.what_is_kosh': { en: '1. What is KOSH?', hi: '१. कोष क्या है?' },
+  'home.hero_sub': { en: 'Operational decision-support twin for CALA authorities under RFCTLARR Act 2013 & NH Act 1956.', hi: 'सक्षम प्राधिकारियों के लिए परिचालन निर्णय सहायता प्रणाली।' },
+  'home.what_is_kosh': { en: '1. What is BHUMI?', hi: '१. भूमि क्या है?' },
   'home.what_problem': { en: '2. What Problem Does It Solve?', hi: '२. यह किस समस्या का समाधान करता है?' },
   'home.why_different': { en: '3. Why is it Different?', hi: '३. यह अन्य प्रणालियों से अलग क्यों है?' },
   'home.where_start': { en: '4. Where Do I Start?', hi: '४. शुरुआत कहाँ से करें?' },

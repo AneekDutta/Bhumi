@@ -16,6 +16,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const { language, setLanguage, t } = useLanguage();
+  const { textSize, setTextSize } = useI18n();
 
   useEffect(() => {
     import("@/lib/supabase/client").then(({ createClient }) => {
@@ -102,12 +103,12 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="w-full flex items-center justify-between gap-2">
             <div className="flex items-center gap-3">
               <span className="text-slate-200">
-                Evaluation Helpdesk: <strong>7595093196</strong> / <strong>6202346942</strong>
+                Emergency Helpline: <strong>7595093196</strong> / <strong>6202346942</strong>
               </span>
               <span className="text-white/30 hidden sm:inline">|</span>
-              <span className="text-slate-300 hidden sm:inline">helpdesk-kosh@sih2026.org</span>
+              <span className="text-slate-300 hidden sm:inline">helpdesk@cala.gov.in</span>
               <span className="text-white/30 hidden md:inline">|</span>
-              <span className="text-amber-300/80 font-mono hidden md:inline">SIH26016 Academic Prototype</span>
+              <span className="text-amber-300/80 font-mono hidden md:inline">CALA Competent Authority</span>
             </div>
 
             <div className="flex items-center gap-3">
@@ -130,35 +131,54 @@ export function AppShell({ children }: { children: ReactNode }) {
               </div>
               <span className="text-white/30">|</span>
               <div className="flex items-center gap-1 font-mono text-[10px]">
-                <span className="px-1 py-0.5 rounded bg-white/10 hover:bg-white/20 cursor-pointer font-bold">A-</span>
-                <span className="px-1 py-0.5 rounded bg-white/15 hover:bg-white/20 cursor-pointer font-bold">A</span>
-                <span className="px-1 py-0.5 rounded bg-white/10 hover:bg-white/20 cursor-pointer font-bold">A+</span>
+                <button
+                  type="button"
+                  onClick={() => setTextSize("sm")}
+                  className={`px-1.5 py-0.5 rounded cursor-pointer font-bold transition-colors ${textSize === "sm" ? "bg-white/30 text-white" : "bg-white/10 text-slate-300 hover:bg-white/20"}`}
+                  title="Decrease font size"
+                >
+                  A-
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTextSize("base")}
+                  className={`px-1.5 py-0.5 rounded cursor-pointer font-bold transition-colors ${textSize === "base" ? "bg-white/30 text-white" : "bg-white/10 text-slate-300 hover:bg-white/20"}`}
+                  title="Normal font size"
+                >
+                  A
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTextSize("lg")}
+                  className={`px-1.5 py-0.5 rounded cursor-pointer font-bold transition-colors ${textSize === "lg" ? "bg-white/30 text-white" : "bg-white/10 text-slate-300 hover:bg-white/20"}`}
+                  title="Increase font size"
+                >
+                  A+
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Administrative Header (KOSH Prototype) */}
+        {/* Administrative Header (BHUMI / CALA Directorate) */}
         <header className="w-full bg-[#0B2E59] text-white shadow-md">
           <div className="w-full px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
 
-            {/* LEFT: Administrative Badge + Bilingual Prototype Title */}
-            <Link href="/dashboard" className="flex items-center gap-3 group min-w-0">
-              <div className="w-9 h-9 rounded bg-[#14213D] border border-amber-400/40 flex-shrink-0 flex items-center justify-center text-amber-300 font-devanagari font-black text-xl shadow-xs group-hover:border-amber-400 transition-colors">
-                क
-              </div>
+            {/* LEFT: Administrative Seal + Bilingual Title */}
+            <Link href="/dashboard" className="flex items-center gap-3 group min-w-0" title="BHUMI Console">
+              <CalaSealLogo size={36} className="w-9 h-9 flex-shrink-0 drop-shadow-xs" variant="light" />
 
               <div className="flex flex-col min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="text-[10px] text-amber-300 font-mono tracking-wider font-bold uppercase leading-tight">
-                    KOSH · SIH26016
+                    BHUMI · CALA DIRECTORATE
                   </span>
                   <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 font-semibold">
-                    PROTOTYPE
+                    OFFICER CONSOLE
                   </span>
                 </div>
                 <span className="text-xs sm:text-sm font-bold text-white font-sans tracking-tight leading-tight">
-                  {language === "hi" ? "कोष — SIH26016 · भूमि अधिग्रहण निर्णय सहायता प्रोटोटाइप" : "Land Acquisition Decision Support Prototype"}
+                  {language === "hi" ? "भूमि — राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन प्रणाली" : "BHUMI — National Land Acquisition Operations"}
                 </span>
               </div>
             </Link>
@@ -182,8 +202,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <div className="hidden sm:flex flex-col text-left">
                   <div className="text-xs font-medium text-white flex items-center gap-1">
                     <span>{t("app.welcome")}</span>
-                    <span className="font-bold truncate max-w-[200px]" title={userEmail || "officer@kosh.sih2026.org"}>
-                      {userEmail || "officer@kosh.sih2026.org"}
+                    <span className="font-bold truncate max-w-[200px]" title={userEmail || "officer@cala.gov.in"}>
+                      {userEmail || "officer@cala.gov.in"}
                     </span>
                     <ChevronDown className="w-3 h-3 text-slate-300 ml-0.5 flex-shrink-0" />
                   </div>
@@ -224,10 +244,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           {/* Official SIH Hackathon Prototype Footer */}
           <footer className="w-full bg-[#0A2647] text-white py-3 px-6 text-center text-xs flex-shrink-0 border-t border-[#071A32] space-y-0.5">
             <div className="font-semibold text-slate-200">
-              KOSH — Smart India Hackathon 2026 Prototype · Problem Statement SIH26016
+              BHUMI — Smart India Hackathon Prototype (SIH26016). Not an official government system.
             </div>
             <div className="text-[11px] text-slate-400">
-              For Academic Evaluation &amp; Prototype Demonstration Only · Synthetic Rajasthan Benchmark Data (P-NH927A / P00001)
+              Designed and Developed for CALA — Central Authority for Land Acquisition Directorate Evaluation
             </div>
             <div className="text-[10px] text-slate-500 font-mono">
               Deterministic Statutory Engine (RFCTLARR Act 2013 &amp; NH Act 1956) · PostGIS Spatial Twin · Critical Path Method

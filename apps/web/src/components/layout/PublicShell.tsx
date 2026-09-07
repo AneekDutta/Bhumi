@@ -5,9 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n/I18nContext";
 import { CalaSealLogo } from "@/components/common/CalaSealLogo";
-import { DigitalCorridorMark } from "@/components/common/DigitalCorridorMark";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
-import { Phone, Bell, Landmark } from "lucide-react";
+import { Phone, Bell } from "lucide-react";
 
 interface PublicShellProps {
   children: ReactNode;
@@ -106,7 +105,7 @@ export function PublicShell({ children, onOfficerLoginClick }: PublicShellProps)
         <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
           
           {/* Left: CALA Generic Administrative Seal + Bilingual Title (Links to /) */}
-          <Link href="/" className="flex items-center gap-3.5 group cursor-pointer" title="Go to KOSH Home">
+          <Link href="/" className="flex items-center gap-3.5 group cursor-pointer" title="Go to BHUMI Home">
             <CalaSealLogo size={46} className="w-11 h-11 flex-shrink-0 drop-shadow-xs" variant="light" />
 
             <div className="flex flex-col">
@@ -122,8 +121,15 @@ export function PublicShell({ children, onOfficerLoginClick }: PublicShellProps)
             </div>
           </Link>
 
-          {/* Right: CALA Directorate Program Mark (Links to /) */}
-          <DigitalCorridorMark />
+          {/* Right: Neutral Statutory Authority Info */}
+          <div className="hidden md:flex flex-col items-end text-right">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-300 font-semibold">
+              Competent Authority for Land Acquisition
+            </span>
+            <span className="text-xs text-amber-300/90 font-medium">
+              NH Act 1956 &bull; RFCTLARR Act 2013
+            </span>
+          </div>
 
         </div>
       </header>
@@ -245,13 +251,13 @@ export function PublicShell({ children, onOfficerLoginClick }: PublicShellProps)
             Designed and Developed for CALA — Central Authority for Land Acquisition
           </p>
           <p className="text-[11px] text-slate-400">
-            KOSH Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.
+            BHUMI Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.
           </p>
           <p className="text-[11px] text-slate-400">
-            Emergency Helpline: <strong className="text-amber-300">7595093196</strong> / <strong className="text-amber-300">6202346942</strong> · Technical Support: <strong className="text-slate-200">support@kosh.internal</strong>
+            Emergency Helpline: <strong className="text-amber-300">7595093196</strong> / <strong className="text-amber-300">6202346942</strong> · Technical Support: <strong className="text-slate-200">helpdesk@cala.gov.in</strong>
           </p>
           <p className="text-[10px] text-slate-400 font-mono pt-1">
-            KOSH Portal Version 3.4.1 · Prototype Deployment (SIH26016)
+            BHUMI Platform Version 3.4.1 · Prototype Deployment (SIH26016)
           </p>
         </div>
       </footer>

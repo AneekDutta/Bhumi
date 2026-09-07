@@ -52,7 +52,7 @@ async function getCachedSessionToken(): Promise<string | null> {
       return cachedAccessToken;
     }
 
-    // If Supabase session is not yet rehydrated in browser but officer has an active KOSH session:
+    // If Supabase session is not yet rehydrated in browser but officer has an active BHUMI session:
     // Seamlessly authenticate with canonical officer credentials to acquire a valid Supabase JWT
     if (typeof document !== 'undefined') {
       const hasOfficerCookie = document.cookie.includes('kosh_officer_session=') || document.cookie.includes('bhumi_officer_session=');
@@ -552,7 +552,7 @@ export const apiClient = {
     } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
     return {
       status: 'ok',
-      app: 'KOSH Core Decision-Intelligence Gateway',
+      app: 'BHUMI Core Decision-Intelligence Gateway',
       version: 'v2.4-PROD',
       services: {
         database: 'Connected (PostgreSQL 16 + PostGIS 3.4)',

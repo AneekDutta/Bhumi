@@ -104,10 +104,6 @@ export default async function NationalDashboardPage() {
           </div>
         </div>
 
-        <p className="text-xs text-[#5A6A80] dark:text-slate-400 m-0 leading-relaxed">
-          Multi-sector linear corridor footprints representing Highways, Railways, Industrial Corridors, and Urban Infrastructure.
-        </p>
-
         {/* Section A Portfolio KPI Strip - Seamless Layout with Vertical Dividers (Item 16) */}
         <div className="grid grid-cols-2 sm:grid-cols-4 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-[#FAFCFE] dark:bg-[#070B14] rounded-md overflow-hidden shadow-xs">
           <div className="py-3 px-4">
@@ -121,7 +117,7 @@ export default async function NationalDashboardPage() {
           </div>
 
           <div className="py-3 px-4">
-            <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
               {mockTotalPlannedAcq.toLocaleString()} <span className="text-xs font-medium text-[#5A6A80]">Ha</span>
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
@@ -131,7 +127,7 @@ export default async function NationalDashboardPage() {
           </div>
 
           <div className="py-3 px-4">
-            <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 tracking-tight">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
               {mockTotalAcquired.toLocaleString()} <span className="text-xs font-medium text-[#5A6A80]">Ha</span>
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
@@ -189,7 +185,7 @@ export default async function NationalDashboardPage() {
                   href={`/projects/gis?id=${p.id}`}
                   className="text-xs font-bold text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1"
                 >
-                  <span>Corridor GIS</span>
+                  <span>View Corridor GIS</span>
                   <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
@@ -215,7 +211,7 @@ export default async function NationalDashboardPage() {
               href="/landowner-cases"
               className="text-xs text-[#0B5FA5] dark:text-sky-400 font-bold hover:underline flex items-center gap-1"
             >
-              <span>View Full Cases Queue</span>
+              <span>View All Cases</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -258,7 +254,7 @@ export default async function NationalDashboardPage() {
           </div>
 
           <div className="py-3 px-4">
-            <div className="text-2xl font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
+            <div className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
               {implementationInitiated}
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-1">
@@ -281,12 +277,9 @@ export default async function NationalDashboardPage() {
         {/* Statutory Aggregations Strip - Seamless Form Style */}
         <div className="pt-3 pb-1 border-t border-b border-[#DCE2E8] dark:border-white/10 space-y-2.5">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2">
-              <Scale className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400" />
-              <span className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] uppercase tracking-wide">
-                RFCTLARR 2013 Statutory Schedule Aggregations
-              </span>
-            </div>
+            <h3 className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] uppercase tracking-wide m-0">
+              RFCTLARR 2013 Statutory Schedule Aggregations
+            </h3>
             <span className="text-[11px] text-[#5A6A80] dark:text-slate-400">
               Statutory Reconciliation
             </span>
@@ -294,7 +287,7 @@ export default async function NationalDashboardPage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 border border-[#DCE2E8] dark:border-white/10 divide-x divide-[#DCE2E8] dark:divide-white/10 bg-[#FAFCFE] dark:bg-[#070B14] rounded-md overflow-hidden shadow-xs">
             <div className="py-2.5 px-4">
-              <div className="text-lg font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
+              <div className="text-lg font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
                 ₹{(stats.compensation_assessed_inr || 0).toLocaleString()}
               </div>
               <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-0.5">
@@ -321,7 +314,7 @@ export default async function NationalDashboardPage() {
             </div>
 
             <div className="py-2.5 px-4">
-              <div className="text-lg font-bold text-[#0B5FA5] dark:text-sky-400 tracking-tight">
+              <div className="text-lg font-bold text-[#14213D] dark:text-[#F0F4FF] tracking-tight">
                 {stats.possession_complete_count || 0} / {totalParcels || 0}
               </div>
               <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 uppercase font-bold tracking-wider mt-0.5">

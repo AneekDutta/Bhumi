@@ -138,7 +138,7 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
 
             <div className="overflow-hidden">
               <span className="font-bold text-sm text-white truncate block">
-                {title || "KOSH Field"}
+                {title || "BHUMI Field"}
               </span>
               {officer && (
                 <span className="text-[10px] text-sky-200 font-mono truncate block">

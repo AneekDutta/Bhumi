@@ -16,13 +16,13 @@ interface I18nContextType {
 const DICTIONARY: Record<Language, Record<string, string>> = {
   en: {
     // Brand & Header
-    "brand.title_hi": "कोश — राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन प्रणाली",
-    "brand.title_en": "KOSH — National Land Acquisition & Management System",
+    "brand.title_hi": "भूमि — राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन प्रणाली",
+    "brand.title_en": "BHUMI — National Land Acquisition & Management System",
     "brand.subline": "CALA — Central Authority for Land Acquisition",
-    "brand.short": "KOSH",
+    "brand.short": "BHUMI",
     "brand.cala": "CALA Directorate",
     "utility.helpline": "Emergency Helpline",
-    "utility.email": "helpdesk-kosh@cala.gov.in",
+    "utility.email": "helpdesk@cala.gov.in",
     "utility.role_cala": "CALA Officer | Competent Authority",
     "utility.welcome": "Welcome",
 
@@ -46,7 +46,7 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "kpi.active_projects": "Active Highway Projects",
     "kpi.active_projects_sub": "Major corridors currently in acquisition",
     "kpi.area_acquired": "Total Area Acquired",
-    "kpi.area_acquired_sub": "Hectares under Section 3D/3G possession",
+    "kpi.area_acquired_sub": "Hectares under Section 3D/3E possession",
     "kpi.compensation": "Compensation Disbursed",
     "kpi.compensation_sub": "Direct Benefit Transfer (PFMS / Treasury)",
     "kpi.pending_notices": "Pending Notifications",
@@ -74,20 +74,20 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "ticker.item3": "[STATUTORY HEARING] Section 3C objections hearing desk active for Kaimur & Dausa districts",
 
     // Footer & Legal
-    "footer.disclaimer": "KOSH Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.",
+    "footer.disclaimer": "BHUMI Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.",
     "footer.framework": "Statutory Framework: RFCTLARR Act 2013 & National Highways Act 1956",
     "footer.authority": "Central Authority for Land Acquisition (CALA) Directorate",
   },
   hi: {
     // Brand & Header
-    "brand.title_hi": "कोश — राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन प्रणाली",
-    "brand.title_en": "KOSH — National Land Acquisition & Management System",
-    "brand.subline": "सीएएलए — केंद्रीय भूमि अधिग्रहण प्राधिकरण",
-    "brand.short": "कोश",
-    "brand.cala": "सीएएलए निदेशालय",
+    "brand.title_hi": "भूमि — राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन प्रणाली",
+    "brand.title_en": "BHUMI — National Land Acquisition & Management System",
+    "brand.subline": "सी.ए.एल.ए. — भूमि अधिग्रहण केंद्रीय प्राधिकरण",
+    "brand.short": "भूमि",
+    "brand.cala": "सी.ए.एल.ए. निदेशालय",
     "utility.helpline": "आपातकालीन हेल्पलाइन",
-    "utility.email": "helpdesk-kosh@cala.gov.in",
-    "utility.role_cala": "सीएएलए अधिकारी | सक्षम प्राधिकारी",
+    "utility.email": "helpdesk@cala.gov.in",
+    "utility.role_cala": "सक्षम प्राधिकारी (CALA)",
     "utility.welcome": "स्वागत है",
 
     // Navigation
@@ -96,11 +96,11 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "nav.portals": "हितधारक पोर्टल",
     "nav.register": "राजमार्ग भूमि रजिस्टर",
     "nav.statutory": "वैधानिक (धारा 3A/3D)",
-    "nav.awards": "मुआवज़ा अधिनिर्णय",
+    "nav.awards": "प्रतिकर अधिनिर्णय (धारा 3G)",
     "nav.mis": "एमआईएस रिपोर्ट",
     "nav.grievance": "शिकायत निवारण",
     "nav.officer_login": "अधिकारी लॉगिन",
-    "nav.calculator": "मुआवज़ा आगणक",
+    "nav.calculator": "प्रतिकर आगणक",
     "nav.corridor_map": "कॉरिडोर जीआईएस मानचित्र",
     "nav.statutory_mandate": "वैधानिक अधिदेश",
     "nav.field_app": "क्षेत्रीय सर्वेक्षक ऐप",
@@ -110,11 +110,11 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "kpi.active_projects": "सक्रिय राजमार्ग परियोजनाएं",
     "kpi.active_projects_sub": "वर्तमान में अधिग्रहण प्रक्रियाधीन मुख्य कॉरिडोर",
     "kpi.area_acquired": "कुल अधिग्रहित क्षेत्र",
-    "kpi.area_acquired_sub": "धारा 3D/3G के तहत अधिपत्य में हेक्टेयर भूमि",
-    "kpi.compensation": "वितरित मुआवज़ा राशि",
+    "kpi.area_acquired_sub": "धारा 3D/3E के तहत अधिपत्य में रकबा",
+    "kpi.compensation": "वितरित प्रतिकर राशि",
     "kpi.compensation_sub": "प्रत्यक्ष लाभ अंतरण (PFMS / ट्रेजरी)",
-    "kpi.pending_notices": "लंबित वैधानिक अधिसूचनाएं",
-    "kpi.pending_notices_sub": "धारा 3A आपत्तियों की प्रतीक्षा कर रहे गजट",
+    "kpi.pending_notices": "प्रारंभिक अधिसूचनाएं",
+    "kpi.pending_notices_sub": "धारा 3A आपत्तियों हेतु खुली अधिसूचनाएं",
     "kpi.total_length": "कुल कॉरिडोर लंबाई",
     "kpi.total_length_sub": "राष्ट्रीय राजमार्ग एवं एक्सप्रेसवे नेटवर्क",
     "kpi.villages_notified": "प्रभावित राजस्व गांव",
@@ -123,22 +123,22 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     // Actions & Form
     "btn.officer_login": "अधिकारी लॉगिन",
     "btn.sign_in": "कंसोल में प्रवेश करें",
-    "btn.demo_login": "एक-क्लिक सीएएलए अधिकारी डेमो लॉगिन",
+    "btn.demo_login": "एक-क्लिक सी.ए.एल.ए. अधिकारी डेमो लॉगिन",
     "btn.track_status": "शिकायत स्थिति जांचें",
     "btn.search": "अभिलेख खोजें",
     "btn.filter": "फ़िल्टर",
     "btn.reset": "रीसेट",
-    "btn.export_pdf": "कॉरिडोर विवरण डाउनलोड करें",
-    "btn.view_gazette": "गजट अधिसूचना देखें",
+    "btn.export_pdf": "कॉरिडोर संक्षिप्त विवरण डाउनलोड करें",
+    "btn.view_gazette": "ई-राजपत्र अधिसूचना देखें",
 
     // Ticker & Notices
     "ticker.heading": "आधिकारिक सूचनाएं",
     "ticker.item1": "[गजट S.O. 1428(E)] दिल्ली-मुंबई एक्सप्रेसवे हेतु धारा 3D अधिग्रहण घोषित",
-    "ticker.item2": "[डीबीटी मैंडेट] 14 कॉरिडोरों में सीधे बैंक खाते में मुआवज़ा अंतरण सक्रिय",
+    "ticker.item2": "[डीबीटी मैंडेट] 14 कॉरिडोरों में सीधे बैंक खाते में प्रतिकर अंतरण सक्रिय",
     "ticker.item3": "[वैधानिक सुनवाई] कैमूर एवं दौसा जिलों में धारा 3C आपत्ति निवारण पीठ सक्रिय",
 
     // Footer & Legal
-    "footer.disclaimer": "कोश प्लेटफॉर्म — स्मार्ट इंडिया हैकथॉन प्रोटोटाइप (SIH26016)। यह कोई आधिकारिक सरकारी प्रणाली नहीं है।",
+    "footer.disclaimer": "भूमि प्लेटफॉर्म — स्मार्ट इंडिया हैकथॉन प्रोटोटाइप (SIH26016)। यह कोई आधिकारिक सरकारी प्रणाली नहीं है।",
     "footer.framework": "वैधानिक ढांचा: RFCTLARR अधिनियम 2013 एवं राष्ट्रीय राजमार्ग अधिनियम 1956",
     "footer.authority": "केंद्रीय भूमि अधिग्रहण प्राधिकरण (CALA) निदेशालय",
   }

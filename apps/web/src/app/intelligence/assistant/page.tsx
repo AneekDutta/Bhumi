@@ -276,7 +276,7 @@ export default function IntelligenceAssistantPage() {
       }
     } catch (err: any) {
       console.error('Assistant Query Error:', err);
-      setError(err?.message || 'Failed to communicate with KOSH Intelligence Assistant.');
+      setError(err?.message || 'Failed to communicate with BHUMI Intelligence Assistant.');
     } finally {
       setIsLoading(false);
     }
@@ -424,7 +424,7 @@ export default function IntelligenceAssistantPage() {
               SIH26016 Decision Intelligence · Assistant & Voice Interface
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
-              KOSH Intelligence Assistant
+              BHUMI Intelligence Assistant
               <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-500/10 text-[#0B5FA5] dark:text-sky-400 border border-sky-500/20">
                 Evidence-Grounded AI
               </span>
@@ -553,7 +553,7 @@ export default function IntelligenceAssistantPage() {
               disabled={isLoading || !query.trim()}
               className="px-5 py-3 rounded-xl bg-[#0B5FA5] hover:bg-[#084880] disabled:opacity-50 text-white text-sm font-semibold transition-all shadow-md flex items-center gap-2"
             >
-              <span>Ask KOSH</span>
+              <span>Ask BHUMI</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
