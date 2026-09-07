@@ -269,7 +269,7 @@ export default function CompensationCalculatorPage() {
             </div>
 
             <p className="text-[10px] text-[#64748B] dark:text-slate-400 leading-tight italic pt-3 border-t border-slate-200 dark:border-slate-800">
-              * Statutory Disclaimer: This calculation is indicative for citizen advisory and grievance preparation. The final statutory compensation award is determined by the Competent Authority for Land Acquisition (CALA) under Section 3G of the National Highways Act, 1956 following ground verification and public hearing of claims.
+              * Statutory Disclaimer: This calculation is indicative for citizen advisory and grievance preparation. The final statutory compensation award is determined by the Central Authority of Land Acquisition (CALA) under Section 3G of the National Highways Act, 1956 following ground verification and public hearing of claims.
             </p>
           </div>
 

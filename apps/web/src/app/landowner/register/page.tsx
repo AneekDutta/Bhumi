@@ -161,7 +161,7 @@ export default function LandownerRegisterPage() {
             RFCTLARR 2013 Statutory Compliance
           </div>
           <h1 className="text-xl font-bold font-display tracking-tight text-[#0B2E59] dark:text-white">
-            BHUMI Citizen Portal
+            KOSH Citizen Portal
           </h1>
           <p className="text-xs text-[#5A6A80] dark:text-slate-400 max-w-xs mx-auto">
             Official Landowner & Project-Affected Person Registration
@@ -350,7 +350,7 @@ export default function LandownerRegisterPage() {
       </div>
 
       <div className="text-center text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 py-3 border-t border-[#DCE2E8] dark:border-white/10">
-        BHUMI Citizen Portal · Prototype (SIH26016) · PostGIS & NetworkX Causal Intelligence Engine
+        KOSH Citizen Portal · Prototype (SIH26016) · PostGIS & NetworkX Causal Intelligence Engine
       </div>
     </div>
   );

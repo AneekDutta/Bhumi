@@ -281,13 +281,7 @@ export default function HighwayRegisterPage() {
                       </span>
                     </td>
                     <td className="py-2 px-3">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                        p.status === "POSSESSION" || isPossessed
-                          ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300"
-                          : p.status === "RESOLVED"
-                          ? "bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300"
-                          : "bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300"
-                      }`}>
+                      <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-[3px] border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-slate-300">
                         {p.status}
                       </span>
                     </td>

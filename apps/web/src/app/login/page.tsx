@@ -83,7 +83,7 @@ function LoginPageContent() {
     const sessionData = {
       officer_id: "OFF-CALA-01",
       name: "Sh. Rajesh Kumar",
-      email: "officer@bhumi.gov.in",
+      email: "officer@kosh.cala.gov.in",
       role: "ADMIN",
     };
 
@@ -108,14 +108,15 @@ function LoginPageContent() {
 
     let loginEmail = emailOrId.trim();
     if (!loginEmail.includes("@")) {
-      loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@bhumi.gov.in`;
+      loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@kosh.cala.gov.in`;
     }
 
+    const isOfficerDemo =
+      loginEmail.toLowerCase() === "officer@kosh.cala.gov.in" ||
+      loginEmail.toLowerCase() === "officer@bhumi.gov.in";
+
     // Auto-fallback for demo officer credentials
-    if (
-      loginEmail.toLowerCase() === "officer@bhumi.gov.in" &&
-      password === "CommanderPass@2025"
-    ) {
+    if (isOfficerDemo && password === "CommanderPass@2025") {
       handleInstantDemoLogin();
       return;
     }
@@ -128,7 +129,7 @@ function LoginPageContent() {
 
       if (error) {
         // Fallback for officer demo ID
-        if (loginEmail.toLowerCase() === "officer@bhumi.gov.in") {
+        if (isOfficerDemo) {
           handleInstantDemoLogin();
           return;
         }
@@ -181,7 +182,7 @@ function LoginPageContent() {
       }
     } catch {
       // In case Supabase network fails, gracefully permit officer demo
-      if (loginEmail.toLowerCase() === "officer@bhumi.gov.in") {
+      if (isOfficerDemo) {
         handleInstantDemoLogin();
         return;
       }
@@ -199,7 +200,7 @@ function LoginPageContent() {
 
     let resetEmail = emailOrId.trim();
     if (!resetEmail.includes("@")) {
-      resetEmail = `${resetEmail.toLowerCase().replace(/\s+/g, "")}@bhumi.gov.in`;
+      resetEmail = `${resetEmail.toLowerCase().replace(/\s+/g, "")}@kosh.cala.gov.in`;
     }
 
     try {
@@ -259,7 +260,7 @@ function LoginPageContent() {
 
   // Quick fill helper for demonstration
   const handleQuickFill = () => {
-    setEmailOrId("officer@bhumi.gov.in");
+    setEmailOrId("officer@kosh.cala.gov.in");
     setPassword("CommanderPass@2025");
     setCaptchaInput(captchaCode.replace(/\s+/g, ""));
     setErrorMsg(null);
@@ -343,7 +344,7 @@ function LoginPageContent() {
                   Citizen Landowner Portal
                 </h3>
                 <p className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1 leading-relaxed">
-                  Bhumi Samvaad citizen interface for checking compensation awards, lodging statutory objections, and tracking DBT disbursals.
+                  KOSH Samvaad citizen interface for checking compensation awards, lodging statutory objections, and tracking DBT disbursals.
                 </p>
                 <div className="mt-2.5 text-[10px] font-bold text-[#B36B00] dark:text-amber-400 flex items-center gap-1">
                   <span>Switch to Citizen Portal</span>
@@ -487,7 +488,7 @@ function LoginPageContent() {
                       required
                       value={emailOrId}
                       onChange={(e) => setEmailOrId(e.target.value)}
-                      placeholder="e.g. officer@bhumi.gov.in"
+                      placeholder="e.g. officer@kosh.cala.gov.in"
                       disabled={loading}
                       className="input w-full bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                     />
@@ -606,7 +607,7 @@ function LoginPageContent() {
                       required
                       value={emailOrId}
                       onChange={(e) => setEmailOrId(e.target.value)}
-                      placeholder="officer@bhumi.gov.in"
+                      placeholder="officer@kosh.cala.gov.in"
                       className="input w-full bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded"
                     />
                   </div>
@@ -631,7 +632,7 @@ function LoginPageContent() {
                   className="text-[11px] font-mono text-[#0B5FA5] dark:text-sky-400 hover:underline inline-flex items-center gap-1.5"
                 >
                   <KeyRound className="w-3 h-3" />
-                  <span>[ Auto-fill officer@bhumi.gov.in ]</span>
+                  <span>[ Auto-fill officer@kosh.cala.gov.in ]</span>
                 </button>
 
                 <div className="pt-2 text-left space-y-1.5 border-t border-[#DCE2E8] dark:border-white/10">
@@ -661,7 +662,7 @@ function LoginPageContent() {
               <span>CALA Access Protocol Notice</span>
             </div>
             <p className="text-[11px] leading-relaxed">
-              This system is strictly for authorized personnel of the Competent Authority for Land Acquisition (CALA) and designated project directors. Unauthorized access attempts are logged and subject to administrative sanctions.
+              This system is strictly for authorized personnel of the Central Authority of Land Acquisition (CALA) and designated project directors. Unauthorized access attempts are logged and subject to administrative sanctions.
             </p>
           </div>
 
@@ -676,7 +677,7 @@ export default function LoginPage() {
   return (
     <React.Suspense fallback={
       <div className="w-full h-screen bg-[#F4F6F8] flex items-center justify-center text-slate-600 font-mono text-xs">
-        Loading BHUMI Portal...
+        Loading KOSH Portal...
       </div>
     }>
       <LoginPageContent />

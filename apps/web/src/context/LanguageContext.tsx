@@ -37,11 +37,11 @@ const DICTIONARY: Record<string, { en: string; hi: string }> = {
   'nav.appearance': { en: 'Appearance', hi: 'स्वरूप' },
 
   // Header & Brand
-  'app.title': { en: 'BHUMI', hi: 'भूमि' },
+  'app.title': { en: 'KOSH', hi: 'कोष' },
   'app.prototype_tag': { en: 'SIH26016 Decision Support Prototype', hi: 'SIH26016 निर्णय सहयोग प्रोटोटाइप' },
   'app.emergency_helpline': { en: 'Emergency Helpdesk', hi: 'आपातकालीन सहायता डेस्क' },
   'app.welcome': { en: 'Welcome, ', hi: 'स्वागत है, ' },
-  'app.cala_officer': { en: 'CALA Officer · Competent Authority', hi: 'सक्षम प्राधिकारी (CALA)' },
+  'app.cala_officer': { en: 'CALA Officer · Central Authority of Land Acquisition', hi: 'प्राधिकारी (CALA) · केंद्रीय भूमि अधिग्रहण प्राधिकरण' },
   'app.whatif_workbench': { en: 'What-If Workbench', hi: 'व्हाट-इफ़ कार्यक्षेत्र' },
 
   // Dashboard & Operations
@@ -109,7 +109,7 @@ const DICTIONARY: Record<string, { en: string; hi: string }> = {
   // Home Page 30-Second Overview
   'home.hero_title': { en: 'Deterministic Land Acquisition Intelligence for Strategic Infrastructure', hi: 'रणनीतिक अवसंरचना के लिए निश्चित भूमि अधिग्रहण निर्णय सहायता' },
   'home.hero_sub': { en: 'Operational decision-support twin for CALA authorities under RFCTLARR Act 2013 & NH Act 1956.', hi: 'सक्षम प्राधिकारियों के लिए परिचालन निर्णय सहायता प्रणाली।' },
-  'home.what_is_kosh': { en: '1. What is BHUMI?', hi: '१. भूमि क्या है?' },
+  'home.what_is_kosh': { en: '1. What is KOSH?', hi: '१. कोष क्या है?' },
   'home.what_problem': { en: '2. What Problem Does It Solve?', hi: '२. यह किस समस्या का समाधान करता है?' },
   'home.why_different': { en: '3. Why is it Different?', hi: '३. यह अन्य प्रणालियों से अलग क्यों है?' },
   'home.where_start': { en: '4. Where Do I Start?', hi: '४. शुरुआत कहाँ से करें?' },

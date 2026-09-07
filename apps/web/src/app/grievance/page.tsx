@@ -148,15 +148,15 @@ export default function GrievanceTrackerPage() {
         {/* Header */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#B36B00] text-white uppercase">
-              BHUMI SAMVAAD &bull; CITIZEN GRIEVANCE REDRESSAL
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#0B2E59] text-white uppercase">
+              KOSH SAMVAAD &bull; CITIZEN GRIEVANCE REDRESSAL
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#14213D] dark:text-white leading-tight">
             Track Citizen Grievance &amp; Claim Token / शिकायत स्थिति ट्रैकर
           </h1>
           <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
-            Statutory tracking of land valuation objections, ground boundary pegging disputes, and Direct Benefit Transfer (DBT) payment clearance.
+            Statutory tracking of valuation objections, boundary pegging disputes, and DBT payment clearance.
           </p>
         </div>
 
@@ -304,14 +304,14 @@ export default function GrievanceTrackerPage() {
               </div>
 
               <div className="text-right flex flex-col items-start sm:items-end">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#EBF7EE] dark:bg-emerald-950/60 border border-[#BEE3C8] dark:emerald-800 text-[#1E7E34] dark:text-emerald-300 text-xs font-bold">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-slate-50 dark:bg-white/5 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
                   <span>{activeGrievance.status}</span>
                 </span>
                 <div className="text-[11px] font-mono text-[#64748B] dark:text-slate-400 mt-1">
                   Desk: {activeGrievance.officer}
                 </div>
-                <div className="text-xs font-bold text-[#0B5FA5] dark:text-sky-400 mt-0.5">
+                <div className="text-xs font-bold text-[#0B2E59] dark:text-sky-400 mt-0.5">
                   Award Under Consideration: {activeGrievance.estimatedAward}
                 </div>
               </div>
@@ -333,10 +333,10 @@ export default function GrievanceTrackerPage() {
                 ].map((st) => (
                   <div
                     key={st.step}
-                    className={`p-2.5 rounded border ${
+                    className={`p-2.5 rounded-[4px] border ${
                       st.step <= activeGrievance.stage
-                        ? "bg-[#F0FDF4] dark:bg-emerald-950/20 border-[#1E7E34] dark:border-emerald-500 text-[#1E7E34] dark:text-emerald-400"
-                        : "bg-slate-50 dark:bg-white/5 border-slate-300 dark:border-slate-800 text-slate-400"
+                        ? "bg-slate-50 dark:bg-white/[0.04] border-[#0B2E59] dark:border-sky-500 text-[#0B2E59] dark:text-sky-300"
+                        : "bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-slate-800 text-slate-400"
                     }`}
                   >
                     <div className="font-bold flex items-center gap-1">
@@ -393,18 +393,18 @@ export default function GrievanceTrackerPage() {
         )}
 
         {/* Bottom CTA to Citizen Portal */}
-        <div className="bg-[#EBF3FA] dark:bg-white/5 border border-[#0B5FA5] dark:border-sky-800 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-md shadow-xs">
+        <div className="bg-slate-50 dark:bg-white/[0.03] border border-[#CBD5E1] dark:border-white/10 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-[4px] shadow-xs">
           <div>
             <h3 className="text-xs font-bold text-[#0B2E59] dark:text-white uppercase tracking-wider">
-              Need to lodge a new objection or compensation dispute?
+              Need to lodge an objection or compensation dispute?
             </h3>
-            <p className="text-xs text-[#555555] dark:text-slate-300 mt-0.5">
-              Authenticate via Aadhaar OTP on the dedicated Bhumi Samvaad Citizen Portal to submit supporting revenue records.
+            <p className="text-xs text-[#555555] dark:text-slate-400 mt-0.5">
+              Authenticate via Aadhaar OTP on the KOSH Samvaad Citizen Portal to submit supporting revenue records.
             </p>
           </div>
           <Link
             href="/landowner/login"
-            className="px-4 py-2 bg-[#0B2E59] hover:bg-[#071A32] text-white text-xs font-bold rounded flex items-center gap-1.5 whitespace-nowrap"
+            className="px-4 py-2 bg-[#0B2E59] hover:bg-[#071A32] text-white text-xs font-bold rounded-[4px] flex items-center gap-1.5 whitespace-nowrap"
           >
             <span>Proceed to Citizen Portal</span>
             <ArrowRight className="w-3.5 h-3.5" />

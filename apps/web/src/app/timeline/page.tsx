@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { AlertTriangle, CheckCircle2, Clock, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Acquisition Timeline | BHUMI',
+  title: 'Acquisition Timeline | KOSH',
   description: 'RFCTLARR statutory pipeline funnel, time-limit grid, and filterable cases table.',
 };
 
@@ -21,11 +21,11 @@ const getPipelineStages = () => {
   const possessionCount = MOCK_PARCELS.filter(p => p.current_stage === 'possessed').length;
 
   return [
-    { stage: 'Sec 3A / Sec 11 Notification', cases: notifiedCount, limit: '12 months', color: '#0B5FA5', pct: calcPct(notifiedCount) },
-    { stage: 'Sec 3C / Sec 15 Objections', cases: objectionsCount, limit: '21–60 days', color: '#B36B00', pct: calcPct(objectionsCount) },
-    { stage: 'Sec 3D / Sec 19 Declaration', cases: declaredCount, limit: '12 months', color: '#2F6FB0', pct: calcPct(declaredCount) },
-    { stage: 'Sec 3G / Sec 23 Award Enquiry', cases: awardCount, limit: '12 months', color: '#C2410C', pct: calcPct(awardCount) },
-    { stage: 'Sec 3E / Sec 38 Possession', cases: possessionCount, limit: '60 days', color: '#1E7E34', pct: calcPct(possessionCount) },
+    { stage: 'Sec 3A / Sec 11 Notification', cases: notifiedCount, limit: '12 months', color: '#0B2E59', pct: calcPct(notifiedCount) },
+    { stage: 'Sec 3C / Sec 15 Objections', cases: objectionsCount, limit: '21–60 days', color: '#475569', pct: calcPct(objectionsCount) },
+    { stage: 'Sec 3D / Sec 19 Declaration', cases: declaredCount, limit: '12 months', color: '#0B2E59', pct: calcPct(declaredCount) },
+    { stage: 'Sec 3G / Sec 23 Award Enquiry', cases: awardCount, limit: '12 months', color: '#475569', pct: calcPct(awardCount) },
+    { stage: 'Sec 3E / Sec 38 Possession', cases: possessionCount, limit: '60 days', color: '#0B2E59', pct: calcPct(possessionCount) },
   ];
 };
 
@@ -55,10 +55,10 @@ const MOCK_CASES = MOCK_PARCELS.map((p, idx) => {
 });
 
 const SEVERITY_STYLE: Record<string, { badgeClass: string }> = {
-  critical: { badgeClass: 'bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-400 border-[#FFCDD2] dark:border-rose-800/50' },
-  high: { badgeClass: 'bg-[#FFF3E0] dark:bg-orange-950/40 text-[#C2410C] dark:text-orange-400 border-[#FFE0B2] dark:border-orange-800/50' },
-  medium: { badgeClass: 'bg-[#FFF8E1] dark:bg-amber-950/40 text-[#B36B00] dark:text-amber-400 border-[#FFE082] dark:border-amber-800/50' },
-  low: { badgeClass: 'bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border-[#C8E6C9] dark:border-emerald-800/50' },
+  critical: { badgeClass: 'bg-slate-100 dark:bg-white/10 text-[#B32424] dark:text-rose-400 border-slate-300 dark:border-white/10' },
+  high: { badgeClass: 'bg-slate-100 dark:bg-white/10 text-[#C2410C] dark:text-orange-400 border-slate-300 dark:border-white/10' },
+  medium: { badgeClass: 'bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-white/10' },
+  low: { badgeClass: 'bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-white/10' },
 };
 
 const STAGE_STYLE: Record<string, { bg: string; color: string }> = {
@@ -227,7 +227,7 @@ export default function TimelinePage() {
                       <td className="px-4 py-3 text-[#555555] dark:text-slate-400">{c.owner}</td>
                       <td className="px-4 py-3">
                         {c.lapsed ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[3px] bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-400 border border-[#FFCDD2] dark:border-rose-800/50 uppercase">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[3px] bg-slate-100 dark:bg-white/10 text-[#B32424] dark:text-rose-400 border border-slate-300 dark:border-white/10 uppercase">
                             <AlertTriangle className="w-2.5 h-2.5" /> LAPSED
                           </span>
                         ) : (

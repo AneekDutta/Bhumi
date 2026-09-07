@@ -13,9 +13,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   try {
     const parcel = await apiClient.getParcel(id);
-    return { title: `Survey No. ${parcel.survey_no} | BHUMI`, description: `Acquisition case details for Parcel ${parcel.survey_no}.` };
+    return { title: `Survey No. ${parcel.survey_no} | KOSH`, description: `Acquisition case details for Parcel ${parcel.survey_no}.` };
   } catch {
-    return { title: 'Parcel Details | BHUMI' };
+    return { title: 'Parcel Details | KOSH' };
   }
 }
 

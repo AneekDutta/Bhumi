@@ -280,7 +280,7 @@ export default function OfficerActionCenterPage() {
             Restricted Officer Area
           </h2>
           <p className="text-sm text-slate-300 leading-relaxed">
-            Internal officer action priorities, legal lapse exposure scores, and project risk calculations are restricted to authorized Competent Authority Land Acquisition (CALA) officers.
+            Internal officer action priorities, legal lapse exposure scores, and project risk calculations are restricted to authorized Central Authority of Land Acquisition (CALA) officers.
           </p>
           <div className="pt-2">
             <Link
@@ -305,8 +305,8 @@ export default function OfficerActionCenterPage() {
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#F1F4F7] text-[#0B2E59] border border-[#CBD5E1] dark:bg-white/10 dark:text-sky-300 dark:border-white/15 font-mono">
                     CPM DIGITAL TWIN INTEGRATED
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#E8F5E9] text-[#1E7E34] border border-[#C8E6C9] dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/40 font-mono">
-                    ZERO FAKE URGENCY
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-300 dark:bg-white/10 dark:text-slate-300 dark:border-white/15 font-mono">
+                    OFFICIAL LEDGER
                   </span>
                 </div>
 
@@ -315,7 +315,7 @@ export default function OfficerActionCenterPage() {
                 </h1>
 
                 <p className="text-xs md:text-sm text-[#475569] dark:text-slate-300 leading-relaxed">
-                  Unified operational command answering: <span className="text-[#14213D] dark:text-white font-medium">What requires attention</span>, <span className="text-[#14213D] dark:text-white font-medium">why</span>, <span className="text-[#14213D] dark:text-white font-medium">what law governs it</span>, <span className="text-[#14213D] dark:text-white font-medium">what deadline applies</span>, <span className="text-[#14213D] dark:text-white font-medium">what evidence supports it</span>, and <span className="text-[#14213D] dark:text-white font-medium">what CPM project impact exists</span>.
+                  Statutory officer task queue and critical path priority ledger.
                 </p>
               </div>
 
@@ -492,13 +492,13 @@ export default function OfficerActionCenterPage() {
                         isActive
                           ? 'bg-white/20 text-white'
                           : tab.key === 'CRITICAL' && count > 0
-                          ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300'
+                          ? 'border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-white/5 text-rose-700 dark:text-rose-400'
                           : tab.key === 'DUE_SOON' && count > 0
-                          ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300'
+                          ? 'border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-white/5 text-amber-700 dark:text-amber-400'
                           : tab.key === 'BLOCKED' && count > 0
-                          ? 'bg-orange-100 text-orange-800 dark:bg-orange-950/50 dark:text-orange-300'
+                          ? 'border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-white/5 text-slate-800 dark:text-slate-200'
                           : tab.key === 'COMPLETED'
-                          ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300'
+                          ? 'border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-white/5 text-emerald-700 dark:text-emerald-400'
                           : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
                       }`}
                     >
@@ -632,21 +632,7 @@ export default function OfficerActionCenterPage() {
                     <div className="flex items-start md:items-center justify-between gap-3 flex-wrap border-b border-[#E2E8F0] dark:border-white/10 pb-3.5">
                       <div className="flex items-center gap-2 flex-wrap">
                         {/* Priority Category Pill */}
-                        <span
-                          className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase border ${
-                            isCritical
-                              ? 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/40'
-                              : isDueSoon
-                              ? 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/40'
-                              : isBlocked
-                              ? 'bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-950/40 dark:text-orange-300 dark:border-orange-800/40'
-                              : isImpact
-                              ? 'bg-sky-100 text-[#0B2E59] border-sky-300 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/40'
-                              : isCompleted
-                              ? 'bg-emerald-100 text-[#1E7E34] border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/40'
-                              : 'bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
-                          }`}
-                        >
+                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border border-[#CBD5E1] dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-slate-300 uppercase">
                           {action.priority_category.replace(/_/g, ' ')}
                         </span>
 
@@ -700,15 +686,7 @@ export default function OfficerActionCenterPage() {
                       {action.priority_reasons.map((reason, rIdx) => (
                         <span
                           key={rIdx}
-                          className={`text-[10px] font-mono px-2 py-0.5 rounded font-semibold border ${
-                            reason.includes('MANDATORY') || reason.includes('OVERDUE')
-                              ? 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/30 dark:text-rose-300 dark:border-rose-900/40'
-                              : reason.includes('CRITICAL PATH') || reason.includes('SCHEDULE')
-                              ? 'bg-sky-50 text-[#0B2E59] border-sky-200 dark:bg-sky-950/30 dark:text-sky-300 dark:border-sky-900/40'
-                              : reason.includes('EVIDENCE') || reason.includes('PRECONDITION')
-                              ? 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/30 dark:text-orange-300 dark:border-orange-900/40'
-                              : 'bg-[#F1F5F9] text-[#334155] border-[#CBD5E1] dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
-                          }`}
+                          className="text-[10px] font-mono px-2 py-0.5 rounded font-semibold border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-white/5 text-slate-700 dark:text-slate-300"
                         >
                           • {reason}
                         </span>
@@ -778,19 +756,19 @@ export default function OfficerActionCenterPage() {
                             </span>
                             <div className="flex items-center justify-between mt-0.5">
                               <span
-                                className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
+                                className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border bg-slate-50 dark:bg-white/5 ${
                                   action.evidence_status === 'VERIFIED'
-                                    ? 'bg-emerald-100 text-[#1E7E34] border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/40'
+                                    ? 'text-[#1E7E34] border-slate-300 dark:text-emerald-300 dark:border-slate-700'
                                     : action.evidence_status === 'DEFICIENT'
-                                    ? 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/40'
-                                    : 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/40'
+                                    ? 'text-rose-700 border-slate-300 dark:text-rose-300 dark:border-slate-700'
+                                    : 'text-amber-800 border-slate-300 dark:text-amber-300 dark:border-slate-700'
                                 }`}
                               >
                                 Evidence: {action.evidence_status}
                               </span>
 
                               {action.cpm_impact.is_critical_path && (
-                                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-700 border border-rose-300 dark:bg-rose-950/40 dark:text-rose-300">
+                                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-50 dark:bg-white/5 text-rose-700 dark:text-rose-400 border border-slate-300 dark:border-slate-700">
                                   CRITICAL PATH
                                 </span>
                               )}
@@ -851,7 +829,7 @@ export default function OfficerActionCenterPage() {
                 <div className="p-5 border-b border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-white/5 flex items-start justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-300 dark:border-rose-800/40 uppercase">
+                      <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-slate-200 uppercase">
                         {selectedAction.priority_category.replace(/_/g, ' ')}
                       </span>
                       <span className="text-xs font-mono text-[#0B5FA5] dark:text-sky-400 font-bold">
@@ -1061,10 +1039,10 @@ export default function OfficerActionCenterPage() {
                                   >
                                     <span className="text-[#334155] dark:text-slate-200 truncate max-w-[140px]">{doc.title}</span>
                                     <span
-                                      className={`px-1.5 py-0.5 rounded font-mono text-[9px] ${
+                                      className={`px-1.5 py-0.5 rounded font-mono text-[9px] border bg-slate-50 dark:bg-white/5 ${
                                         doc.status === 'VERIFIED'
-                                          ? 'bg-emerald-100 text-[#1E7E34] dark:bg-emerald-950/40 dark:text-emerald-300'
-                                          : 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
+                                          ? 'border-slate-300 dark:border-slate-700 text-[#1E7E34] dark:text-emerald-300'
+                                          : 'border-slate-300 dark:border-slate-700 text-amber-800 dark:text-amber-300'
                                       }`}
                                     >
                                       {doc.status}
@@ -1109,7 +1087,7 @@ export default function OfficerActionCenterPage() {
                                 +{selectedAction.cpm_impact.operational_delay_cpm_days}d Operational Delay
                               </span>
                               {selectedAction.cpm_impact.is_critical_path && (
-                                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-300 uppercase font-bold">
+                                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-slate-50 dark:bg-white/5 text-rose-700 dark:text-rose-400 border border-slate-300 dark:border-slate-700 uppercase font-semibold">
                                   Critical Path
                                 </span>
                               )}

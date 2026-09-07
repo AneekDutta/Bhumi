@@ -23,7 +23,7 @@ import { AdminOperationsSection } from '@/components/dashboard/AdminOperationsSe
 import { MOCK_GOVERNMENT_PROJECTS } from '@/lib/mockProjectData';
 
 export const metadata: Metadata = {
-  title: 'National Operations Console | BHUMI',
+  title: 'National Operations Console | KOSH',
   description: 'National land acquisition portfolio overview separated into Government Infrastructure Corridors and Real Citizen Grievances.',
 };
 
@@ -159,13 +159,7 @@ export default async function NationalDashboardPage() {
                   <span className="text-[10px] font-mono font-bold text-[#0B5FA5] dark:text-sky-400">
                     {p.code} &middot; {p.sector}
                   </span>
-                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
-                    p.status === 'DELAYED'
-                      ? 'bg-[#FFF8E6] text-[#B36B00] border-[#FFE29A] dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800'
-                      : p.status === 'CRITICAL_BLOCKER'
-                      ? 'bg-[#FDF0F0] text-[#B32424] border-[#F8C8C8] dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800'
-                      : 'bg-[#EBF7EE] text-[#1E7E34] border-[#BEE3C8] dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800'
-                  }`}>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] border border-[#CBD5E1] dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-slate-300 uppercase">
                     {p.status.replace('_', ' ')}
                   </span>
                 </div>
@@ -218,7 +212,7 @@ export default async function NationalDashboardPage() {
         </div>
 
         <p className="text-xs text-[#5A6A80] dark:text-slate-400 m-0 leading-relaxed">
-          Source of truth for citizen cases. Originates strictly from citizen parcel registrations (4+ GPS coordinates) &rarr; landowner complaints &rarr; Field Officer ground verification &rarr; Admin statutory determination.
+          Citizen parcel registrations, field inspection records, and statutory award determinations.
         </p>
 
         {/* Real KPIs Cards - Seamless Layout with Vertical Dividers (Item 16) */}

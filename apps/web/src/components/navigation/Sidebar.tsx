@@ -109,11 +109,11 @@ export function Sidebar() {
       <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
         {/* Brand */}
         <div className="p-4 pb-3 border-b border-[#DCE2E8] dark:border-white/[0.06] flex items-center justify-between flex-shrink-0">
-          <Link href="/dashboard" className="flex items-center gap-2.5 group" title="BHUMI Operations Console">
+          <Link href="/dashboard" className="flex items-center gap-2.5 group" title="KOSH Operations Console">
             <CalaSealLogo size={32} className="w-8 h-8 flex-shrink-0 drop-shadow-xs" variant="light" />
             <div>
               <div className="font-bold text-[#14213D] dark:text-white text-[15px] leading-tight">
-                BHUMI Console
+                KOSH Console
               </div>
               <div className="text-[10px] text-[#64748B] dark:text-[#94A3B8] font-mono">
                 CALA Directorate · Kota

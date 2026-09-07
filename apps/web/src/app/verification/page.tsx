@@ -207,7 +207,7 @@ export default function FieldVerificationOverviewPage() {
                       <span className="text-xs font-mono font-bold text-[#0B5FA5] dark:text-sky-400">
                         #{pid}
                       </span>
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-amber-100 dark:bg-amber-950/40 text-[#B36B00] dark:text-amber-400 border border-amber-300 dark:border-amber-800/50 uppercase">
+                      <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-[2px] bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 uppercase">
                         {c.status || 'Submitted'}
                       </span>
                     </div>

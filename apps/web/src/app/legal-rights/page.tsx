@@ -85,7 +85,7 @@ export default function LegalRightsPage() {
         const [discRes, provRes, offRes, loRes, rulesRes, sumRes] = await Promise.all([
           getLegalDisclaimer().catch(() => ({
             disclaimer:
-              'BHUMI provides statutory information and workflow guidance based on configured legal sources. It does not provide legal advice or determine legal rights. Verify the current applicable law with the competent authority.',
+              'KOSH provides statutory information and workflow guidance based on configured legal sources. It does not provide legal advice or determine legal rights. Verify the current applicable law with the competent authority.',
           })),
           getLegalProvisions().catch(() => []),
           getOfficerProceduralGuide().catch(() => ({ stages: [] })),
@@ -228,7 +228,7 @@ export default function LegalRightsPage() {
               Decision-Support & Statutory Information Notice
             </span>
             {disclaimer ||
-              'BHUMI provides statutory information and workflow guidance based on configured legal sources. It does not provide legal advice or determine legal rights. Verify current applicable law with the competent authority or a qualified legal professional.'}
+              'KOSH provides statutory information and workflow guidance based on configured legal sources. It does not provide legal advice or determine legal rights. Verify current applicable law with the competent authority or a qualified legal professional.'}
           </div>
         </div>
       </div>
@@ -860,7 +860,7 @@ export default function LegalRightsPage() {
                       </div>
                     </div>
 
-                    {/* Decoupled Legal Effect vs BHUMI CPM Model */}
+                    {/* Decoupled Legal Effect vs KOSH CPM Model */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                       <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
                         <div className="text-[10px] font-mono text-indigo-400 uppercase tracking-wider flex items-center gap-1.5 font-bold">
@@ -876,7 +876,7 @@ export default function LegalRightsPage() {
 
                       <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
                         <div className="text-[10px] font-mono text-amber-400 uppercase tracking-wider flex items-center gap-1.5 font-bold">
-                          <Clock className="w-3.5 h-3.5" /> BHUMI Project Impact Model
+                          <Clock className="w-3.5 h-3.5" /> KOSH Project Impact Model
                         </div>
                         <div className="text-xs font-bold text-amber-400 font-mono">
                           {calcResult.operational_delay_cpm_days > 0
@@ -992,7 +992,7 @@ export default function LegalRightsPage() {
                           <strong className="text-indigo-300 font-mono">{rule.legal_effect || 'ACTION_REQUIRED'}</strong>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span>BHUMI CPM Heuristic:</span>
+                          <span>KOSH CPM Heuristic:</span>
                           <strong className="text-amber-400 font-mono">+{rule.operational_delay_cpm_days || rule.cpm_delay_weight_days}d</strong>
                         </div>
                       </div>

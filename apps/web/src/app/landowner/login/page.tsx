@@ -43,7 +43,7 @@ function LandownerLoginContent() {
       user_id: "O00004",
       owner_id: "O00004",
       name: "Geeta Meena",
-      email: "geeta.meena@bhumi.in",
+      email: "geeta.meena@kosh.citizen.in",
       contact_village: "Chandwas (V03)",
       role: "LANDOWNER"
     };
@@ -201,7 +201,7 @@ function LandownerLoginContent() {
             RFCTLARR 2013 Statutory Compliance
           </div>
           <h1 className="text-xl font-bold font-display tracking-tight text-[#0B2E59] dark:text-white">
-            BHUMI Landowner & Citizen Portal
+            KOSH Landowner & Citizen Portal
           </h1>
           <p className="text-xs text-[#5A6A80] dark:text-slate-400 max-w-xs mx-auto">
             Grievance Redressal, Cadastral Boundary Registry & Compensation Tracking
@@ -238,23 +238,23 @@ function LandownerLoginContent() {
           </div>
 
           {/* Instant Citizen Demo Access */}
-          <div className="bg-[#FFF8E6] dark:bg-amber-950/30 border border-[#FFE29A] dark:border-amber-800 p-3 rounded-md shadow-xs text-xs space-y-1.5">
+          <div className="bg-slate-50 dark:bg-white/[0.03] border border-[#CBD5E1] dark:border-white/10 p-3 rounded-[4px] text-xs space-y-2">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-[#B36B00] dark:text-amber-300 text-[11px] uppercase tracking-wider">
+              <span className="font-semibold text-slate-800 dark:text-slate-200 text-[11px] uppercase tracking-wider">
                 Titleholder Demo Access
               </span>
-              <span className="text-[9px] font-mono bg-[#B36B00] text-white px-1.5 py-0.5 rounded font-bold">
+              <span className="text-[9px] font-mono border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-1.5 py-0.5 rounded font-medium">
                 1-TAP
               </span>
             </div>
-            <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-tight">
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-tight">
               Test citizen grievance submission & parcel tracking as <strong>Geeta Meena</strong>:
             </p>
             <button
               type="button"
               onClick={handleInstantDemoLogin}
               disabled={loading}
-              className="w-full py-2 px-3 bg-[#B36B00] hover:bg-[#8F5500] text-white font-bold text-xs rounded shadow-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full py-2 px-3 bg-[#0B2E59] hover:bg-[#082242] text-white font-medium text-xs rounded-[4px] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <span>Instant Citizen Portal Demo Login &rarr;</span>
             </button>
@@ -341,7 +341,7 @@ function LandownerLoginContent() {
       </div>
 
       <div className="text-center text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 py-3 border-t border-[#DCE2E8] dark:border-white/10">
-        BHUMI Land Records Management System · Prototype (SIH26016) · PostGIS & NetworkX Causal Graph
+        KOSH Land Records Management System · Prototype (SIH26016) · PostGIS & NetworkX Causal Graph
       </div>
     </div>
   );

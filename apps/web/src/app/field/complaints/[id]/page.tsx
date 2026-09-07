@@ -242,12 +242,12 @@ export default function FieldComplaintDetailPage() {
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Queue</span>
           </Link>
-          <span className={`text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-[3px] border ${
+          <span className={`text-[10px] font-mono font-semibold uppercase px-2.5 py-0.5 rounded-[3px] border bg-slate-50 dark:bg-white/5 ${
             isVerified
-              ? "bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-300 border-[#C8E6C9] dark:border-emerald-800/40"
+              ? "border-slate-300 dark:border-slate-700 text-emerald-700 dark:text-emerald-400"
               : isRejected
-              ? "bg-[#FFEBEE] dark:bg-rose-950/40 text-[#B32424] dark:text-rose-300 border-[#FFCDD2] dark:border-rose-800/40"
-              : "bg-[#FFF8E1] dark:bg-amber-950/40 text-[#B36B00] dark:text-amber-300 border-[#FFE082] dark:border-amber-800/40"
+              ? "border-slate-300 dark:border-slate-700 text-rose-700 dark:text-rose-400"
+              : "border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
           }`}>
             {status}
           </span>

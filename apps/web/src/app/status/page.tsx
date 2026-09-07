@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { Activity, Database, Cpu, Layers, Scale, ShieldCheck, CheckCircle2, Server, Terminal } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'System Status | BHUMI Platform',
+  title: 'System Status | KOSH Platform',
   description: 'Operational health, database connectivity, and statutory rules engine status.',
 };
 
@@ -146,7 +146,7 @@ export default async function StatusPage() {
 
       {/* Architecture Topology */}
       <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-5 shadow-sm">
-        <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase tracking-wider">BHUMI Decision Platform</div>
+        <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase tracking-wider">KOSH Decision Platform</div>
         <div className="text-sm font-bold text-[#14213D] dark:text-white mt-0.5 mb-4">Architecture Topology</div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {archTiers.map((t) => (

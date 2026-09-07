@@ -47,7 +47,7 @@ const GOV_UPDATES: GovUpdateItem[] = [
     id: "upd-1",
     category: "STATUTORY",
     badge: "Statutory Notification",
-    badgeBg: "bg-[#F1F4F7] dark:bg-white/10 border-[#CBD5E1] dark:border-white/15",
+    badgeBg: "bg-slate-100 dark:bg-white/10 border-slate-300 dark:border-white/15",
     badgeText: "text-[#0B2E59] dark:text-sky-300",
     date: "Feb 11, 2026",
     authority: "CALA Directorate · Valuation Division",
@@ -56,14 +56,14 @@ const GOV_UPDATES: GovUpdateItem[] = [
     summary: "Central authority issued revised baseline rates for assessing market value of corridor land categories, updating compulsory acquisition compensation benchmarks under Section 26 of the RFCTLARR Act.",
     tag: "Valuation Revision 2026",
     status: "IN FORCE",
-    statusColor: "text-[#1E7E34] dark:text-emerald-300 bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40",
+    statusColor: "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10",
     iconType: "statutory",
   },
   {
     id: "upd-2",
     category: "CABINET",
     badge: "Statutory Directive",
-    badgeBg: "bg-[#F1F4F7] dark:bg-white/10 border-[#CBD5E1] dark:border-white/15",
+    badgeBg: "bg-slate-100 dark:bg-white/10 border-slate-300 dark:border-white/15",
     badgeText: "text-[#0B2E59] dark:text-sky-300",
     date: "Feb 25, 2026",
     authority: "CALA Directorate · Industrial Corridors Wing",
@@ -72,14 +72,14 @@ const GOV_UPDATES: GovUpdateItem[] = [
     summary: "Notified land assembly guidelines for strategic multi-modal logistics parks and established oversight procedures to ensure zero cadastral discrepancies in title deeds.",
     tag: "Industrial Infrastructure",
     status: "GAZETTED",
-    statusColor: "text-[#0B2E59] dark:text-sky-300 bg-[#E6F0FA] dark:bg-sky-950/40 border-[#BDD7EE] dark:border-sky-800/40",
+    statusColor: "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10",
     iconType: "cabinet",
   },
   {
     id: "upd-3",
     category: "STATUTORY",
     badge: "Policy Framework",
-    badgeBg: "bg-[#F1F4F7] dark:bg-white/10 border-[#CBD5E1] dark:border-white/15",
+    badgeBg: "bg-slate-100 dark:bg-white/10 border-slate-300 dark:border-white/15",
     badgeText: "text-[#0B2E59] dark:text-sky-300",
     date: "Jun 3, 2026",
     authority: "CALA Directorate · Urban & Land Pooling Cell",
@@ -88,14 +88,14 @@ const GOV_UPDATES: GovUpdateItem[] = [
     summary: "Introduced land pooling provisions as a participatory alternative to compulsory acquisition, returning reconstituted developed plots to eligible landowners.",
     tag: "Land Pooling",
     status: "OPERATIONAL",
-    statusColor: "text-[#1E7E34] dark:text-emerald-300 bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40",
+    statusColor: "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10",
     iconType: "statutory",
   },
   {
     id: "upd-4",
     category: "JUDICIAL",
     badge: "Judicial Precedent",
-    badgeBg: "bg-[#F1F4F7] dark:bg-white/10 border-[#CBD5E1] dark:border-white/15",
+    badgeBg: "bg-slate-100 dark:bg-white/10 border-slate-300 dark:border-white/15",
     badgeText: "text-[#0B2E59] dark:text-sky-300",
     date: "Jul 15, 2026",
     authority: "Statutory Judicial Precedent · Constitutional Division",
@@ -104,14 +104,14 @@ const GOV_UPDATES: GovUpdateItem[] = [
     summary: "Affirmed that non-conduct of preliminary feasibility survey does not invalidate preliminary statutory notification, provided affected landowners are granted substantive hearing under Section 15.",
     tag: "Judicial Precedent",
     status: "BINDING PRECEDENT",
-    statusColor: "text-[#0B2E59] dark:text-sky-300 bg-[#E6F0FA] dark:bg-sky-950/40 border-[#BDD7EE] dark:border-sky-800/40",
+    statusColor: "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10",
     iconType: "judicial",
   },
   {
     id: "upd-5",
     category: "JUDICIAL",
     badge: "Statutory Directive",
-    badgeBg: "bg-[#F1F4F7] dark:bg-white/10 border-[#CBD5E1] dark:border-white/15",
+    badgeBg: "bg-slate-100 dark:bg-white/10 border-slate-300 dark:border-white/15",
     badgeText: "text-[#0B2E59] dark:text-sky-300",
     date: "Active Directive",
     authority: "CALA Directorate · Special Infrastructure Perimeter Cell",
@@ -120,14 +120,14 @@ const GOV_UPDATES: GovUpdateItem[] = [
     summary: "Standardized acquisition workflows for strategic forward defense and transit corridors, ordering expedited compensation disbursal and time-bound Section 38 possession.",
     tag: "Strategic Corridor",
     status: "IN FORCE",
-    statusColor: "text-[#1E7E34] dark:text-emerald-300 bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40",
+    statusColor: "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10",
     iconType: "judicial",
   },
   {
     id: "upd-6",
     category: "STATUTORY",
     badge: "Statutory Mandate",
-    badgeBg: "bg-[#F1F4F7] dark:bg-white/10 border-[#CBD5E1] dark:border-white/15",
+    badgeBg: "bg-slate-100 dark:bg-white/10 border-slate-300 dark:border-white/15",
     badgeText: "text-[#0B2E59] dark:text-sky-300",
     date: "Statutory Act",
     authority: "Statutory Framework · RFCTLARR Act, 2013",
@@ -136,14 +136,14 @@ const GOV_UPDATES: GovUpdateItem[] = [
     summary: "Guarantees mandatory Social Impact Assessment (SIA), statutory consent thresholds, 100% Solatium, and rural multipliers (1.25x to 2.0x) on market valuation.",
     tag: "RFCTLARR 2013",
     status: "CENTRAL ACT",
-    statusColor: "text-[#0B2E59] dark:text-sky-300 bg-[#E6F0FA] dark:bg-sky-950/40 border-[#BDD7EE] dark:border-sky-800/40",
+    statusColor: "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10",
     iconType: "statutory",
   },
   {
     id: "upd-7",
     category: "CORRIDOR",
     badge: "Corridor Progress",
-    badgeBg: "bg-[#F1F4F7] dark:bg-white/10 border-[#CBD5E1] dark:border-white/15",
+    badgeBg: "bg-slate-100 dark:bg-white/10 border-slate-300 dark:border-white/15",
     badgeText: "text-[#0B2E59] dark:text-sky-300",
     date: "Active Phase",
     authority: "CALA Project Implementation Unit · Kota Sector",
@@ -152,14 +152,14 @@ const GOV_UPDATES: GovUpdateItem[] = [
     summary: "Package 1 Kansua (94% physical possession cleared under Sec 3E); Package 2 Mandana (Sec 3G valuation hearings in progress); Package 3 Suket (PFMS DBT disbursal scheduled).",
     tag: "NH-927A Bypass",
     status: "94% POSSESSION",
-    statusColor: "text-[#1E7E34] dark:text-emerald-300 bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40",
+    statusColor: "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10",
     iconType: "corridor",
   },
   {
     id: "upd-8",
     category: "DISBURSAL",
     badge: "Disbursal Clearance",
-    badgeBg: "bg-[#F1F4F7] dark:bg-white/10 border-[#CBD5E1] dark:border-white/15",
+    badgeBg: "bg-slate-100 dark:bg-white/10 border-slate-300 dark:border-white/15",
     badgeText: "text-[#0B2E59] dark:text-sky-300",
     date: "PFMS Batch 088",
     authority: "CALA Direct Benefit Transfer Unit",
@@ -168,14 +168,14 @@ const GOV_UPDATES: GovUpdateItem[] = [
     summary: "39.54 Hectares across 3 revenue villages processed with zero intermediary deductions. Funds deposited directly into verified Aadhaar-linked beneficiary accounts via RBI e-Kuber gateway.",
     tag: "₹28.4 Cr DBT",
     status: "DISBURSED",
-    statusColor: "text-[#1E7E34] dark:text-emerald-300 bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40",
+    statusColor: "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10",
     iconType: "disbursal",
   },
   {
     id: "upd-9",
     category: "GRIEVANCE",
     badge: "Field Audit",
-    badgeBg: "bg-[#F1F4F7] dark:bg-white/10 border-[#CBD5E1] dark:border-white/15",
+    badgeBg: "bg-slate-100 dark:bg-white/10 border-slate-300 dark:border-white/15",
     badgeText: "text-[#0B2E59] dark:text-sky-300",
     date: "Audit Completed",
     authority: "CALA Field Survey & Grievance Cell (OFF-001)",
@@ -184,7 +184,7 @@ const GOV_UPDATES: GovUpdateItem[] = [
     summary: "Physical DGPS boundary survey verified on-site. Landholder objection admitted and parcel record re-benchmarked to Class-A Irrigated under statutory schedule.",
     tag: "Field Audit",
     status: "RESOLVED",
-    statusColor: "text-[#1E7E34] dark:text-emerald-300 bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40",
+    statusColor: "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10",
     iconType: "grievance",
   },
 ];
@@ -252,7 +252,7 @@ export default function LandingPage() {
     const sessionData = {
       officer_id: "OFF-CALA-01",
       name: "Sh. Rajesh Kumar",
-      email: "officer@bhumi.cala.gov.in",
+      email: "officer@kosh.cala.gov.in",
       role: "ADMIN",
     };
 
@@ -276,7 +276,7 @@ export default function LandingPage() {
 
     let loginEmail = officerId.trim();
     if (!loginEmail.includes("@")) {
-      loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@bhumi.cala.gov.in`;
+      loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@kosh.cala.gov.in`;
     }
 
     try {
@@ -396,8 +396,8 @@ export default function LandingPage() {
                   </h3>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold bg-[#EBF7EE] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border border-[#BEE3C8] dark:border-emerald-800 rounded">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-mono font-bold bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-white/10 rounded-[2px]">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-slate-500" />
                     <span>Sec 3D Declared &bull; 3E Active</span>
                   </span>
                 </div>
@@ -406,58 +406,58 @@ export default function LandingPage() {
               {/* Corridor Milestone Track */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="p-3 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800 rounded">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400 font-mono">
                     Package 1 &bull; Kota Bypass
                   </div>
                   <div className="text-xs font-bold text-[#14213D] dark:text-white mt-0.5">
                     Km 0.000 to Km 16.200 (Kansua)
                   </div>
-                  <div className="text-[11px] text-[#1E7E34] dark:text-emerald-400 font-medium mt-1">
+                  <div className="text-[11px] text-slate-700 dark:text-slate-300 font-mono mt-1">
                     94% Possession Completed &bull; RoW Clear
                   </div>
                 </div>
 
                 <div className="p-3 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800 rounded">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400 font-mono">
                     Package 2 &bull; Mandana Section
                   </div>
                   <div className="text-xs font-bold text-[#14213D] dark:text-white mt-0.5">
                     Km 16.200 to Km 32.800 (Mandana)
                   </div>
-                  <div className="text-[11px] text-[#B36B00] dark:text-amber-400 font-medium mt-1">
-                    Sec 3G CALA Award Valuation Underway
+                  <div className="text-[11px] text-slate-700 dark:text-slate-300 font-mono mt-1">
+                    Sec 3G Award Valuation Underway
                   </div>
                 </div>
 
                 <div className="p-3 bg-[#F8FAFC] dark:bg-white/5 border border-[#CBD5E1] dark:border-slate-800 rounded">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400 font-mono">
                     Package 3 &bull; Suket Terminal
                   </div>
                   <div className="text-xs font-bold text-[#14213D] dark:text-white mt-0.5">
                     Km 32.800 to Km 48.500 (Suket)
                   </div>
-                  <div className="text-[11px] text-[#0B5FA5] dark:text-sky-400 font-medium mt-1">
+                  <div className="text-[11px] text-slate-700 dark:text-slate-300 font-mono mt-1">
                     Objections Adjudicated &bull; DBT Scheduled
                   </div>
                 </div>
               </div>
 
               {/* Spatial GIS Callout (Strictly View-Only / Informational for Public) */}
-              <div className="p-3.5 bg-[#EBF3FA] dark:bg-white/5 border border-[#0B5FA5]/30 dark:border-sky-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-md">
+              <div className="p-3.5 bg-slate-50 dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-md">
                 <div className="flex items-start gap-2.5">
-                  <Navigation className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400 mt-0.5 flex-shrink-0" />
+                  <Navigation className="w-4 h-4 text-[#0B2E59] dark:text-sky-400 mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="text-xs font-bold text-[#0B2E59] dark:text-white">
                       Cadastral GIS &amp; Spatial Alignment Digital Twin
                     </div>
                     <div className="text-[11px] text-[#555555] dark:text-slate-400">
-                      High-precision DGPS boundary polygons, satellite overlays, RoW buffer analysis, and encroachment tracking are maintained under statutory CALA supervision.
+                      High-precision DGPS boundary polygons, satellite overlays, RoW buffer analysis, and encroachment tracking under statutory CALA supervision.
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0B2E59]/10 dark:bg-white/10 text-[#0B2E59] dark:text-sky-300 text-xs font-mono font-bold whitespace-nowrap border border-[#0B2E59]/20 dark:border-white/20 rounded">
-                  <Lock className="w-3.5 h-3.5 text-amber-500" />
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300 text-xs font-mono font-bold whitespace-nowrap border border-slate-300 dark:border-white/20 rounded">
+                  <Lock className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                   <span>Authorized Officers Only</span>
                 </div>
               </div>

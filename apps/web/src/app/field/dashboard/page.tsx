@@ -141,11 +141,11 @@ export default function FieldDashboardPage() {
           {queueCount > 0 && (
             <Link
               href="/field/sync"
-              className="flex items-center justify-between p-2.5 rounded bg-[#FFF8E1] dark:bg-amber-950/20 border border-[#FFE082] dark:border-amber-800/40 text-[#B36B00] dark:text-amber-300 text-xs transition-colors hover:bg-amber-100"
+              className="flex items-center justify-between p-2.5 rounded-[4px] bg-slate-50 dark:bg-white/5 border border-[#CBD5E1] dark:border-white/10 text-slate-800 dark:text-slate-200 text-xs transition-colors hover:bg-slate-100 dark:hover:bg-white/10"
             >
               <div className="flex items-center gap-2">
-                <RefreshCw className="w-4 h-4 text-[#B36B00] dark:text-amber-400 animate-spin" />
-                <span className="font-bold">{queueCount} Submissions Waiting to Sync</span>
+                <RefreshCw className="w-4 h-4 text-[#0B2E59] dark:text-sky-400 animate-spin" />
+                <span className="font-semibold">{queueCount} Submissions Waiting to Sync</span>
               </div>
               <span className="text-[10px] font-mono font-bold uppercase underline">Review Queue</span>
             </Link>
@@ -186,17 +186,17 @@ export default function FieldDashboardPage() {
             </p>
           </div>
         ) : (
-          <div className="bg-white dark:bg-[#0D121F] border-l-4 border-l-[#B36B00] border border-[#DCE2E8] dark:border-white/10 rounded-md p-4 shadow-xs space-y-2">
+          <div className="bg-white dark:bg-[#0D121F] border border-[#CBD5E1] dark:border-white/10 rounded-[4px] p-4 shadow-xs space-y-2">
             <div className="flex items-center justify-between">
               <Link
                 href="/field/complaints"
-                className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-[#B36B00] dark:text-amber-400 font-bold hover:underline"
+                className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-[#0B2E59] dark:text-sky-400 font-bold hover:underline"
               >
-                <AlertTriangle className="w-3.5 h-3.5 text-[#B36B00] dark:text-amber-400" /> Pending Field Verification
+                <AlertTriangle className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" /> Pending Field Verification
               </Link>
               <Link
                 href="/field/complaints"
-                className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#FFF8E1] dark:bg-amber-500/20 text-[#B36B00] dark:text-amber-300 font-bold border border-[#FFE082] dark:border-amber-800/40 hover:underline transition-colors"
+                className="text-[10px] font-mono px-2 py-0.5 rounded-[4px] bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-slate-300 font-semibold border border-slate-300 dark:border-slate-700 hover:bg-slate-100 transition-colors"
               >
                 {pendingComplaints.length} Pending &rarr;
               </Link>

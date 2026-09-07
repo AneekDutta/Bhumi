@@ -112,7 +112,7 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
             <div className="overflow-hidden">
               <div className="flex items-center gap-1.5">
                 <span className="font-bold text-sm text-white truncate block font-display leading-tight">
-                  {title || "BHUMI Citizen Portal"}
+                  {title || "KOSH Citizen Portal"}
                 </span>
                 <span className="px-1.5 py-0.2 rounded-[3px] text-[9px] font-mono font-bold bg-[#E8F5E9]/20 text-emerald-200 border border-emerald-400/40 whitespace-nowrap">
                   TITLEHOLDER

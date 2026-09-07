@@ -7,7 +7,7 @@ interface CalaSealLogoProps {
 }
 
 /**
- * Fictional, generic administrative seal for CALA (Central Authority for Land Acquisition).
+ * Fictional, generic administrative seal for CALA (Central Authority of Land Acquisition).
  * Built purely from geometric motifs: compass rose, cadastral land parcel grid, and measuring quadrant.
  * Strictly compliant with SIH prototype rules: NO Lion Capital, NO Ashoka Chakra, NO real government marks.
  */

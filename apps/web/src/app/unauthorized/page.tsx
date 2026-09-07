@@ -37,10 +37,10 @@ function UnauthorizedContent() {
           <CalaSealLogo size={32} variant="navy" />
           <div>
             <div className="font-bold text-sm text-[#0B2E59] dark:text-sky-300 leading-tight">
-              BHUMI Portal
+              KOSH Portal
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono">
-              Central Authority for Land Acquisition
+              Central Authority of Land Acquisition
             </div>
           </div>
         </Link>
@@ -117,7 +117,7 @@ function UnauthorizedContent() {
               className="w-full py-2 px-4 rounded bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-all flex items-center justify-center gap-2"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to Public BHUMI Home</span>
+              <span>Back to Public KOSH Home</span>
             </Link>
           </div>
         </div>
@@ -125,7 +125,7 @@ function UnauthorizedContent() {
 
       {/* Footer */}
       <footer className="w-full max-w-2xl mx-auto py-4 text-center text-[10px] text-slate-400 font-mono border-t border-[#DCE2E8] dark:border-white/10">
-        BHUMI CALA Security Layer &bull; Zero Silent Redirect Policy
+        KOSH CALA Security Layer &bull; Zero Silent Redirect Policy
       </footer>
     </div>
   );

@@ -17,7 +17,7 @@ import {
 import { MOCK_GOVERNMENT_PROJECTS } from '@/lib/mockProjectData';
 
 export const metadata: Metadata = {
-  title: 'Project Portfolio | BHUMI',
+  title: 'Project Portfolio | KOSH',
   description: 'National infrastructure project portfolio overview across Highways, Railways, Industrial, and Energy sectors.',
 };
 
@@ -125,13 +125,7 @@ export default function ProjectsPage() {
                   <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#E6F0FA] dark:bg-sky-950/50 text-[#0B5FA5] dark:text-sky-400 border border-[#BDD7EE] dark:border-sky-800">
                     {p.sector.toUpperCase()}
                   </span>
-                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
-                    p.status === 'DELAYED'
-                      ? 'bg-[#FFF8E6] text-[#B36B00] border-[#FFE29A] dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800'
-                      : p.status === 'CRITICAL_BLOCKER'
-                      ? 'bg-[#FDF0F0] text-[#B32424] border-[#F8C8C8] dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800'
-                      : 'bg-[#EBF7EE] text-[#1E7E34] border-[#BEE3C8] dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800'
-                  }`}>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] border border-[#CBD5E1] dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-slate-300 uppercase">
                     {p.status.replace('_', ' ')}
                   </span>
                 </div>

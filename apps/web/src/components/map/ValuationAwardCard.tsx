@@ -448,7 +448,7 @@ export function ValuationAwardCard({
               color: '#fde68a',
               lineHeight: 1.4,
             }}>
-              <strong>DISCLAIMER:</strong> Statutory valuation computed using RFCTLARR Act 2013 (Sections 26–30) rules with Synthetic Demo parameters. Intended for BHUMI SIH26016 corridor digital twin simulation and decision support.
+              <strong>DISCLAIMER:</strong> Statutory valuation computed using RFCTLARR Act 2013 (Sections 26–30) rules with Synthetic Demo parameters. Intended for KOSH SIH26016 corridor digital twin simulation and decision support.
             </div>
           </div>
         )}

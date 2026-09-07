@@ -109,7 +109,7 @@ export default function GoldenDemoPage() {
               SIH26016 Evaluator Experience · Golden Demo
             </div>
             <h1 className="text-2xl lg:text-3xl font-bold font-display tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
-              BHUMI End-to-End Golden Demo Flow
+              KOSH End-to-End Golden Demo Flow
               <span className="text-xs px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500/20 to-indigo-500/20 text-indigo-700 dark:text-indigo-300 border border-indigo-500/30 font-mono">
                 Cohesive Showcase
               </span>
@@ -220,10 +220,10 @@ export default function GoldenDemoPage() {
                   </div>
                 </div>
 
-                <div className="p-5 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 space-y-3">
-                  <h3 className="text-sm font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                    BHUMI Automated Ingestion Defenses
+                <div className="p-5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] space-y-3">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    KOSH Automated Ingestion Defenses
                   </h3>
                   <div className="space-y-2 text-xs">
                     <div className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-[#0b0d19] border border-slate-200 dark:border-white/[0.06]">
@@ -633,13 +633,13 @@ export default function GoldenDemoPage() {
 
           {activeStep === 8 && (
             <div className="space-y-5">
-              <div className="p-4 rounded-xl bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800/40 text-xs text-sky-900 dark:text-sky-200 space-y-1">
-                <div className="font-bold flex items-center gap-1.5">
-                  <Bot className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400" />
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] text-xs text-slate-800 dark:text-slate-200 space-y-1">
+                <div className="font-bold flex items-center gap-1.5 text-slate-900 dark:text-white">
+                  <Bot className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
                   Grounded Intelligence Layer & Voice Safety Contract:
                 </div>
                 <div>
-                  &quot;The BHUMI AI Assistant serves strictly as an explanation and query interface grounded in deterministic system state (CPM float, statutory clocks, RFCTLARR compensation tables). Spoken commands are subject to the Voice Safety Contract: mutations cannot execute autonomously.&quot;
+                  &quot;The KOSH AI Assistant serves strictly as an explanation and query interface grounded in deterministic system state (CPM float, statutory clocks, RFCTLARR compensation tables). Spoken commands are subject to the Voice Safety Contract: mutations cannot execute autonomously.&quot;
                 </div>
               </div>
 

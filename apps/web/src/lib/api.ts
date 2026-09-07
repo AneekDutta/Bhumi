@@ -552,7 +552,7 @@ export const apiClient = {
     } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
     return {
       status: 'ok',
-      app: 'BHUMI Core Decision-Intelligence Gateway',
+      app: 'KOSH Core Decision-Intelligence Gateway',
       version: 'v2.4-PROD',
       services: {
         database: 'Connected (PostgreSQL 16 + PostGIS 3.4)',

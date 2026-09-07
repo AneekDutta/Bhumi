@@ -68,8 +68,8 @@ export function CaseReportModal({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-[#14213D] dark:text-white">BHUMI SIH26016 · Demonstration Decision-Support Report</h2>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-[2px] bg-[#E8F5E9] dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-300 border border-[#C8E6C9] dark:border-emerald-800/40 font-semibold uppercase">
+                <h2 className="text-base font-bold text-[#14213D] dark:text-white">KOSH SIH26016 · Demonstration Decision-Support Report</h2>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-[2px] bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-white/10 font-semibold uppercase">
                   {reportData.currentStatus || "FIELD VERIFIED"}
                 </span>
               </div>
@@ -105,13 +105,13 @@ export function CaseReportModal({
           {/* Official Letterhead Banner */}
           <div className="p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 text-center space-y-1">
             <div className="text-[11px] uppercase font-bold tracking-widest text-[#0B2E59] dark:text-sky-300 font-mono">
-              CENTRAL AUTHORITY FOR LAND ACQUISITION (CALA)
+              CENTRAL AUTHORITY OF LAND ACQUISITION (CALA)
             </div>
             <div className="text-sm font-bold text-[#14213D] dark:text-white font-display">
-              COMPETENT AUTHORITY LAND ACQUISITION DIVISION
+              CENTRAL AUTHORITY OF LAND ACQUISITION DIVISION
             </div>
             <div className="text-[10px] text-[#5A6A80] dark:text-slate-400">
-              National Infrastructure Corridor Acquisition Directorate &middot; BHUMI Platform (SIH26016)
+              National Infrastructure Corridor Acquisition Directorate &middot; KOSH Platform (SIH26016)
             </div>
           </div>
 

@@ -137,8 +137,8 @@ function LandownerCasesContent() {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/50 text-[#1E7E34] dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 uppercase">
-              {verifiedComplaints.length} Verified Landowner Grievances
+            <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-[3px] bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 uppercase">
+              {verifiedComplaints.length} Verified Grievances
             </span>
             <span className="text-xs text-[#64748B] dark:text-slate-400 font-mono">
               Statutory Resolution &bull; RFCTLARR 2013 First Schedule

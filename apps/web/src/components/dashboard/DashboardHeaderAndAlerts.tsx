@@ -60,7 +60,7 @@ export function DashboardHeaderAndAlerts({ stats }: DashboardHeaderAndAlertsProp
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `BHUMI_National_MIS_Summary_${new Date().toISOString().slice(0,10)}.csv`);
+    link.setAttribute("download", `KOSH_National_MIS_Summary_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -70,7 +70,7 @@ export function DashboardHeaderAndAlerts({ stats }: DashboardHeaderAndAlertsProp
 
   const handleExportJSON = () => {
     const exportData = {
-      platform: "BHUMI Decision Support System",
+      platform: "KOSH Decision Support System",
       problem_statement: "SIH26016",
       benchmark_corridor: "P-NH927A (Rajasthan)",
       generated_at: new Date().toISOString(),
@@ -81,7 +81,7 @@ export function DashboardHeaderAndAlerts({ stats }: DashboardHeaderAndAlertsProp
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `BHUMI_MIS_Snapshot_${new Date().toISOString().slice(0,10)}.json`);
+    link.setAttribute("download", `KOSH_MIS_Snapshot_${new Date().toISOString().slice(0,10)}.json`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -170,22 +170,21 @@ export function DashboardHeaderAndAlerts({ stats }: DashboardHeaderAndAlertsProp
           IN-PRODUCT CRITICAL OPERATIONAL ALERTS BAR (CANONICAL P00001)
           ================================================================ */}
       {!alertDismissed && (
-        <div className="p-3.5 rounded-[4px] bg-rose-50 dark:bg-rose-950/30 border-l-4 border-l-[#B32424] border-t border-r border-b border-rose-200 dark:border-rose-900/60 shadow-xs space-y-2">
+        <div className="p-3.5 rounded-[4px] bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 border-l-4 border-l-[#B32424] shadow-xs space-y-2">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-2.5">
               <ShieldAlert className="w-5 h-5 text-[#B32424] dark:text-rose-400 flex-shrink-0 mt-0.5" />
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-[2px] bg-[#B32424] text-white uppercase tracking-wider">
-                    CRITICAL OPERATIONAL BOTTLENECK
+                  <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-[2px] bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-white/10 uppercase tracking-wider">
+                    CRITICAL BOTTLENECK
                   </span>
-                  <span className="text-xs font-bold text-[#14213D] dark:text-rose-200 font-mono">
-                    PARCEL P00001 · CORRIDOR P-NH927A · ZERO FLOAT
+                  <span className="text-xs font-bold text-[#14213D] dark:text-white font-mono">
+                    Parcel P00001 · Corridor P-NH927A · 0 Days Float
                   </span>
                 </div>
-                <p className="text-xs text-[#B32424] dark:text-rose-300 mt-1 leading-relaxed">
-                  <strong>Section 15 Hearing Clock Exceeded:</strong> 60-day statutory window elapsed without signed objection closure.
-                  Digital Twin CPM indicates <strong>0 Days Float</strong>. Without immediate endorsement, Section 19 declaration risks statutory lapse under RFCTLARR Section 19(7).
+                <p className="text-xs text-[#334155] dark:text-slate-300 mt-1 leading-normal">
+                  Section 15 hearing window elapsed. Objections pending closure before Section 19 declaration.
                 </p>
               </div>
             </div>
@@ -193,21 +192,21 @@ export function DashboardHeaderAndAlerts({ stats }: DashboardHeaderAndAlertsProp
             <button
               type="button"
               onClick={() => setAlertDismissed(true)}
-              className="text-xs text-slate-400 hover:text-slate-700 dark:hover:text-white px-1.5 py-0.5"
+              className="text-xs text-slate-400 hover:text-slate-700 dark:hover:text-white px-1.5 py-0.5 cursor-pointer"
               aria-label="Dismiss alert"
             >
               ✕
             </button>
           </div>
 
-          <div className="flex items-center gap-2.5 flex-wrap pt-1 border-t border-rose-200 dark:border-rose-900/40 text-xs">
+          <div className="flex items-center gap-2 flex-wrap pt-1.5 border-t border-[#E2E8F0] dark:border-white/10 text-xs">
             <span className="text-[11px] font-semibold text-[#5A6A80] dark:text-slate-400">
-              Immediate Officer Action:
+              Required Action:
             </span>
 
             <Link
               href="/action-center"
-              className="px-2.5 py-1 rounded-[3px] bg-[#B32424] hover:bg-[#8F1D1D] text-white font-bold flex items-center gap-1 transition-colors text-[11px]"
+              className="px-2.5 py-1 rounded-[3px] bg-[#0B2E59] hover:bg-[#082242] text-white font-bold flex items-center gap-1 transition-colors text-[11px]"
             >
               <span>Resolve in Action Center</span>
               <ArrowRight className="w-3 h-3" />
@@ -215,23 +214,9 @@ export function DashboardHeaderAndAlerts({ stats }: DashboardHeaderAndAlertsProp
 
             <Link
               href="/parcels/P00001"
-              className="px-2.5 py-1 rounded-[3px] bg-white dark:bg-rose-900/30 border border-rose-300 dark:border-rose-800 text-[#B32424] dark:text-rose-200 font-bold hover:bg-rose-100 transition-colors text-[11px]"
+              className="px-2.5 py-1 rounded-[3px] bg-white dark:bg-white/5 border border-[#CBD5E1] dark:border-white/10 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-white/10 transition-colors text-[11px]"
             >
               <span>Inspect Parcel P00001</span>
-            </Link>
-
-            <Link
-              href="/projects/gis?id=P-NH927A"
-              className="px-2.5 py-1 rounded-[3px] bg-white dark:bg-rose-900/30 border border-rose-300 dark:border-rose-800 text-[#0B5FA5] dark:text-sky-300 font-bold hover:bg-slate-50 transition-colors text-[11px]"
-            >
-              <span>Spatial Corridor GIS</span>
-            </Link>
-
-            <Link
-              href="/intelligence/what-if"
-              className="px-2.5 py-1 rounded-[3px] bg-white dark:bg-rose-900/30 border border-rose-300 dark:border-rose-800 text-amber-700 dark:text-amber-300 font-bold hover:bg-amber-50 transition-colors text-[11px]"
-            >
-              <span>Simulate Counterfactual What-If</span>
             </Link>
           </div>
         </div>
