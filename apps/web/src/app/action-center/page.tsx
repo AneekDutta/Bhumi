@@ -295,29 +295,27 @@ export default function OfficerActionCenterPage() {
       ) : (
         <>
           {/* Header Banner */}
-          <div className="rounded-2xl bg-gradient-to-r from-slate-900 via-rose-950/40 to-slate-900 border border-slate-800/80 p-6 md:p-8 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="rounded-md bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-6 shadow-xs relative">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="space-y-2 max-w-3xl">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30 font-mono">
-                    <AlertOctagon className="w-3.5 h-3.5" /> CALA COMMAND & CONTROL
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#F1F4F7] text-[#0B2E59] border border-[#CBD5E1] dark:bg-white/10 dark:text-sky-300 dark:border-white/15 font-mono">
+                    CALA COMMAND & CONTROL
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 font-mono">
-                    <Sparkles className="w-3.5 h-3.5" /> CPM DIGITAL TWIN INTEGRATED
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#F1F4F7] text-[#0B2E59] border border-[#CBD5E1] dark:bg-white/10 dark:text-sky-300 dark:border-white/15 font-mono">
+                    CPM DIGITAL TWIN INTEGRATED
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> ZERO FAKE URGENCY
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#E8F5E9] text-[#1E7E34] border border-[#C8E6C9] dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/40 font-mono">
+                    ZERO FAKE URGENCY
                   </span>
                 </div>
 
-                <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight font-display">
+                <h1 className="text-2xl md:text-3xl font-bold text-[#14213D] dark:text-white tracking-tight">
                   Officer Action Center
                 </h1>
 
-                <p className="text-sm md:text-base text-slate-300 leading-relaxed">
-                  Unified operational command answering: <span className="text-white font-medium">What requires attention</span>, <span className="text-white font-medium">why</span>, <span className="text-white font-medium">what law governs it</span>, <span className="text-white font-medium">what deadline applies</span>, <span className="text-white font-medium">what evidence supports it</span>, and <span className="text-white font-medium">what CPM project impact exists</span>.
+                <p className="text-xs md:text-sm text-[#475569] dark:text-slate-300 leading-relaxed">
+                  Unified operational command answering: <span className="text-[#14213D] dark:text-white font-medium">What requires attention</span>, <span className="text-[#14213D] dark:text-white font-medium">why</span>, <span className="text-[#14213D] dark:text-white font-medium">what law governs it</span>, <span className="text-[#14213D] dark:text-white font-medium">what deadline applies</span>, <span className="text-[#14213D] dark:text-white font-medium">what evidence supports it</span>, and <span className="text-[#14213D] dark:text-white font-medium">what CPM project impact exists</span>.
                 </p>
               </div>
 
@@ -326,14 +324,14 @@ export default function OfficerActionCenterPage() {
                 <button
                   onClick={fetchActionData}
                   disabled={isRefreshing}
-                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-xs font-semibold text-slate-200 transition-all shadow-sm"
+                  className="flex items-center gap-2 px-3.5 py-2 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 text-xs font-semibold text-[#14213D] dark:text-slate-200 border border-[#CBD5E1] dark:border-slate-700 transition-all shadow-xs cursor-pointer"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-indigo-400' : ''}`} />
+                  <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-[#0B5FA5]' : ''}`} />
                   <span>Refresh Queue</span>
                 </button>
                 <Link
                   href="/intelligence/what-if"
-                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition-all shadow-lg shadow-indigo-600/20"
+                  className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0B2E59] hover:bg-[#0B5FA5] text-xs font-semibold text-white transition-all shadow-xs"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>What-If Simulator</span>
@@ -342,10 +340,10 @@ export default function OfficerActionCenterPage() {
             </div>
 
             {/* Restrained Statutory Disclaimer */}
-            <div className="mt-6 rounded-xl bg-slate-950/60 border border-slate-800 p-3.5 text-xs text-slate-300 leading-relaxed flex items-start gap-2.5">
-              <Info className="w-4 h-4 text-indigo-400 flex-shrink-0 mt-0.5" />
+            <div className="mt-5 rounded bg-[#F8FAFC] dark:bg-white/5 border border-[#DCE2E8] dark:border-white/10 p-3.5 text-xs text-[#475569] dark:text-slate-300 leading-relaxed flex items-start gap-2.5">
+              <Info className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400 flex-shrink-0 mt-0.5" />
               <div>
-                <span className="font-semibold text-slate-200">
+                <span className="font-semibold text-[#14213D] dark:text-white">
                   Authoritative Statutory Operation:
                 </span>{' '}
                 Actions are derived deterministically from RFCTLARR Act 2013 and Rajasthan Rules 2016 statutory deadline clocks. Prioritization is explained transparently via explicit statutory reasons (mandatory proceedings lapse &gt; overdue &gt; critical path impact &gt; float consumption).
@@ -358,120 +356,114 @@ export default function OfficerActionCenterPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
               <div
                 onClick={() => setSelectedCategory('CRITICAL')}
-                className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                className={`p-3.5 rounded-md border cursor-pointer transition-colors ${
                   selectedCategory === 'CRITICAL'
-                    ? 'bg-rose-950/40 border-rose-500 shadow-lg shadow-rose-950/30'
-                    : 'bg-slate-900/80 border-rose-500/20 hover:border-rose-500/50'
+                    ? 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-500 ring-1 ring-rose-500'
+                    : 'bg-white dark:bg-[#0B1220] border-[#DCE2E8] dark:border-white/10 hover:border-rose-400'
                 }`}
               >
-                <div className="text-[11px] font-mono text-rose-400 font-semibold uppercase flex items-center justify-between">
-                  <span>Critical / Lapse</span>
-                  <AlertOctagon className="w-3.5 h-3.5 text-rose-400" />
+                <div className="text-[11px] font-semibold text-rose-700 dark:text-rose-400 uppercase tracking-wide">
+                  Critical / Lapse
                 </div>
-                <div className="text-2xl font-extrabold font-mono text-rose-400 mt-1">
+                <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">
                   {summary.critical_count}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">
+                <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
                   {summary.mandatory_lapse_count} Mandatory Lapse
                 </div>
               </div>
 
               <div
                 onClick={() => setSelectedCategory('DUE_SOON')}
-                className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                className={`p-3.5 rounded-md border cursor-pointer transition-colors ${
                   selectedCategory === 'DUE_SOON'
-                    ? 'bg-amber-950/40 border-amber-500 shadow-lg shadow-amber-950/30'
-                    : 'bg-slate-900/80 border-amber-500/20 hover:border-amber-500/50'
+                    ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-500 ring-1 ring-amber-500'
+                    : 'bg-white dark:bg-[#0B1220] border-[#DCE2E8] dark:border-white/10 hover:border-amber-400'
                 }`}
               >
-                <div className="text-[11px] font-mono text-amber-400 font-semibold uppercase flex items-center justify-between">
-                  <span>Due Soon</span>
-                  <Clock className="w-3.5 h-3.5 text-amber-400" />
+                <div className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wide">
+                  Due Soon
                 </div>
-                <div className="text-2xl font-extrabold font-mono text-amber-400 mt-1">
+                <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">
                   {summary.due_soon_count}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">
+                <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
                   &le; 30 calendar days
                 </div>
               </div>
 
               <div
                 onClick={() => setSelectedCategory('BLOCKED')}
-                className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                className={`p-3.5 rounded-md border cursor-pointer transition-colors ${
                   selectedCategory === 'BLOCKED'
-                    ? 'bg-orange-950/40 border-orange-500 shadow-lg shadow-orange-950/30'
-                    : 'bg-slate-900/80 border-orange-500/20 hover:border-orange-500/50'
+                    ? 'bg-orange-50/60 dark:bg-orange-950/30 border-orange-500 ring-1 ring-orange-500'
+                    : 'bg-white dark:bg-[#0B1220] border-[#DCE2E8] dark:border-white/10 hover:border-orange-400'
                 }`}
               >
-                <div className="text-[11px] font-mono text-orange-400 font-semibold uppercase flex items-center justify-between">
-                  <span>Blocked</span>
-                  <ShieldAlert className="w-3.5 h-3.5 text-orange-400" />
+                <div className="text-[11px] font-semibold text-orange-700 dark:text-orange-400 uppercase tracking-wide">
+                  Blocked
                 </div>
-                <div className="text-2xl font-extrabold font-mono text-orange-400 mt-1">
+                <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">
                   {summary.blocked_count}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">
-                  Deficient / Stayed Prerequisite
+                <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
+                  Deficient / Stayed
                 </div>
               </div>
 
               <div
                 onClick={() => setSelectedCategory('PROJECT_IMPACT')}
-                className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                className={`p-3.5 rounded-md border cursor-pointer transition-colors ${
                   selectedCategory === 'PROJECT_IMPACT'
-                    ? 'bg-sky-950/40 border-sky-500 shadow-lg shadow-sky-950/30'
-                    : 'bg-slate-900/80 border-sky-500/20 hover:border-sky-500/50'
+                    ? 'bg-sky-50/60 dark:bg-sky-950/30 border-[#0B5FA5] ring-1 ring-[#0B5FA5]'
+                    : 'bg-white dark:bg-[#0B1220] border-[#DCE2E8] dark:border-white/10 hover:border-[#0B5FA5]'
                 }`}
               >
-                <div className="text-[11px] font-mono text-sky-400 font-semibold uppercase flex items-center justify-between">
-                  <span>Project Impact</span>
-                  <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+                <div className="text-[11px] font-semibold text-[#0B2E59] dark:text-sky-400 uppercase tracking-wide">
+                  Project Impact
                 </div>
-                <div className="text-2xl font-extrabold font-mono text-sky-400 mt-1">
+                <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">
                   {summary.project_impact_count}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">
-                  {summary.critical_path_blocker_count} Critical Path Blockers
+                <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
+                  {summary.critical_path_blocker_count} Path Blockers
                 </div>
               </div>
 
               <div
                 onClick={() => setSelectedCategory('UPCOMING')}
-                className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                className={`p-3.5 rounded-md border cursor-pointer transition-colors ${
                   selectedCategory === 'UPCOMING'
-                    ? 'bg-sky-950/40 border-sky-500 shadow-lg shadow-sky-950/30'
-                    : 'bg-slate-900/80 border-sky-500/20 hover:border-sky-500/50'
+                    ? 'bg-slate-100 dark:bg-slate-800 border-[#0B2E59] ring-1 ring-[#0B2E59]'
+                    : 'bg-white dark:bg-[#0B1220] border-[#DCE2E8] dark:border-white/10 hover:border-slate-400'
                 }`}
               >
-                <div className="text-[11px] font-mono text-sky-400 font-semibold uppercase flex items-center justify-between">
-                  <span>Upcoming</span>
-                  <Calendar className="w-3.5 h-3.5 text-sky-400" />
+                <div className="text-[11px] font-semibold text-[#475569] dark:text-slate-300 uppercase tracking-wide">
+                  Upcoming
                 </div>
-                <div className="text-2xl font-extrabold font-mono text-sky-400 mt-1">
+                <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">
                   {summary.upcoming_count}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">
+                <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
                   On-track statutory clocks
                 </div>
               </div>
 
               <div
                 onClick={() => setSelectedCategory('COMPLETED')}
-                className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                className={`p-3.5 rounded-md border cursor-pointer transition-colors ${
                   selectedCategory === 'COMPLETED'
-                    ? 'bg-emerald-950/40 border-emerald-500 shadow-lg shadow-emerald-950/30'
-                    : 'bg-slate-900/80 border-emerald-500/20 hover:border-emerald-500/50'
+                    ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-[#1E7E34] ring-1 ring-[#1E7E34]'
+                    : 'bg-white dark:bg-[#0B1220] border-[#DCE2E8] dark:border-white/10 hover:border-[#1E7E34]'
                 }`}
               >
-                <div className="text-[11px] font-mono text-emerald-400 font-semibold uppercase flex items-center justify-between">
-                  <span>Completed</span>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="text-[11px] font-semibold text-[#1E7E34] dark:text-emerald-400 uppercase tracking-wide">
+                  Completed
                 </div>
-                <div className="text-2xl font-extrabold font-mono text-emerald-400 mt-1">
+                <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">
                   {summary.completed_count}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">
+                <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
                   Evidenced & verified
                 </div>
               </div>
@@ -479,7 +471,7 @@ export default function OfficerActionCenterPage() {
           )}
 
           {/* Operational Category Filter Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar border-b border-slate-800">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar border-b border-[#DCE2E8] dark:border-white/10">
             {CATEGORY_TABS.map((tab) => {
               const isActive = selectedCategory === tab.key;
               const count = tab.countKey && summary ? summary[tab.countKey] : tab.key === 'ALL' ? summary?.total_actions : undefined;
@@ -487,25 +479,27 @@ export default function OfficerActionCenterPage() {
                 <button
                   key={tab.key}
                   onClick={() => setSelectedCategory(tab.key)}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+                      ? 'bg-[#0B2E59] text-white shadow-xs'
+                      : 'text-[#475569] dark:text-slate-400 hover:text-[#14213D] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
                   }`}
                 >
                   <span>{tab.label}</span>
                   {typeof count === 'number' && (
                     <span
-                      className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${
-                        tab.key === 'CRITICAL' && count > 0
-                          ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                      className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-bold ${
+                        isActive
+                          ? 'bg-white/20 text-white'
+                          : tab.key === 'CRITICAL' && count > 0
+                          ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300'
                           : tab.key === 'DUE_SOON' && count > 0
-                          ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                          ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300'
                           : tab.key === 'BLOCKED' && count > 0
-                          ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30'
+                          ? 'bg-orange-100 text-orange-800 dark:bg-orange-950/50 dark:text-orange-300'
                           : tab.key === 'COMPLETED'
-                          ? 'bg-emerald-500/20 text-emerald-400'
-                          : 'bg-slate-800 text-slate-300'
+                          ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300'
+                          : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
                       }`}
                     >
                       {count}
@@ -520,18 +514,18 @@ export default function OfficerActionCenterPage() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
             {/* Search */}
             <div className="md:col-span-5 relative">
-              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search by action, survey, village, or legal section..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full pl-9 pr-8 py-2 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-[#0B5FA5] transition-colors"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -543,7 +537,7 @@ export default function OfficerActionCenterPage() {
               <select
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                className="w-full px-3 py-2 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 focus:outline-none focus:border-[#0B5FA5]"
               >
                 <option value="ALL">All Responsible Roles</option>
                 <option value="COLLECTOR">Competent Authority / Collector</option>
@@ -558,7 +552,7 @@ export default function OfficerActionCenterPage() {
                 placeholder="Filter Parcel ID (e.g. P00003)"
                 value={parcelFilter}
                 onChange={(e) => setParcelFilter(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono uppercase"
+                className="w-full px-3 py-2 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-[#0B5FA5] font-mono uppercase"
               />
             </div>
 
@@ -572,7 +566,7 @@ export default function OfficerActionCenterPage() {
                     setSelectedRole('ALL');
                     setSelectedCategory('ALL');
                   }}
-                  className="w-full py-2 px-2 text-[11px] text-slate-400 hover:text-white rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-colors text-center"
+                  className="w-full py-2 px-2 text-[11px] text-[#475569] dark:text-slate-300 hover:text-[#14213D] rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 hover:bg-slate-100 transition-colors text-center cursor-pointer"
                   title="Clear all filters"
                 >
                   Reset
@@ -584,16 +578,16 @@ export default function OfficerActionCenterPage() {
           {/* Action Cards Queue */}
           {loading ? (
             <div className="flex items-center justify-center py-20 text-slate-500 gap-3">
-              <div className="w-5 h-5 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-[#0B5FA5] border-t-transparent rounded-full animate-spin" />
               <span>Prioritizing operational duties against statutory engine...</span>
             </div>
           ) : filteredActions.length === 0 ? (
-            <div className="rounded-2xl bg-slate-900/60 border border-slate-800 p-12 text-center space-y-3">
-              <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
-              <h3 className="text-base font-bold text-white font-display">
+            <div className="rounded-md bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-12 text-center space-y-3 shadow-xs">
+              <CheckCircle2 className="w-10 h-10 text-emerald-600 dark:text-emerald-400 mx-auto" />
+              <h3 className="text-base font-bold text-[#14213D] dark:text-white">
                 No Action Items in This Queue
               </h3>
-              <p className="text-xs text-slate-400 max-w-md mx-auto">
+              <p className="text-xs text-[#64748B] dark:text-slate-400 max-w-md mx-auto">
                 {selectedCategory !== 'ALL'
                   ? `There are no actions currently categorized under ${selectedCategory.replace(/_/g, ' ')}. All statutory requirements for this category are satisfied or up to date.`
                   : 'All acquisition statutory clocks and field duties are current. Zero unaddressed items in the corridor pipeline.'}
@@ -601,7 +595,7 @@ export default function OfficerActionCenterPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex items-center justify-between text-xs text-slate-400 font-mono px-1">
+              <div className="flex items-center justify-between text-xs text-[#64748B] dark:text-slate-400 font-mono px-1">
                 <span>
                   Showing {filteredActions.length} Prioritized Action{filteredActions.length !== 1 ? 's' : ''}
                 </span>
@@ -620,37 +614,37 @@ export default function OfficerActionCenterPage() {
                 return (
                   <div
                     key={action.id}
-                    className={`rounded-2xl border transition-all p-5 shadow-lg relative overflow-hidden ${
+                    className={`rounded-md border transition-all p-5 shadow-xs relative bg-white dark:bg-[#0B1220] border-[#DCE2E8] dark:border-white/10 ${
                       isCritical
-                        ? 'bg-slate-900/90 border-rose-500/40 hover:border-rose-500/70 shadow-rose-950/20'
+                        ? 'border-l-4 border-l-rose-600'
                         : isDueSoon
-                        ? 'bg-slate-900/90 border-amber-500/40 hover:border-amber-500/70 shadow-amber-950/20'
+                        ? 'border-l-4 border-l-amber-500'
                         : isBlocked
-                        ? 'bg-slate-900/90 border-orange-500/40 hover:border-orange-500/70 shadow-orange-950/20'
+                        ? 'border-l-4 border-l-orange-500'
                         : isImpact
-                        ? 'bg-slate-900/90 border-sky-500/40 hover:border-sky-500/70 shadow-sky-950/20'
+                        ? 'border-l-4 border-l-[#0B5FA5]'
                         : isCompleted
-                        ? 'bg-slate-900/60 border-emerald-500/30 hover:border-emerald-500/50'
-                        : 'bg-slate-900/70 border-slate-800 hover:border-slate-700'
+                        ? 'border-l-4 border-l-[#1E7E34]'
+                        : 'border-l-4 border-l-slate-400'
                     }`}
                   >
-                    {/* Top Row: Lead with Priority Reasons (Zero Raw Score in Primary View) */}
-                    <div className="flex items-start md:items-center justify-between gap-3 flex-wrap border-b border-slate-800/80 pb-3.5">
+                    {/* Top Row: Lead with Priority Reasons */}
+                    <div className="flex items-start md:items-center justify-between gap-3 flex-wrap border-b border-[#E2E8F0] dark:border-white/10 pb-3.5">
                       <div className="flex items-center gap-2 flex-wrap">
                         {/* Priority Category Pill */}
                         <span
-                          className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full uppercase border ${
+                          className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase border ${
                             isCritical
-                              ? 'bg-rose-500/15 text-rose-400 border-rose-500/40'
+                              ? 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/40'
                               : isDueSoon
-                              ? 'bg-amber-500/15 text-amber-400 border-amber-500/40'
+                              ? 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/40'
                               : isBlocked
-                              ? 'bg-orange-500/15 text-orange-400 border-orange-500/40'
+                              ? 'bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-950/40 dark:text-orange-300 dark:border-orange-800/40'
                               : isImpact
-                              ? 'bg-sky-500/15 text-sky-400 border-sky-500/40'
+                              ? 'bg-sky-100 text-[#0B2E59] border-sky-300 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/40'
                               : isCompleted
-                              ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/40'
-                              : 'bg-sky-500/15 text-sky-400 border-sky-500/40'
+                              ? 'bg-emerald-100 text-[#1E7E34] border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/40'
+                              : 'bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
                           }`}
                         >
                           {action.priority_category.replace(/_/g, ' ')}
@@ -659,11 +653,11 @@ export default function OfficerActionCenterPage() {
                         {/* Parcel ID & Survey Number */}
                         <Link
                           href={`/parcels/${action.parcel_id}`}
-                          className="text-xs font-mono font-bold text-indigo-400 hover:underline flex items-center gap-1"
+                          className="text-xs font-mono font-bold text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1"
                         >
                           <span>{action.parcel_id}</span>
                           {action.survey_no && (
-                            <span className="text-slate-400 font-normal">
+                            <span className="text-[#64748B] dark:text-slate-400 font-normal">
                               ({action.survey_no})
                             </span>
                           )}
@@ -671,13 +665,13 @@ export default function OfficerActionCenterPage() {
 
                         {/* Village Name */}
                         {action.village_name && (
-                          <span className="text-xs text-slate-400">
+                          <span className="text-xs text-[#64748B] dark:text-slate-400">
                             • {action.village_name}
                           </span>
                         )}
 
                         {/* Responsible Role Badge */}
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F1F5F9] dark:bg-slate-800 text-[#334155] dark:text-slate-300 border border-[#CBD5E1] dark:border-slate-700">
                           {action.responsible_role.replace(/_/g, ' ')}
                         </span>
                       </div>
@@ -685,14 +679,14 @@ export default function OfficerActionCenterPage() {
                       {/* Right: Statutory Due Date & Immediacy */}
                       <div className="flex items-center gap-3">
                         <div className="text-right">
-                          <div className="text-[10px] font-mono text-slate-400">Statutory Due Date</div>
+                          <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400">Statutory Due Date</div>
                           <div
                             className={`text-sm font-mono font-bold ${
                               action.days_remaining < 0
-                                ? 'text-rose-400'
+                                ? 'text-rose-600 dark:text-rose-400'
                                 : action.days_remaining <= 30
-                                ? 'text-amber-400'
-                                : 'text-slate-200'
+                                ? 'text-amber-600 dark:text-amber-400'
+                                : 'text-[#14213D] dark:text-white'
                             }`}
                           >
                             {action.calculated_due_date} ({action.days_remaining}d)
@@ -701,19 +695,19 @@ export default function OfficerActionCenterPage() {
                       </div>
                     </div>
 
-                    {/* Primary Reason Tags Banner: Officers see explicit legal rationale instead of points */}
+                    {/* Primary Reason Tags Banner */}
                     <div className="pt-2.5 pb-1 flex items-center gap-1.5 flex-wrap">
                       {action.priority_reasons.map((reason, rIdx) => (
                         <span
                           key={rIdx}
-                          className={`text-[10px] font-mono px-2 py-0.5 rounded-md font-semibold border ${
+                          className={`text-[10px] font-mono px-2 py-0.5 rounded font-semibold border ${
                             reason.includes('MANDATORY') || reason.includes('OVERDUE')
-                              ? 'bg-rose-500/10 text-rose-300 border-rose-500/30'
+                              ? 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/30 dark:text-rose-300 dark:border-rose-900/40'
                               : reason.includes('CRITICAL PATH') || reason.includes('SCHEDULE')
-                              ? 'bg-sky-500/10 text-sky-300 border-sky-500/30'
+                              ? 'bg-sky-50 text-[#0B2E59] border-sky-200 dark:bg-sky-950/30 dark:text-sky-300 dark:border-sky-900/40'
                               : reason.includes('EVIDENCE') || reason.includes('PRECONDITION')
-                              ? 'bg-orange-500/10 text-orange-300 border-orange-500/30'
-                              : 'bg-slate-800 text-slate-300 border-slate-700'
+                              ? 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/30 dark:text-orange-300 dark:border-orange-900/40'
+                              : 'bg-[#F1F5F9] text-[#334155] border-[#CBD5E1] dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
                           }`}
                         >
                           • {reason}
@@ -726,15 +720,15 @@ export default function OfficerActionCenterPage() {
                       {/* 1. What & Required Action (Col 1-5) */}
                       <div className="md:col-span-5 space-y-2">
                         <div>
-                          <span className="text-[10px] font-mono uppercase text-slate-400 tracking-wider block">
+                          <span className="text-[10px] font-mono uppercase text-[#64748B] dark:text-slate-400 tracking-wider block">
                             1. What Requires Attention Right Now
                           </span>
-                          <h3 className="text-sm font-bold text-white mt-0.5 font-display">
+                          <h3 className="text-sm font-bold text-[#14213D] dark:text-white mt-0.5">
                             {action.action_title}
                           </h3>
                         </div>
 
-                        <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+                        <p className="text-xs text-[#334155] dark:text-slate-300 leading-relaxed bg-[#F8FAFC] dark:bg-white/5 p-2.5 rounded border border-[#E2E8F0] dark:border-white/10">
                           {action.required_action}
                         </p>
                       </div>
@@ -742,33 +736,33 @@ export default function OfficerActionCenterPage() {
                       {/* 2 & 3. Why & Governing Law (Col 6-8) */}
                       <div className="md:col-span-4 space-y-2">
                         <div>
-                          <span className="text-[10px] font-mono uppercase text-slate-400 tracking-wider block">
+                          <span className="text-[10px] font-mono uppercase text-[#64748B] dark:text-slate-400 tracking-wider block">
                             2. Why & Legal Governing Provision
                           </span>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="font-mono font-bold text-amber-400">
+                            <span className="font-mono font-bold text-[#0B2E59] dark:text-sky-300">
                               {action.statutory_section}
                             </span>
-                            <span className="text-slate-400 truncate">
+                            <span className="text-[#64748B] dark:text-slate-400 truncate">
                               {action.act_name}
                             </span>
                           </div>
                         </div>
 
-                        <div className="rounded-xl bg-slate-950/60 p-2.5 border border-slate-800/80 space-y-1">
-                          <div className="text-[10px] font-mono text-slate-400">
-                            Legal Effect: <strong className="text-slate-200">{action.legal_effect}</strong>
+                        <div className="rounded bg-[#F8FAFC] dark:bg-white/5 p-2.5 border border-[#E2E8F0] dark:border-white/10 space-y-1">
+                          <div className="text-[10px] font-mono text-[#64748B] dark:text-slate-400">
+                            Legal Effect: <strong className="text-[#14213D] dark:text-slate-200">{action.legal_effect}</strong>
                           </div>
-                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                          <p className="text-[11px] text-[#475569] dark:text-slate-300 leading-relaxed">
                             {action.consequence_if_overdue}
                           </p>
                         </div>
 
                         {/* Judicial Court Stay Indicator if applicable */}
                         {action.order_specific_court_stay && (
-                          <div className="rounded-xl bg-sky-950/30 border border-sky-500/40 p-2 text-[11px] text-sky-200 flex items-center justify-between">
+                          <div className="rounded bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-500/40 p-2 text-[11px] text-[#0B2E59] dark:text-sky-200 flex items-center justify-between">
                             <span className="font-mono">Court Stay: {action.court_order_reference}</span>
-                            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 uppercase">
+                            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-sky-200 dark:bg-sky-500/20 text-[#0B2E59] dark:text-sky-300 uppercase">
                               {action.judicial_verification_status || 'PENDING'}
                             </span>
                           </div>
@@ -779,38 +773,38 @@ export default function OfficerActionCenterPage() {
                       <div className="md:col-span-3 space-y-2 flex flex-col justify-between">
                         <div className="space-y-2">
                           <div>
-                            <span className="text-[10px] font-mono uppercase text-slate-400 tracking-wider block">
+                            <span className="text-[10px] font-mono uppercase text-[#64748B] dark:text-slate-400 tracking-wider block">
                               5. Evidence & 6. Downstream CPM
                             </span>
                             <div className="flex items-center justify-between mt-0.5">
                               <span
                                 className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
                                   action.evidence_status === 'VERIFIED'
-                                    ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                                    ? 'bg-emerald-100 text-[#1E7E34] border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/40'
                                     : action.evidence_status === 'DEFICIENT'
-                                    ? 'bg-rose-500/15 text-rose-400 border-rose-500/30'
-                                    : 'bg-amber-500/15 text-amber-400 border-amber-500/30'
+                                    ? 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/40'
+                                    : 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/40'
                                 }`}
                               >
                                 Evidence: {action.evidence_status}
                               </span>
 
                               {action.cpm_impact.is_critical_path && (
-                                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/40">
+                                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-700 border border-rose-300 dark:bg-rose-950/40 dark:text-rose-300">
                                   CRITICAL PATH
                                 </span>
                               )}
                             </div>
                           </div>
 
-                          <div className="rounded-xl bg-slate-950/60 p-2.5 border border-slate-800/80 text-[11px] space-y-1">
-                            <div className="text-slate-300">
+                          <div className="rounded bg-[#F8FAFC] dark:bg-white/5 p-2.5 border border-[#E2E8F0] dark:border-white/10 text-[11px] space-y-1">
+                            <div className="text-[#334155] dark:text-slate-300">
                               CPM Delay:{' '}
-                              <strong className="text-rose-400 font-mono">
+                              <strong className="text-rose-600 dark:text-rose-400 font-mono">
                                 +{action.cpm_impact.operational_delay_cpm_days} days
                               </strong>
                             </div>
-                            <div className="text-slate-400 truncate">
+                            <div className="text-[#64748B] dark:text-slate-400 truncate">
                               Blocks: {action.cpm_impact.downstream_summary}
                             </div>
                           </div>
@@ -824,7 +818,7 @@ export default function OfficerActionCenterPage() {
                               setActiveActionModalTab('causal_chain');
                               setSelectedCausalStep(0);
                             }}
-                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors shadow-sm"
+                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded bg-[#0B2E59] hover:bg-[#0B5FA5] text-white font-semibold text-xs transition-colors shadow-xs cursor-pointer"
                           >
                             <Compass className="w-3.5 h-3.5" />
                             <span>Drill Causal Chain</span>
@@ -835,7 +829,7 @@ export default function OfficerActionCenterPage() {
                               setSelectedAction(action);
                               setActiveActionModalTab('resolve');
                             }}
-                            className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+                            className="px-3 py-2 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 text-[#14213D] dark:text-slate-200 text-xs font-semibold border border-[#CBD5E1] dark:border-slate-700 transition-colors cursor-pointer shadow-xs"
                             title="Resolve Action with Verified Evidence"
                           >
                             Resolve
@@ -851,48 +845,48 @@ export default function OfficerActionCenterPage() {
 
           {/* Action Dossier Modal / Drawer with Comprehensive Causal Chain Drill-Down */}
           {selectedAction && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-              <div className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-5xl max-h-[92vh] overflow-hidden flex flex-col shadow-2xl">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
+              <div className="bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 rounded-lg w-full max-w-5xl max-h-[92vh] overflow-hidden flex flex-col shadow-2xl">
                 {/* Modal Header */}
-                <div className="p-6 border-b border-slate-800 bg-slate-950/80 flex items-start justify-between gap-4">
+                <div className="p-5 border-b border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-white/5 flex items-start justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30">
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-300 dark:border-rose-800/40 uppercase">
                         {selectedAction.priority_category.replace(/_/g, ' ')}
                       </span>
-                      <span className="text-xs font-mono text-indigo-400 font-bold">
+                      <span className="text-xs font-mono text-[#0B5FA5] dark:text-sky-400 font-bold">
                         Parcel: #{selectedAction.parcel_id}
                       </span>
                       {selectedAction.survey_no && (
-                        <span className="text-xs font-mono text-slate-400">
+                        <span className="text-xs font-mono text-[#64748B] dark:text-slate-400">
                           Survey: {selectedAction.survey_no}
                         </span>
                       )}
-                      <span className="text-xs font-mono text-slate-400">
+                      <span className="text-xs font-mono text-[#64748B] dark:text-slate-400">
                         Action ID: {selectedAction.id}
                       </span>
                     </div>
-                    <h2 className="text-lg md:text-xl font-bold text-white mt-1.5 font-display">
+                    <h2 className="text-lg md:text-xl font-bold text-[#14213D] dark:text-white mt-1.5">
                       {selectedAction.action_title}
                     </h2>
                   </div>
 
                   <button
                     onClick={() => setSelectedAction(null)}
-                    className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
+                    className="p-1.5 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 text-slate-500 hover:text-slate-800 dark:hover:text-white border border-[#CBD5E1] dark:border-slate-700 transition-colors cursor-pointer"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
                 {/* Modal Tab Switcher */}
-                <div className="flex items-center gap-3 px-6 pt-3 border-b border-slate-800 bg-slate-950/40 text-xs">
+                <div className="flex items-center gap-3 px-6 pt-3 border-b border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-white/5 text-xs">
                   <button
                     onClick={() => setActiveActionModalTab('causal_chain')}
-                    className={`pb-2.5 font-semibold transition-colors border-b-2 flex items-center gap-1.5 ${
+                    className={`pb-2.5 font-semibold transition-colors border-b-2 flex items-center gap-1.5 cursor-pointer ${
                       activeActionModalTab === 'causal_chain'
-                        ? 'border-indigo-500 text-indigo-400'
-                        : 'border-transparent text-slate-400 hover:text-slate-200'
+                        ? 'border-[#0B2E59] text-[#0B2E59] dark:border-sky-400 dark:text-sky-300'
+                        : 'border-transparent text-[#64748B] hover:text-[#14213D] dark:text-slate-400 dark:hover:text-slate-200'
                     }`}
                   >
                     <Compass className="w-3.5 h-3.5" />
@@ -900,10 +894,10 @@ export default function OfficerActionCenterPage() {
                   </button>
                   <button
                     onClick={() => setActiveActionModalTab('resolve')}
-                    className={`pb-2.5 font-semibold transition-colors border-b-2 flex items-center gap-1.5 ${
+                    className={`pb-2.5 font-semibold transition-colors border-b-2 flex items-center gap-1.5 cursor-pointer ${
                       activeActionModalTab === 'resolve'
-                        ? 'border-emerald-500 text-emerald-400'
-                        : 'border-transparent text-slate-400 hover:text-slate-200'
+                        ? 'border-[#1E7E34] text-[#1E7E34] dark:border-emerald-400 dark:text-emerald-300'
+                        : 'border-transparent text-[#64748B] hover:text-[#14213D] dark:text-slate-400 dark:hover:text-slate-200'
                     }`}
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
@@ -911,10 +905,10 @@ export default function OfficerActionCenterPage() {
                   </button>
                   <button
                     onClick={() => setActiveActionModalTab('court_stay')}
-                    className={`pb-2.5 font-semibold transition-colors border-b-2 flex items-center gap-1.5 ${
+                    className={`pb-2.5 font-semibold transition-colors border-b-2 flex items-center gap-1.5 cursor-pointer ${
                       activeActionModalTab === 'court_stay'
-                        ? 'border-sky-500 text-sky-400'
-                        : 'border-transparent text-slate-400 hover:text-slate-200'
+                        ? 'border-[#0B5FA5] text-[#0B5FA5] dark:border-sky-400 dark:text-sky-300'
+                        : 'border-transparent text-[#64748B] hover:text-[#14213D] dark:text-slate-400 dark:hover:text-slate-200'
                     }`}
                   >
                     <Scale className="w-3.5 h-3.5" />
@@ -928,13 +922,13 @@ export default function OfficerActionCenterPage() {
                   {activeActionModalTab === 'causal_chain' && (
                     <div className="space-y-6">
                       {/* Step Indicator Breadcrumb */}
-                      <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                      <div className="p-4 rounded-md bg-[#F8FAFC] dark:bg-white/5 border border-[#E2E8F0] dark:border-white/10 space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+                          <span className="text-xs font-mono font-bold text-[#0B2E59] dark:text-sky-300 uppercase tracking-wider flex items-center gap-1.5">
                             <Compass className="w-3.5 h-3.5" />
                             Deterministic Causal Chain Drill-Down (Click to Inspect Stage)
                           </span>
-                          <span className="text-[11px] font-mono text-slate-400">
+                          <span className="text-[11px] font-mono text-[#64748B] dark:text-slate-400">
                             Stage {selectedCausalStep + 1} of 9
                           </span>
                         </div>
@@ -955,10 +949,10 @@ export default function OfficerActionCenterPage() {
                             <button
                               key={step.key}
                               onClick={() => setSelectedCausalStep(idx)}
-                              className={`py-2 px-1 rounded-lg border font-semibold transition-all ${
+                              className={`py-2 px-1 rounded border font-semibold transition-all cursor-pointer ${
                                 selectedCausalStep === idx
-                                  ? 'bg-indigo-600 text-white border-indigo-400 shadow-md'
-                                  : 'bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800'
+                                  ? 'bg-[#0B2E59] text-white border-[#0B2E59] shadow-xs'
+                                  : 'bg-white dark:bg-slate-800 text-[#334155] dark:text-slate-300 border-[#CBD5E1] dark:border-slate-700 hover:bg-slate-100'
                               }`}
                             >
                               {step.name}
@@ -970,33 +964,33 @@ export default function OfficerActionCenterPage() {
                       {/* Detailed Causal Stage Panels */}
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {/* 1. ACTION & 2. LAW & 3. DEADLINE */}
-                        <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-5 space-y-3">
-                          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                            <span className="text-xs font-mono font-bold text-amber-400 uppercase">
+                        <div className="rounded-md bg-[#F8FAFC] dark:bg-white/5 border border-[#E2E8F0] dark:border-white/10 p-4 space-y-3">
+                          <div className="flex items-center justify-between border-b border-[#E2E8F0] dark:border-white/10 pb-2">
+                            <span className="text-xs font-mono font-bold text-[#0B2E59] dark:text-sky-300 uppercase">
                               Stages 1–3: Legal Foundation
                             </span>
-                            <Scale className="w-4 h-4 text-amber-400" />
+                            <Scale className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400" />
                           </div>
 
                           <div className="space-y-1">
-                            <span className="text-[10px] font-mono text-slate-400 uppercase">1. Operational Duty</span>
-                            <div className="text-xs font-bold text-white">{selectedAction.action_title}</div>
-                            <p className="text-[11px] text-slate-300 leading-relaxed bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase">1. Operational Duty</span>
+                            <div className="text-xs font-bold text-[#14213D] dark:text-white">{selectedAction.action_title}</div>
+                            <p className="text-[11px] text-[#334155] dark:text-slate-300 leading-relaxed bg-white dark:bg-[#0B1220] p-2.5 rounded border border-[#E2E8F0] dark:border-white/10">
                               {selectedAction.required_action}
                             </p>
                           </div>
 
                           <div className="space-y-1 pt-1">
-                            <span className="text-[10px] font-mono text-slate-400 uppercase">2. Governing Law</span>
-                            <div className="text-xs font-bold font-mono text-indigo-300">
+                            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase">2. Governing Law</span>
+                            <div className="text-xs font-bold font-mono text-[#0B2E59] dark:text-sky-300">
                               {selectedAction.statutory_section} — {selectedAction.act_name}
                             </div>
-                            <div className="text-[11px] text-slate-400 leading-relaxed">
+                            <div className="text-[11px] text-[#64748B] dark:text-slate-400 leading-relaxed">
                               {selectedAction.legal_citation_text}
                             </div>
                             <Link
                               href={selectedAction.legal_provision_url || '/legal-rights'}
-                              className="inline-flex items-center gap-1 text-[11px] text-indigo-400 hover:underline pt-0.5"
+                              className="inline-flex items-center gap-1 text-[11px] text-[#0B5FA5] dark:text-sky-400 hover:underline pt-0.5"
                             >
                               <span>Inspect Section Text in Knowledge Center</span>
                               <ExternalLink className="w-3 h-3" />
@@ -1004,73 +998,73 @@ export default function OfficerActionCenterPage() {
                           </div>
 
                           <div className="space-y-1 pt-1">
-                            <span className="text-[10px] font-mono text-slate-400 uppercase">3. Statutory Deadline</span>
-                            <div className="text-sm font-bold font-mono text-amber-400">
+                            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase">3. Statutory Deadline</span>
+                            <div className="text-sm font-bold font-mono text-[#0B2E59] dark:text-sky-300">
                               {selectedAction.calculated_due_date} ({selectedAction.days_remaining}d remaining)
                             </div>
-                            <div className="text-[11px] text-slate-400">
+                            <div className="text-[11px] text-[#64748B] dark:text-slate-400">
                               Trigger Event: {selectedAction.trigger_event} on {selectedAction.trigger_date}
                             </div>
-                            <div className="text-[11px] font-mono text-rose-300 pt-0.5">
+                            <div className="text-[11px] font-mono text-rose-600 dark:text-rose-400 pt-0.5">
                               Consequence: {selectedAction.consequence_if_overdue}
                             </div>
                           </div>
                         </div>
 
                         {/* 4. CASE & 5. PARCEL & 6. EVIDENCE */}
-                        <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-5 space-y-3">
-                          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                            <span className="text-xs font-mono font-bold text-indigo-400 uppercase">
+                        <div className="rounded-md bg-[#F8FAFC] dark:bg-white/5 border border-[#E2E8F0] dark:border-white/10 p-4 space-y-3">
+                          <div className="flex items-center justify-between border-b border-[#E2E8F0] dark:border-white/10 pb-2">
+                            <span className="text-xs font-mono font-bold text-[#0B2E59] dark:text-sky-300 uppercase">
                               Stages 4–6: Case & Parcel Dossier
                             </span>
-                            <Layers className="w-4 h-4 text-indigo-400" />
+                            <Layers className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400" />
                           </div>
 
                           <div className="space-y-1">
-                            <span className="text-[10px] font-mono text-slate-400 uppercase">4. Acquisition Case</span>
-                            <div className="text-xs font-mono font-bold text-slate-200">
+                            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase">4. Acquisition Case</span>
+                            <div className="text-xs font-mono font-bold text-[#14213D] dark:text-slate-200">
                               Case ID: {selectedAction.case_id}
                             </div>
-                            <div className="text-[11px] text-slate-400">
+                            <div className="text-[11px] text-[#64748B] dark:text-slate-400">
                               Notification Date: {selectedAction.case_notification_date || selectedAction.trigger_date}
                             </div>
                           </div>
 
                           <div className="space-y-1 pt-1">
-                            <span className="text-[10px] font-mono text-slate-400 uppercase">5. Parcel State</span>
-                            <div className="text-xs font-bold text-white">
+                            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase">5. Parcel State</span>
+                            <div className="text-xs font-bold text-[#14213D] dark:text-white">
                               Survey {selectedAction.survey_no || 'N/A'} · {selectedAction.village_name || 'Corridor Village'}
                             </div>
-                            <div className="text-[11px] text-slate-300">
+                            <div className="text-[11px] text-[#334155] dark:text-slate-300">
                               Owner: <strong>{selectedAction.landowner_name || 'Landholder'}</strong> · {selectedAction.area_hectares} Ha
                             </div>
-                            <div className="text-[10px] font-mono text-indigo-400 pt-0.5">
+                            <div className="text-[10px] font-mono text-[#0B5FA5] dark:text-sky-400 pt-0.5">
                               Acquisition Stage: {selectedAction.current_acquisition_status.toUpperCase()}
                             </div>
                           </div>
 
                           <div className="space-y-1.5 pt-1">
-                            <span className="text-[10px] font-mono text-slate-400 uppercase">6. Supporting Evidence</span>
-                            <div className="text-[11px] text-slate-300">
-                              Mandatory Record: <strong className="text-white">{selectedAction.required_evidence_type}</strong>
+                            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase">6. Supporting Evidence</span>
+                            <div className="text-[11px] text-[#334155] dark:text-slate-300">
+                              Mandatory Record: <strong className="text-[#14213D] dark:text-white">{selectedAction.required_evidence_type}</strong>
                             </div>
                             <div className="space-y-1 max-h-32 overflow-y-auto">
                               {selectedAction.evidence_list.length === 0 ? (
-                                <div className="text-[11px] text-amber-400 bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
+                                <div className="text-[11px] text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/20 p-2 rounded border border-amber-200 dark:border-amber-800/40">
                                   No evidence document uploaded. Action remains in BLOCKED/DEFICIENT category.
                                 </div>
                               ) : (
                                 selectedAction.evidence_list.map((doc, dIdx) => (
                                   <div
                                     key={dIdx}
-                                    className="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800 text-[11px]"
+                                    className="flex items-center justify-between p-2 rounded bg-white dark:bg-[#0B1220] border border-[#E2E8F0] dark:border-white/10 text-[11px]"
                                   >
-                                    <span className="text-slate-200 truncate max-w-[140px]">{doc.title}</span>
+                                    <span className="text-[#334155] dark:text-slate-200 truncate max-w-[140px]">{doc.title}</span>
                                     <span
                                       className={`px-1.5 py-0.5 rounded font-mono text-[9px] ${
                                         doc.status === 'VERIFIED'
-                                          ? 'bg-emerald-500/20 text-emerald-400'
-                                          : 'bg-amber-500/20 text-amber-400'
+                                          ? 'bg-emerald-100 text-[#1E7E34] dark:bg-emerald-950/40 dark:text-emerald-300'
+                                          : 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
                                       }`}
                                     >
                                       {doc.status}
@@ -1083,52 +1077,52 @@ export default function OfficerActionCenterPage() {
                         </div>
 
                         {/* 7. MILESTONE & 8. DEPENDENCY & 9. CPM IMPACT */}
-                        <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-5 space-y-3">
-                          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                            <span className="text-xs font-mono font-bold text-rose-400 uppercase">
+                        <div className="rounded-md bg-[#F8FAFC] dark:bg-white/5 border border-[#E2E8F0] dark:border-white/10 p-4 space-y-3">
+                          <div className="flex items-center justify-between border-b border-[#E2E8F0] dark:border-white/10 pb-2">
+                            <span className="text-xs font-mono font-bold text-[#0B2E59] dark:text-sky-300 uppercase">
                               Stages 7–9: CPM Digital Twin
                             </span>
-                            <Sparkles className="w-4 h-4 text-rose-400" />
+                            <Sparkles className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400" />
                           </div>
 
                           <div className="space-y-1">
-                            <span className="text-[10px] font-mono text-slate-400 uppercase">7. Downstream Milestone</span>
-                            <div className="text-xs font-bold text-white font-mono">
+                            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase">7. Downstream Milestone</span>
+                            <div className="text-xs font-bold text-[#14213D] dark:text-white font-mono">
                               {selectedAction.affected_milestone_name || 'Site Possession & Handover'}
                             </div>
-                            <div className="text-[11px] text-slate-400">
+                            <div className="text-[11px] text-[#64748B] dark:text-slate-400">
                               Milestone ID: {selectedAction.affected_milestone_id || 'MS-07'}
                             </div>
                           </div>
 
                           <div className="space-y-1 pt-1">
-                            <span className="text-[10px] font-mono text-slate-400 uppercase">8. Structural Dependency</span>
-                            <p className="text-[11px] text-slate-300 leading-relaxed bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase">8. Structural Dependency</span>
+                            <p className="text-[11px] text-[#334155] dark:text-slate-300 leading-relaxed bg-white dark:bg-[#0B1220] p-2.5 rounded border border-[#E2E8F0] dark:border-white/10">
                               {selectedAction.dependency_summary || `Gating Right-of-Way possession hand-over for parcel ${selectedAction.parcel_id}`}
                             </p>
                           </div>
 
                           <div className="space-y-2 pt-1">
-                            <span className="text-[10px] font-mono text-slate-400 uppercase">9. CPM Delay & Simulation</span>
+                            <span className="text-[10px] font-mono text-[#64748B] dark:text-slate-400 uppercase">9. CPM Delay & Simulation</span>
                             <div className="flex items-center justify-between">
-                              <span className="text-sm font-bold font-mono text-rose-400">
+                              <span className="text-sm font-bold font-mono text-rose-600 dark:text-rose-400">
                                 +{selectedAction.cpm_impact.operational_delay_cpm_days}d Operational Delay
                               </span>
                               {selectedAction.cpm_impact.is_critical_path && (
-                                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 uppercase font-bold">
+                                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-300 uppercase font-bold">
                                   Critical Path
                                 </span>
                               )}
                             </div>
-                            <div className="text-[11px] text-slate-400">
-                              Total Float: <strong className="text-slate-200 font-mono">{selectedAction.cpm_impact.total_float_days} days</strong>
+                            <div className="text-[11px] text-[#64748B] dark:text-slate-400">
+                              Total Float: <strong className="text-[#14213D] dark:text-slate-200 font-mono">{selectedAction.cpm_impact.total_float_days} days</strong>
                             </div>
                             <div className="pt-2">
                               <Link
                                 href={`/intelligence/what-if?parcel=${selectedAction.parcel_id}`}
-                                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 border border-indigo-500/40 text-xs font-semibold transition-colors"
+                                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded bg-[#0B2E59] hover:bg-[#0B5FA5] text-white text-xs font-semibold transition-colors shadow-xs"
                               >
-                                <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                                <Sparkles className="w-3.5 h-3.5" />
                                 <span>Simulate Intervention in What-If Twin</span>
                               </Link>
                             </div>
@@ -1143,23 +1137,23 @@ export default function OfficerActionCenterPage() {
                     <form onSubmit={handleResolveAction} className="space-y-5 max-w-2xl mx-auto">
                       {resolveFeedback && (
                         <div
-                          className={`p-4 rounded-xl text-xs flex items-center gap-2.5 border ${
+                          className={`p-3.5 rounded text-xs flex items-center gap-2.5 border ${
                             resolveFeedback.type === 'success'
-                              ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300'
-                              : 'bg-amber-500/15 border-amber-500/30 text-amber-300'
+                              ? 'bg-emerald-50 border-emerald-200 text-[#1E7E34] dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800/40'
+                              : 'bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800/40'
                           }`}
                         >
                           {resolveFeedback.type === 'success' ? (
-                            <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                            <CheckCircle2 className="w-5 h-5 text-[#1E7E34] dark:text-emerald-400 flex-shrink-0" />
                           ) : (
-                            <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                            <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
                           )}
                           <span>{resolveFeedback.message}</span>
                         </div>
                       )}
 
-                      <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 leading-relaxed space-y-1">
-                        <span className="font-bold text-white block">Statutory Evidence Requirement:</span>
+                      <div className="p-3.5 rounded bg-[#F8FAFC] dark:bg-white/5 border border-[#E2E8F0] dark:border-white/10 text-xs text-[#334155] dark:text-slate-300 leading-relaxed space-y-1">
+                        <span className="font-bold text-[#14213D] dark:text-white block">Statutory Evidence Requirement:</span>
                         <p>
                           A statutory deadline is only marked officially completed when the mandatory legal proof (e.g. Gazette notification publication, award decree, or PFMS deposit receipt) is verified.
                         </p>
@@ -1167,7 +1161,7 @@ export default function OfficerActionCenterPage() {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
-                          <label className="block text-xs font-mono text-slate-300 uppercase">
+                          <label className="block text-xs font-mono text-[#475569] dark:text-slate-300 uppercase">
                             Official Date of Statutory Event:
                           </label>
                           <input
@@ -1175,12 +1169,12 @@ export default function OfficerActionCenterPage() {
                             value={resolveDate}
                             onChange={(e) => setResolveDate(e.target.value)}
                             required
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 font-mono"
+                            className="w-full px-3.5 py-2.5 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 focus:outline-none focus:border-[#1E7E34] font-mono"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="block text-xs font-mono text-slate-300 uppercase">
+                          <label className="block text-xs font-mono text-[#475569] dark:text-slate-300 uppercase">
                             Evidence Document ID / Gazette Citation:
                           </label>
                           <input
@@ -1188,16 +1182,16 @@ export default function OfficerActionCenterPage() {
                             value={resolveEvidenceId}
                             onChange={(e) => setResolveEvidenceId(e.target.value)}
                             placeholder="e.g. DOC-GZ-2025-0814 or Gazette Issue #12"
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 font-mono"
+                            className="w-full px-3.5 py-2.5 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 focus:outline-none focus:border-[#1E7E34] font-mono"
                           />
-                          <p className="text-[10px] text-slate-500">
+                          <p className="text-[10px] text-[#64748B] dark:text-slate-400">
                             If omitted, remarks are saved as progress notes, but deadline remains open.
                           </p>
                         </div>
                       </div>
 
                       <div className="space-y-1">
-                        <label className="block text-xs font-mono text-slate-300 uppercase">
+                        <label className="block text-xs font-mono text-[#475569] dark:text-slate-300 uppercase">
                           Officer Findings & Procedural Remarks:
                         </label>
                         <textarea
@@ -1206,7 +1200,7 @@ export default function OfficerActionCenterPage() {
                           onChange={(e) => setResolveNotes(e.target.value)}
                           required
                           placeholder="State the official procedural steps completed, notification details, panchnama records, or PFMS deposit numbers..."
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
+                          className="w-full px-3.5 py-2.5 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 focus:outline-none focus:border-[#1E7E34]"
                         />
                       </div>
 
@@ -1216,9 +1210,9 @@ export default function OfficerActionCenterPage() {
                           id="markStatutoryComplete"
                           checked={markStatutoryComplete}
                           onChange={(e) => setMarkStatutoryComplete(e.target.checked)}
-                          className="rounded border-slate-700 bg-slate-900 text-emerald-600 focus:ring-0"
+                          className="rounded border-slate-400 bg-white text-[#1E7E34] focus:ring-0"
                         />
-                        <label htmlFor="markStatutoryComplete" className="text-xs text-slate-300">
+                        <label htmlFor="markStatutoryComplete" className="text-xs text-[#334155] dark:text-slate-300">
                           Verify statutory fulfillment and unblock downstream CPM milestone if evidence is verified
                         </label>
                       </div>
@@ -1226,7 +1220,7 @@ export default function OfficerActionCenterPage() {
                       <button
                         type="submit"
                         disabled={isSubmittingResolve}
-                        className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2"
+                        className="w-full py-2.5 rounded bg-[#1E7E34] hover:bg-[#166527] text-white font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
                       >
                         {isSubmittingResolve ? (
                           <>
@@ -1248,28 +1242,28 @@ export default function OfficerActionCenterPage() {
                     <form onSubmit={handleRecordStay} className="space-y-5 max-w-2xl mx-auto">
                       {stayFeedback && (
                         <div
-                          className={`p-4 rounded-xl text-xs flex items-center gap-2.5 border ${
+                          className={`p-3.5 rounded text-xs flex items-center gap-2.5 border ${
                             stayFeedback.type === 'success'
-                              ? 'bg-sky-500/15 border-sky-500/30 text-sky-300'
-                              : 'bg-amber-500/15 border-amber-500/30 text-amber-300'
+                              ? 'bg-sky-50 border-sky-200 text-[#0B2E59] dark:bg-sky-950/30 dark:text-sky-300 dark:border-sky-800/40'
+                              : 'bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800/40'
                           }`}
                         >
                           {stayFeedback.type === 'success' ? (
-                            <CheckCircle2 className="w-5 h-5 text-sky-400 flex-shrink-0" />
+                            <CheckCircle2 className="w-5 h-5 text-[#0B5FA5] dark:text-sky-400 flex-shrink-0" />
                           ) : (
-                            <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                            <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
                           )}
                           <span>{stayFeedback.message}</span>
                         </div>
                       )}
 
-                      <div className="p-3.5 rounded-xl bg-sky-950/20 border border-sky-500/30 text-xs text-sky-200/90 leading-relaxed">
+                      <div className="p-3.5 rounded bg-[#F8FAFC] dark:bg-white/5 border border-[#E2E8F0] dark:border-white/10 text-xs text-[#334155] dark:text-slate-300 leading-relaxed">
                         Under Section 19(7) Explanation and Section 25 Proviso, only verified periods of court injunction or stay are excluded from limitation computation. A citation must be judicially verified before extending the statutory clock.
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
-                          <label className="block text-xs font-mono text-sky-300 uppercase">
+                          <label className="block text-xs font-mono text-[#0B2E59] dark:text-sky-300 uppercase">
                             Court Order Reference / Writ Citation:
                           </label>
                           <input
@@ -1278,12 +1272,12 @@ export default function OfficerActionCenterPage() {
                             onChange={(e) => setStayOrderRef(e.target.value)}
                             required
                             placeholder="e.g. WP(C) No. 4128/2025"
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-sky-500/40 text-xs text-slate-200 focus:outline-none focus:border-sky-400 font-mono"
+                            className="w-full px-3.5 py-2.5 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 focus:outline-none focus:border-[#0B5FA5] font-mono"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="block text-xs font-mono text-slate-300 uppercase">
+                          <label className="block text-xs font-mono text-[#475569] dark:text-slate-300 uppercase">
                             Court / Judicial Forum:
                           </label>
                           <input
@@ -1291,12 +1285,12 @@ export default function OfficerActionCenterPage() {
                             value={stayCourtName}
                             onChange={(e) => setStayCourtName(e.target.value)}
                             placeholder="e.g. High Court of Judicature for Rajasthan at Jaipur"
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-sky-400 font-mono"
+                            className="w-full px-3.5 py-2.5 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 focus:outline-none focus:border-[#0B5FA5] font-mono"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="block text-xs font-mono text-slate-300 uppercase">
+                          <label className="block text-xs font-mono text-[#475569] dark:text-slate-300 uppercase">
                             Date Stay Order Granted:
                           </label>
                           <input
@@ -1304,34 +1298,34 @@ export default function OfficerActionCenterPage() {
                             value={stayOrderDate}
                             onChange={(e) => setStayOrderDate(e.target.value)}
                             required
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-sky-400 font-mono"
+                            className="w-full px-3.5 py-2.5 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 focus:outline-none focus:border-[#0B5FA5] font-mono"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="block text-xs font-mono text-slate-300 uppercase">
+                          <label className="block text-xs font-mono text-[#475569] dark:text-slate-300 uppercase">
                             Date Stay Vacated / Hearing Date (Optional):
                           </label>
                           <input
                             type="date"
                             value={stayVacatedDate}
                             onChange={(e) => setStayVacatedDate(e.target.value)}
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-sky-400 font-mono"
+                            className="w-full px-3.5 py-2.5 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 focus:outline-none focus:border-[#0B5FA5] font-mono"
                           />
-                          <p className="text-[10px] text-slate-500">
+                          <p className="text-[10px] text-[#64748B] dark:text-slate-400">
                             Effective exclusion: {computedStayDays} calendar days
                           </p>
                         </div>
                       </div>
 
                       <div className="space-y-1">
-                        <label className="block text-xs font-mono text-sky-300 uppercase">
+                        <label className="block text-xs font-mono text-[#0B2E59] dark:text-sky-300 uppercase">
                           Judicial Verification Status:
                         </label>
                         <select
                           value={stayVerificationStatus}
                           onChange={(e) => setStayVerificationStatus(e.target.value)}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-sky-500/40 text-xs text-slate-200 focus:outline-none focus:border-sky-400"
+                          className="w-full px-3.5 py-2.5 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 focus:outline-none focus:border-[#0B5FA5]"
                         >
                           <option value="VERIFIED">VERIFIED: Certified copy verified; extend statutory limitation clock</option>
                           <option value="PENDING_VERIFICATION">PENDING_VERIFICATION: Record citation; do NOT extend statutory clock until verified</option>
@@ -1339,7 +1333,7 @@ export default function OfficerActionCenterPage() {
                       </div>
 
                       <div className="space-y-1">
-                        <label className="block text-xs font-mono text-slate-300 uppercase">
+                        <label className="block text-xs font-mono text-[#475569] dark:text-slate-300 uppercase">
                           Judicial Remarks & Injunction Terms:
                         </label>
                         <textarea
@@ -1347,14 +1341,14 @@ export default function OfficerActionCenterPage() {
                           value={stayNotes}
                           onChange={(e) => setStayNotes(e.target.value)}
                           placeholder="Bench details, interim injunction operative terms, status of counter-affidavit..."
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-sky-400"
+                          className="w-full px-3.5 py-2.5 rounded bg-white dark:bg-[#0B1220] border border-[#CBD5E1] dark:border-white/10 text-xs text-[#14213D] dark:text-slate-200 focus:outline-none focus:border-[#0B5FA5]"
                         />
                       </div>
 
                       <button
                         type="submit"
                         disabled={isSubmittingStay}
-                        className="w-full py-3 rounded-xl bg-[#0B5FA5] hover:bg-[#084880] text-white font-bold text-xs shadow-lg shadow-sky-600/20 transition-all flex items-center justify-center gap-2"
+                        className="w-full py-2.5 rounded bg-[#0B2E59] hover:bg-[#0B5FA5] text-white font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
                       >
                         {isSubmittingStay ? (
                           <>

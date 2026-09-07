@@ -92,7 +92,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="h-screen w-full bg-[#F4F6F8] dark:bg-[#07080F] text-[#14213D] dark:text-[#F0F4FF] font-sans antialiased flex flex-col overflow-hidden transition-colors duration-200">
+    <div className="min-h-screen w-full bg-[#F4F6F8] dark:bg-[#07080F] text-[#14213D] dark:text-[#F0F4FF] font-sans antialiased flex flex-col transition-colors duration-200">
       
       {/* ================================================================
           STICKY TOP ADMINISTRATIVE BAR (Utility Strip + Header)
@@ -233,7 +233,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* ================================================================
           MAIN WORKSPACE LAYOUT: Independent Scroll Sidebar & Main Body
           ================================================================ */}
-      <div className="flex-1 flex min-h-0 w-full overflow-hidden">
+      <div className="flex-1 flex w-full">
         <Sidebar />
         <main className="flex-1 min-w-0 flex flex-col justify-between bg-[#F4F6F8] dark:bg-[#07080F]">
           {/* Page Content Container */}

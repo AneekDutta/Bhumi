@@ -97,25 +97,25 @@ export default function TimelinePage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Total Cases</div>
-          <div className="text-2xl font-bold text-[#0B2E59] dark:text-sky-400 mt-1">{totalCases}</div>
+          <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">{totalCases}</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Statutory pipeline cases</div>
         </div>
 
         <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Active Cases</div>
-          <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 mt-1">{activeCases}</div>
+          <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">{activeCases}</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Proceeding within limit</div>
         </div>
 
         <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Lapsed Cases</div>
-          <div className="text-2xl font-bold text-[#B32424] dark:text-rose-400 mt-1">{lapsedCases}</div>
+          <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">{lapsedCases}</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Statutory breach alert</div>
         </div>
 
         <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">Avg Days in Stage</div>
-          <div className="text-2xl font-bold text-[#B36B00] dark:text-amber-400 mt-1">{avgDaysInStage}d</div>
+          <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">{avgDaysInStage}d</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">Turnaround duration</div>
         </div>
       </div>

@@ -181,22 +181,22 @@ export default function ReportsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">{dynamicKpiCards[0].label}</div>
-          <div className="text-2xl font-bold text-[#0B2E59] dark:text-sky-400 mt-1">{dynamicKpiCards[0].val}</div>
+          <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">{dynamicKpiCards[0].val}</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">{dynamicKpiCards[0].sub}</div>
         </div>
         <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">{dynamicKpiCards[1].label}</div>
-          <div className="text-2xl font-bold text-[#1E7E34] dark:text-emerald-400 mt-1">{dynamicKpiCards[1].val}</div>
+          <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">{dynamicKpiCards[1].val}</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">{dynamicKpiCards[1].sub}</div>
         </div>
         <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">{dynamicKpiCards[2].label}</div>
-          <div className="text-2xl font-bold text-[#B32424] dark:text-rose-400 mt-1">{dynamicKpiCards[2].val}</div>
+          <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">{dynamicKpiCards[2].val}</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">{dynamicKpiCards[2].sub}</div>
         </div>
         <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 shadow-sm">
           <div className="text-[11px] font-bold text-[#555555] dark:text-slate-400 uppercase tracking-wider">{dynamicKpiCards[3].label}</div>
-          <div className="text-2xl font-bold text-[#B36B00] dark:text-amber-400 mt-1">{dynamicKpiCards[3].val}</div>
+          <div className="text-2xl font-bold font-mono text-[#14213D] dark:text-white mt-1">{dynamicKpiCards[3].val}</div>
           <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">{dynamicKpiCards[3].sub}</div>
         </div>
       </div>
