@@ -38,6 +38,49 @@ def _sanitize_secret(text: str, secret: str) -> str:
     return text
 
 
+def _clean_and_parse_json(raw: str, default_val: Any = None) -> Any:
+    """Robust JSON parser that handles markdown code fences, trailing commas, and partial structures."""
+    if not raw:
+        return default_val if default_val is not None else {}
+    txt = raw.strip()
+    if txt.startswith("```"):
+        lines = txt.splitlines()
+        if lines and lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].startswith("```"):
+            lines = lines[:-1]
+        txt = "\n".join(lines).strip()
+    try:
+        return json.loads(txt)
+    except Exception:
+        pass
+
+    first_brace = txt.find("{")
+    first_bracket = txt.find("[")
+    if first_brace != -1 and (first_bracket == -1 or first_brace < first_bracket):
+        last_brace = txt.rfind("}")
+        if last_brace != -1 and last_brace > first_brace:
+            candidate = txt[first_brace : last_brace + 1]
+            candidate = re.sub(r",\s*([\}\]])", r"\1", candidate)
+            try:
+                return json.loads(candidate)
+            except Exception:
+                pass
+    elif first_bracket != -1:
+        last_bracket = txt.rfind("]")
+        if last_bracket != -1 and last_bracket > first_bracket:
+            candidate = txt[first_bracket : last_bracket + 1]
+            candidate = re.sub(r",\s*([\}\]])", r"\1", candidate)
+            try:
+                return json.loads(candidate)
+            except Exception:
+                pass
+
+    if default_val is not None:
+        return default_val
+    return {"answer": txt}
+
+
 class GeminiAIProvider(AIProvider):
     """
     Production-grade generative AI provider leveraging Google Gemini models
@@ -85,8 +128,9 @@ class GeminiAIProvider(AIProvider):
     ) -> Any:
         """Executes Gemini generate_content with bounded backoff and resilient model failover for transient 503/429 spikes."""
         candidate_models = [self._active_model]
-        if "gemini-3.5-flash" not in candidate_models:
-            candidate_models.append("gemini-3.5-flash")
+        for fallback_m in ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-flash-lite-latest"]:
+            if fallback_m not in candidate_models:
+                candidate_models.append(fallback_m)
         if self.model_name not in candidate_models:
             candidate_models.append(self.model_name)
 
@@ -199,7 +243,7 @@ Provide an evidence-grounded response in valid JSON matching this schema:
             response = await self._generate_with_retry(prompt, config)
 
             raw_text = response.text or "{}"
-            data = json.loads(raw_text)
+            data = _clean_and_parse_json(raw_text, {})
 
             # Map raw actions to RecommendedAction objects
             rec_actions = []
@@ -314,7 +358,7 @@ Return valid JSON:
             )
             response = await self._generate_with_retry(prompt, config)
 
-            data = json.loads(response.text or "{}")
+            data = _clean_and_parse_json(response.text or "{}", {})
 
             chronology_items = []
             for ch in data.get("chronology", []):
@@ -387,7 +431,7 @@ Return valid JSON:
             )
             response = await self._generate_with_retry(prompt, config)
 
-            data = json.loads(response.text or "[]")
+            data = _clean_and_parse_json(response.text or "[]", [])
             if not isinstance(data, list):
                 data = [data]
 
@@ -453,7 +497,7 @@ Return valid JSON:
             )
             response = await self._generate_with_retry(prompt, config)
 
-            data = json.loads(response.text or "{}")
+            data = _clean_and_parse_json(response.text or "{}", {})
             return NLWhatIfScenario(
                 raw_query=clean_query,
                 is_supported=data.get("is_supported", True),
