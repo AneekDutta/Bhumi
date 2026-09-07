@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { 
   FileText, 
   MapPin, 
@@ -107,13 +108,13 @@ export function LandownerGrievanceReviewCard({
 
   // STRICT FILTER: Admin Implementation Queue ONLY admits complaints that have been verified by Field Officer
   const verifiedComplaints = complaints.filter((c) => {
-    const s = c.status || "";
+    const s = (c.status || "").toUpperCase();
     return (
-      s === "Verified by Field Officer" ||
-      s === "Field Verified" ||
-      s === "Implementation Initiated" ||
-      s === "Implementation Completed" ||
-      s === "RESOLVED"
+      (s.includes("VERIFIED") ||
+       s.includes("IMPLEMENTATION") ||
+       s.includes("RESOLVED")) &&
+      !s.includes("DECLINED") &&
+      !s.includes("REJECTED")
     );
   });
 
@@ -356,7 +357,18 @@ export function LandownerGrievanceReviewCard({
                   <div className="pb-2 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B5FA5]">
                     <div className="text-[9px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">14-Digit Parcel ID</div>
                     <div className="text-xs font-bold text-[#0B5FA5] dark:text-sky-400 font-mono mt-0.5">
-                      {parcelId}
+                      {parcelId && parcelId !== "N/A" ? (
+                        <Link
+                          href={`/parcels/${encodeURIComponent(parcelId)}`}
+                          className="hover:underline inline-flex items-center gap-1"
+                          title="View Authoritative Parcel Record"
+                        >
+                          <span>{parcelId}</span>
+                          <ExternalLink className="w-2.5 h-2.5 opacity-70" />
+                        </Link>
+                      ) : (
+                        parcelId
+                      )}
                     </div>
                   </div>
 

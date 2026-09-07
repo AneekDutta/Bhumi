@@ -107,11 +107,11 @@ export default function ParcelsPage() {
             <span>View in Landowner GIS</span>
           </Link>
           <Link
-            href="/landowner"
+            href="/landowner-cases"
             className="px-3.5 py-2 rounded-[4px] bg-[#0B2E59] hover:bg-[#082242] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
           >
             <FileText className="w-3.5 h-3.5" />
-            <span>Citizen Portal</span>
+            <span>Landowner Grievances</span>
           </Link>
         </div>
       </div>
@@ -215,7 +215,9 @@ export default function ParcelsPage() {
                   return (
                     <tr key={p.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
                       <td className="px-4 py-3 font-mono font-bold text-[#0B5FA5] dark:text-sky-400">
-                        #{pid}
+                        <Link href={`/parcels/${encodeURIComponent(pid)}`} className="hover:underline">
+                          #{pid}
+                        </Link>
                       </td>
                       <td className="px-4 py-3 font-medium text-[#14213D] dark:text-white">
                         {owner}
@@ -245,13 +247,21 @@ export default function ParcelsPage() {
                         {docCount} Document{docCount === 1 ? '' : 's'}
                       </td>
                       <td className="px-4 py-3">
-                        <Link
-                          href={`/landowner-gis?id=${pid}`}
-                          className="font-bold text-[#0B5FA5] dark:text-sky-400 hover:underline inline-flex items-center gap-1"
-                        >
-                          <span>GIS Boundary</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </Link>
+                        <div className="flex items-center gap-3">
+                          <Link
+                            href={`/parcels/${encodeURIComponent(pid)}`}
+                            className="font-bold text-[#0B2E59] dark:text-sky-300 hover:underline inline-flex items-center gap-1"
+                          >
+                            <span>Dossier</span>
+                          </Link>
+                          <Link
+                            href={`/landowner-gis?id=${encodeURIComponent(pid)}`}
+                            className="font-bold text-[#0B5FA5] dark:text-sky-400 hover:underline inline-flex items-center gap-1"
+                          >
+                            <span>GIS</span>
+                            <ArrowRight className="w-3 h-3" />
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   );

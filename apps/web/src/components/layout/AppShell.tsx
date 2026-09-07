@@ -156,7 +156,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="w-full px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
           
           {/* LEFT: CALA Generic Administrative Seal + Bilingual System Title */}
-          <Link href="/" className="flex items-center gap-3.5 group min-w-0">
+          <Link href="/dashboard" className="flex items-center gap-3.5 group min-w-0">
             <CalaSealLogo size={42} className="w-10 h-10 flex-shrink-0 drop-shadow-xs" variant="light" />
 
             {/* Bilingual Ministry / Authority Title */}

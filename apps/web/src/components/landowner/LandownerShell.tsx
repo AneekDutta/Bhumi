@@ -13,6 +13,7 @@ import {
   ArrowLeft
 } from "lucide-react";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
+import { ExitButton } from "@/components/common/ExitButton";
 
 interface LandownerShellProps {
   children: ReactNode;
@@ -125,31 +126,10 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
             </div>
           </div>
 
-          {/* Right Action Icons: Role Switchers & Theme */}
+          {/* Right Action Icons: Theme & Secure Exit */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
-            <button
-              type="button"
-              onClick={() => {
-                window.location.href = "/field/dashboard";
-              }}
-              title="Switch to Field Officer Console"
-              className="p-1.5 rounded-[4px] bg-white/10 text-white/90 hover:text-white border border-white/15 transition-colors cursor-pointer"
-            >
-              <Smartphone className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                window.location.href = "/";
-              }}
-              title="Switch to Desktop Admin Console"
-              className="p-1.5 rounded-[4px] bg-white/10 text-white/90 hover:text-white border border-white/15 transition-colors cursor-pointer"
-            >
-              <Monitor className="w-3.5 h-3.5" />
-            </button>
-
             <ThemeToggle variant="icon" className="!bg-white/10 !border-white/15 !text-white hover:!bg-white/20 !rounded-[4px]" />
+            <ExitButton variant="header" className="!bg-white/10 !border-white/15 !text-rose-200 hover:!bg-white/20 !rounded-[4px]" />
           </div>
         </div>
 

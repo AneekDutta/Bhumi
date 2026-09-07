@@ -21,10 +21,20 @@ export function ExitButton({ variant = "header", className = "" }: ExitButtonPro
       console.warn("Sign out notification:", e);
     }
     // Expire session cookies cleanly
-    document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    // Redirect to login
-    window.location.href = "/login";
+    document.cookie = "bhumi_user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+    document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+    document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+
+    // Redirect to respective login gateway
+    if (typeof window !== "undefined") {
+      if (window.location.pathname.startsWith("/landowner")) {
+        window.location.href = "/landowner/login";
+      } else if (window.location.pathname.startsWith("/field")) {
+        window.location.href = "/field/login";
+      } else {
+        window.location.href = "/login";
+      }
+    }
   };
 
   if (variant === "sidebar") {

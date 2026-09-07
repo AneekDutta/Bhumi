@@ -68,6 +68,14 @@ export interface LandownerComplaintPayload {
     timestamp: string | number;
     is_simulated?: boolean;
   };
+  proximity_verification?: {
+    lat: number;
+    lng: number;
+    accuracy?: number;
+    distance_meters?: number | null;
+    verified?: boolean;
+    captured_at?: string;
+  } | null;
   landowner_reported_boundary?: {
     points: LandownerBoundaryPoint[];
     polygon?: any;
@@ -1208,6 +1216,7 @@ class SupabaseDataService {
         accuracy: payload.landowner_reported_location?.accuracy ?? payload.gps?.accuracy ?? payload.gps_accuracy ?? 5.0,
         captured_at: payload.gps?.captured_at || nowIso
       },
+      proximity_verification: payload.proximity_verification || null,
       submitted_at: nowIso,
       status: initialStatus,
       assigned_officer: {
@@ -1317,6 +1326,7 @@ class SupabaseDataService {
               gps: parsed.gps || parsed.landowner_reported_location || null,
               document_evidence: parsed.document_evidence || (docs.length > 0 ? docs[0] : null),
               landowner_documents: docs,
+              proximity_verification: parsed.proximity_verification || null,
               landowner_reported_location: parsed.landowner_reported_location || parsed.gps || null,
               landowner_reported_boundary: parsed.landowner_reported_boundary || null,
               landowner_declared_area: parsed.landowner_declared_area || null,
@@ -2596,41 +2606,47 @@ class SupabaseDataService {
       ? `Physical on-site inspection completed on ${new Date(parsedDesc.field_verification.verified_at || nowIso).toLocaleDateString("en-IN")} by ${parsedDesc.field_verification.officer_name} (${parsedDesc.field_verification.officer_id}). Findings: "${parsedDesc.field_verification.notes}". Ground cadastral boundary verified.`
       : `Ground inspection validated cadastral alignment and boundary corners.`;
 
-    const resolutionNotice = {
-      notice_reference: noticeRef,
-      notice_date: nowIso,
-      owner_name: ownerName,
-      contact_village: village,
-      parcel_id: parcelId,
-      survey_number: surveyNumber,
-      complaint_id: complaintId,
-      subject: `Statutory Acquisition Determination & Redressal Notice under RFCTLARR Act 2013`,
-      grievance_summary: parsedDesc.description || "Citizen grievance regarding land acquisition and compensation award.",
-      field_verification_summary: fieldSummary,
-      simulation_conclusion: simConclusion,
-      final_decision: `The Competent Authority has passed an order resolving all disputes for Survey Plot #${surveyNumber}. Total statutory award of ₹${(payload.statutory_award_inr || 0).toLocaleString()} approved. Possession status: ${payload.possession_status || "Possession Handed Over"}.`,
-      resolution_remarks: payload.resolution_remarks.trim(),
-      statutory_award_inr: payload.statutory_award_inr || (sim ? sim.total_statutory_award_inr : 0),
-      area_acquired_acres: resolvedAcres,
-      what_if_simulation_id: payload.simulation_id || (sim ? sim.simulation_id : null),
-      next_steps: payload.next_steps || [
-        "Direct electronic payment via PFMS e-Kuber into Aadhaar-linked bank account within 14 working days.",
-        "Revenue mutation order issued to Tehsildar for updating RoR / Jamabandi records.",
-        "Clearance of statutory Right-of-Way for National Infrastructure Corridor."
-      ],
-      authority_name: adminName,
-      notice_delivered: true
-    };
+    const resolutionRemarks = (payload.resolution_remarks || (payload as any).resolution_notes || "Statutory determination and award adjustment finalized under RFCTLARR Act 2013.").trim();
+    const orderRef = (payload as any).order_reference || `CALA-DET-2026-${complaintId.slice(-6).toUpperCase()}`;
 
-    parsedDesc.status = "RESOLVED";
-    parsedDesc.resolution = {
-      resolution_action: "RESOLVED",
-      resolution_comment: payload.resolution_remarks.trim(),
-      admin_name: adminName,
-      resolved_at: nowIso,
-      statutory_data: {
-        compensation_assessed: payload.statutory_award_inr || 0,
-        compensation_paid: payload.statutory_award_inr || 0,
+    const resolutionNotice = {
+        notice_reference: noticeRef,
+        order_reference: orderRef,
+        notice_date: nowIso,
+        owner_name: ownerName,
+        contact_village: village,
+        parcel_id: parcelId,
+        survey_number: surveyNumber,
+        complaint_id: complaintId,
+        subject: `Statutory Acquisition Determination & Redressal Notice under RFCTLARR Act 2013`,
+        grievance_summary: parsedDesc.description || "Citizen grievance regarding land acquisition and compensation award.",
+        field_verification_summary: fieldSummary,
+        simulation_conclusion: simConclusion,
+        final_decision: `The Competent Authority has passed an order resolving all disputes for Survey Plot #${surveyNumber}. Total statutory award of ₹${(payload.statutory_award_inr || 0).toLocaleString()} approved. Possession status: ${payload.possession_status || "Possession Handed Over"}. Order Ref: ${orderRef}`,
+        resolution_remarks: resolutionRemarks,
+        resolution_notes: resolutionRemarks,
+        statutory_award_inr: payload.statutory_award_inr || (sim ? sim.total_statutory_award_inr : 0),
+        area_acquired_acres: resolvedAcres,
+        what_if_simulation_id: payload.simulation_id || (sim ? sim.simulation_id : null),
+        next_steps: payload.next_steps || [
+          "Direct electronic payment via PFMS e-Kuber into Aadhaar-linked bank account within 14 working days.",
+          "Revenue mutation order issued to Tehsildar for updating RoR / Jamabandi records.",
+          "Clearance of statutory Right-of-Way for National Infrastructure Corridor."
+        ],
+        authority_name: adminName,
+        notice_delivered: true
+      };
+
+      parsedDesc.status = "RESOLVED";
+      parsedDesc.resolution = {
+        resolution_action: "RESOLVED",
+        resolution_comment: resolutionRemarks,
+        admin_name: adminName,
+        resolved_at: nowIso,
+        order_reference: orderRef,
+        statutory_data: {
+          compensation_assessed: payload.statutory_award_inr || 0,
+          compensation_paid: payload.statutory_award_inr || 0,
         area_acquired_acres: resolvedAcres,
         possession_status: payload.possession_status || "Possession Handed Over"
       }

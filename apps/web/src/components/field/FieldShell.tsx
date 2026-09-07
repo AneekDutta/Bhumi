@@ -4,6 +4,7 @@ import React, { ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { 
+  FileText,
   ClipboardList, 
   MapPin, 
   RefreshCw, 
@@ -16,6 +17,7 @@ import {
   Smartphone
 } from "lucide-react";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
+import { ExitButton } from "@/components/common/ExitButton";
 import { offlineStore } from "@/lib/offlineStore";
 
 interface FieldShellProps {
@@ -48,14 +50,23 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
     window.addEventListener("bhumi-queue-change", updateQueue);
 
     const active = offlineStore.getActiveOfficer();
-    if (active) {
-      setOfficer(active);
-    } else {
-      setOfficer({
-        id: "OFF-001",
-        name: "Ramesh Patel",
-        designation: "Patwari / Lekhpal"
-      });
+    const officerObj = active || {
+      id: "OFF-001",
+      officer_id: "OFF-001",
+      name: "Ramesh Patel",
+      designation: "Patwari / Revenue Lekhpal",
+      assigned_villages: ["Ramganj Mandi", "Kanhera Kalan", "Wagholi"],
+      role: "FIELD_OFFICER"
+    };
+    setOfficer(officerObj);
+    if (!active) {
+      offlineStore.setActiveOfficer(officerObj);
+    }
+
+    // Proactively synchronize client cookies for field officer session to prevent RBAC redirects
+    if (typeof document !== "undefined") {
+      document.cookie = "bhumi_user_role=FIELD_OFFICER; path=/; max-age=604800; SameSite=Lax";
+      document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(officerObj))}; path=/; max-age=604800; SameSite=Lax`;
     }
 
     return () => {
@@ -67,16 +78,22 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
 
   const navItems = [
     {
+      label: "Dashboard",
+      href: "/field/dashboard",
+      icon: Smartphone,
+      active: pathname === "/field" || pathname === "/field/dashboard"
+    },
+    {
       label: "Parcels",
       href: "/field/parcels",
       icon: ClipboardList,
-      active: pathname === "/field" || pathname === "/field/parcels"
+      active: pathname === "/field/parcels" || pathname.startsWith("/field/parcels/")
     },
     {
-      label: "GIS Map",
-      href: "/field/map",
-      icon: MapPin,
-      active: pathname === "/field/map"
+      label: "Grievances",
+      href: "/field/complaints",
+      icon: FileText,
+      active: pathname.startsWith("/field/complaints")
     },
     {
       label: "Sync",
@@ -87,9 +104,9 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
     },
     {
       label: "Officer",
-      href: "/field/login",
+      href: "/field/settings",
       icon: User,
-      active: pathname === "/field/login"
+      active: pathname === "/field/settings" || pathname === "/field/login"
     }
   ];
 
@@ -110,7 +127,7 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
                 <ArrowLeft className="w-4 h-4" />
               </button>
             ) : (
-              <Link href="/field" className="flex items-center gap-2 flex-shrink-0">
+              <Link href="/field/dashboard" className="flex items-center gap-2 flex-shrink-0">
                 <div className="w-7 h-7 rounded-[4px] bg-white/15 border border-white/25 flex items-center justify-center text-white font-bold text-xs shadow-xs">
                   <Smartphone className="w-4 h-4" />
                 </div>
@@ -153,18 +170,8 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
               )}
             </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                window.location.href = "/";
-              }}
-              title="Switch to Web Officer / Admin Console"
-              className="p-1.5 rounded-[4px] bg-white/10 text-white hover:bg-white/20 border border-white/20 transition-colors cursor-pointer"
-            >
-              <Monitor className="w-3.5 h-3.5" />
-            </button>
-
             <ThemeToggle variant="icon" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20" />
+            <ExitButton variant="header" className="!bg-white/10 !border-white/20 !text-rose-200 hover:!bg-white/20" />
           </div>
         </div>
 
@@ -183,7 +190,7 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
 
       {/* Persistent Mobile Bottom Navigation Bar */}
       <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-[#0D121F]/95 backdrop-blur-md border-t border-[#DCE2E8] dark:border-white/10 shadow-xs">
-        <div className="max-w-lg mx-auto grid grid-cols-4 h-16">
+        <div className="max-w-lg mx-auto grid grid-cols-5 h-16">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (

@@ -1,5 +1,12 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import {
+  UserRole,
+  isPublicRoute,
+  getRequiredRoleForRoute,
+  canRoleAccessRoute,
+  ROLE_LOGIN_PATHS,
+} from '@/lib/routes';
 
 export async function updateSession(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ykxcoihvfzgykrkabbdy.supabase.co';
@@ -32,164 +39,202 @@ export async function updateSession(request: NextRequest) {
     // Network or offline fallback
   }
 
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
+  const fullPathWithQuery = `${pathname}${search}`;
 
-  // Never redirect API calls to HTML login pages
+  // Never redirect internal API calls to HTML pages
   if (pathname.startsWith('/api/')) {
     return supabaseResponse;
   }
 
-  // Public paths that don't require auth
-  const publicPaths = [
-    '/login', 
-    '/auth/callback', 
-    '/auth/confirm', 
-    '/field/login', 
-    '/landowner/login', 
-    '/landowner/register',
-    '/highway-register',
-    '/gazette',
-    '/calculator',
-    '/grievance',
-    '/reports',
-    '/projects',
-  ];
-  const isPublicPath = pathname === '/' || publicPaths.some((p) => pathname.startsWith(p));
-
-  // Check for either Supabase user or verified session cookie
-  const officerSession = request.cookies.get('bhumi_officer_session')?.value;
-  const landownerSession = request.cookies.get('bhumi_landowner_session')?.value;
-  let parsedRole: string | null = user?.user_metadata?.role || null;
-
-  if (!parsedRole && landownerSession) {
-    try {
-      const decoded = decodeURIComponent(landownerSession);
-      const parsed = JSON.parse(decoded);
-      parsedRole = parsed?.role || 'LANDOWNER';
-    } catch {
-      try {
-        const parsed = JSON.parse(landownerSession);
-        parsedRole = parsed?.role || 'LANDOWNER';
-      } catch {
-        parsedRole = 'LANDOWNER';
-      }
-    }
-  }
-
-  if (!parsedRole && officerSession) {
-    try {
-      const decoded = decodeURIComponent(officerSession);
-      const parsed = JSON.parse(decoded);
-      parsedRole = parsed?.role || null;
-    } catch {
-      try {
-        const parsed = JSON.parse(officerSession);
-        parsedRole = parsed?.role || null;
-      } catch {}
-    }
-  }
-
-  const isAuthenticated = !!user || !!officerSession || !!landownerSession;
-
-  // 1. Support instantaneous role switching via query param
+  // =============================================================================
+  // 1. DEV / EVALUATION ROLE SWITCHING HELPER
+  // =============================================================================
   if (request.nextUrl.searchParams.get('switch') === 'admin') {
-    const url = request.nextUrl.clone();
-    url.searchParams.delete('switch');
-    url.pathname = '/dashboard';
-    const response = NextResponse.redirect(url);
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.searchParams.delete('switch');
+    redirectUrl.pathname = '/dashboard';
+    const response = NextResponse.redirect(redirectUrl);
     const sessionData = {
       officer_id: 'OFF-CALA-01',
       name: 'Sh. Rajesh Kumar',
       email: 'officer@bhumi.gov.in',
-      role: 'ADMIN'
+      role: 'ADMIN',
     };
+    response.cookies.set('bhumi_user_role', 'ADMIN', { path: '/', maxAge: 86400 * 7, sameSite: 'lax' });
     response.cookies.set('bhumi_officer_session', encodeURIComponent(JSON.stringify(sessionData)), {
       path: '/',
       maxAge: 86400 * 7,
       sameSite: 'lax',
     });
-    return response;
-  }
-
-  if (request.nextUrl.searchParams.get('switch') === 'landowner') {
-    const url = request.nextUrl.clone();
-    url.searchParams.delete('switch');
-    url.pathname = '/landowner/home';
-    const response = NextResponse.redirect(url);
-    const sessionData = {
-      owner_id: 'O00004',
-      name: 'Geeta Meena',
-      contact_village: 'Chandwas (V03)',
-      role: 'LANDOWNER'
-    };
-    response.cookies.set('bhumi_landowner_session', encodeURIComponent(JSON.stringify(sessionData)), {
-      path: '/',
-      maxAge: 86400 * 7,
-      sameSite: 'lax',
-    });
+    response.cookies.delete('bhumi_landowner_session');
     return response;
   }
 
   if (request.nextUrl.searchParams.get('switch') === 'field') {
-    const url = request.nextUrl.clone();
-    url.searchParams.delete('switch');
-    url.pathname = '/field/dashboard';
-    const response = NextResponse.redirect(url);
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.searchParams.delete('switch');
+    redirectUrl.pathname = '/field/dashboard';
+    const response = NextResponse.redirect(redirectUrl);
     const sessionData = {
       officer_id: 'OFF-001',
       name: 'Ramesh Patel',
       designation: 'Patwari / Revenue Lekhpal',
       assigned_villages: ['Ramganj Mandi', 'Kanhera Kalan', 'Wagholi'],
-      role: 'FIELD_OFFICER'
+      role: 'FIELD_OFFICER',
     };
+    response.cookies.set('bhumi_user_role', 'FIELD_OFFICER', { path: '/', maxAge: 86400 * 7, sameSite: 'lax' });
     response.cookies.set('bhumi_officer_session', encodeURIComponent(JSON.stringify(sessionData)), {
       path: '/',
       maxAge: 86400 * 7,
       sameSite: 'lax',
     });
+    response.cookies.delete('bhumi_landowner_session');
     return response;
   }
 
-  // 2. If unauthenticated and accessing a protected path:
-  const isCitizenPath = (pathname === '/landowner' || pathname.startsWith('/landowner/')) && !pathname.startsWith('/landowner-');
-  const isFieldOfficerPath = pathname === '/field' || pathname.startsWith('/field/');
-
-  if (!isAuthenticated && !isPublicPath) {
-    const url = request.nextUrl.clone();
-    if (isFieldOfficerPath) {
-      url.pathname = '/field/login';
-    } else if (isCitizenPath) {
-      url.pathname = '/landowner/login';
-    } else {
-      url.pathname = '/login';
-    }
-    return NextResponse.redirect(url);
+  if (request.nextUrl.searchParams.get('switch') === 'landowner') {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.searchParams.delete('switch');
+    redirectUrl.pathname = '/landowner/home';
+    const response = NextResponse.redirect(redirectUrl);
+    const sessionData = {
+      owner_id: 'O00004',
+      name: 'Geeta Meena',
+      contact_village: 'Chandwas (V03)',
+      role: 'LANDOWNER',
+    };
+    response.cookies.set('bhumi_user_role', 'LANDOWNER', { path: '/', maxAge: 86400 * 7, sameSite: 'lax' });
+    response.cookies.set('bhumi_landowner_session', encodeURIComponent(JSON.stringify(sessionData)), {
+      path: '/',
+      maxAge: 86400 * 7,
+      sameSite: 'lax',
+    });
+    response.cookies.delete('bhumi_officer_session');
+    return response;
   }
 
-  // 2. Strict Role-Based Access Control (RBAC):
-  // Field Officers are strictly restricted to /field/* routes
-  if (parsedRole === 'FIELD_OFFICER') {
-    if (isPublicPath) {
-      return supabaseResponse;
-    }
-    if (!isFieldOfficerPath) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/field/dashboard';
-      return NextResponse.redirect(url);
+  // =============================================================================
+  // 2. STRICT SESSION & ROLE DETECTION
+  // =============================================================================
+  const userRoleCookie = request.cookies.get('bhumi_user_role')?.value;
+  const officerSessionCookie = request.cookies.get('bhumi_officer_session')?.value;
+  const landownerSessionCookie = request.cookies.get('bhumi_landowner_session')?.value;
+
+  let parsedRole: UserRole | null = null;
+
+  // Check explicit cookie role first
+  if (userRoleCookie === 'ADMIN' || userRoleCookie === 'FIELD_OFFICER' || userRoleCookie === 'LANDOWNER') {
+    parsedRole = userRoleCookie as UserRole;
+  }
+
+  // Check Supabase metadata if role is not determined
+  if (!parsedRole && user?.user_metadata?.role) {
+    const metaRole = String(user.user_metadata.role).toUpperCase();
+    if (metaRole === 'ADMIN' || metaRole === 'FIELD_OFFICER' || metaRole === 'LANDOWNER') {
+      parsedRole = metaRole as UserRole;
     }
   }
 
-  // Landowners are strictly restricted to /landowner/* routes
-  if (parsedRole === 'LANDOWNER') {
-    if (isPublicPath) {
-      return supabaseResponse;
-    }
-    if (!isCitizenPath) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/landowner/home';
-      return NextResponse.redirect(url);
+  // Fallback to officer session payload
+  if (!parsedRole && officerSessionCookie) {
+    try {
+      const decoded = decodeURIComponent(officerSessionCookie);
+      const parsed = JSON.parse(decoded);
+      if (parsed?.role === 'ADMIN' || parsed?.role === 'FIELD_OFFICER') {
+        parsedRole = parsed.role;
+      }
+    } catch {
+      try {
+        const parsed = JSON.parse(officerSessionCookie);
+        if (parsed?.role === 'ADMIN' || parsed?.role === 'FIELD_OFFICER') {
+          parsedRole = parsed.role;
+        }
+      } catch {}
     }
   }
 
+  // Fallback to landowner session payload
+  if (!parsedRole && landownerSessionCookie) {
+    try {
+      const decoded = decodeURIComponent(landownerSessionCookie);
+      const parsed = JSON.parse(decoded);
+      if (parsed?.role === 'LANDOWNER' || parsed?.user_id || parsed?.owner_id) {
+        parsedRole = 'LANDOWNER';
+      }
+    } catch {
+      try {
+        const parsed = JSON.parse(landownerSessionCookie);
+        if (parsed?.role === 'LANDOWNER' || parsed?.user_id || parsed?.owner_id) {
+          parsedRole = 'LANDOWNER';
+        }
+      } catch {}
+    }
+  }
+
+  // =============================================================================
+  // 3. PUBLIC ROUTES
+  // =============================================================================
+  if (isPublicRoute(pathname)) {
+    // If authenticated user visits THEIR OWN login page, redirect to their dashboard
+    if (pathname === '/login' && parsedRole === 'ADMIN') {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = '/dashboard';
+      return NextResponse.redirect(redirectUrl);
+    }
+    if (pathname === '/field/login' && parsedRole === 'FIELD_OFFICER') {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = '/field/dashboard';
+      return NextResponse.redirect(redirectUrl);
+    }
+    if (pathname === '/landowner/login' && parsedRole === 'LANDOWNER') {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = '/landowner/home';
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    // Otherwise, allow public route access freely (no cookie mutations, no silent bounces)
+    return supabaseResponse;
+  }
+
+  // =============================================================================
+  // 4. PROTECTED ROUTES ACCESS CONTROL
+  // =============================================================================
+  const requiredRole = getRequiredRoleForRoute(pathname);
+
+  // Case A: Unauthenticated access to protected route -> Redirect to role-specific login with ?next=
+  if (!parsedRole) {
+    const redirectUrl = request.nextUrl.clone();
+    const loginGateway = requiredRole ? ROLE_LOGIN_PATHS[requiredRole] : '/login';
+    redirectUrl.pathname = loginGateway;
+    redirectUrl.search = '';
+    redirectUrl.searchParams.set('next', fullPathWithQuery);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  // Case B: Authenticated access to root portal index paths -> Clean redirect to dashboard
+  if (pathname === '/field') {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/field/dashboard';
+    return NextResponse.redirect(redirectUrl);
+  }
+  if (pathname === '/landowner') {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/landowner/home';
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  // Case C: Role Mismatch -> Explicit 403 /unauthorized page (NEVER silent fallback redirect)
+  if (!canRoleAccessRoute(parsedRole, pathname)) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/unauthorized';
+    redirectUrl.search = '';
+    if (requiredRole) redirectUrl.searchParams.set('required', requiredRole);
+    redirectUrl.searchParams.set('current', parsedRole);
+    redirectUrl.searchParams.set('from', fullPathWithQuery);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  // Case D: Role matches required permissions -> Proceed
   return supabaseResponse;
 }

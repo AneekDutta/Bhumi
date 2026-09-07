@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Search, Filter, AlertTriangle, CheckCircle2, ChevronRight, Activity, MapPin } from 'lucide-react';
 
-export function PortfolioTable({ projects }: { projects: any[] }) {
+export function PortfolioTable({ projects, viewOnly = false }: { projects: any[]; viewOnly?: boolean }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterMode, setFilterMode] = useState<'ALL' | 'CRITICAL' | 'DELAYED' | 'ON_SCHEDULE'>('ALL');
 
@@ -78,7 +78,9 @@ export function PortfolioTable({ projects }: { projects: any[] }) {
               <th scope="col" className="px-3 py-3 text-right">Contiguous Clusters</th>
               <th scope="col" className="px-3 py-3 text-right">Critical Overrun</th>
               <th scope="col" className="px-3 py-3 text-center">Urgency</th>
-              <th scope="col" className="px-4 py-3 text-right min-w-[180px]">Operational Actions</th>
+              {!viewOnly && (
+                <th scope="col" className="px-4 py-3 text-right min-w-[180px]">Operational Actions</th>
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-[#DCE2E8] dark:divide-white/5">
@@ -91,13 +93,19 @@ export function PortfolioTable({ projects }: { projects: any[] }) {
                 <tr key={pId} className="hover:bg-[#F8FAFC] dark:hover:bg-white/[0.02] transition-colors group">
                   <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">
                     <div className="flex flex-col">
-                      <Link
-                        href={`/projects/${pId}`}
-                        className="hover:text-[#0B2E59] dark:hover:text-sky-400 font-bold text-slate-900 dark:text-slate-100 focus:outline-none transition-colors flex items-center gap-1.5"
-                      >
-                        <span>{p.name}</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#0B2E59] dark:group-hover:text-sky-400 group-hover:translate-x-0.5 transition-all" />
-                      </Link>
+                      {viewOnly ? (
+                        <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                          <span>{p.name}</span>
+                        </div>
+                      ) : (
+                        <Link
+                          href={`/projects/${pId}`}
+                          className="hover:text-[#0B2E59] dark:hover:text-sky-400 font-bold text-slate-900 dark:text-slate-100 focus:outline-none transition-colors flex items-center gap-1.5"
+                        >
+                          <span>{p.name}</span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#0B2E59] dark:group-hover:text-sky-400 group-hover:translate-x-0.5 transition-all" />
+                        </Link>
+                      )}
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
                           ID: {pId.substring(0, 8)}
@@ -142,24 +150,26 @@ export function PortfolioTable({ projects }: { projects: any[] }) {
                     </span>
                   </td>
 
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Link
-                        href={`/projects/${pId}/impact`}
-                        className="text-xs font-semibold px-2.5 py-1 rounded-[3px] bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-slate-200 border border-[#DCE2E8] dark:border-white/10 transition-colors flex items-center gap-1 shadow-xs"
-                      >
-                        <Activity className="w-3 h-3" />
-                        <span>Impact</span>
-                      </Link>
-                      <Link
-                        href={`/projects/${pId}/spatial`}
-                        className="text-xs font-semibold px-2.5 py-1 rounded-[3px] bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#1E7E34] dark:text-emerald-300 border border-[#DCE2E8] dark:border-white/10 transition-colors flex items-center gap-1 shadow-xs"
-                      >
-                        <MapPin className="w-3 h-3" />
-                        <span>GIS</span>
-                      </Link>
-                    </div>
-                  </td>
+                  {!viewOnly && (
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Link
+                          href={`/projects/${pId}/impact`}
+                          className="text-xs font-semibold px-2.5 py-1 rounded-[3px] bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-slate-200 border border-[#DCE2E8] dark:border-white/10 transition-colors flex items-center gap-1 shadow-xs"
+                        >
+                          <Activity className="w-3 h-3" />
+                          <span>Impact</span>
+                        </Link>
+                        <Link
+                          href={`/projects/${pId}/spatial`}
+                          className="text-xs font-semibold px-2.5 py-1 rounded-[3px] bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#1E7E34] dark:text-emerald-300 border border-[#DCE2E8] dark:border-white/10 transition-colors flex items-center gap-1 shadow-xs"
+                        >
+                          <MapPin className="w-3 h-3" />
+                          <span>GIS</span>
+                        </Link>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               );
             })}

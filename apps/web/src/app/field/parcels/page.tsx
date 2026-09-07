@@ -142,14 +142,15 @@ export default function AssignedParcelsPage() {
             filtered.map((parcel) => {
               const pId = parcel.parcel_id || parcel.id;
               return (
-                <div
+                <Link
                   key={pId}
-                  className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 hover:border-[#0B2E59] rounded-[4px] p-4 shadow-xs transition-all space-y-3"
+                  href={`/field/parcels/${pId}`}
+                  className="block bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 hover:border-[#0B2E59] dark:hover:border-sky-500 rounded-[4px] p-4 shadow-xs transition-all space-y-3 cursor-pointer group"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm text-[#14213D] dark:text-white font-mono">
+                        <span className="font-bold text-sm text-[#14213D] dark:text-white font-mono group-hover:text-[#0B2E59] dark:group-hover:text-sky-400 transition-colors">
                           Parcel #{pId}
                         </span>
                         <span className="text-[10px] font-mono px-2 py-0.5 rounded-[3px] bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300 font-bold">
@@ -173,11 +174,12 @@ export default function AssignedParcelsPage() {
 
                   <div className="flex items-center justify-between text-xs text-[#5A6A80] dark:text-slate-400 border-t border-[#DCE2E8] dark:border-white/10 pt-2 font-mono">
                     <span>Owner: <strong className="text-[#14213D] dark:text-white">{parcel.owner_name}</strong></span>
-                    <span className="text-[#0B2E59] dark:text-sky-400 text-[11px] font-semibold">
-                      Demarcated Polygon
+                    <span className="text-[#0B2E59] dark:text-sky-400 text-[11px] font-semibold flex items-center gap-1">
+                      <span>Inspect Parcel</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </span>
                   </div>
-                </div>
+                </Link>
               );
             })
           )}

@@ -109,11 +109,14 @@ export default function LandownerRegisterPage() {
       // 3. Set Session Cookies
       const sessionPayload = {
         user_id: userId,
+        owner_id: userId,
         name: displayName,
         email: cleanEmail,
         role: "LANDOWNER"
       };
+      document.cookie = "bhumi_user_role=LANDOWNER; path=/; max-age=604800; SameSite=Lax";
       document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+      document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
       setSuccessMsg("Account registered successfully! Entering Citizen Portal...");
       setTimeout(() => {

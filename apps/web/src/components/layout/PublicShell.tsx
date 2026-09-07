@@ -133,17 +133,40 @@ export function PublicShell({ children }: PublicShellProps) {
       {/* ========================================================================= */}
       {/* 3. OFFICIAL BULLETIN TICKER STRIP                                         */}
       {/* ========================================================================= */}
-      <div className="bg-[#EBF3FC] dark:bg-[#0A1A2E] text-xs border-b border-[#D0E2F2] dark:border-sky-950 px-4 py-1.5 flex items-center gap-3 overflow-hidden">
-        <span className="bg-[#B32424] text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded-none flex-shrink-0 flex items-center gap-1">
-          <Bell className="w-3 h-3" />
-          <span>{t("ticker.heading")}</span>
-        </span>
-        <div className="overflow-x-auto whitespace-nowrap text-[#14213D] dark:text-slate-200 text-[11px] font-medium no-scrollbar">
-          <span className="font-bold text-[#0B2E59] dark:text-sky-300">{t("ticker.item1")}</span> &nbsp;&bull;&nbsp; 
-          <span className="font-bold text-[#1E7E34] dark:text-emerald-400">{t("ticker.item2")}</span> &nbsp;&bull;&nbsp; 
-          <span className="font-bold text-[#0B2E59] dark:text-sky-300">{t("ticker.item3")}</span>
+      <div className="bg-[#EBF3FC] dark:bg-[#0A1A2E] text-xs border-b border-[#D0E2F2] dark:border-sky-950 px-3 sm:px-4 py-1.5 flex items-center gap-3 overflow-hidden select-none">
+        {/* Fixed Red Official Bulletins Label on Left */}
+        <div className="flex-shrink-0 z-10 bg-[#EBF3FC] dark:bg-[#0A1A2E] flex items-center pr-2 border-r border-[#D0E2F2] dark:border-sky-900">
+          <span className="bg-[#B32424] text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded-none flex items-center gap-1.5 shadow-xs uppercase tracking-wider">
+            <Bell className="w-3 h-3 text-amber-300 animate-pulse flex-shrink-0" />
+            <span>{t("ticker.heading")}</span>
+          </span>
+        </div>
+
+        {/* Continuous Looping Horizontal News Ticker Track (pauses on hover) */}
+        <div className="relative flex-1 overflow-hidden" title="Official Gazette & Statutory Updates">
+          <div className="animate-gov-ticker text-[#14213D] dark:text-slate-200 text-[11px] font-medium cursor-default">
+            {/* Primary sequence */}
+            <div className="inline-flex items-center gap-4 pr-6">
+              <span className="font-bold text-[#0B2E59] dark:text-sky-300">{t("ticker.item1")}</span>
+              <span className="text-slate-400 font-bold">&bull;</span>
+              <span className="font-bold text-[#1E7E34] dark:text-emerald-400">{t("ticker.item2")}</span>
+              <span className="text-slate-400 font-bold">&bull;</span>
+              <span className="font-bold text-[#0B2E59] dark:text-sky-300">{t("ticker.item3")}</span>
+              <span className="text-slate-400 font-bold">&bull;</span>
+            </div>
+            {/* Duplicate sequence for seamless 0% -> -50% continuous loop without visible jump */}
+            <div className="inline-flex items-center gap-4 pr-6" aria-hidden="true">
+              <span className="font-bold text-[#0B2E59] dark:text-sky-300">{t("ticker.item1")}</span>
+              <span className="text-slate-400 font-bold">&bull;</span>
+              <span className="font-bold text-[#1E7E34] dark:text-emerald-400">{t("ticker.item2")}</span>
+              <span className="text-slate-400 font-bold">&bull;</span>
+              <span className="font-bold text-[#0B2E59] dark:text-sky-300">{t("ticker.item3")}</span>
+              <span className="text-slate-400 font-bold">&bull;</span>
+            </div>
+          </div>
         </div>
       </div>
+
 
       {/* ========================================================================= */}
       {/* 4. HORIZONTAL NAVY NAVIGATION BAR (Dedicated Multi-Page Routing)          */}

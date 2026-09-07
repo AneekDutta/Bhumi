@@ -80,11 +80,11 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
     <div className="flex flex-col gap-6">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-[#5A6A80] dark:text-slate-400 font-mono">
-        <Link href="/" className="hover:text-[#0B2E59] dark:hover:text-sky-300">Dashboard</Link>
+        <Link href="/dashboard" className="hover:text-[#0B2E59] dark:hover:text-sky-300">Dashboard</Link>
+        <span>/</span>
+        <Link href="/parcels" className="hover:text-[#0B2E59] dark:hover:text-sky-300">Parcels</Link>
         <span>/</span>
         <Link href="/projects" className="hover:text-[#0B2E59] dark:hover:text-sky-300">Corridors</Link>
-        <span>/</span>
-        <Link href={`/projects/${activeParcel.project_id || 'P-NH927A'}`} className="hover:text-[#0B2E59] dark:hover:text-sky-300">Corridor</Link>
         <span>/</span>
         <span className="text-[#14213D] dark:text-[#F0F4FF] font-semibold">Survey No. {activeParcel.survey_no || activeParcel.survey_number}</span>
       </nav>

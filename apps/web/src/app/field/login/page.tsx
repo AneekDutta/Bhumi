@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { getSafeRedirectUrl } from "@/lib/routes";
 import { 
   UserCheck, 
   ShieldCheck, 
@@ -45,8 +46,9 @@ const DEMO_OFFICERS: Officer[] = [
   }
 ];
 
-export default function FieldLoginPage() {
+function FieldLoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [officers, setOfficers] = useState<Officer[]>(DEMO_OFFICERS);
   const [loading, setLoading] = useState(false);
   const [loginMode, setLoginMode] = useState<"DEMO" | "CREDENTIALS">("DEMO");
@@ -86,11 +88,13 @@ export default function FieldLoginPage() {
     offlineStore.setActiveOfficer(sessionData);
 
     // Set cookie for middleware route isolation
+    document.cookie = "bhumi_user_role=FIELD_OFFICER; path=/; max-age=604800; SameSite=Lax";
     document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(sessionData))}; path=/; max-age=604800; SameSite=Lax`;
+    document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
     setTimeout(() => {
-      router.push("/field/dashboard");
-      router.refresh();
+      const destination = getSafeRedirectUrl("FIELD_OFFICER", searchParams.get("next"));
+      window.location.href = destination;
     }, 500);
   };
 
@@ -376,17 +380,13 @@ export default function FieldLoginPage() {
             <p className="text-[11px] text-[#5A6A80] dark:text-slate-400">
               Are you a CALA Director or State Administrator?
             </p>
-            <button
-              type="button"
-              onClick={() => {
-                document.cookie = "bhumi_officer_session=officer%40bhumi.gov.in; path=/; max-age=86400; SameSite=Lax";
-                window.location.href = "/";
-              }}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0B2E59] dark:text-sky-400 hover:underline transition-colors cursor-pointer mt-0.5"
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0B2E59] dark:text-sky-400 hover:underline transition-colors mt-0.5"
             >
               <Monitor className="w-3.5 h-3.5 text-[#0B2E59] dark:text-sky-400" />
-              <span>Go to Desktop Admin Command Console →</span>
-            </button>
+              <span>Go to Desktop Admin Command Gateway →</span>
+            </Link>
           </div>
         </div>
 
@@ -396,5 +396,17 @@ export default function FieldLoginPage() {
         BHUMI · PostGIS & NetworkX Causal Intelligence Engine
       </div>
     </div>
+  );
+}
+
+export default function FieldLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F4F6F8] dark:bg-[#07080F] flex items-center justify-center text-xs font-mono text-slate-400">
+        Loading Field Officer Authentication...
+      </div>
+    }>
+      <FieldLoginContent />
+    </Suspense>
   );
 }

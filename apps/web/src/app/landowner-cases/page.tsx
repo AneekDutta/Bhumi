@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { 
   Users, 
   ShieldCheck, 
@@ -21,10 +22,14 @@ import { getLandownerComplaints } from '@/lib/api';
 import { LandownerGrievanceReviewCard } from '@/components/documents/LandownerGrievanceReviewCard';
 import { PortfolioMap } from '@/components/dashboard/PortfolioMap';
 
-export default function LandownerCasesPage() {
+function LandownerCasesContent() {
+  const searchParams = useSearchParams();
+  const targetCaseId = searchParams.get('caseId');
+  const targetParcelId = searchParams.get('parcelId');
+
   const [complaints, setComplaints] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
+  const [selectedParcelId, setSelectedParcelId] = useState<string | null>(targetParcelId || null);
 
   const fetchRealData = async () => {
     setLoading(true);
@@ -43,29 +48,51 @@ export default function LandownerCasesPage() {
     fetchRealData();
   }, []);
 
+  useEffect(() => {
+    if (complaints.length > 0) {
+      if (targetParcelId) {
+        setSelectedParcelId(targetParcelId);
+      } else if (targetCaseId) {
+        const found = complaints.find(c => c.id === targetCaseId || c.complaint_id === targetCaseId);
+        if (found) {
+          setSelectedParcelId(found.parcel_id || found.id);
+        }
+      }
+      if (targetCaseId) {
+        setTimeout(() => {
+          const el = document.getElementById(`complaint-card-${targetCaseId}`);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 400);
+      }
+    }
+  }, [complaints, targetCaseId, targetParcelId]);
+
   // Filter verified complaints that have passed Field Officer verification
   const verifiedComplaints = complaints.filter(c => {
-    const s = c.status || '';
+    const s = (c.status || '').toUpperCase();
     return (
-      s === 'Verified by Field Officer' ||
-      s === 'Field Verified' ||
-      s === 'Implementation Initiated' ||
-      s === 'Implementation Completed' ||
-      s === 'RESOLVED'
+      (s.includes('VERIFIED') ||
+       s.includes('IMPLEMENTATION') ||
+       s.includes('RESOLVED')) &&
+      !s.includes('DECLINED') &&
+      !s.includes('REJECTED')
     );
   });
 
-  const pendingInitiation = verifiedComplaints.filter(c => 
-    c.status === 'Verified by Field Officer' || c.status === 'Field Verified'
-  ).length;
+  const pendingInitiation = verifiedComplaints.filter(c => {
+    const s = (c.status || '').toUpperCase();
+    return s.includes('VERIFIED') && !s.includes('IMPLEMENTATION') && !s.includes('RESOLVED');
+  }).length;
 
-  const inProgress = verifiedComplaints.filter(c => 
-    c.status === 'Implementation Initiated'
-  ).length;
+  const inProgress = verifiedComplaints.filter(c => {
+    const s = (c.status || '').toUpperCase();
+    return s.includes('INITIATED');
+  }).length;
 
-  const completed = verifiedComplaints.filter(c => 
-    c.status === 'Implementation Completed' || c.status === 'RESOLVED'
-  ).length;
+  const completed = verifiedComplaints.filter(c => {
+    const s = (c.status || '').toUpperCase();
+    return s.includes('COMPLETED') || s.includes('RESOLVED');
+  }).length;
 
   const totalAcres = verifiedComplaints.reduce((sum, c) => {
     const ac = c.landowner_declared_area?.acres || (c.area_sqm ? c.area_sqm / 4046.86 : 0);
@@ -215,5 +242,17 @@ export default function LandownerCasesPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function LandownerCasesPage() {
+  return (
+    <Suspense fallback={
+      <div className="py-20 text-center text-xs font-mono text-slate-400">
+        Loading Landowner Grievances &amp; Cases...
+      </div>
+    }>
+      <LandownerCasesContent />
+    </Suspense>
   );
 }

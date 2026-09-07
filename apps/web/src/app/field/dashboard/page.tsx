@@ -53,7 +53,16 @@ export default function FieldDashboardPage() {
 
   useEffect(() => {
     const active = offlineStore.getActiveOfficer();
-    setOfficer(active || { id: "OFF-001", name: "Ramesh Patel", designation: "Patwari / Revenue Lekhpal" });
+    const officerObj = active || { id: "OFF-001", officer_id: "OFF-001", name: "Ramesh Patel", designation: "Patwari / Revenue Lekhpal", role: "FIELD_OFFICER" };
+    setOfficer(officerObj);
+    if (!active) {
+      offlineStore.setActiveOfficer(officerObj);
+    }
+
+    if (typeof document !== "undefined") {
+      document.cookie = "bhumi_user_role=FIELD_OFFICER; path=/; max-age=604800; SameSite=Lax";
+      document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(officerObj))}; path=/; max-age=604800; SameSite=Lax`;
+    }
 
     const q = offlineStore.getAll().filter((i) => !i.synced);
     setQueueCount(q.length);
@@ -197,29 +206,41 @@ export default function FieldDashboardPage() {
 
         {/* Operational KPI Metrics - Flat Government Ledger */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-1">
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B36B00] space-y-0.5">
-            <span className="text-[#B36B00] dark:text-amber-400 block text-[10px] font-bold uppercase tracking-wider">PENDING CASES</span>
+          <Link
+            href="/field/complaints?filter=PENDING"
+            className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B36B00] space-y-0.5 hover:bg-amber-500/5 transition-colors block cursor-pointer group"
+          >
+            <span className="text-[#B36B00] dark:text-amber-400 block text-[10px] font-bold uppercase tracking-wider group-hover:underline">PENDING CASES</span>
             <span className="text-2xl font-bold font-mono text-[#B36B00] dark:text-amber-400 block">{pendingComplaints.length}</span>
-            <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Awaiting Review</span>
-          </div>
+            <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Awaiting Review &rarr;</span>
+          </Link>
 
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34] space-y-0.5">
-            <span className="text-[#1E7E34] dark:text-emerald-400 block text-[10px] font-bold uppercase tracking-wider">VERIFIED CASES</span>
+          <Link
+            href="/field/complaints?filter=VERIFIED"
+            className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#1E7E34] space-y-0.5 hover:bg-emerald-500/5 transition-colors block cursor-pointer group"
+          >
+            <span className="text-[#1E7E34] dark:text-emerald-400 block text-[10px] font-bold uppercase tracking-wider group-hover:underline">VERIFIED CASES</span>
             <span className="text-2xl font-bold font-mono text-[#1E7E34] dark:text-emerald-400 block">{verifiedComplaints.length}</span>
-            <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Approved</span>
-          </div>
+            <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Approved &rarr;</span>
+          </Link>
 
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B32424] space-y-0.5">
-            <span className="text-[#B32424] dark:text-rose-400 block text-[10px] font-bold uppercase tracking-wider">DECLINED CASES</span>
+          <Link
+            href="/field/complaints?filter=REJECTED"
+            className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#B32424] space-y-0.5 hover:bg-rose-500/5 transition-colors block cursor-pointer group"
+          >
+            <span className="text-[#B32424] dark:text-rose-400 block text-[10px] font-bold uppercase tracking-wider group-hover:underline">DECLINED CASES</span>
             <span className="text-2xl font-bold font-mono text-[#B32424] dark:text-rose-400 block">{rejectedComplaints.length}</span>
-            <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Rejected</span>
-          </div>
+            <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Rejected &rarr;</span>
+          </Link>
 
-          <div className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B2E59] dark:border-sky-500 space-y-0.5">
-            <span className="text-[#0B2E59] dark:text-sky-400 block text-[10px] font-bold uppercase tracking-wider">TOTAL CASES</span>
+          <Link
+            href="/field/complaints"
+            className="pb-3 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#0B2E59] dark:border-sky-500 space-y-0.5 hover:bg-sky-500/5 transition-colors block cursor-pointer group"
+          >
+            <span className="text-[#0B2E59] dark:text-sky-400 block text-[10px] font-bold uppercase tracking-wider group-hover:underline">TOTAL CASES</span>
             <span className="text-2xl font-bold font-mono text-[#14213D] dark:text-white block">{complaints.length}</span>
-            <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Assigned</span>
-          </div>
+            <span className="text-[10px] text-[#5A6A80] dark:text-slate-400 block">Assigned &rarr;</span>
+          </Link>
         </div>
 
         {/* Quick Action Navigation Buttons */}
@@ -291,26 +312,33 @@ export default function FieldDashboardPage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {parcels.slice(0, 3).map((p) => (
-                <div
-                  key={p.parcel_id}
-                  className="block p-3.5 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 space-y-1.5 shadow-xs"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-[#14213D] dark:text-white text-xs font-mono">
-                      Parcel #{p.parcel_id}
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-[3px] border bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300 font-bold">
-                      {p.status || "Registered"}
-                    </span>
-                  </div>
+              {parcels.slice(0, 3).map((p) => {
+                const pid = p.parcel_id || p.id;
+                return (
+                  <Link
+                    key={pid}
+                    href={`/field/parcels/${pid}`}
+                    className="block p-3.5 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 hover:border-[#0B2E59] dark:hover:border-sky-500 space-y-1.5 shadow-xs transition-colors group cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[#14213D] dark:text-white text-xs font-mono group-hover:text-[#0B2E59] dark:group-hover:text-sky-400 transition-colors">
+                        Parcel #{pid}
+                      </span>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-[3px] border bg-[#E8F5E9] dark:bg-emerald-950/40 border-[#C8E6C9] dark:border-emerald-800/40 text-[#1E7E34] dark:text-emerald-300 font-bold">
+                        {p.status || "Registered"}
+                      </span>
+                    </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-[#5A6A80] dark:text-slate-400">
-                    <span>{p.village_name || "Corridor Sector"} · {p.owner_name || "Landowner"}</span>
-                    <span className="text-[#0B2E59] dark:text-sky-400 font-mono font-bold">{p.area_acres || 0} Acres</span>
-                  </div>
-                </div>
-              ))}
+                    <div className="flex items-center justify-between text-[11px] text-[#5A6A80] dark:text-slate-400">
+                      <span>{p.village_name || "Corridor Sector"} · {p.owner_name || "Landowner"}</span>
+                      <span className="text-[#0B2E59] dark:text-sky-400 font-mono font-bold flex items-center gap-1">
+                        <span>{p.area_acres || 0} Acres</span>
+                        <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           )}
         </div>

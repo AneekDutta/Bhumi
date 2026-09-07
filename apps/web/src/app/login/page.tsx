@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/I18nContext";
 import { PublicShell } from "@/components/layout/PublicShell";
+import { getSafeRedirectUrl, UserRole } from "@/lib/routes";
 
 type AuthMode = "LOGIN" | "FORGOT_PASSWORD" | "UPDATE_PASSWORD";
 
@@ -86,13 +87,15 @@ function LoginPageContent() {
       role: "ADMIN",
     };
 
+    document.cookie = "bhumi_user_role=ADMIN; path=/; max-age=604800; SameSite=Lax";
     document.cookie = `bhumi_officer_session=${encodeURIComponent(
       JSON.stringify(sessionData)
     )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+    document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
     setTimeout(() => {
-      const next = searchParams.get("next") || "/dashboard";
-      window.location.href = next;
+      const destination = getSafeRedirectUrl("ADMIN", searchParams.get("next"));
+      window.location.href = destination;
     }, 500);
   };
 
@@ -146,17 +149,34 @@ function LoginPageContent() {
       }
 
       if (data.session) {
-        const role = data.user?.user_metadata?.role;
-        setSuccessMsg("Security clearance accepted. Loading operational twin...");
+        const role = (data.user?.user_metadata?.role as string)?.toUpperCase() || "ADMIN";
+        setSuccessMsg("Security clearance accepted. Loading operational console...");
+
+        document.cookie = `bhumi_user_role=${role}; path=/; max-age=604800; SameSite=Lax`;
+
+        if (role === "LANDOWNER") {
+          const sessionPayload = {
+            user_id: data.user.id,
+            name: data.user.user_metadata?.full_name || data.user.email?.split("@")[0],
+            email: data.user.email,
+            role: "LANDOWNER",
+          };
+          document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=604800; SameSite=Lax`;
+          document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+        } else {
+          const sessionData = {
+            officer_id: data.user.id,
+            name: data.user.user_metadata?.full_name || "CALA Officer",
+            email: data.user.email,
+            role: role,
+          };
+          document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(sessionData))}; path=/; max-age=604800; SameSite=Lax`;
+          document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+        }
+
         setTimeout(() => {
-          if (role === "LANDOWNER") {
-            window.location.href = "/landowner/home";
-          } else if (role === "FIELD_OFFICER") {
-            window.location.href = "/field/dashboard";
-          } else {
-            const next = searchParams.get("next") || "/dashboard";
-            window.location.href = next;
-          }
+          const destination = getSafeRedirectUrl(role as UserRole, searchParams.get("next"));
+          window.location.href = destination;
         }, 500);
       }
     } catch {

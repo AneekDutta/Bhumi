@@ -42,6 +42,12 @@ export default function FieldComplaintsListPage() {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const p = new URLSearchParams(window.location.search).get("filter")?.toUpperCase();
+      if (p === "PENDING" || p === "VERIFIED" || p === "REJECTED") {
+        setFilter(p as any);
+      }
+    }
     loadData();
   }, []);
 

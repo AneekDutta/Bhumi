@@ -207,6 +207,12 @@ export default function LandownerComplaintDetailPage() {
                   </span>
                 </div>
               </div>
+              {complaint.proximity_verification?.distance_meters != null && (
+                <div className="text-[11px] font-mono text-[#1E7E34] dark:text-emerald-400 pt-1.5 border-t border-[#DCE2E8] dark:border-white/10 flex items-center justify-between">
+                  <span>Proximity to Registered Parcel:</span>
+                  <span className="font-bold">✓ Within {complaint.proximity_verification.distance_meters} meters</span>
+                </div>
+              )}
             </div>
           )}
 
@@ -319,22 +325,59 @@ export default function LandownerComplaintDetailPage() {
             <div className="space-y-2 pt-1">
               <button
                 onClick={() => generateLandownerNoticePdf(buildLandownerNoticeData(complaint))}
-                className="w-full py-2 px-3 rounded-[4px] bg-[#1E7E34] hover:bg-[#166527] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
+                className="w-full py-2.5 px-3 rounded-[4px] bg-[#1E7E34] hover:bg-[#166527] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Download Official Resolution Notice (PDF)</span>
               </button>
 
-              {(complaint.what_if_simulation || complaint.simulation_record) && (
-                <button
-                  onClick={() => generateCaseReportPdf(buildCaseReportData(complaint))}
-                  className="w-full py-2 px-3 rounded-[4px] bg-white dark:bg-[#0D121F] hover:bg-[#F8FAFC] text-[#0B2E59] dark:text-sky-300 font-semibold text-xs flex items-center justify-center gap-2 border border-[#DCE2E8] dark:border-white/10 transition-all cursor-pointer"
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>Download Complete Case Report &amp; What-If File (PDF)</span>
-                </button>
-              )}
+              <button
+                onClick={() => generateCaseReportPdf(buildCaseReportData(complaint))}
+                className="w-full py-2.5 px-3 rounded-[4px] bg-white dark:bg-[#0D121F] hover:bg-[#F8FAFC] text-[#0B2E59] dark:text-sky-300 font-semibold text-xs flex items-center justify-center gap-2 border border-[#DCE2E8] dark:border-white/10 transition-all cursor-pointer shadow-xs"
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>Download Complete Case File &amp; Statutory Assessment (PDF)</span>
+              </button>
             </div>
+          </div>
+        )}
+
+        {/* Grievance Declined Card (If rejected / declined by Field Officer) */}
+        {(isRejected || complaint.rejection) && (
+          <div className="bg-[#FFEBEE] dark:bg-rose-950/20 border border-[#FFCDD2] dark:border-rose-800/50 rounded-[4px] p-4 space-y-3 shadow-xs">
+            <div className="flex items-center justify-between border-b border-[#FFCDD2] dark:border-rose-800/40 pb-2.5">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-[4px] bg-[#B32424] text-white flex items-center justify-center">
+                  <XCircle className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-mono uppercase text-[#B32424] dark:text-rose-300 font-bold block">
+                    Field Verification Unit &bull; Ground Determination
+                  </span>
+                  <h2 className="text-xs font-bold text-[#14213D] dark:text-white">
+                    Grievance Formally Declined
+                  </h2>
+                </div>
+              </div>
+              <span className="text-[10px] font-mono font-bold bg-[#B32424] text-white px-2 py-0.5 rounded-[3px] uppercase">
+                FIELD DECLINED
+              </span>
+            </div>
+
+            <div className="bg-white dark:bg-[#0D121F] p-3 rounded-[4px] border border-[#FFCDD2] dark:border-rose-800/30 space-y-2">
+              <div className="text-xs text-[#14213D] dark:text-slate-300 leading-relaxed">
+                <strong className="text-[#B32424] dark:text-rose-400">Ground Finding: </strong>
+                {complaint.rejection?.reason || "Field inspection confirmed registered cadastral demarcation is valid. Discrepancy claim disallowed."}
+              </div>
+              <div className="text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 pt-1 border-t border-[#DCE2E8] dark:border-white/10 flex items-center justify-between">
+                <span>Inspecting Officer: <strong className="text-[#14213D] dark:text-slate-200">{complaint.rejection?.officer_name || "Revenue Officer"} ({complaint.rejection?.officer_id || "OFF-001"})</strong></span>
+                <span>{new Date(complaint.rejection?.rejected_at || complaint.updated_at || Date.now()).toLocaleDateString("en-IN")}</span>
+              </div>
+            </div>
+
+            <p className="text-[11px] text-[#5A6A80] dark:text-slate-400 leading-relaxed italic">
+              Notice: This case was reviewed on site and declined. The matter is permanently closed in statutory records and has not been forwarded to the CALA Admin implementation queue.
+            </p>
           </div>
         )}
 

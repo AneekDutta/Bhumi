@@ -272,7 +272,13 @@ export default function FieldVerificationOverviewPage() {
               >
                 <div>
                   <div className="font-bold text-[#14213D] dark:text-white">
-                    Parcel #{c.parcel_id} &bull; {c.owner_name}
+                    {c.parcel_id ? (
+                      <Link href={`/parcels/${encodeURIComponent(c.parcel_id)}`} className="hover:underline text-[#0B5FA5] dark:text-sky-400">
+                        Parcel #{c.parcel_id}
+                      </Link>
+                    ) : (
+                      <span>Parcel #N/A</span>
+                    )} &bull; {c.owner_name}
                   </div>
                   <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
                     Status: <span className="text-[#1E7E34] dark:text-emerald-400 font-semibold">{c.status}</span> &bull; Field notes: &ldquo;{c.field_verification_notes || c.resolution_notes || 'Verified on ground'}&rdquo;
@@ -280,7 +286,7 @@ export default function FieldVerificationOverviewPage() {
                 </div>
 
                 <Link
-                  href="/landowner-cases"
+                  href={`/landowner-cases?caseId=${encodeURIComponent(c.id || '')}&parcelId=${encodeURIComponent(c.parcel_id || '')}`}
                   className="font-bold text-[#0B5FA5] dark:text-sky-400 hover:underline flex items-center gap-1"
                 >
                   <span>Admin Implementation Directives</span>

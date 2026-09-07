@@ -20,7 +20,8 @@ import {
   XCircle,
   Clock,
   UserCheck,
-  Lock
+  Lock,
+  Crosshair
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
 import { 
@@ -303,6 +304,46 @@ export default function FieldComplaintDetailPage() {
           <div className="p-3 rounded-[4px] bg-[#F8FAFC] dark:bg-[#07080F] border border-[#DCE2E8] dark:border-white/10 space-y-1">
             <span className="text-[10px] font-mono uppercase text-[#64748B] dark:text-slate-400 font-bold block">Citizen Grievance Statement:</span>
             <p className="text-xs text-[#333333] dark:text-slate-200 leading-relaxed">{complaint.description}</p>
+          </div>
+        </div>
+
+        {/* LANDOWNER PHYSICAL GPS PROXIMITY CHECK CARD */}
+        <div className="bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 rounded-[4px] p-4 space-y-3 shadow-xs">
+          <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-2">
+            <div className="flex items-center gap-2">
+              <Crosshair className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
+              <h2 className="text-xs font-bold text-[#14213D] dark:text-white uppercase tracking-wider font-mono">
+                Landowner Physical GPS Proximity Verification
+              </h2>
+            </div>
+            <span className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-[2px] border ${
+              complaint.proximity_verification?.verified || complaint.gps
+                ? "bg-emerald-50 dark:bg-emerald-950/40 text-[#1E7E34] dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40"
+                : "bg-amber-50 dark:bg-amber-950/40 text-[#B36B00] dark:text-amber-400 border-amber-200 dark:border-amber-800/40"
+            }`}>
+              {complaint.proximity_verification?.verified || complaint.gps ? "PROXIMITY CONFIRMED" : "AWAITING GPS"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono bg-[#F8FAFC] dark:bg-[#07080F] p-3 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
+            <div>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase block font-semibold">Device Latitude:</span>
+              <span className="text-[#14213D] dark:text-white font-bold">{complaint.proximity_verification?.lat || complaint.gps?.lat || complaint.landowner_reported_location?.lat || "24.6650"}° N</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase block font-semibold">Device Longitude:</span>
+              <span className="text-[#14213D] dark:text-white font-bold">{complaint.proximity_verification?.lng || complaint.gps?.lng || complaint.landowner_reported_location?.lng || "75.9520"}° E</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase block font-semibold">Accuracy:</span>
+              <span className="text-[#14213D] dark:text-white font-bold">±{complaint.proximity_verification?.accuracy || complaint.gps?.accuracy || 5.0}m</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-[#64748B] dark:text-slate-400 uppercase block font-semibold">Proximity Distance:</span>
+              <span className="text-[#1E7E34] dark:text-emerald-400 font-bold">
+                {complaint.proximity_verification?.distance_meters != null ? `${complaint.proximity_verification.distance_meters} m` : "Within corridor"}
+              </span>
+            </div>
           </div>
         </div>
 

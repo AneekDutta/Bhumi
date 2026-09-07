@@ -306,3 +306,27 @@ html.dark .input:focus {
   color: #FFFFFF;
   border-color: #0B2E59;
 }
+
+/* ==========================================================================
+   OFFICIAL GOVERNMENT BULLETIN NEWS TICKER
+   ========================================================================== */
+@keyframes govTicker {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-gov-ticker {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: govTicker 38s linear infinite;
+  will-change: transform;
+}
+
+.animate-gov-ticker:hover {
+  animation-play-state: paused;
+}
+

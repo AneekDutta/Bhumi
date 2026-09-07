@@ -51,9 +51,14 @@ export default function FieldSettingsPage() {
 
   const handleSignOut = async () => {
     offlineStore.clearActiveOfficer();
-    const supabase = await import("@/lib/supabase/client").then(m => m.createClient());
-    await supabase.auth.signOut();
-    router.push("/login");
+    try {
+      const supabase = await import("@/lib/supabase/client").then(m => m.createClient());
+      await supabase.auth.signOut();
+    } catch {}
+    document.cookie = "bhumi_user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+    document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+    document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+    window.location.href = "/field/login";
   };
 
   return (
@@ -141,12 +146,14 @@ export default function FieldSettingsPage() {
           <button
             type="button"
             onClick={() => {
-              window.location.href = "/";
+              document.cookie = "bhumi_user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+              document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+              window.location.href = "/login";
             }}
             className="w-full py-2.5 px-4 bg-[#E6F0FA] dark:bg-sky-950/30 hover:bg-[#D4E6F7] text-[#0B2E59] dark:text-sky-300 rounded-[4px] text-xs font-bold border border-[#B8D5ED] dark:border-sky-800/40 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
           >
             <ExternalLink className="w-3.5 h-3.5" />
-            <span>Switch to Desktop Web Officer Portal</span>
+            <span>Switch to Desktop Admin Console</span>
           </button>
 
           <Link

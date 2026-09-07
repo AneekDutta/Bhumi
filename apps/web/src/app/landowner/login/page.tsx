@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { getSafeRedirectUrl } from "@/lib/routes";
 import { 
   Users, 
   ArrowRight, 
@@ -18,8 +19,9 @@ import { createOrUpdateLandownerProfile } from "@/lib/api";
 import { toUuid } from "@/lib/supabase/supabaseService";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 
-export default function LandownerLoginPage() {
+function LandownerLoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
 
   // Input states
@@ -30,6 +32,31 @@ export default function LandownerLoginPage() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Instant Demo Citizen Login
+  const handleInstantDemoLogin = () => {
+    setLoading(true);
+    setErrorMsg(null);
+    setSuccessMsg("Citizen verification accepted. Loading Landowner Grievance Portal...");
+
+    const sessionPayload = {
+      user_id: "O00004",
+      owner_id: "O00004",
+      name: "Geeta Meena",
+      email: "geeta.meena@bhumi.in",
+      contact_village: "Chandwas (V03)",
+      role: "LANDOWNER"
+    };
+
+    document.cookie = "bhumi_user_role=LANDOWNER; path=/; max-age=604800; SameSite=Lax";
+    document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+    document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+
+    setTimeout(() => {
+      const destination = getSafeRedirectUrl("LANDOWNER", searchParams.get("next"));
+      window.location.href = destination;
+    }, 500);
+  };
 
   // Simple Email + Password Login
   const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -75,15 +102,19 @@ export default function LandownerLoginPage() {
 
           const sessionPayload = {
             user_id: uid,
+            owner_id: uid,
             name: userName,
             email: cleanEmail,
             role: "LANDOWNER"
           };
+          document.cookie = "bhumi_user_role=LANDOWNER; path=/; max-age=604800; SameSite=Lax";
           document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+          document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
           setSuccessMsg("Authentication verified! Entering Landowner Portal...");
           setTimeout(() => {
-            window.location.href = "/landowner/home";
+            const destination = getSafeRedirectUrl("LANDOWNER", searchParams.get("next"));
+            window.location.href = destination;
           }, 600);
           return;
         }
@@ -115,15 +146,19 @@ export default function LandownerLoginPage() {
 
       const sessionPayload = {
         user_id: userId,
+        owner_id: userId,
         name: userName,
         email: cleanEmail,
         role: "LANDOWNER"
       };
+      document.cookie = "bhumi_user_role=LANDOWNER; path=/; max-age=604800; SameSite=Lax";
       document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+      document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
       setSuccessMsg("Login successful! Loading Landowner Portal...");
       setTimeout(() => {
-        window.location.href = "/landowner/home";
+        const destination = getSafeRedirectUrl("LANDOWNER", searchParams.get("next"));
+        window.location.href = destination;
       }, 600);
 
     } catch (err: any) {
@@ -192,6 +227,29 @@ export default function LandownerLoginPage() {
             <p className="text-[11px] text-[#5A6A80] dark:text-slate-400">
               Enter your registered email and password to access your land parcels and grievance dashboard.
             </p>
+          </div>
+
+          {/* Instant Citizen Demo Access */}
+          <div className="bg-[#FFF8E6] dark:bg-amber-950/30 border border-[#FFE29A] dark:border-amber-800 p-3 rounded-none text-xs space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-[#B36B00] dark:text-amber-300 text-[11px] uppercase tracking-wider">
+                Titleholder Demo Access
+              </span>
+              <span className="text-[9px] font-mono bg-[#B36B00] text-white px-1 py-0.2 rounded-none font-bold">
+                1-TAP
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-tight">
+              Test citizen grievance submission & parcel tracking as <strong>Geeta Meena</strong>:
+            </p>
+            <button
+              type="button"
+              onClick={handleInstantDemoLogin}
+              disabled={loading}
+              className="w-full py-2 px-3 bg-[#B36B00] hover:bg-[#8F5500] text-white font-bold text-xs rounded-none transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <span>Instant Citizen Portal Demo Login &rarr;</span>
+            </button>
           </div>
 
           <form onSubmit={handleLoginSubmit} className="space-y-3.5 text-xs">
@@ -278,5 +336,17 @@ export default function LandownerLoginPage() {
         BHUMI Platform · Prototype Deployment (SIH26016) · CALA Directorate
       </div>
     </div>
+  );
+}
+
+export default function LandownerLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F4F6F8] dark:bg-[#07080F] flex items-center justify-center text-xs font-mono text-slate-400">
+        Loading Landowner Authentication...
+      </div>
+    }>
+      <LandownerLoginContent />
+    </Suspense>
   );
 }

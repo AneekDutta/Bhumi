@@ -55,9 +55,12 @@ export default function LandingPage() {
       role: "ADMIN",
     };
 
+    // Set role & officer session, explicitly purge opposing landowner session
+    document.cookie = "bhumi_user_role=ADMIN; path=/; max-age=604800; SameSite=Lax";
     document.cookie = `bhumi_officer_session=${encodeURIComponent(
       JSON.stringify(sessionData)
     )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+    document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
     setTimeout(() => {
       window.location.href = "/dashboard";
@@ -96,18 +99,28 @@ export default function LandingPage() {
       }
 
       if (data?.session) {
-        setLoginSuccess("Access authorized. Directing to CALA Command Console...");
+        const userRole = data.user.user_metadata?.role || "ADMIN";
+        setLoginSuccess("Access authorized. Directing to Operational Console...");
         const sessionData = {
           officer_id: data.user.id,
           name: data.user.user_metadata?.full_name || "CALA Officer",
           email: data.user.email,
-          role: "ADMIN",
+          role: userRole,
         };
+        document.cookie = `bhumi_user_role=${userRole}; path=/; max-age=604800; SameSite=Lax`;
         document.cookie = `bhumi_officer_session=${encodeURIComponent(
           JSON.stringify(sessionData)
         )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+        document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+
         setTimeout(() => {
-          window.location.href = "/dashboard";
+          if (userRole === "FIELD_OFFICER") {
+            window.location.href = "/field/dashboard";
+          } else if (userRole === "LANDOWNER") {
+            window.location.href = "/landowner/home";
+          } else {
+            window.location.href = "/dashboard";
+          }
         }, 400);
       }
     } catch (err: any) {
@@ -228,43 +241,40 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Spatial GIS Callout for Authenticated Officers */}
+              {/* Spatial GIS Callout (Strictly View-Only / Informational for Public) */}
               <div className="p-3.5 bg-[#EBF3FA] dark:bg-white/5 border border-[#0B5FA5]/30 dark:border-sky-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="flex items-start gap-2.5">
                   <Navigation className="w-4 h-4 text-[#0B5FA5] dark:text-sky-400 mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="text-xs font-bold text-[#0B2E59] dark:text-white">
-                      Full Cadastral GIS &amp; Spatial Alignment Digital Twin
+                      Cadastral GIS &amp; Spatial Alignment Digital Twin
                     </div>
                     <div className="text-[11px] text-[#555555] dark:text-slate-400">
-                      Access high-precision DGPS boundary polygons, satellite overlays, RoW buffer analysis, and encroachment tracking inside the Officer Console.
+                      High-precision DGPS boundary polygons, satellite overlays, RoW buffer analysis, and encroachment tracking are maintained under statutory CALA supervision.
                     </div>
                   </div>
                 </div>
 
-                <Link
-                  href="/projects/gis"
-                  className="px-3.5 py-1.5 bg-[#0B2E59] hover:bg-[#071A32] text-white text-xs font-bold rounded-none flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition-colors"
-                >
-                  <span>Open GIS Viewer</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0B2E59]/10 dark:bg-white/10 text-[#0B2E59] dark:text-sky-300 text-xs font-mono font-bold whitespace-nowrap border border-[#0B2E59]/20 dark:border-white/20">
+                  <Lock className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Authorized Officers Only</span>
+                </div>
               </div>
             </div>
 
-            {/* Government Data Table */}
+            {/* Government Data Table (Strictly View-Only) */}
             <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-4 space-y-2">
               <div className="flex items-center justify-between border-b border-[#DCE2E8] dark:border-white/10 pb-2">
                 <div className="font-bold text-xs uppercase tracking-wide text-[#14213D] dark:text-white flex items-center gap-2">
                   <Layers className="w-4 h-4 text-[#0B5FA5]" />
                   <span>Government Project Portfolio &bull; National Linear Corridors</span>
                 </div>
-                <Link href="/projects" className="text-xs font-bold text-[#0B5FA5] hover:underline flex items-center gap-1">
-                  <span>View Full Directory</span>
+                <Link href="/highway-register" className="text-xs font-bold text-[#0B5FA5] hover:underline flex items-center gap-1">
+                  <span>View Public Register</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
-              <PortfolioTable projects={MOCK_GOVERNMENT_PROJECTS} />
+              <PortfolioTable projects={MOCK_GOVERNMENT_PROJECTS} viewOnly={true} />
             </div>
 
           </div>

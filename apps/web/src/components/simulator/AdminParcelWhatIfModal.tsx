@@ -86,25 +86,36 @@ export function AdminParcelWhatIfModal({
   // Derive actual area from database record
   let areaSqm = 0;
   let areaAcres = 0;
-  if (target.landowner_declared_area?.sqm) {
-    areaSqm = Number(target.landowner_declared_area.sqm);
-    areaAcres = Number(target.landowner_declared_area.acres || (areaSqm / 4046.86).toFixed(3));
-  } else if (target.landowner_reported_boundary?.area_sqm) {
-    areaSqm = Number(target.landowner_reported_boundary.area_sqm);
-    areaAcres = Number(target.landowner_reported_boundary.area_acres || (areaSqm / 4046.86).toFixed(3));
+  if (target.area_hectares) {
+    areaSqm = Number(target.area_hectares) * 10000;
+    areaAcres = Number(target.area_hectares) * 2.47105;
+  } else if (target.calculated_area?.hectares) {
+    areaSqm = Number(target.calculated_area.hectares) * 10000;
+    areaAcres = Number(target.calculated_area.acres || (areaSqm / 4046.86));
+  } else if (target.calculated_area?.sqm) {
+    areaSqm = Number(target.calculated_area.sqm);
+    areaAcres = Number(target.calculated_area.acres || (areaSqm / 4046.86));
   } else if (target.area_sqm) {
     areaSqm = Number(target.area_sqm);
-    areaAcres = Number(target.area_acres || (areaSqm / 4046.86).toFixed(3));
+    areaAcres = Number(target.area_acres || (areaSqm / 4046.86));
   } else if (target.area_acres) {
     areaAcres = Number(target.area_acres);
     areaSqm = areaAcres * 4046.86;
+  } else if (target.landowner_declared_area?.sqm) {
+    areaSqm = Number(target.landowner_declared_area.sqm);
+    areaAcres = Number(target.landowner_declared_area.acres || (areaSqm / 4046.86));
+  } else if (target.landowner_reported_boundary?.area_sqm) {
+    areaSqm = Number(target.landowner_reported_boundary.area_sqm);
+    areaAcres = Number(target.landowner_reported_boundary.area_acres || (areaSqm / 4046.86));
   }
 
+  const hasSufficientData = areaSqm > 0;
+
   // Exact statutory calculations under RFCTLARR 2013 First Schedule (Sections 26-30)
-  const baseMarketValue = Math.round(areaSqm * baseRatePerSqm);
-  const multipliedMarketValue = Math.round(baseMarketValue * ruralMultiplier);
+  const baseMarketValue = hasSufficientData ? Math.round(areaSqm * baseRatePerSqm) : 0;
+  const multipliedMarketValue = hasSufficientData ? Math.round(baseMarketValue * ruralMultiplier) : 0;
   const solatium100Pct = multipliedMarketValue; // Section 30(1): 100% solatium on multiplied market value
-  const interest12Pct = Math.round(baseMarketValue * 0.12); // Section 30(3): 12% per annum additional compensation
+  const interest12Pct = hasSufficientData ? Math.round(baseMarketValue * 0.12) : 0; // Section 30(3): 12% per annum additional compensation
   const totalStatutoryCompensation = multipliedMarketValue + solatium100Pct + interest12Pct;
 
   const activeIntervention = INTERVENTIONS.find((i) => i.id === selectedInterventionId) || INTERVENTIONS[0];
@@ -149,6 +160,17 @@ export function AdminParcelWhatIfModal({
 
         {/* Modal Body */}
         <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-[#F4F6F8] dark:bg-[#07080F]">
+
+          {/* Insufficient Data Alert */}
+          {!hasSufficientData && (
+            <div className="p-3.5 rounded-[4px] bg-[#FFF8E1] dark:bg-amber-950/40 border border-[#FFE082] dark:border-amber-800/50 text-[#B36B00] dark:text-amber-200 text-xs flex items-center gap-2.5">
+              <AlertTriangle className="w-5 h-5 flex-shrink-0 text-[#B36B00] dark:text-amber-400" />
+              <div>
+                <span className="font-bold uppercase tracking-wider block text-[11px]">Insufficient data for simulation</span>
+                <p className="text-[11px] leading-relaxed">Official registered parcel area is required to compute statutory RFCTLARR compensation awards.</p>
+              </div>
+            </div>
+          )}
 
           {/* Real Cadastral Geometry Banner */}
           <div className="p-3.5 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs flex flex-wrap items-center justify-between gap-4">
@@ -399,7 +421,8 @@ export function AdminParcelWhatIfModal({
                   onSaveSimulation(simPayload);
                   onClose();
                 }}
-                className="px-3.5 py-1.5 rounded-none bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs flex items-center gap-1.5 shadow-none transition-colors cursor-pointer"
+                disabled={!hasSufficientData}
+                className="px-3.5 py-1.5 rounded-none bg-[#0B2E59] hover:bg-[#082242] text-white font-bold text-xs flex items-center gap-1.5 shadow-none transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Scale className="w-3.5 h-3.5 text-sky-200" />
                 <span>Save Simulation &amp; Generate Report</span>
@@ -409,6 +432,7 @@ export function AdminParcelWhatIfModal({
             {onApplySimulation && (
               <button
                 type="button"
+                disabled={!hasSufficientData}
                 onClick={() => {
                   onApplySimulation({
                     intervention: activeIntervention,
@@ -418,7 +442,7 @@ export function AdminParcelWhatIfModal({
                   });
                   onClose();
                 }}
-                className="px-3.5 py-1.5 rounded-[4px] bg-[#1E7E34] hover:bg-[#166527] text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 rounded-[4px] bg-[#1E7E34] hover:bg-[#166527] text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span>Apply Simulation Scenario</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -428,12 +452,13 @@ export function AdminParcelWhatIfModal({
             {onInitiate && (
               <button
                 type="button"
+                disabled={!hasSufficientData}
                 onClick={() => {
                   const notes = `Statutory implementation initiated under ${activeIntervention.section} (${activeIntervention.name}). Total assessed compensation: ₹${totalStatutoryCompensation.toLocaleString()} for ${areaAcres.toFixed(3)} acres. Estimated delay reduction: ${activeIntervention.scheduleRecoveryDays} days.`;
                   onInitiate(target.id || target.complaint_id, notes);
                   onClose();
                 }}
-                className="px-3.5 py-1.5 rounded-[4px] bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-slate-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-[#DCE2E8] dark:border-white/15"
+                className="px-3.5 py-1.5 rounded-[4px] bg-white dark:bg-white/5 hover:bg-[#F4F6F8] dark:hover:bg-white/10 text-[#0B2E59] dark:text-slate-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-[#DCE2E8] dark:border-white/15 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span>Initiate Implementation</span>
                 <ArrowRight className="w-3.5 h-3.5" />
