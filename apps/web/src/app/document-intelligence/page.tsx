@@ -46,13 +46,16 @@ interface DocumentDetail {
   filename: string;
   document_category: string;
   sha256_hash: string;
+  document_hash?: string;
   uploaded_at: string;
   review_status: 'EXTRACTED' | 'PENDING_REVIEW' | 'VERIFIED' | 'REJECTED';
+  extraction_status?: string;
   ocr_provider: string;
   ocr_engine?: string;
   ocr_source?: string;
   ocr_status?: string;
   ocr_confidence: number;
+  raw_text?: string;
   extracted_fields: ExtractedField[];
   structured_data: Record<string, any>;
   validation_errors: string[];
@@ -60,6 +63,7 @@ interface DocumentDetail {
   verified_at?: string;
   review_notes?: string;
 }
+
 
 const CATEGORIES = [
   { value: 'SECTION_11_NOTIFICATION', label: 'Section 11(1) Preliminary Gazette Notification' },
@@ -90,6 +94,7 @@ export default function DocumentIntelligencePage() {
     e.preventDefault();
     if (!file) return;
     setUploading(true);
+    setDocDetail(null);
     setErrorMsg(null);
     setAppliedResult(null);
 
@@ -254,9 +259,18 @@ export default function DocumentIntelligencePage() {
                 <input
                   type="file"
                   accept=".pdf,.png,.jpg,.jpeg,.txt"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  onChange={(e) => {
+                    const selected = e.target.files?.[0] || null;
+                    setFile(selected);
+                    setDocDetail(null);
+                    setErrorMsg(null);
+                    setAppliedResult(null);
+                    setEditingField(null);
+                    setReviewNotes('');
+                  }}
                   className="w-full text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-50 dark:file:bg-sky-950/40 file:text-[#0B2E59] dark:file:text-sky-400 hover:file:bg-sky-100 cursor-pointer border border-slate-200 dark:border-white/[0.08] rounded-xl p-2"
                 />
+
               </div>
 
               <div>
@@ -450,6 +464,28 @@ export default function DocumentIntelligencePage() {
                       </div>
                     </div>
                   </div>
+                </div>
+
+                {/* Raw OCR Text Container (Verbatim Provider Output) */}
+                <div className="bg-white dark:bg-[#0c0e1e] p-6 rounded-2xl border border-slate-200 dark:border-white/[0.08] shadow-sm space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <ScanLine className="w-4 h-4 text-[#0B2E59] dark:text-sky-400" />
+                        Raw OCR Text (Verbatim Output)
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                        Authoritative text extracted from document bytes before structured field parsing.
+                      </p>
+                    </div>
+                    <span className="text-[11px] font-mono text-slate-400">
+                      {docDetail.raw_text ? `${docDetail.raw_text.length} characters` : '0 characters'}
+                    </span>
+                  </div>
+
+                  <pre className="font-mono text-xs p-4 bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06] rounded-xl text-slate-800 dark:text-slate-200 whitespace-pre-wrap max-h-52 overflow-y-auto select-text leading-relaxed">
+                    {docDetail.raw_text || '(No text returned by OCR provider)'}
+                  </pre>
                 </div>
 
                 {/* Structured Extraction & Human Review Fields */}

@@ -33,22 +33,31 @@ def require_officer_or_admin(identity: TrustedIdentity) -> str:
 async def upload_document_for_intelligence(
     file: UploadFile = File(...),
     category: Optional[str] = Form(None),
-    use_mock_ocr: bool = Form(True),
+    use_mock_ocr: bool = Form(False),
     ocr_provider: Optional[str] = Form(None),
     identity: TrustedIdentity = Depends(get_current_user_context),
 ):
     """
     Ingests document, validates size and signature, generates SHA-256 hash,
-    executes OCR, extracts structured schema fields, and initializes Human Review Gate.
+    executes real OCR, extracts structured schema fields, and initializes Human Review Gate.
     """
     officer_user = require_officer_or_admin(identity)
 
-    # Size check: 25MB max
+    # 1. Format / Extension Validation
+    filename = file.filename or "uploaded_document.pdf"
+    valid_exts = (".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".txt")
+    if not filename.lower().endswith(valid_exts):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported file format '{filename}'. Supported formats: PDF, PNG, JPG, JPEG, TXT."
+        )
+
+    # 2. Size Check
     file_bytes = await file.read()
+    if len(file_bytes) == 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uploaded document is empty (0 bytes).")
     if len(file_bytes) > 25 * 1024 * 1024:
         raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Document exceeds maximum limit of 25MB.")
-    if len(file_bytes) == 0:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uploaded document is empty.")
 
     cat_enum = None
     if category:
@@ -59,13 +68,14 @@ async def upload_document_for_intelligence(
 
     return await document_intelligence_service.ingest_document(
         file_bytes=file_bytes,
-        filename=file.filename or "uploaded_document.pdf",
+        filename=filename,
         mime_type=file.content_type or "application/pdf",
         category=cat_enum,
         use_mock_ocr=use_mock_ocr,
         ocr_provider=ocr_provider,
         uploaded_by=officer_user,
     )
+
 
 
 @router.get("/{document_id}/extraction", response_model=DocumentExtractionDetail)

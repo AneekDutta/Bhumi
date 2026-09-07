@@ -288,7 +288,7 @@ class OCRSpaceProvider(OCRProvider):
 
         language = self._resolve_language(mime_type, filename)
 
-        # 3. Initial Attempt with Selected Engine (default Engine 3)
+        # 3. Initial Attempt with Selected Engine (default Engine 2 or configured engine)
         res_json, req_err = await self._execute_ocr_request(
             file_bytes=file_bytes,
             filename=filename,
@@ -304,14 +304,15 @@ class OCRSpaceProvider(OCRProvider):
         if not req_err and res_json:
             pages, full_text, parse_err = self._parse_ocr_response(res_json, language)
 
-        # 4. Engine 3 -> Engine 2 Automatic Fallback on Provider Error (e.g. E580, non-200, empty text)
+        # 4. Automatic Fallback on Provider Error (e.g. E580, non-200, empty text)
         used_fallback = False
-        if (parse_err or not full_text) and self._engine == "3":
+        fallback_engine = "1" if self._engine == "2" else "2"
+        if (parse_err or not full_text):
             fb_json, fb_req_err = await self._execute_ocr_request(
                 file_bytes=file_bytes,
                 filename=filename,
                 mime_type=mime_type,
-                engine="2",
+                engine=fallback_engine,
                 language=language,
             )
             if not fb_req_err and fb_json:
@@ -357,3 +358,4 @@ class OCRSpaceProvider(OCRProvider):
             average_confidence=0.95,
             processing_timestamp=datetime.now(timezone.utc).isoformat(),
         )
+

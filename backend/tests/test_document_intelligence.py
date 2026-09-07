@@ -44,6 +44,7 @@ async def test_duplicate_document_idempotency():
         file_bytes=sample_content,
         filename="first.pdf",
         category=DocumentCategory.AWARD_STATEMENT,
+        use_mock_ocr=True,
     )
     assert job1.status == JobStatus.REVIEW_REQUIRED
 
@@ -52,6 +53,7 @@ async def test_duplicate_document_idempotency():
         file_bytes=sample_content,
         filename="second.pdf",
         category=DocumentCategory.AWARD_STATEMENT,
+        use_mock_ocr=True,
     )
     assert job2.document_id == job1.document_id
     assert job2.job_id.startswith("JOB-DUP-")

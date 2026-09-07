@@ -164,13 +164,16 @@ class DocumentExtractionDetail(BaseModel):
     filename: str
     document_category: DocumentCategory
     sha256_hash: str
+    document_hash: Optional[str] = None
     uploaded_at: str
     review_status: ReviewStatus
+    extraction_status: str = "PENDING_REVIEW"
     ocr_provider: str
-    ocr_engine: Optional[str] = "3"
+    ocr_engine: Optional[str] = "2"
     ocr_source: Optional[str] = "External OCR"
-    ocr_status: Optional[str] = "OCR complete"
+    ocr_status: Optional[str] = "OCR_COMPLETE"
     ocr_confidence: float
+    raw_text: Optional[str] = None
     extracted_fields: list[ExtractedFieldItem] = []
     structured_data: dict[str, Any] = {}
     validation_errors: list[str] = []
@@ -202,9 +205,11 @@ class ApplyExtractionRequest(BaseModel):
 class DocumentJobRead(BaseModel):
     job_id: str
     document_id: str
+    document_hash: Optional[str] = None
     filename: str
     category: DocumentCategory
     status: JobStatus
     created_at: str
     completed_at: Optional[str] = None
     error_message: Optional[str] = None
+
