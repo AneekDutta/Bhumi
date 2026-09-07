@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 
 interface KoshLogoProps {
   className?: string;
@@ -15,13 +15,28 @@ export function KoshLogo({
   size = 40,
   variant = "badge",
 }: KoshLogoProps) {
-  const width = Math.round(size * 1.4);
+  const width = Math.round(size * 1.3);
+
+  if (variant === "light") {
+    return (
+      <div className={`flex items-center justify-center flex-shrink-0 ${className}`}>
+        <img
+          src="/kosh-logo-white.png"
+          alt="KOSH — Land to Progress"
+          width={width}
+          height={size}
+          className="h-full w-auto object-contain select-none"
+          style={{ maxHeight: size }}
+        />
+      </div>
+    );
+  }
 
   if (variant === "badge") {
     return (
       <div
         className={`bg-white rounded-md p-1 border border-slate-200/80 dark:border-white/20 shadow-xs flex items-center justify-center flex-shrink-0 transition-transform ${className}`}
-        style={{ height: size + 8, width: width + 12 }}
+        style={{ height: size + 6, width: width + 10 }}
       >
         <img
           src="/kosh-logo.png"
@@ -41,7 +56,7 @@ export function KoshLogo({
         alt="KOSH — Land to Progress"
         width={width}
         height={size}
-        className="h-full w-auto object-contain select-none rounded"
+        className="h-full w-auto object-contain select-none"
         style={{ maxHeight: size }}
       />
     </div>

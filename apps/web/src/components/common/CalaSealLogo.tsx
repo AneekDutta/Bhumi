@@ -12,7 +12,7 @@ interface CalaSealLogoProps {
  */
 export function CalaSealLogo({ className = "", size = 44, variant = "light" }: CalaSealLogoProps) {
   const isLight = variant === "light";
-  const badgeWidth = Math.round(size * 1.4);
+  const badgeWidth = Math.round(size * 1.3);
   return (
     <div
       className={`rounded-md p-1 flex items-center justify-center flex-shrink-0 shadow-xs bg-white ${
