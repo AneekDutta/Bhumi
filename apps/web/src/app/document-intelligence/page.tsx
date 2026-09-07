@@ -48,6 +48,9 @@ interface DocumentDetail {
   uploaded_at: string;
   review_status: 'EXTRACTED' | 'PENDING_REVIEW' | 'VERIFIED' | 'REJECTED';
   ocr_provider: string;
+  ocr_engine?: string;
+  ocr_source?: string;
+  ocr_status?: string;
   ocr_confidence: number;
   extracted_fields: ExtractedField[];
   structured_data: Record<string, any>;
@@ -70,7 +73,8 @@ const CATEGORIES = [
 export default function DocumentIntelligencePage() {
   const [file, setFile] = useState<File | null>(null);
   const [category, setCategory] = useState<string>('SECTION_11_NOTIFICATION');
-  const [useMockOCR, setUseMockOCR] = useState<boolean>(true);
+  const [selectedProvider, setSelectedProvider] = useState<'ocrspace' | 'local' | 'mock'>('ocrspace');
+  const [useMockOCR, setUseMockOCR] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [docDetail, setDocDetail] = useState<DocumentDetail | null>(null);
   const [editingField, setEditingField] = useState<string | null>(null);
@@ -97,6 +101,7 @@ export default function DocumentIntelligencePage() {
       const formData = new FormData();
       formData.append('file', sampleFile);
       formData.append('category', cat);
+      formData.append('ocr_provider', 'mock');
       formData.append('use_mock_ocr', 'true');
 
       const job = await uploadDocumentForIntelligence(formData);
@@ -122,7 +127,8 @@ export default function DocumentIntelligencePage() {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('category', category);
-      formData.append('use_mock_ocr', String(useMockOCR));
+      formData.append('ocr_provider', selectedProvider);
+      formData.append('use_mock_ocr', String(selectedProvider === 'mock'));
 
       const job = await uploadDocumentForIntelligence(formData);
       if (job && job.document_id) {
@@ -283,21 +289,28 @@ export default function DocumentIntelligencePage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
-                <div>
-                  <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">
-                    Use High-Accuracy Mock OCR
-                  </div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    Simulates bounding box layouts & confidence scores
-                  </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                  OCR Engine / Provider
+                </label>
+                <select
+                  value={selectedProvider}
+                  onChange={(e) => {
+                    const val = e.target.value as 'ocrspace' | 'local' | 'mock';
+                    setSelectedProvider(val);
+                    setUseMockOCR(val === 'mock');
+                  }}
+                  className="w-full text-sm bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.1] rounded-xl px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="ocrspace">OCR.Space Cloud OCR (Engine 3)</option>
+                  <option value="local">Local Headless OCR (On-Premises)</option>
+                  <option value="mock">Synthetic Benchmark / Mock OCR</option>
+                </select>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                  {selectedProvider === 'ocrspace' && 'Free-tier limits: ≤1 MB file size, ≤3 pages per PDF.'}
+                  {selectedProvider === 'local' && 'Processes text locally without sending bytes to third-party endpoints.'}
+                  {selectedProvider === 'mock' && 'Simulates deterministic bounding box layouts for testing.'}
                 </div>
-                <input
-                  type="checkbox"
-                  checked={useMockOCR}
-                  onChange={(e) => setUseMockOCR(e.target.checked)}
-                  className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500"
-                />
               </div>
 
               <button
@@ -414,6 +427,47 @@ export default function DocumentIntelligencePage() {
                       <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1">
                         <ShieldCheck className="w-3.5 h-3.5" />
                         Passed Integrity Gate
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* OCR Provenance Indicator */}
+                  <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/[0.06] grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
+                      <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
+                        OCR Provider
+                      </div>
+                      <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mt-0.5 flex items-center gap-1.5">
+                        <Cpu className="w-3.5 h-3.5" />
+                        {docDetail.ocr_provider || 'OCR.Space'}
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
+                      <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
+                        Engine
+                      </div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+                        {docDetail.ocr_engine || '3'}
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
+                      <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
+                        Status
+                      </div>
+                      <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        {docDetail.ocr_status || 'OCR complete'}
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#14172b] border border-slate-200 dark:border-white/[0.06]">
+                      <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">
+                        Source
+                      </div>
+                      <div className="text-xs font-bold text-slate-700 dark:text-slate-300 mt-0.5">
+                        {docDetail.ocr_source || 'External OCR'}
                       </div>
                     </div>
                   </div>

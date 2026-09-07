@@ -167,6 +167,9 @@ class DocumentExtractionDetail(BaseModel):
     uploaded_at: str
     review_status: ReviewStatus
     ocr_provider: str
+    ocr_engine: Optional[str] = "3"
+    ocr_source: Optional[str] = "External OCR"
+    ocr_status: Optional[str] = "OCR complete"
     ocr_confidence: float
     extracted_fields: list[ExtractedFieldItem] = []
     structured_data: dict[str, Any] = {}

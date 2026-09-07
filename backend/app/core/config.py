@@ -35,6 +35,12 @@ class Settings(BaseSettings):
     SUPABASE_SERVICE_ROLE_KEY: str = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
     STORAGE_BUCKET_NAME: str = os.getenv("STORAGE_BUCKET_NAME", "documents")
 
+    # OCR Provider Configuration
+    OCR_PROVIDER: str = os.getenv("OCR_PROVIDER", "local")  # local, ocrspace, mock
+    OCRSPACE_API_KEY: str = os.getenv("OCRSPACE_API_KEY", "")
+    OCRSPACE_ENGINE: str = os.getenv("OCRSPACE_ENGINE", "3")
+    OCRSPACE_TIMEOUT_SECONDS: int = int(os.getenv("OCRSPACE_TIMEOUT_SECONDS", "60"))
+
     # CORS
     ALLOWED_ORIGINS: str = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000")
 

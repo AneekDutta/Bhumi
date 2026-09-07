@@ -25,9 +25,11 @@ from app.schemas.document_intelligence import (
     OCROutput,
     ReviewStatus,
 )
+from app.core.config import settings
 from app.services.ocr.base import OCRProvider
 from app.services.ocr.local_provider import LocalOCRProvider
 from app.services.ocr.mock_provider import MockOCRProvider
+from app.services.ocr.ocrspace_provider import OCRSpaceProvider
 from app.services.sih26016_service import sih_service
 from app.services.statutory_deadline_engine import statutory_deadline_engine
 
@@ -49,6 +51,42 @@ class DocumentIntelligenceService:
         self._documents_store: dict[str, dict[str, Any]] = {}
         self._hash_index: dict[str, str] = {}  # sha256 -> document_id
         self._jobs_store: dict[str, dict[str, Any]] = {}
+
+    def get_ocr_provider(self, use_mock_ocr: bool = True, ocr_provider: Optional[str] = None) -> OCRProvider:
+        """
+        Resolves the appropriate OCR provider based on request parameter and server settings.
+        Supports: 'ocrspace', 'local', 'mock'.
+        If 'ocrspace' is requested or configured, instantiates OCRSpaceProvider with server credentials.
+        """
+        chosen = (ocr_provider or "").lower().strip()
+        if chosen in ("ocrspace", "ocr_space", "ocr.space"):
+            return OCRSpaceProvider(
+                api_key=settings.OCRSPACE_API_KEY,
+                engine=settings.OCRSPACE_ENGINE,
+                timeout_seconds=settings.OCRSPACE_TIMEOUT_SECONDS,
+            )
+        elif chosen in ("local", "tesseract"):
+            return self._local_provider
+        elif chosen == "mock":
+            return self._mock_provider
+        elif chosen:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Unsupported OCR provider '{ocr_provider}'. Must be one of: 'ocrspace', 'local', 'mock'."
+            )
+
+        # No explicit ocr_provider in form: inspect use_mock_ocr and settings.OCR_PROVIDER
+        if use_mock_ocr:
+            return self._mock_provider
+
+        default_provider = (settings.OCR_PROVIDER or "local").lower().strip()
+        if default_provider in ("ocrspace", "ocr_space", "ocr.space"):
+            return OCRSpaceProvider(
+                api_key=settings.OCRSPACE_API_KEY,
+                engine=settings.OCRSPACE_ENGINE,
+                timeout_seconds=settings.OCRSPACE_TIMEOUT_SECONDS,
+            )
+        return self._local_provider
 
     def _sanitize_untrusted_text(self, text: str) -> tuple[str, bool]:
         """Detects and defangs prompt injection or adversarial text in OCR streams."""
@@ -87,6 +125,7 @@ class DocumentIntelligenceService:
         mime_type: str = "application/pdf",
         category: Optional[DocumentCategory] = None,
         use_mock_ocr: bool = True,
+        ocr_provider: Optional[str] = None,
         uploaded_by: str = "OFF-001",
     ) -> DocumentJobRead:
         """
@@ -116,7 +155,7 @@ class DocumentIntelligenceService:
         now_iso = datetime.now(timezone.utc).isoformat()
 
         # 2. Select OCR Provider
-        provider: OCRProvider = self._mock_provider if use_mock_ocr else self._local_provider
+        provider: OCRProvider = self.get_ocr_provider(use_mock_ocr=use_mock_ocr, ocr_provider=ocr_provider)
         ocr_res: OCROutput = await provider.extract_text(file_bytes, filename, mime_type, sha256)
 
         # 3. Sanitize OCR text against prompt injection
@@ -128,6 +167,23 @@ class DocumentIntelligenceService:
         if injection_detected:
             validation_errors.append("SECURITY_WARNING: Adversarial prompt injection pattern was detected and defanged in OCR stream.")
 
+        # Determine provenance metadata
+        if provider.provider_id == "OCR.Space":
+            ocr_provider_label = "OCR.Space"
+            ocr_engine_label = getattr(provider, "engine", "3")
+            ocr_source_label = "External OCR"
+            ocr_status_label = "OCR complete"
+        elif provider.provider_id == "LOCAL_HEADLESS_OCR":
+            ocr_provider_label = "Local OCR"
+            ocr_engine_label = "native-pdf"
+            ocr_source_label = "Local Pipeline"
+            ocr_status_label = "OCR complete"
+        else:
+            ocr_provider_label = "Mock OCR"
+            ocr_engine_label = "statutory-v2"
+            ocr_source_label = "Synthetic Benchmark"
+            ocr_status_label = "OCR complete"
+
         # 5. Store document record
         self._documents_store[doc_id] = {
             "document_id": doc_id,
@@ -137,7 +193,10 @@ class DocumentIntelligenceService:
             "uploaded_at": now_iso,
             "uploaded_by": uploaded_by,
             "review_status": ReviewStatus.PENDING_REVIEW,
-            "ocr_provider": provider.provider_id,
+            "ocr_provider": ocr_provider_label,
+            "ocr_engine": ocr_engine_label,
+            "ocr_source": ocr_source_label,
+            "ocr_status": ocr_status_label,
             "ocr_confidence": ocr_res.average_confidence,
             "extracted_fields": fields,
             "structured_data": structured_dict,
@@ -298,6 +357,9 @@ class DocumentIntelligenceService:
             uploaded_at=doc["uploaded_at"],
             review_status=doc["review_status"],
             ocr_provider=doc["ocr_provider"],
+            ocr_engine=doc.get("ocr_engine", "3"),
+            ocr_source=doc.get("ocr_source", "External OCR"),
+            ocr_status=doc.get("ocr_status", "OCR complete"),
             ocr_confidence=doc["ocr_confidence"],
             extracted_fields=doc["extracted_fields"],
             structured_data=doc["structured_data"],

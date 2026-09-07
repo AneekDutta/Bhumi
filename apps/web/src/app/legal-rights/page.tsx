@@ -175,7 +175,7 @@ export default function LegalRightsPage() {
   }, [provisions, selectedCategory, selectedJurisdiction, searchQuery]);
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="space-y-8 pb-16 bg-[#07080F] rounded-xl -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-6">
       {/* Header Banner */}
       <div className="rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/60 to-slate-900 border border-slate-800/80 p-6 md:p-8 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
@@ -234,9 +234,9 @@ export default function LegalRightsPage() {
       </div>
 
       {/* Role Navigation & Search Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-700 pb-4">
         {/* Role Tabs */}
-        <div className="flex items-center gap-2 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800 flex-wrap">
+        <div className="flex items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800 flex-wrap">
           <button
             onClick={() => setActiveTab('landowner')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all ${
@@ -252,7 +252,7 @@ export default function LegalRightsPage() {
             onClick={() => setActiveTab('officer')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all ${
               activeTab === 'officer'
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
+                ? 'bg-[#0B2E59] text-white shadow-lg shadow-[#0B2E59]/30'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
             }`}
           >
@@ -393,7 +393,7 @@ export default function LegalRightsPage() {
                 return (
                   <div
                     key={sec.section_key}
-                    className="rounded-xl bg-slate-900/60 border border-slate-800/80 overflow-hidden shadow-lg transition-all"
+                    className="rounded-xl bg-slate-900 border border-slate-800 overflow-hidden shadow-lg transition-all"
                   >
                     <button
                       onClick={() => toggleSection(sec.section_key)}
@@ -509,8 +509,8 @@ export default function LegalRightsPage() {
                       key={stage.stage_number}
                       className={`rounded-xl border transition-all ${
                         isHardLapse
-                          ? 'bg-slate-900/80 border-rose-900/40 shadow-rose-950/20'
-                          : 'bg-slate-900/60 border-slate-800/80'
+                          ? 'bg-slate-900 border-rose-900/40 shadow-rose-950/20'
+                          : 'bg-slate-900 border-slate-800'
                       }`}
                     >
                       <button
@@ -1027,7 +1027,7 @@ export default function LegalRightsPage() {
                   <div
                     key={prov.id}
                     onClick={() => setSelectedProvision(prov)}
-                    className="cursor-pointer rounded-xl bg-slate-900/70 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 p-5 space-y-3 transition-all group flex flex-col justify-between"
+                    className="cursor-pointer rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 p-5 space-y-3 transition-all group flex flex-col justify-between"
                   >
                     <div className="space-y-2">
                       <div className="flex items-start justify-between gap-2">

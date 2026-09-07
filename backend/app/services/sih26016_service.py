@@ -25,8 +25,9 @@ class SIH26016Service:
         self._load_data()
 
     def _get_seed_path(self) -> Path:
-        # Search relative to repo root
+        # Search relative to repo root or packaged backend app
         candidates = [
+            Path(__file__).resolve().parent.parent / "data" / "sih26016" / "seed_data.json",
             Path("data/sih26016/seed_data.json"),
             Path("../data/sih26016/seed_data.json"),
             Path(__file__).resolve().parents[3] / "data" / "sih26016" / "seed_data.json",

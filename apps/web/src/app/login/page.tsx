@@ -74,10 +74,20 @@ function LoginPageContent() {
   }, [searchParams]);
 
   // Instant Officer Demo Login
-  const handleInstantDemoLogin = () => {
+  const handleInstantDemoLogin = async () => {
     setLoading(true);
     setErrorMsg(null);
     setSuccessMsg("Security clearance accepted for CALA Officer. Loading National Operations Console...");
+
+    // Establish canonical Supabase JWT session for protected API access
+    try {
+      await supabase.auth.signInWithPassword({
+        email: "officer@kosh.sih2026.org",
+        password: "CommanderPass@2025",
+      });
+    } catch (e) {
+      console.warn("Supabase auth fallback:", e);
+    }
 
     // Establish official CALA Officer session cookie
     const sessionData = {
@@ -109,17 +119,11 @@ function LoginPageContent() {
     setLoading(true);
 
     let loginEmail = emailOrId.trim();
-    if (!loginEmail.includes("@")) {
+    const lower = loginEmail.toLowerCase();
+    if (lower === "off-cala-01" || lower === "officer" || lower === "officer@kosh.gov.in" || lower === "officer@bhumi.gov.in") {
+      loginEmail = "officer@kosh.sih2026.org";
+    } else if (!loginEmail.includes("@")) {
       loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@kosh.sih2026.org`;
-    }
-
-    // Auto-fallback for demo officer credentials
-    if (
-      (loginEmail.toLowerCase() === "officer@kosh.sih2026.org" || loginEmail.toLowerCase() === "officer@kosh.gov.in" || loginEmail.toLowerCase() === "officer@bhumi.gov.in") &&
-      password === "CommanderPass@2025"
-    ) {
-      handleInstantDemoLogin();
-      return;
     }
 
     try {
@@ -130,8 +134,8 @@ function LoginPageContent() {
 
       if (error) {
         // Fallback for officer demo ID
-        if (loginEmail.toLowerCase() === "officer@kosh.sih2026.org" || loginEmail.toLowerCase() === "officer@kosh.gov.in" || loginEmail.toLowerCase() === "officer@bhumi.gov.in") {
-          handleInstantDemoLogin();
+        if (loginEmail.toLowerCase() === "officer@kosh.sih2026.org") {
+          await handleInstantDemoLogin();
           return;
         }
 

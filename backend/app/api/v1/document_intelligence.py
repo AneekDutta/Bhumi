@@ -34,6 +34,7 @@ async def upload_document_for_intelligence(
     file: UploadFile = File(...),
     category: Optional[str] = Form(None),
     use_mock_ocr: bool = Form(True),
+    ocr_provider: Optional[str] = Form(None),
     identity: TrustedIdentity = Depends(get_current_user_context),
 ):
     """
@@ -62,6 +63,7 @@ async def upload_document_for_intelligence(
         mime_type=file.content_type or "application/pdf",
         category=cat_enum,
         use_mock_ocr=use_mock_ocr,
+        ocr_provider=ocr_provider,
         uploaded_by=officer_user,
     )
 

@@ -25,6 +25,7 @@ import {
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { getFieldOfficers } from "@/lib/api";
 import { offlineStore } from "@/lib/offlineStore";
+import { createClient } from "@/lib/supabase/client";
 
 interface Officer {
   officer_id: string;
@@ -71,10 +72,20 @@ function FieldLoginContent() {
     loadOfficers();
   }, []);
 
-  const loginAsOfficer = (officer: Officer) => {
+  const loginAsOfficer = async (officer: Officer) => {
     setLoading(true);
     setErrorMsg(null);
     setSuccessMsg(`Authenticating as ${officer.name} (${officer.designation})...`);
+
+    try {
+      const supabase = createClient();
+      await supabase.auth.signInWithPassword({
+        email: "officer@kosh.sih2026.org",
+        password: "CommanderPass@2025",
+      });
+    } catch (e) {
+      console.warn("Field Officer Supabase auth fallback:", e);
+    }
 
     const sessionData = {
       officer_id: officer.officer_id,
