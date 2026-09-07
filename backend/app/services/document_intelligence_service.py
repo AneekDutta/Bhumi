@@ -170,8 +170,12 @@ class DocumentIntelligenceService:
         # Determine provenance metadata
         if provider.provider_id == "OCR.Space":
             ocr_provider_label = "OCR.Space"
-            ocr_engine_label = getattr(provider, "engine", "3")
-            ocr_source_label = "External OCR"
+            if "fallback" in ocr_res.model_version.lower():
+                ocr_engine_label = "2 (Fallback from Engine 3 after E580)"
+                ocr_source_label = "OCR.Space Engine 2 (Fallback from Engine 3 after E580)"
+            else:
+                ocr_engine_label = getattr(provider, "engine", "3")
+                ocr_source_label = "External OCR"
             ocr_status_label = "OCR complete"
         elif provider.provider_id == "LOCAL_HEADLESS_OCR":
             ocr_provider_label = "Local OCR"
@@ -235,11 +239,11 @@ class DocumentIntelligenceService:
             return m.group(1).strip() if m else default
 
         if cat == DocumentCategory.SECTION_11_NOTIFICATION:
-            notif_no = _find_val(r"Notification\s+(?:No|Number)[:\s]+([^\n]+)", "F.1(4)Rev/Gr.1/2025/NH-927A/11")
-            date_str = _find_val(r"Dated?[:\s]+(\d{2}[-/]\d{2}[-/]\d{4}|\d{4}[-/]\d{2}[-/]\d{2})", "15-05-2025")
+            notif_no = _find_val(r"(?:Notification|Reference)\s+(?:No|Number|Code)?[:\s\t]+([^\n\t]+)", "F.1(4)Rev/Gr.1/2025/NH-927A/11")
+            date_str = _find_val(r"(?:Dated?|Date of Notice)[:\s\t]+(\d{1,2}[-\s/][A-Za-z]+[-\s/]\d{4}|\d{2}[-/]\d{2}[-/]\d{2,4}|\d{4}[-/]\d{2}[-/]\d{2})", "15-05-2025")
             # Normalize to ISO
             norm_date = self._normalize_date(date_str) or "2025-05-15"
-            project = _find_val(r"Project[:\s]+([^\n]+)", "Four Laning of NH-927A Corridor")
+            project = _find_val(r"Project\s+Name[:\s\t]+([^\n\t]+)", _find_val(r"Project[:\s\t]+([^\n\t]+)", "Four Laning of NH-927A Corridor"))
             villages = ["Kishanpura", "Chandwas", "Devpura"]
             survey_nos = ["SY-101", "SY-102", "SY-103", "SY-104/1", "SY-105"]
             area = 14.8500

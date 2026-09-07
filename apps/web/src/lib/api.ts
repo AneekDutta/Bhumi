@@ -1082,47 +1082,14 @@ export const apiClient = {
   },
 
   simulateSIHIntervention: async (projectId: string, payload: any) => {
-    try {
-      const res = await fetch(`${API_URL}/sih26016/projects/${projectId}/simulate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
-
-    // Deterministic client fallback simulation
-    const project = NATIONAL_PROJECTS.find(p => p.id === projectId) || NATIONAL_PROJECTS[0];
-    const curDelay = project?.project_delay_days || 229;
-    const daysRecovered = payload.intervention_type === 'deploy_additional_officers' ? 60 : 45;
-    const newDelay = Math.max(0, curDelay - daysRecovered);
-
-    return {
-      intervention_type: payload.intervention_type,
-      target_entities: payload.input_entity_ids || ['P00001'],
-      preconditions_met: true,
-      precondition_warnings: [],
-      before: {
-        project_finish: '2028-11-15',
-        project_delay_days: curDelay,
-        critical_path: ['P00001', 'P00002'],
-        total_duration_days: 780.0
+    const res = await authenticatedFetch(`/sih26016/projects/${projectId}/simulate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      after: {
-        project_finish: '2028-09-30',
-        project_delay_days: newDelay,
-        critical_path: ['P00002'],
-        total_duration_days: 780.0 - daysRecovered
-      },
-      delay_reduction_days: daysRecovered,
-      cost_estimate_units: {
-        officer_days: 14,
-        cost_inr: 45000,
-        action_unit: 'Revenue Lok Adalat Hearing'
-      },
-      affected_entities: payload.input_entity_ids || ['P00001'],
-      source_type: 'MODEL_DERIVED'
-    };
+      body: JSON.stringify(payload)
+    });
+    return await res.json();
   },
 
   getFieldOfficers: async () => {

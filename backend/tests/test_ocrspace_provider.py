@@ -425,3 +425,125 @@ async def test_unverified_ocr_cannot_mutate_workflow_state():
             officer_user="OFF-001",
         )
         assert apply_res["status"] == "APPLIED_TO_WORKFLOW"
+
+
+# 15. Engine 3 -> Engine 2 Automatic Fallback on E580
+@pytest.mark.asyncio
+async def test_engine3_to_engine2_fallback_on_e580():
+    provider = OCRSpaceProvider(api_key="TEST_API_KEY", engine="3")
+
+    e580_resp = MagicMock()
+    e580_resp.status_code = 200
+    e580_resp.json.return_value = {
+        "OCRExitCode": 2,
+        "IsErroredOnProcessing": False,
+        "ErrorMessage": ["E580: This OCR Engine returned an unexpected error. Please try some other OCR Engine."],
+        "ParsedResults": [
+            {
+                "ParsedText": "",
+                "FileParseExitCode": -1,
+                "ErrorMessage": "E580: This OCR Engine returned an unexpected error.",
+            }
+        ],
+    }
+
+    engine2_resp = MagicMock()
+    engine2_resp.status_code = 200
+    engine2_resp.json.return_value = {
+        "OCRExitCode": 1,
+        "IsErroredOnProcessing": False,
+        "ParsedResults": [
+            {
+                "ParsedText": "GOVERNMENT OF RAJASTHAN NOTIFICATION UNDER SECTION 11(1) RFCTLARR ACT, 2013",
+                "FileParseExitCode": 1,
+            }
+        ],
+    }
+
+    # First call (Engine 3) returns e580_resp, second call (Engine 2 retry) returns engine2_resp
+    with patch("httpx.AsyncClient.post", new_callable=AsyncMock) as mock_post:
+        mock_post.side_effect = [e580_resp, engine2_resp]
+
+        output = await provider.extract_text(
+            file_bytes=b"%PDF-1.4 simulated pdf",
+            filename="ocr_test.pdf",
+            mime_type="application/pdf",
+            document_hash="e580_fallback_hash",
+        )
+
+        assert mock_post.call_count == 2
+        # Check call arguments
+        call1_data = mock_post.call_args_list[0].kwargs["data"]
+        call2_data = mock_post.call_args_list[1].kwargs["data"]
+        assert call1_data["OCREngine"] == "3"
+        assert call2_data["OCREngine"] == "2"
+
+        # Verify output attributes and provenance
+        assert output.provider == "OCR.Space"
+        assert output.model_version == "engine-2 (fallback from engine-3 after E580)"
+        assert "SECTION 11(1)" in output.full_text
+        assert len(output.pages) == 1
+
+
+# 16. Ingest with E580 Fallback Records Exact Provenance and Enters PENDING_REVIEW
+@pytest.mark.asyncio
+async def test_ingest_with_e580_fallback_provenance():
+    e580_resp = MagicMock()
+    e580_resp.status_code = 200
+    e580_resp.json.return_value = {
+        "OCRExitCode": 2,
+        "IsErroredOnProcessing": False,
+        "ErrorMessage": ["E580: This OCR Engine returned an unexpected error."],
+        "ParsedResults": [
+            {"ParsedText": "", "FileParseExitCode": -1, "ErrorMessage": "E580"}
+        ],
+    }
+
+    engine2_resp = MagicMock()
+    engine2_resp.status_code = 200
+    engine2_resp.json.return_value = {
+        "OCRExitCode": 1,
+        "IsErroredOnProcessing": False,
+        "ParsedResults": [
+            {
+                "ParsedText": (
+                    "NOTIFICATION UNDER SECTION 11(1) RFCTLARR ACT, 2013\n"
+                    "Notification No: F.1(4)Rev/Gr.1/2025/NH-927A/11\n"
+                    "Dated: 2025-05-15\n"
+                    "Project: P-NH927A\n"
+                    "Villages: Kishanpura, Chandwas, Devpura\n"
+                    "Survey Numbers: SY-101, SY-102\n"
+                    "Total Area: 14.85 Hectares\n"
+                ),
+                "FileParseExitCode": 1,
+            }
+        ],
+    }
+
+    with patch.object(settings, "OCRSPACE_API_KEY", "DUMMY_KEY_FOR_TESTING"), \
+         patch("httpx.AsyncClient.post", new_callable=AsyncMock) as mock_post:
+        mock_post.side_effect = [e580_resp, engine2_resp]
+
+        job = await document_intelligence_service.ingest_document(
+            file_bytes=b"Simulated PDF with E580 then fallback",
+            filename="ocr_fallback_notice.pdf",
+            mime_type="application/pdf",
+            ocr_provider="ocrspace",
+            use_mock_ocr=False,
+            uploaded_by="OFF-001",
+        )
+
+        assert job.status == JobStatus.REVIEW_REQUIRED
+        detail: DocumentExtractionDetail = document_intelligence_service.get_document_extraction(job.document_id)
+
+        # Verify Provenance metadata reflecting the automatic Engine 2 fallback
+        assert detail.ocr_provider == "OCR.Space"
+        assert detail.ocr_engine == "2 (Fallback from Engine 3 after E580)"
+        assert detail.ocr_source == "OCR.Space Engine 2 (Fallback from Engine 3 after E580)"
+        assert detail.ocr_status == "OCR complete"
+        assert detail.review_status == ReviewStatus.PENDING_REVIEW
+
+        # Verify structured field extraction succeeded from Engine 2 text
+        assert detail.structured_data.get("notification_number") == "F.1(4)Rev/Gr.1/2025/NH-927A/11"
+        assert detail.structured_data.get("notification_date") == "2025-05-15"
+

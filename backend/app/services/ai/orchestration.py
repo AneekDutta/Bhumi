@@ -377,7 +377,16 @@ class AIOrchestrationService:
         before = sim_res.get("before", {})
         after = sim_res.get("after", {})
         delay_red = sim_res.get("delay_reduction_days", 0)
-        explanation = await self._provider.explain_whatif_result(scenario, sim_res)
+        try:
+            explanation = await self._provider.explain_whatif_result(scenario, sim_res)
+        except Exception as e:
+            logger.warning(f"AI provider explanation failed: {e}")
+            explanation = (
+                f"Under the registered CPM dependency model, executing '{scenario.parsed_intent}' "
+                f"yields a modeled corridor delay reduction of {delay_red} days "
+                f"(baseline project delay: {before.get('project_delay_days', 0)} days, counterfactual delay: {after.get('project_delay_days', 0)} days). "
+                f"Generative natural-language narrative synthesis was unavailable."
+            )
 
         return NLWhatIfResult(
             scenario=scenario,

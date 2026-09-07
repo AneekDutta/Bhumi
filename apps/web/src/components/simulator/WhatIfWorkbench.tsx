@@ -248,43 +248,58 @@ export function WhatIfWorkbench({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="p-3 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10">
-              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono uppercase">BEFORE INTERVENTION</div>
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono font-bold uppercase">
+                CURRENT MODELED PROJECT DELAY
+              </div>
               <div className="text-base font-bold font-mono text-[#B32424] dark:text-rose-400 mt-1">
                 {simResult.before?.project_finish || '2028-11-15'}
               </div>
               <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">
-                +{simResult.before?.project_delay_days || 229}d Corridor Delay
+                +{(simResult.before?.project_delay_days ?? 229)}d Corridor Delay
               </div>
             </div>
 
             <div className="p-3 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10">
-              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono uppercase">AFTER INTERVENTION</div>
+              <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 font-mono font-bold uppercase">
+                COUNTERFACTUAL FORECAST
+              </div>
               <div className="text-base font-bold font-mono text-[#1E7E34] dark:text-emerald-400 mt-1">
-                {simResult.after?.project_finish || '2028-09-30'}
+                {simResult.after?.project_finish || '2028-11-15'}
               </div>
               <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 mt-0.5">
-                +{simResult.after?.project_delay_days || 184}d Corridor Delay
+                +{(simResult.after?.project_delay_days ?? (229 - (simResult.delay_reduction_days ?? 0)))}d Corridor Delay
               </div>
             </div>
 
             <div className="p-3 rounded-[4px] bg-[#E8F5E9] dark:bg-emerald-950/40 border border-[#C8E6C9] dark:border-emerald-800/40">
-              <div className="text-[10px] text-[#1E7E34] dark:text-emerald-400 font-mono font-bold uppercase">DAYS RECOVERED</div>
+              <div className="text-[10px] text-[#1E7E34] dark:text-emerald-400 font-mono font-bold uppercase">
+                MODELED IMPROVEMENT FROM THIS INTERVENTION
+              </div>
               <div className="text-xl font-bold font-mono text-[#1E7E34] dark:text-emerald-300 mt-0.5">
-                -{simResult.delay_reduction_days || 45} Days
+                {(simResult.delay_reduction_days ?? 0) > 0 ? `-${simResult.delay_reduction_days} Days` : '0 Days'}
               </div>
               <div className="text-[11px] text-[#1E7E34] dark:text-emerald-300 mt-0.5 font-medium">
-                Critical chain float liberated
+                {(simResult.delay_reduction_days ?? 0) === 0
+                  ? 'Critical path remains constrained by remaining project activities'
+                  : 'Critical chain float liberated'}
               </div>
             </div>
           </div>
 
-          <div className="text-xs text-[#14213D] dark:text-slate-200 leading-relaxed bg-white dark:bg-[#0D121F] p-3 rounded-[4px] border border-[#DCE2E8] dark:border-white/10">
-            <strong className="text-[#0B2E59] dark:text-sky-300">Policy Feasibility:</strong> {simResult.preconditions_met ? 'All statutory preconditions satisfied.' : 'Precondition alerts identified.'}{' '}
-            Total deployment cost:{' '}
-            <span className="font-mono font-bold text-[#1E7E34] dark:text-emerald-400">
-              ₹{simResult.cost_estimate_units?.cost_inr?.toLocaleString() || '45,000'} ({simResult.cost_estimate_units?.officer_days || 14} officer-days)
-            </span>
-            .
+          <div className="text-xs text-[#14213D] dark:text-slate-200 leading-relaxed bg-white dark:bg-[#0D121F] p-3 rounded-[4px] border border-[#DCE2E8] dark:border-white/10 space-y-1">
+            <div>
+              <strong className="text-[#0B2E59] dark:text-sky-300">Policy Feasibility:</strong>{' '}
+              {simResult.preconditions_met ? 'All statutory preconditions satisfied.' : 'Precondition alerts identified.'}{' '}
+              Total deployment cost:{' '}
+              <span className="font-mono font-bold text-[#1E7E34] dark:text-emerald-400">
+                ₹{simResult.cost_estimate_units?.cost_inr?.toLocaleString() || '15,000'} ({simResult.cost_estimate_units?.officer_days || 5} officer-days)
+              </span>.
+            </div>
+            {(simResult.delay_reduction_days ?? 0) === 0 && (
+              <div className="text-[11px] text-[#5A6A80] dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-white/5">
+                <strong>Schedule Context:</strong> Resolving the selected intervention on {simResult.target_entities?.join(', ') || 'this parcel'} removes its local blocker ({simResult.intervention_type}). However, net corridor completion date is governed by parallel zero-float critical path sequences on other parcels.
+              </div>
+            )}
           </div>
         </div>
       )}
