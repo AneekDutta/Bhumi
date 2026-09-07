@@ -23,7 +23,7 @@ import { AdminOperationsSection } from '@/components/dashboard/AdminOperationsSe
 import { MOCK_GOVERNMENT_PROJECTS } from '@/lib/mockProjectData';
 
 export const metadata: Metadata = {
-  title: 'National Operations Console | BHUMI',
+  title: 'National Operations Console | KOSH',
   description: 'National land acquisition portfolio overview separated into Government Infrastructure Corridors and Real Citizen Grievances.',
 };
 

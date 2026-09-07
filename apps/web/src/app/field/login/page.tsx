@@ -23,6 +23,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
+import { KoshLogo } from "@/components/common/KoshLogo";
 import { getFieldOfficers } from "@/lib/api";
 import { offlineStore } from "@/lib/offlineStore";
 import { createClient } from "@/lib/supabase/client";
@@ -80,7 +81,7 @@ function FieldLoginContent() {
     try {
       const supabase = createClient();
       await supabase.auth.signInWithPassword({
-        email: "officer@bhumi.sih2026.org",
+        email: "officer@kosh.sih2026.org",
         password: "CommanderPass@2025",
       });
     } catch (e) {
@@ -158,11 +159,9 @@ function FieldLoginContent() {
         
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-[4px] bg-[#0B2E59] text-white shadow-xs mb-1 border border-white/20">
-            <Smartphone className="w-7 h-7" />
-          </div>
+          <KoshLogo size={46} variant="badge" className="mx-auto mb-1" />
           <h1 className="text-2xl font-black font-display tracking-tight text-[#14213D] dark:text-white">
-            BHUMI Field Surveyor Portal
+            KOSH Field Surveyor Portal
           </h1>
           <p className="text-xs text-[#5A6A80] dark:text-slate-400 max-w-xs mx-auto">
             Mobile Cadastral Verification & Ground Issue Escalation Console
@@ -407,7 +406,7 @@ function FieldLoginContent() {
       </div>
 
       <div className="text-center text-[10px] font-mono text-[#5A6A80] dark:text-slate-500 py-3 border-t border-[#DCE2E8] dark:border-white/10">
-        BHUMI · CALA Field Operations · PostGIS & NetworkX Engine
+        KOSH · CALA Field Operations · PostGIS & NetworkX Engine
       </div>
     </div>
   );

@@ -46,7 +46,7 @@ export default function NotFound() {
       </div>
 
       <p className="mt-8 text-[11px] text-slate-400 dark:text-slate-500 font-mono">
-        BHUMI Directorate &bull; Zero Silent Redirect Fallback Policy
+        KOSH Directorate &bull; Zero Silent Redirect Fallback Policy
       </p>
     </div>
   );

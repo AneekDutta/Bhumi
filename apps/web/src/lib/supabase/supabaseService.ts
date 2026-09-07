@@ -1,5 +1,5 @@
 /**
- * BHUMI PLATFORM — UNIFIED SUPABASE DATA SERVICE
+ * KOSH PLATFORM — UNIFIED SUPABASE DATA SERVICE
  * Authoritative single source of truth for both Field Operations & Admin Web.
  * Connects directly to Supabase PostgREST, Storage, and Audit logs.
  * Strictly aligned with live Supabase schemas:

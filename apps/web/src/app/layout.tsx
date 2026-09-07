@@ -7,8 +7,8 @@ import { LanguageProvider } from '@/context/LanguageContext';
 
 export const metadata: Metadata = {
   title: {
-    default: 'BHUMI — SIH26016 · National Land Acquisition Decision Support Prototype',
-    template: '%s | BHUMI',
+    default: 'KOSH — SIH26016 · National Land Acquisition Decision Support Prototype',
+    template: '%s | KOSH',
   },
   description: 'Demonstration decision-support prototype for infrastructure land acquisition, statutory workflows, and critical path risk monitoring.',
   icons: {
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'BHUMI Field',
+    title: 'KOSH Field',
   },
 };
 

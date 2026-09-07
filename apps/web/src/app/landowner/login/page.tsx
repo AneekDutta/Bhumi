@@ -18,6 +18,7 @@ import { createClient } from "@/lib/supabase/client";
 import { createOrUpdateLandownerProfile } from "@/lib/api";
 import { toUuid } from "@/lib/supabase/supabaseService";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
+import { KoshLogo } from "@/components/common/KoshLogo";
 
 function LandownerLoginContent() {
   const router = useRouter();
@@ -43,7 +44,7 @@ function LandownerLoginContent() {
       user_id: "O00004",
       owner_id: "O00004",
       name: "Geeta Meena",
-      email: "geeta.meena@bhumi.in",
+      email: "geeta.meena@kosh.in",
       contact_village: "Chandwas (V03)",
       role: "LANDOWNER"
     };
@@ -194,14 +195,12 @@ function LandownerLoginContent() {
 
         {/* Header Branding */}
         <div className="text-center space-y-1.5 pt-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-[4px] bg-[#0B2E59] text-amber-400 shadow-sm mb-1 border border-[#082242]">
-            <Users className="w-6 h-6" />
-          </div>
+          <KoshLogo size={46} variant="badge" className="mx-auto mb-1" />
           <div className="text-[10px] font-bold uppercase tracking-widest text-[#B36B00] dark:text-amber-400">
             RFCTLARR 2013 Statutory Compliance
           </div>
           <h1 className="text-xl font-bold font-display tracking-tight text-[#0B2E59] dark:text-white">
-            BHUMI Landowner & Citizen Portal
+            KOSH Landowner & Citizen Portal
           </h1>
           <p className="text-xs text-[#5A6A80] dark:text-slate-400 max-w-xs mx-auto">
             Grievance Redressal, Cadastral Boundary Registry & Compensation Tracking
@@ -341,7 +340,7 @@ function LandownerLoginContent() {
       </div>
 
       <div className="text-center text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 py-3 border-t border-[#DCE2E8] dark:border-white/10">
-        BHUMI Land Records Management System · Prototype (SIH26016) · PostGIS & NetworkX Causal Graph
+        KOSH Land Records Management System · Prototype (SIH26016) · PostGIS & NetworkX Causal Graph
       </div>
     </div>
   );

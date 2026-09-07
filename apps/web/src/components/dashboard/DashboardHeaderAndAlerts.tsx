@@ -60,7 +60,7 @@ export function DashboardHeaderAndAlerts({ stats }: DashboardHeaderAndAlertsProp
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `BHUMI_National_MIS_Summary_${new Date().toISOString().slice(0,10)}.csv`);
+    link.setAttribute("download", `KOSH_National_MIS_Summary_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -70,7 +70,7 @@ export function DashboardHeaderAndAlerts({ stats }: DashboardHeaderAndAlertsProp
 
   const handleExportJSON = () => {
     const exportData = {
-      platform: "BHUMI Decision Support System",
+      platform: "KOSH Decision Support System",
       problem_statement: "SIH26016",
       benchmark_corridor: "P-NH927A (Rajasthan)",
       generated_at: new Date().toISOString(),
@@ -81,7 +81,7 @@ export function DashboardHeaderAndAlerts({ stats }: DashboardHeaderAndAlertsProp
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `BHUMI_MIS_Snapshot_${new Date().toISOString().slice(0,10)}.json`);
+    link.setAttribute("download", `KOSH_MIS_Snapshot_${new Date().toISOString().slice(0,10)}.json`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

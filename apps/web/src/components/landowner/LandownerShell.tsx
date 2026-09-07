@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { ExitButton } from "@/components/common/ExitButton";
+import { KoshLogo } from "@/components/common/KoshLogo";
 
 interface LandownerShellProps {
   children: ReactNode;
@@ -103,16 +104,14 @@ export function LandownerShell({ children, title, showBack = false }: LandownerS
               </button>
             ) : (
               <Link href="/landowner/home" className="flex items-center gap-2 flex-shrink-0">
-                <div className="w-7 h-7 rounded-[4px] bg-amber-400 text-[#0B2E59] flex items-center justify-center font-black font-devanagari text-sm shadow-xs border border-amber-300">
-                  क
-                </div>
+                <KoshLogo size={22} variant="badge" />
               </Link>
             )}
 
             <div className="overflow-hidden">
               <div className="flex items-center gap-1.5">
                 <span className="font-bold text-sm text-white truncate block font-display leading-tight">
-                  {title || "BHUMI Citizen Portal"}
+                  {title || "KOSH Citizen Portal"}
                 </span>
                 <span className="px-1.5 py-0.2 rounded-[3px] text-[9px] font-mono font-bold bg-[#E8F5E9]/20 text-emerald-200 border border-emerald-400/40 whitespace-nowrap">
                   TITLEHOLDER

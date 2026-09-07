@@ -16,10 +16,10 @@ interface I18nContextType {
 const DICTIONARY: Record<Language, Record<string, string>> = {
   en: {
     // Brand & Header
-    "brand.title_hi": "भूमि — राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन प्रणाली",
-    "brand.title_en": "BHUMI — National Land Acquisition & Management System",
+    "brand.title_hi": "कोष — राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन प्रणाली",
+    "brand.title_en": "KOSH — National Land Acquisition & Management System",
     "brand.subline": "CALA — Central Authority for Land Acquisition",
-    "brand.short": "BHUMI",
+    "brand.short": "KOSH",
     "brand.cala": "CALA Directorate",
     "utility.helpline": "Emergency Helpline",
     "utility.email": "helpdesk@cala.gov.in",
@@ -74,14 +74,14 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "ticker.item3": "[STATUTORY HEARING] Section 3C objections hearing desk active for Kaimur & Dausa districts",
 
     // Footer & Legal
-    "footer.disclaimer": "BHUMI Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.",
+    "footer.disclaimer": "KOSH Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.",
     "footer.framework": "Statutory Framework: RFCTLARR Act 2013 & National Highways Act 1956",
     "footer.authority": "Central Authority for Land Acquisition (CALA) Directorate",
   },
   hi: {
     // Brand & Header
-    "brand.title_hi": "भूमि — राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन प्रणाली",
-    "brand.title_en": "BHUMI — National Land Acquisition & Management System",
+    "brand.title_hi": "कोष — राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन प्रणाली",
+    "brand.title_en": "KOSH — National Land Acquisition & Management System",
     "brand.subline": "सी.ए.एल.ए. — भूमि अधिग्रहण केंद्रीय प्राधिकरण",
     "brand.short": "भूमि",
     "brand.cala": "सी.ए.एल.ए. निदेशालय",
@@ -138,7 +138,7 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "ticker.item3": "[वैधानिक सुनवाई] कैमूर एवं दौसा जिलों में धारा 3C आपत्ति निवारण पीठ सक्रिय",
 
     // Footer & Legal
-    "footer.disclaimer": "भूमि प्लेटफॉर्म — स्मार्ट इंडिया हैकथॉन प्रोटोटाइप (SIH26016)। यह कोई आधिकारिक सरकारी प्रणाली नहीं है।",
+    "footer.disclaimer": "कोष प्लेटफॉर्म — स्मार्ट इंडिया हैकथॉन प्रोटोटाइप (SIH26016)। यह कोई आधिकारिक सरकारी प्रणाली नहीं है।",
     "footer.framework": "वैधानिक ढांचा: RFCTLARR अधिनियम 2013 एवं राष्ट्रीय राजमार्ग अधिनियम 1956",
     "footer.authority": "केंद्रीय भूमि अधिग्रहण प्राधिकरण (CALA) निदेशालय",
   }

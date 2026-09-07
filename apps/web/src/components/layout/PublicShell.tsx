@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n/I18nContext";
 import { CalaSealLogo } from "@/components/common/CalaSealLogo";
+import { KoshLogo } from "@/components/common/KoshLogo";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { Phone, Bell } from "lucide-react";
 
@@ -105,7 +106,7 @@ export function PublicShell({ children, onOfficerLoginClick }: PublicShellProps)
         <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
           
           {/* Left: CALA Generic Administrative Seal + Bilingual Title (Links to /) */}
-          <Link href="/" className="flex items-center gap-3.5 group cursor-pointer" title="Go to BHUMI Home">
+          <Link href="/" className="flex items-center gap-3.5 group cursor-pointer" title="Go to KOSH Home">
             <CalaSealLogo size={46} className="w-11 h-11 flex-shrink-0 drop-shadow-xs" variant="light" />
 
             <div className="flex flex-col">
@@ -247,17 +248,19 @@ export function PublicShell({ children, onOfficerLoginClick }: PublicShellProps)
             </Link>
           </div>
 
+          <KoshLogo size={24} variant="badge" className="mx-auto" />
+
           <p className="font-medium text-slate-200">
             Designed and Developed for CALA — Central Authority for Land Acquisition
           </p>
           <p className="text-[11px] text-slate-400">
-            BHUMI Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.
+            KOSH Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.
           </p>
           <p className="text-[11px] text-slate-400">
             Emergency Helpline: <strong className="text-amber-300">7595093196</strong> / <strong className="text-amber-300">6202346942</strong> · Technical Support: <strong className="text-slate-200">helpdesk@cala.gov.in</strong>
           </p>
           <p className="text-[10px] text-slate-400 font-mono pt-1">
-            BHUMI Platform Version 3.4.1 · Prototype Deployment (SIH26016)
+            KOSH Platform Version 3.4.1 · Prototype Deployment (SIH26016)
           </p>
         </div>
       </footer>

@@ -149,7 +149,7 @@ export default function GrievanceTrackerPage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#B36B00] text-white uppercase">
-              BHUMI SAMVAAD &bull; CITIZEN GRIEVANCE REDRESSAL
+              KOSH SAMVAAD &bull; CITIZEN GRIEVANCE REDRESSAL
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#14213D] dark:text-white leading-tight">
@@ -399,7 +399,7 @@ export default function GrievanceTrackerPage() {
               Need to lodge a new objection or compensation dispute?
             </h3>
             <p className="text-xs text-[#555555] dark:text-slate-300 mt-0.5">
-              Authenticate via Aadhaar OTP on the dedicated Bhumi Samvaad Citizen Portal to submit supporting revenue records.
+              Authenticate via Aadhaar OTP on the dedicated KOSH Samvaad Citizen Portal to submit supporting revenue records.
             </p>
           </div>
           <Link

@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { PublicShell } from "@/components/layout/PublicShell";
 import { PortfolioTable } from "@/components/dashboard/PortfolioTable";
+import { KoshLogo } from "@/components/common/KoshLogo";
 import { useI18n } from "@/lib/i18n/I18nContext";
 import { createClient } from "@/lib/supabase/client";
 import { MOCK_GOVERNMENT_PROJECTS } from "@/lib/mockProjectData";
@@ -305,7 +306,7 @@ export default function LandingPage() {
     const sessionData = {
       officer_id: "OFF-CALA-01",
       name: "Sh. Rajesh Kumar",
-      email: "officer@bhumi.cala.gov.in",
+      email: "officer@kosh.cala.gov.in",
       role: "ADMIN",
     };
 
@@ -329,7 +330,7 @@ export default function LandingPage() {
 
     let loginEmail = officerId.trim();
     if (!loginEmail.includes("@")) {
-      loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@bhumi.cala.gov.in`;
+      loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@kosh.cala.gov.in`;
     }
 
     try {
@@ -399,13 +400,21 @@ export default function LandingPage() {
           <div className="lg:col-span-8 space-y-4">
             
             {/* Heading */}
-            <div className="border-b border-[#DCE2E8] dark:border-white/10 pb-2.5">
-              <h1 className="text-xl sm:text-2xl font-bold text-[#14213D] dark:text-white leading-tight">
-                National Highway Land Acquisition Dashboard
-              </h1>
-              <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
-                Statutory digital twin governing linear infrastructure land acquisition under the <strong>National Highways Act, 1956</strong> and <strong>RFCTLARR Act, 2013</strong>.
-              </p>
+            <div className="border-b border-[#DCE2E8] dark:border-white/10 pb-2.5 flex items-start justify-between gap-4">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#0B2E59]/10 dark:bg-white/10 text-[#0B2E59] dark:text-sky-300 font-mono text-[10px] font-bold mb-1 tracking-wider uppercase">
+                  <span>KOSH · Land to Progress</span>
+                </div>
+                <h1 className="text-xl sm:text-2xl font-bold text-[#14213D] dark:text-white leading-tight">
+                  National Highway Land Acquisition Dashboard
+                </h1>
+                <p className="text-xs text-[#5A6A80] dark:text-slate-400 mt-1">
+                  Statutory digital twin governing linear infrastructure land acquisition under the <strong>National Highways Act, 1956</strong> and <strong>RFCTLARR Act, 2013</strong>.
+                </p>
+              </div>
+              <div className="hidden sm:block flex-shrink-0">
+                <KoshLogo size={36} variant="badge" />
+              </div>
             </div>
 
             {/* 4 Authoritative Stat Tiles */}
@@ -740,8 +749,8 @@ export default function LandingPage() {
               >
                 {/* Header with Back button */}
                 <div className="bg-[#0B2E59] text-white px-4 py-2.5 border-b border-[#0A2647] flex items-center justify-between flex-shrink-0">
-                  <div className="flex items-center gap-2">
-                    <Lock className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                  <div className="flex items-center gap-2.5">
+                    <KoshLogo size={24} variant="badge" />
                     <div>
                       <div className="text-[10px] font-bold font-devanagari text-slate-200">
                         अधिकारी लॉगिन
@@ -787,7 +796,7 @@ export default function LandingPage() {
                       required
                       value={officerId}
                       onChange={(e) => setOfficerId(e.target.value)}
-                      placeholder="e.g. OFF-CALA-01 or officer@bhumi.cala.gov.in"
+                      placeholder="e.g. OFF-CALA-01 or officer@kosh.cala.gov.in"
                       className="w-full text-xs p-2.5 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded focus:outline-none focus:border-[#0B5FA5]"
                     />
                   </div>

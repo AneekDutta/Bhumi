@@ -160,25 +160,25 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        {/* Administrative Header (BHUMI / CALA Directorate) */}
+        {/* Administrative Header (KOSH / CALA Directorate) */}
         <header className="w-full bg-[#0B2E59] text-white shadow-md">
           <div className="w-full px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
 
             {/* LEFT: Administrative Seal + Bilingual Title */}
-            <Link href="/dashboard" className="flex items-center gap-3 group min-w-0" title="BHUMI Console">
+            <Link href="/dashboard" className="flex items-center gap-3 group min-w-0" title="KOSH Console">
               <CalaSealLogo size={36} className="w-9 h-9 flex-shrink-0 drop-shadow-xs" variant="light" />
 
               <div className="flex flex-col min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="text-[10px] text-amber-300 font-mono tracking-wider font-bold uppercase leading-tight">
-                    BHUMI · CALA DIRECTORATE
+                    KOSH · CALA DIRECTORATE
                   </span>
                   <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 font-semibold">
                     OFFICER CONSOLE
                   </span>
                 </div>
                 <span className="text-xs sm:text-sm font-bold text-white font-sans tracking-tight leading-tight">
-                  {language === "hi" ? "भूमि — राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन प्रणाली" : "BHUMI — National Land Acquisition Operations"}
+                  {language === "hi" ? "कोष — राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन प्रणाली" : "KOSH — National Land Acquisition Operations"}
                 </span>
               </div>
             </Link>
@@ -244,7 +244,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           {/* Official SIH Hackathon Prototype Footer */}
           <footer className="w-full bg-[#0A2647] text-white py-3 px-6 text-center text-xs flex-shrink-0 border-t border-[#071A32] space-y-0.5">
             <div className="font-semibold text-slate-200">
-              BHUMI — Smart India Hackathon Prototype (SIH26016). Not an official government system.
+              KOSH — Smart India Hackathon Prototype (SIH26016). Not an official government system.
             </div>
             <div className="text-[11px] text-slate-400">
               Designed and Developed for CALA — Central Authority for Land Acquisition Directorate Evaluation

@@ -116,7 +116,7 @@ export function Sidebar() {
             <CalaSealLogo size={32} className="w-8 h-8 flex-shrink-0 drop-shadow-xs" variant="light" />
             <div>
               <div className="font-bold text-[#14213D] dark:text-white text-[15px] leading-tight">
-                BHUMI Console
+                KOSH Console
               </div>
               <div className="text-[10px] text-[#64748B] dark:text-[#94A3B8] font-mono">
                 CALA Directorate · Kota

@@ -17,7 +17,7 @@ import {
 import { MOCK_GOVERNMENT_PROJECTS } from '@/lib/mockProjectData';
 
 export const metadata: Metadata = {
-  title: 'Project Portfolio | BHUMI',
+  title: 'Project Portfolio | KOSH',
   description: 'National infrastructure project portfolio overview across Highways, Railways, Industrial, and Energy sectors.',
 };
 

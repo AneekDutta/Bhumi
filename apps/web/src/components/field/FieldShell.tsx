@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { ExitButton } from "@/components/common/ExitButton";
+import { KoshLogo } from "@/components/common/KoshLogo";
 import { offlineStore } from "@/lib/offlineStore";
 
 interface FieldShellProps {
@@ -130,15 +131,13 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
               </button>
             ) : (
               <Link href="/field/dashboard" className="flex items-center gap-2 flex-shrink-0">
-                <div className="w-7 h-7 rounded-[4px] bg-white/15 border border-white/25 flex items-center justify-center text-white font-bold text-xs shadow-xs">
-                  <Smartphone className="w-4 h-4" />
-                </div>
+                <KoshLogo size={22} variant="badge" />
               </Link>
             )}
 
             <div className="overflow-hidden">
               <span className="font-bold text-sm text-white truncate block">
-                {title || "BHUMI Field"}
+                {title || "KOSH Field"}
               </span>
               {officer && (
                 <span className="text-[10px] text-sky-200 font-mono truncate block">
