@@ -154,7 +154,7 @@ def main():
 
     # Write TypeScript file
     ts_code = f"""/**
- * BHUMI PLATFORM — AUTHORITATIVE SIH26016 DATASET REPOSITORY
+ * KOSH PLATFORM — AUTHORITATIVE SIH26016 DATASET REPOSITORY
  * Synchronized directly from data/sih26016/seed_data.json
  * Features: NH-927A Kota-Jhalawar Bypass Widening, 181 Parcels, 3 Villages
  */

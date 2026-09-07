@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { PublicShell } from "@/components/layout/PublicShell";
 import { useI18n } from "@/lib/i18n/I18nContext";
 import { Calculator, Info, ShieldCheck, FileCheck, HelpCircle } from "lucide-react";
+import { calculateStatutoryAward } from "@/lib/statutory/rfctlarrCalculator";
 
 export default function CompensationCalculatorPage() {
   const { t } = useI18n();
@@ -16,14 +17,23 @@ export default function CompensationCalculatorPage() {
   const [calcInterestMonths, setCalcInterestMonths] = useState(8);
   const [calcAssetsValue, setCalcAssetsValue] = useState(120000);
 
-  // Mathematics
-  const calcBaseMarketValue = calcAreaSqm * calcCircleRate;
-  const calcEffectiveMultiplier = calcLocationType === "RURAL" ? calcRuralMultiplier : 1.0;
-  const calcMultipliedValue = calcBaseMarketValue * calcEffectiveMultiplier;
-  const calcTotalLandWithAssets = calcMultipliedValue + calcAssetsValue;
-  const calcSolatium = calcTotalLandWithAssets * 1.0; // 100% Solatium
-  const calcAdditionalInterest = calcBaseMarketValue * 0.12 * (calcInterestMonths / 12);
-  const calcTotalCompensation = calcTotalLandWithAssets + calcSolatium + calcAdditionalInterest;
+  // Canonical RFCTLARR Calculation Engine
+  const award = calculateStatutoryAward({
+    areaSqm: calcAreaSqm,
+    circleRatePerSqm: calcCircleRate,
+    locationType: calcLocationType,
+    multiplierFactor: calcLocationType === "RURAL" ? calcRuralMultiplier : 1.0,
+    interestMonths: calcInterestMonths,
+    assetsValue: calcAssetsValue,
+  });
+
+  const calcBaseMarketValue = award.marketValueBase;
+  const calcEffectiveMultiplier = award.multiplierFactor;
+  const calcMultipliedValue = award.marketValueAdjusted;
+  const calcTotalLandWithAssets = award.subtotalBeforeSolatium;
+  const calcSolatium = award.solatiumAmount;
+  const calcAdditionalInterest = award.additionalStatutoryAmount12Pct;
+  const calcTotalCompensation = award.totalCompensation;
 
   return (
     <PublicShell>
@@ -230,9 +240,9 @@ export default function CompensationCalculatorPage() {
                 {/* Line 5 */}
                 <div className="flex items-center justify-between p-2.5 rounded-none bg-blue-50/70 dark:bg-blue-950/30 border-b-2 border-blue-500">
                   <div>
-                    <span className="font-bold text-[#0B5FA5] dark:text-sky-300">5. 12% Additional Interest ({calcInterestMonths} Months)</span>
+                    <span className="font-bold text-[#0B5FA5] dark:text-sky-300">5. 12% Additional Statutory Component ({calcInterestMonths} Months)</span>
                     <div className="text-[10px] text-[#0B5FA5] dark:text-sky-400">
-                      Section 30(3) Interest from Notification Date to Award
+                      Section 30(3) Additional Statutory Amount from Notification Date to Award
                     </div>
                   </div>
                   <span className="font-mono font-bold text-[#0B5FA5] dark:text-sky-300">

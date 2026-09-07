@@ -12,6 +12,14 @@ from app.api.v1 import (
     sih26016,
     spatial,
     landowner,
+    valuation,
+    legal,
+    deadlines,
+    officer_actions,
+    document_intelligence,
+    risk,
+    identity,
+    assistant,
 )
 
 api_router = APIRouter()
@@ -30,3 +38,19 @@ from fastapi import Depends
 api_router.include_router(sih26016.router, prefix="/sih26016", tags=["sih26016"], dependencies=[Depends(get_current_user_context)])
 
 api_router.include_router(landowner.router, prefix="/landowner", tags=["Landowner Profile & Grievance"], dependencies=[Depends(get_current_user_context)])
+
+api_router.include_router(valuation.router, prefix="/valuation", tags=["valuation"], dependencies=[Depends(get_current_user_context)])
+
+api_router.include_router(legal.router, prefix="/legal", tags=["Legal & Rights"])
+
+api_router.include_router(deadlines.router, prefix="/deadlines", tags=["Statutory Deadlines"])
+
+api_router.include_router(officer_actions.router, prefix="/officer-actions", tags=["Officer Action Center"])
+
+api_router.include_router(document_intelligence.router, prefix="/document-intelligence", tags=["Document Intelligence"], dependencies=[Depends(get_current_user_context)])
+
+api_router.include_router(risk.router, prefix="/risk", tags=["Acquisition Risk Engine"], dependencies=[Depends(get_current_user_context)])
+
+api_router.include_router(identity.router, prefix="/identity", tags=["Identity Verification"], dependencies=[Depends(get_current_user_context)])
+
+api_router.include_router(assistant.router, prefix="/assistant", tags=["KOSH Intelligence Assistant"], dependencies=[Depends(get_current_user_context)])

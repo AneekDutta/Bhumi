@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { ExitButton } from "@/components/common/ExitButton";
 import { Activity, ChevronDown, User } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
 
 import { CalaSealLogo } from "@/components/common/CalaSealLogo";
 import { useI18n } from "@/lib/i18n/I18nContext";
@@ -14,22 +15,22 @@ import { useI18n } from "@/lib/i18n/I18nContext";
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [userEmail, setUserEmail] = useState<string | null>(null);
-  const { language, setLanguage, textSize, setTextSize, t } = useI18n();
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     import("@/lib/supabase/client").then(({ createClient }) => {
       const supabase = createClient();
-      supabase.auth.getUser().then(({ data }) => {
+      supabase.auth.getUser().then(({ data }: { data: any }) => {
         if (data?.user?.email) {
           setUserEmail(data.user.email);
         } else {
           // Check if officer session cookie exists
-          const match = typeof document !== "undefined" ? document.cookie.match(/bhumi_officer_session=([^;]+)/) : null;
+          const match = typeof document !== "undefined" ? document.cookie.match(/(?:kosh_officer_session|bhumi_officer_session)=([^;]+)/) : null;
           if (match) {
             try {
               const parsed = JSON.parse(decodeURIComponent(match[1]));
               if (parsed.email) setUserEmail(parsed.email);
-              else if (parsed.officer_id) setUserEmail(`${parsed.officer_id.toLowerCase()}@bhumi.cala.gov.in`);
+              else if (parsed.officer_id) setUserEmail(`${parsed.officer_id.toLowerCase()}@kosh.sih2026.org`);
             } catch {}
           }
         }
@@ -92,147 +93,144 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="h-screen w-full bg-[#F4F6F8] dark:bg-[#07080F] text-[#14213D] dark:text-[#F0F4FF] font-sans antialiased flex flex-col overflow-hidden transition-colors duration-200">
       
-      {/* Top Utility Strip (Helpline, Language, Font Size) */}
-      <div className="bg-[#071A32] text-white text-[11px] px-4 sm:px-6 lg:px-8 py-1.5 border-b border-white/10 flex-shrink-0 z-30">
-        <div className="w-full flex items-center justify-between gap-2">
-          <div className="flex items-center gap-3">
-            <span className="text-slate-200">
-              {t("utility.helpline")}: <strong>7595093196</strong> / <strong>6202346942</strong>
-            </span>
-            <span className="text-white/30 hidden sm:inline">|</span>
-            <span className="text-slate-300 hidden sm:inline">{t("utility.email")}</span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1 text-slate-300">
-              <button 
-                onClick={() => setLanguage('en')}
-                className={`px-1 transition-colors ${language === 'en' ? 'text-white font-bold underline' : 'text-slate-300 hover:text-white'}`}
-                aria-label="Switch to English"
-              >
-                English
-              </button>
-              <span className="text-white/40">|</span>
-              <button 
-                onClick={() => setLanguage('hi')}
-                className={`px-1 font-devanagari transition-colors ${language === 'hi' ? 'text-white font-bold underline' : 'text-slate-300 hover:text-white'}`}
-                aria-label="Switch to Hindi"
-              >
-                हिन्दी
-              </button>
+      {/* ================================================================
+          STICKY TOP ADMINISTRATIVE BAR (Utility Strip + Header)
+          ================================================================ */}
+      <div className="sticky top-0 z-40 w-full flex-shrink-0">
+        {/* Top Utility Strip (Toll-Free Helpline, Language, Font Size) */}
+        <div className="bg-[#071A32] text-white text-[11px] px-4 sm:px-6 lg:px-8 py-1.5 border-b border-white/10">
+          <div className="w-full flex items-center justify-between gap-2">
+            <div className="flex items-center gap-3">
+              <span className="text-slate-200">
+                Evaluation Helpdesk: <strong>7595093196</strong> / <strong>6202346942</strong>
+              </span>
+              <span className="text-white/30 hidden sm:inline">|</span>
+              <span className="text-slate-300 hidden sm:inline">helpdesk-kosh@sih2026.org</span>
+              <span className="text-white/30 hidden md:inline">|</span>
+              <span className="text-amber-300/80 font-mono hidden md:inline">SIH26016 Academic Prototype</span>
             </div>
-            <span className="text-white/30">|</span>
-            <div className="flex items-center gap-1 font-mono text-[10px]">
-              <button 
-                onClick={() => setTextSize('sm')}
-                className={`px-1.5 py-0.5 rounded-none font-bold cursor-pointer transition-colors ${textSize === 'sm' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
-                aria-label="Decrease text size"
-              >
-                A-
-              </button>
-              <button 
-                onClick={() => setTextSize('base')}
-                className={`px-1.5 py-0.5 rounded-none font-bold cursor-pointer transition-colors ${textSize === 'base' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
-                aria-label="Default text size"
-              >
-                A
-              </button>
-              <button 
-                onClick={() => setTextSize('lg')}
-                className={`px-1.5 py-0.5 rounded-none font-bold cursor-pointer transition-colors ${textSize === 'lg' ? 'bg-white/30 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}
-                aria-label="Increase text size"
-              >
-                A+
-              </button>
+
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 text-slate-300 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setLanguage("en")}
+                  className={`cursor-pointer transition-colors px-1.5 py-0.5 rounded text-[11px] ${language === "en" ? "text-white font-bold bg-white/15 underline" : "text-slate-300 hover:text-white"}`}
+                >
+                  English
+                </button>
+                <span className="text-white/40">|</span>
+                <button
+                  type="button"
+                  onClick={() => setLanguage("hi")}
+                  className={`cursor-pointer transition-colors font-devanagari px-1.5 py-0.5 rounded text-[11px] ${language === "hi" ? "text-white font-bold bg-white/15 underline" : "text-slate-300 hover:text-white"}`}
+                >
+                  हिन्दी
+                </button>
+              </div>
+              <span className="text-white/30">|</span>
+              <div className="flex items-center gap-1 font-mono text-[10px]">
+                <span className="px-1 py-0.5 rounded bg-white/10 hover:bg-white/20 cursor-pointer font-bold">A-</span>
+                <span className="px-1 py-0.5 rounded bg-white/15 hover:bg-white/20 cursor-pointer font-bold">A</span>
+                <span className="px-1 py-0.5 rounded bg-white/10 hover:bg-white/20 cursor-pointer font-bold">A+</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* ================================================================
-          TOP OFFICIAL CALA AUTHORITY HEADER
-          ================================================================ */}
-      <header className="w-full bg-[#0B2E59] text-white shadow-xs flex-shrink-0 z-30">
-        <div className="w-full px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
-          
-          {/* LEFT: CALA Generic Administrative Seal + Bilingual System Title */}
-          <Link href="/dashboard" className="flex items-center gap-3.5 group min-w-0">
-            <CalaSealLogo size={42} className="w-10 h-10 flex-shrink-0 drop-shadow-xs" variant="light" />
+        {/* Administrative Header (KOSH Prototype) */}
+        <header className="w-full bg-[#0B2E59] text-white shadow-md">
+          <div className="w-full px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
 
-            {/* Bilingual Ministry / Authority Title */}
-            <div className="flex flex-col min-w-0">
-              <span className="text-[11px] sm:text-xs text-slate-200 font-sans tracking-wide leading-tight">
-                {t("brand.title_hi")}
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-white font-sans tracking-tight leading-tight">
-                {t("brand.title_en")}
-              </span>
-              <span className="text-[10px] text-amber-300 font-semibold tracking-wide leading-tight">
-                {t("brand.subline")}
-              </span>
-            </div>
-          </Link>
+            {/* LEFT: Administrative Badge + Bilingual Prototype Title */}
+            <Link href="/dashboard" className="flex items-center gap-3 group min-w-0">
+              <div className="w-9 h-9 rounded bg-[#14213D] border border-amber-400/40 flex-shrink-0 flex items-center justify-center text-amber-300 font-devanagari font-black text-xl shadow-xs group-hover:border-amber-400 transition-colors">
+                क
+              </div>
 
-          {/* RIGHT: User Profile & Actions */}
-          <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
-            {/* What-If Workbench Link */}
-            <Link
-              href="/intelligence/what-if"
-              className="hidden xl:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-none bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors"
-            >
-              <Activity className="w-3.5 h-3.5 text-amber-300" />
-              <span>What-If Workbench</span>
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] text-amber-300 font-mono tracking-wider font-bold uppercase leading-tight">
+                    KOSH · SIH26016
+                  </span>
+                  <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 font-semibold">
+                    PROTOTYPE
+                  </span>
+                </div>
+                <span className="text-xs sm:text-sm font-bold text-white font-sans tracking-tight leading-tight">
+                  {language === "hi" ? "कोष — SIH26016 · भूमि अधिग्रहण निर्णय सहायता प्रोटोटाइप" : "Land Acquisition Decision Support Prototype"}
+                </span>
+              </div>
             </Link>
 
-            {/* Authority Officer Profile Card */}
-            <div className="flex items-center gap-2.5 pl-2 sm:pl-3 sm:border-l sm:border-white/20">
-              <div className="w-8 h-8 rounded-none bg-white/10 border border-white/20 flex items-center justify-center text-white font-semibold flex-shrink-0">
-                <User className="w-4 h-4 text-amber-300" />
-              </div>
-              <div className="hidden sm:flex flex-col text-left">
-                <div className="text-xs font-medium text-white flex items-center gap-1">
-                  <span>{t("utility.welcome")}, </span>
-                  <span className="font-bold truncate max-w-[200px]" title={userEmail || "officer@bhumi.cala.gov.in"}>
-                    {userEmail || "officer@bhumi.cala.gov.in"}
-                  </span>
-                  <ChevronDown className="w-3 h-3 text-slate-300 ml-0.5 flex-shrink-0" />
-                </div>
-                <div className="text-[10px] text-slate-300 font-sans tracking-tight">
-                  {t("utility.role_cala")}
-                </div>
-              </div>
-            </div>
+            {/* RIGHT: User Profile & Actions */}
+            <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
+              {/* What-If Workbench Link */}
+              <Link
+                href="/intelligence/what-if"
+                className="hidden xl:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-none bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors"
+              >
+                <Activity className="w-3.5 h-3.5 text-amber-300" />
+                <span>{t("app.whatif_workbench")}</span>
+              </Link>
 
-            {/* Theme Toggle & Sign Out */}
-            <div className="flex items-center gap-1.5">
-              <ThemeToggle variant="icon" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20" />
-              <ExitButton variant="header" className="!bg-white/10 !border-white/20 !text-rose-200 hover:!bg-white/20" />
+              {/* Authority Officer Profile Card */}
+              <div className="flex items-center gap-2.5 pl-2 sm:pl-3 sm:border-l sm:border-white/20">
+                <div className="w-8 h-8 rounded-none bg-white/10 border border-white/20 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                  <User className="w-4 h-4 text-amber-300" />
+                </div>
+                <div className="hidden sm:flex flex-col text-left">
+                  <div className="text-xs font-medium text-white flex items-center gap-1">
+                    <span>{t("app.welcome")}</span>
+                    <span className="font-bold truncate max-w-[200px]" title={userEmail || "officer@kosh.sih2026.org"}>
+                      {userEmail || "officer@kosh.sih2026.org"}
+                    </span>
+                    <ChevronDown className="w-3 h-3 text-slate-300 ml-0.5 flex-shrink-0" />
+                  </div>
+                  <div className="text-[10px] text-slate-300 font-sans tracking-tight">
+                    CALA Kota (NH-927A) · Rajasthan Benchmark
+                  </div>
+                </div>
+              </div>
+
+              {/* Theme Toggle & Sign Out */}
+              <div className="flex items-center gap-1.5">
+                <ThemeToggle variant="icon" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20" />
+                <ExitButton variant="header" className="!bg-white/10 !border-white/20 !text-rose-200 hover:!bg-white/20" />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Clean Authority Hairline Rule */}
-        <div className="h-[2px] w-full bg-[#0B5FA5] flex-shrink-0" />
-      </header>
+          {/* National Tricolor Hairline Band */}
+          <div className="flex h-[2px] w-full">
+            <div className="flex-1 bg-[#FF9933]" />
+            <div className="flex-1 bg-white" />
+            <div className="flex-1 bg-[#138808]" />
+          </div>
+        </header>
+      </div>
 
       {/* ================================================================
           MAIN WORKSPACE LAYOUT: Independent Scroll Sidebar & Main Body
           ================================================================ */}
-      <div className="flex-1 flex w-full overflow-hidden">
+      <div className="flex-1 flex min-h-0 w-full overflow-hidden">
         <Sidebar />
-        <main className="flex-1 min-w-0 h-full overflow-y-auto overflow-x-hidden flex flex-col justify-between bg-[#F4F6F8] dark:bg-[#07080F]">
+        <main className="flex-1 min-w-0 flex flex-col justify-between bg-[#F4F6F8] dark:bg-[#07080F]">
           {/* Page Content Container */}
           <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
             {children}
           </div>
 
-          {/* Neutral Prototype Footer (Zero Real Government Marks) */}
-          <footer className="w-full bg-[#0A2647] text-white py-3 px-6 text-center text-xs flex-shrink-0 border-t border-[#071A32] space-y-1">
-            <div className="font-medium text-slate-200">
-              {t("footer.disclaimer")}
+          {/* Official SIH Hackathon Prototype Footer */}
+          <footer className="w-full bg-[#0A2647] text-white py-3 px-6 text-center text-xs flex-shrink-0 border-t border-[#071A32] space-y-0.5">
+            <div className="font-semibold text-slate-200">
+              KOSH — Smart India Hackathon 2026 Prototype · Problem Statement SIH26016
             </div>
             <div className="text-[11px] text-slate-400">
-              {t("footer.framework")} &bull; {t("footer.authority")}
+              For Academic Evaluation &amp; Prototype Demonstration Only · Synthetic Rajasthan Benchmark Data (P-NH927A / P00001)
+            </div>
+            <div className="text-[10px] text-slate-500 font-mono">
+              Deterministic Statutory Engine (RFCTLARR Act 2013 &amp; NH Act 1956) · PostGIS Spatial Twin · Critical Path Method
             </div>
           </footer>
         </main>

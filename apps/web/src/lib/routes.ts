@@ -89,6 +89,7 @@ export function isPublicRoute(pathname: string): boolean {
   if (pathname === '/gazette' || pathname.startsWith('/gazette/')) return true;
   if (pathname === '/calculator' || pathname.startsWith('/calculator/')) return true;
   if (pathname === '/grievance' || pathname.startsWith('/grievance/')) return true;
+  if (pathname === '/legal-rights' || pathname.startsWith('/legal-rights/')) return true;
 
   // Public login / registration gateways
   if (pathname === '/login' || pathname.startsWith('/login/')) return true;
@@ -123,6 +124,8 @@ export function isAdminRoute(pathname: string): boolean {
   if (pathname === '/reports' || pathname.startsWith('/reports/')) return true;
   if (pathname === '/timeline' || pathname.startsWith('/timeline/')) return true;
   if (pathname === '/status' || pathname.startsWith('/status/')) return true;
+  if (pathname === '/action-center' || pathname.startsWith('/action-center/')) return true;
+  if (pathname === '/document-intelligence' || pathname.startsWith('/document-intelligence/')) return true;
   return false;
 }
 

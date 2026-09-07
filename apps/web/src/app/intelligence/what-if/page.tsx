@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { 
   IndianRupee, 
@@ -18,6 +18,7 @@ import {
   Percent
 } from 'lucide-react';
 import { getLandownerComplaints, getAllRegisteredParcels, adminCompleteImplementation } from '@/lib/api';
+import { calculateStatutoryAward } from '@/lib/statutory/rfctlarrCalculator';
 
 export default function WhatIfSimulationPage() {
   const [cases, setCases] = useState<any[]>([]);
@@ -32,7 +33,7 @@ export default function WhatIfSimulationPage() {
   const [applying, setApplying] = useState(false);
   const [applySuccess, setApplySuccess] = useState<string | null>(null);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const data = await getLandownerComplaints();
@@ -56,11 +57,11 @@ export default function WhatIfSimulationPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCaseId]);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const selectedCase = useMemo(() => {
     return cases.find(c => c.id === selectedCaseId) || cases[0] || null;
@@ -75,19 +76,28 @@ export default function WhatIfSimulationPage() {
     const baseValue = areaSqm * ratePerSqm;
 
     // BEFORE: Standard statutory baseline
-    const beforeMultiplier = 1.0;
-    const beforeBaseWithMult = baseValue * beforeMultiplier;
-    const beforeSolatium = beforeBaseWithMult * 1.0;
-    const beforeTotal = beforeBaseWithMult + beforeSolatium;
+    const beforeAward = calculateStatutoryAward({
+      areaSqm,
+      circleRatePerSqm: ratePerSqm,
+      multiplierFactor: 1.0,
+      solatiumPercentage: 100,
+    });
+    const beforeTotal = beforeAward.totalCompensation;
     const beforeLitigationRisk = selectedCase.status === 'Implementation Completed' ? 'LOW (15%)' : 'HIGH (78%)';
     const beforeDelayDays = 120;
 
     // AFTER: Simulated Parameters
-    const afterBaseWithMult = baseValue * multiplier;
-    const afterSolatium = afterBaseWithMult * (solatiumPct / 100);
-    const afterInterest = afterBaseWithMult * (0.12 * interestYears);
+    const afterAward = calculateStatutoryAward({
+      areaSqm,
+      circleRatePerSqm: ratePerSqm,
+      multiplierFactor: multiplier,
+      solatiumPercentage: solatiumPct,
+      interestYears,
+    });
     const interventionBonus = selectedIntervention === 'pfms_direct' ? 50000 : selectedIntervention === 'lok_adalat' ? 100000 : 0;
-    const afterTotal = afterBaseWithMult + afterSolatium + afterInterest + interventionBonus;
+    const afterTotal = afterAward.totalCompensation + interventionBonus;
+    const afterSolatium = afterAward.solatiumAmount;
+    const afterInterest = afterAward.additionalStatutoryAmount12Pct;
 
     const netDifference = afterTotal - beforeTotal;
     const estimatedDaysSaved = selectedIntervention === 'pfms_direct' ? 75 : selectedIntervention === 'joint_cadastral' ? 90 : 60;

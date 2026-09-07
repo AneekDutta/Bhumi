@@ -211,7 +211,8 @@ export default function RealLandownerGISPage() {
     zoom = gisParcels.length > 1 ? 13.5 : 15.2;
   }
 
-  const mapKey = process.env.NEXT_PUBLIC_MAPTILER_KEY;
+  const rawMapKey = process.env.NEXT_PUBLIC_MAPTILER_KEY;
+  const mapKey = (rawMapKey && rawMapKey !== 'Gc1lYt64NhTk5BQqkkZ4') ? rawMapKey : undefined;
   const mapStyle = mapKey 
     ? `https://api.maptiler.com/maps/basic-v2/style.json?key=${mapKey}` 
     : isLight

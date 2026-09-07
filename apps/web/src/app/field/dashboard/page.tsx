@@ -17,7 +17,8 @@ import {
   Settings,
   Layers,
   Database,
-  FileText
+  FileText,
+  AlertOctagon
 } from "lucide-react";
 import { FieldShell } from "@/components/field/FieldShell";
 import { getFieldParcels, getFieldIncidents, getLandownerComplaints } from "@/lib/api";
@@ -150,6 +151,30 @@ export default function FieldDashboardPage() {
             </Link>
           )}
         </div>
+
+        {/* Officer Action Center Banner */}
+        <Link
+          href="/action-center"
+          className="flex items-center justify-between p-3.5 rounded-[4px] bg-[#0B2E59] text-white hover:bg-[#082242] border border-[#0B2E59] shadow-xs group transition-all"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-[4px] bg-white/10 flex items-center justify-center flex-shrink-0 text-white">
+              <AlertOctagon className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-white">Officer Action Center</span>
+                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-[2px] bg-white/20 text-white uppercase">
+                  Statutory Clocks & CPM
+                </span>
+              </div>
+              <p className="text-[11px] text-white/80 mt-0.5">
+                Prioritized duties, mandatory lapse risks, and critical path blockers.
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-white/70 group-hover:text-white group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+        </Link>
 
         {/* Real Complaint Verification Queue / Empty State */}
         {pendingComplaints.length === 0 ? (

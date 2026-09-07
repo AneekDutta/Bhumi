@@ -3,13 +3,14 @@ import { ReactNode } from 'react';
 import type { Metadata, Viewport } from 'next';
 import { AppShell } from '@/components/layout/AppShell';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { LanguageProvider } from '@/context/LanguageContext';
 
 export const metadata: Metadata = {
   title: {
-    default: 'BHUMI: National Land Acquisition & Infrastructure Operations',
-    template: '%s | BHUMI',
+    default: 'KOSH — SIH26016 · Land Acquisition Decision Support Prototype',
+    template: '%s | KOSH',
   },
-  description: 'Operational decision-intelligence platform for infrastructure land acquisition, statutory workflows, and critical path risk monitoring.',
+  description: 'Demonstration decision-support prototype for infrastructure land acquisition, statutory workflows, and critical path risk monitoring.',
   icons: {
     icon: '/icon.svg',
   },
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'BHUMI Field',
+    title: 'KOSH Field',
   },
 };
 
@@ -39,7 +40,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             __html: `
               (function() {
                 try {
-                  var saved = localStorage.getItem('bhumi-theme');
+                  var saved = localStorage.getItem('kosh-theme') || localStorage.getItem('bhumi-theme');
                   var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                   var isDark = saved === 'dark' || (saved === 'system' && prefersDark);
                   var root = document.documentElement;
@@ -60,9 +61,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="min-h-full bg-[#F4F6F8] dark:bg-[#07080F] text-[#14213D] dark:text-[#F0F4FF] font-sans antialiased transition-colors duration-150">
         <ThemeProvider>
-          <I18nProvider>
-            <AppShell>{children}</AppShell>
-          </I18nProvider>
+          <LanguageProvider>
+            <I18nProvider>
+              <AppShell>{children}</AppShell>
+            </I18nProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

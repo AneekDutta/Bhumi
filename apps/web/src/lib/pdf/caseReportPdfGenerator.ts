@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import { calculateStatutoryAward } from "@/lib/statutory/rfctlarrCalculator";
 
 export interface CaseReportData {
   // A. Case Information
@@ -121,13 +122,13 @@ export function generateCaseReportPdf(data: CaseReportData): void {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
   doc.setTextColor(255, 255, 255);
-  doc.text("OFFICIAL STATUTORY CASE RECORD & WHAT-IF SIMULATION REPORT", margin + 6, y + 8);
+  doc.text("KOSH SIH26016 · DEMONSTRATION DECISION-SUPPORT REPORT", margin + 6, y + 8);
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(203, 213, 225);
   doc.text("Right to Fair Compensation and Transparency in Land Acquisition, Rehabilitation and Resettlement Act, 2013", margin + 6, y + 14);
-  doc.text("BHUMI Decision Intelligence Engine · Directorate of Land Acquisition · SIH26016 Prototype", margin + 6, y + 19);
+  doc.text("KOSH Decision Intelligence Engine · SIH26016 Land Acquisition Decision Support Prototype", margin + 6, y + 19);
 
   y += 30;
 
@@ -350,7 +351,7 @@ export function generateCaseReportPdf(data: CaseReportData): void {
   doc.text("District Competent Authority / Land Acquisition Officer", margin + 110, y);
   y += 4;
   doc.text("Field Verification Unit · Revenue Division", margin + 5, y);
-  doc.text("Ministry of Road Transport & Highways / National Highways Authority", margin + 110, y);
+  doc.text("Modeled after MoRTH / NHAI Corridor Workflows · SIH26016", margin + 110, y);
 
   // Footer page numbers
   const totalPages = doc.getNumberOfPages();
@@ -360,7 +361,7 @@ export function generateCaseReportPdf(data: CaseReportData): void {
     doc.setFontSize(7);
     doc.setTextColor(148, 163, 184);
     doc.text(
-      `BHUMI SIH26016 · Official Statutory Case Record · Page ${i} of ${totalPages}`,
+      `KOSH SIH26016 · Demonstration Decision-Support Report · Page ${i} of ${totalPages}`,
       pageWidth / 2,
       pageHeight - 8,
       { align: "center" }
@@ -368,7 +369,7 @@ export function generateCaseReportPdf(data: CaseReportData): void {
   }
 
   // Save the PDF
-  doc.save(`BHUMI_Case_Report_${data.complaintId}.pdf`);
+  doc.save(`KOSH_Case_Report_${data.complaintId}.pdf`);
 
   // Helper functions
   function renderSectionHeader(title: string) {
@@ -447,15 +448,15 @@ export function generateLandownerNoticePdf(data: LandownerNoticeData): void {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.setTextColor(15, 23, 42);
-  doc.text("CENTRAL AUTHORITY FOR LAND ACQUISITION (CALA)", pageWidth / 2, y, { align: "center" });
+  doc.text("KOSH — SIH26016 PROTOTYPE DEMONSTRATION", pageWidth / 2, y, { align: "center" });
   y += 5;
   doc.setFontSize(10);
-  doc.text("OFFICE OF THE COMPETENT AUTHORITY LAND ACQUISITION DIVISION", pageWidth / 2, y, { align: "center" });
+  doc.text("COMPETENT AUTHORITY LAND ACQUISITION (CALA) SIMULATION MODEL", pageWidth / 2, y, { align: "center" });
   y += 5;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(100, 116, 139);
-  doc.text("Under the Right to Fair Compensation and Transparency in Land Acquisition, Rehabilitation and Resettlement Act, 2013", pageWidth / 2, y, { align: "center" });
+  doc.text("RFCTLARR Act 2013 Statutory Compliance Workflow · Academic Demonstration", pageWidth / 2, y, { align: "center" });
   y += 4;
   doc.setLineWidth(0.4);
   doc.setDrawColor(15, 23, 42);
@@ -576,18 +577,18 @@ export function generateLandownerNoticePdf(data: LandownerNoticeData): void {
   doc.setFontSize(8);
   doc.text(data.authorityName || "Competent Authority Land Acquisition (CALA)", pageWidth - margin - 60, y);
   y += 4;
-  doc.text("Land Acquisition & Revenue Directorate", pageWidth - margin - 60, y);
+  doc.text("SIH26016 Prototype Workflow", pageWidth - margin - 60, y);
   y += 4;
-  doc.text("CALA Central Authority", pageWidth - margin - 60, y);
+  doc.text("Decision-Support Demonstration", pageWidth - margin - 60, y);
 
   // Footer
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7);
   doc.setTextColor(148, 163, 184);
-  doc.text("This is an official statutory notice generated under the BHUMI Digital Platform (SIH26016). Valid for revenue and bank disbursement records.", pageWidth / 2, pageHeight - 12, { align: "center" });
+  doc.text("KOSH — SIH26016 · Demonstration Decision-Support Notice. Intended solely for academic hackathon simulation and decision support.", pageWidth / 2, pageHeight - 12, { align: "center" });
 
   // Save the PDF
-  doc.save(`BHUMI_Notice_${data.complaintId}.pdf`);
+  doc.save(`KOSH_Notice_${data.complaintId}.pdf`);
 }
 
 /**
@@ -646,10 +647,10 @@ export function buildCaseReportData(complaint: any): CaseReportData {
     interventionSection: "First Schedule r/w Section 26-30 RFCTLARR Act 2013",
     ruralMultiplier: sim.simulated?.multipliers?.rural || 1.25,
     baseRatePerSqm: 1850,
-    marketValueInr: simCalc.market_value || Math.round(Number(areaSqm) * 1850 * 1.25),
-    solatiumInr: simCalc.solatium || Math.round(Number(areaSqm) * 1850 * 1.25),
-    interestInr: simCalc.additional_interest || Math.round(Number(areaSqm) * 1850 * 1.25 * 0.12),
-    totalAwardInr: simCalc.total_statutory_award || Math.round(Number(areaSqm) * 1850 * 1.25 * 2.12),
+    marketValueInr: simCalc.market_value || calculateStatutoryAward({ areaSqm: Number(areaSqm) || 0, circleRatePerSqm: 1850, multiplierFactor: sim.simulated?.multipliers?.rural || 1.25, interestYears: 1 }).marketValueAdjusted,
+    solatiumInr: simCalc.solatium || calculateStatutoryAward({ areaSqm: Number(areaSqm) || 0, circleRatePerSqm: 1850, multiplierFactor: sim.simulated?.multipliers?.rural || 1.25, interestYears: 1 }).solatiumAmount,
+    interestInr: simCalc.additional_interest || calculateStatutoryAward({ areaSqm: Number(areaSqm) || 0, circleRatePerSqm: 1850, multiplierFactor: sim.simulated?.multipliers?.rural || 1.25, interestYears: 1 }).additionalStatutoryAmount12Pct,
+    totalAwardInr: simCalc.total_statutory_award || calculateStatutoryAward({ areaSqm: Number(areaSqm) || 0, circleRatePerSqm: 1850, multiplierFactor: sim.simulated?.multipliers?.rural || 1.25, interestYears: 1 }).totalCompensation,
     baselineDelayDays: 120,
     delayReductionDays: 75,
     projectedDelayDays: 45,
@@ -693,7 +694,7 @@ export function buildLandownerNoticeData(complaint: any): LandownerNoticeData {
     statutoryAwardInr: awardInr,
     nextSteps: [
       "Submit updated bank account details and cancelled cheque to the CALA disbursement portal.",
-      "Verify updated parcel geometry on the Bhumi GIS Landowner portal.",
+      "Verify updated parcel geometry on the KOSH GIS Landowner portal.",
       "Receive formal mutated Naksha / Khasra passbook from Patwari upon final acquisition gazette."
     ],
     authorityName: res.admin_name || "Competent Authority for Land Acquisition (CALA)"

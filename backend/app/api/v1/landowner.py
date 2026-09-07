@@ -58,10 +58,10 @@ async def create_or_update_profile(
         )
         await db.commit()
         row = result.mappings().first()
-        return dict(row) if row else payload.dict()
+        return dict(row) if row else payload.model_dump()
     except Exception as e:
         logger.warning(f"Profile upsert skipped or fallback used: {e}")
-        return payload.dict()
+        return payload.model_dump()
 
 @router.get("/profile/{user_id}")
 async def get_profile(
@@ -151,7 +151,7 @@ async def submit_complaint(
     complaint_id = f"CMP-{uuid.uuid4().hex[:6].upper()}"
     doc_id = uuid.uuid4()
     
-    desc = payload.dict()
+    desc = payload.model_dump()
     desc["complaint_id"] = complaint_id
     desc["status"] = "SUBMITTED"
     
@@ -269,7 +269,7 @@ async def verify_complaint(
         raise HTTPException(status_code=404, detail="Not found")
         
     desc = doc["description"] if isinstance(doc["description"], dict) else json.loads(doc["description"])
-    desc["verification"] = payload.dict()
+    desc["verification"] = payload.model_dump()
     desc["status"] = "VERIFIED"
     
     await db.execute(text("UPDATE documents SET description = :desc, status = 'VERIFIED' WHERE id = :id"), {"desc": json.dumps(desc), "id": doc["id"]})
@@ -284,7 +284,7 @@ async def verify_complaint(
             "actor_id": str(user.user_id),
             "actor_role": user.role.value if hasattr(user.role, 'value') else str(user.role),
             "entity_id": doc["id"],
-            "state": json.dumps(payload.dict())
+            "state": json.dumps(payload.model_dump())
         }
     )
     await db.commit()
@@ -327,7 +327,7 @@ async def resolve_complaint(
         raise HTTPException(status_code=404, detail="Not found")
         
     desc = doc["description"] if isinstance(doc["description"], dict) else json.loads(doc["description"])
-    desc["resolution"] = payload.dict()
+    desc["resolution"] = payload.model_dump()
     desc["status"] = "RESOLVED"
     
     await db.execute(text("UPDATE documents SET description = :desc, status = 'RESOLVED' WHERE id = :id"), {"desc": json.dumps(desc), "id": doc["id"]})
@@ -342,7 +342,7 @@ async def resolve_complaint(
             "actor_id": str(user.user_id),
             "actor_role": user.role.value if hasattr(user.role, 'value') else str(user.role),
             "entity_id": doc["id"],
-            "state": json.dumps(payload.dict())
+            "state": json.dumps(payload.model_dump())
         }
     )
     await db.commit()

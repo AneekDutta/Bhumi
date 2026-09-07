@@ -58,15 +58,23 @@ export async function updateSession(request: NextRequest) {
     const sessionData = {
       officer_id: 'OFF-CALA-01',
       name: 'Sh. Rajesh Kumar',
-      email: 'officer@bhumi.gov.in',
+      email: 'officer@kosh.sih2026.org',
       role: 'ADMIN',
     };
+    const sessionCookie = encodeURIComponent(JSON.stringify(sessionData));
+    response.cookies.set('kosh_user_role', 'ADMIN', { path: '/', maxAge: 86400 * 7, sameSite: 'lax' });
     response.cookies.set('bhumi_user_role', 'ADMIN', { path: '/', maxAge: 86400 * 7, sameSite: 'lax' });
-    response.cookies.set('bhumi_officer_session', encodeURIComponent(JSON.stringify(sessionData)), {
+    response.cookies.set('kosh_officer_session', sessionCookie, {
       path: '/',
       maxAge: 86400 * 7,
       sameSite: 'lax',
     });
+    response.cookies.set('bhumi_officer_session', sessionCookie, {
+      path: '/',
+      maxAge: 86400 * 7,
+      sameSite: 'lax',
+    });
+    response.cookies.delete('kosh_landowner_session');
     response.cookies.delete('bhumi_landowner_session');
     return response;
   }
@@ -83,12 +91,20 @@ export async function updateSession(request: NextRequest) {
       assigned_villages: ['Ramganj Mandi', 'Kanhera Kalan', 'Wagholi'],
       role: 'FIELD_OFFICER',
     };
+    const fieldCookie = encodeURIComponent(JSON.stringify(sessionData));
+    response.cookies.set('kosh_user_role', 'FIELD_OFFICER', { path: '/', maxAge: 86400 * 7, sameSite: 'lax' });
     response.cookies.set('bhumi_user_role', 'FIELD_OFFICER', { path: '/', maxAge: 86400 * 7, sameSite: 'lax' });
-    response.cookies.set('bhumi_officer_session', encodeURIComponent(JSON.stringify(sessionData)), {
+    response.cookies.set('kosh_officer_session', fieldCookie, {
       path: '/',
       maxAge: 86400 * 7,
       sameSite: 'lax',
     });
+    response.cookies.set('bhumi_officer_session', fieldCookie, {
+      path: '/',
+      maxAge: 86400 * 7,
+      sameSite: 'lax',
+    });
+    response.cookies.delete('kosh_landowner_session');
     response.cookies.delete('bhumi_landowner_session');
     return response;
   }
@@ -104,12 +120,20 @@ export async function updateSession(request: NextRequest) {
       contact_village: 'Chandwas (V03)',
       role: 'LANDOWNER',
     };
+    const loCookie = encodeURIComponent(JSON.stringify(sessionData));
+    response.cookies.set('kosh_user_role', 'LANDOWNER', { path: '/', maxAge: 86400 * 7, sameSite: 'lax' });
     response.cookies.set('bhumi_user_role', 'LANDOWNER', { path: '/', maxAge: 86400 * 7, sameSite: 'lax' });
-    response.cookies.set('bhumi_landowner_session', encodeURIComponent(JSON.stringify(sessionData)), {
+    response.cookies.set('kosh_landowner_session', loCookie, {
       path: '/',
       maxAge: 86400 * 7,
       sameSite: 'lax',
     });
+    response.cookies.set('bhumi_landowner_session', loCookie, {
+      path: '/',
+      maxAge: 86400 * 7,
+      sameSite: 'lax',
+    });
+    response.cookies.delete('kosh_officer_session');
     response.cookies.delete('bhumi_officer_session');
     return response;
   }
@@ -117,9 +141,9 @@ export async function updateSession(request: NextRequest) {
   // =============================================================================
   // 2. STRICT SESSION & ROLE DETECTION
   // =============================================================================
-  const userRoleCookie = request.cookies.get('bhumi_user_role')?.value;
-  const officerSessionCookie = request.cookies.get('bhumi_officer_session')?.value;
-  const landownerSessionCookie = request.cookies.get('bhumi_landowner_session')?.value;
+  const userRoleCookie = request.cookies.get('kosh_user_role')?.value || request.cookies.get('bhumi_user_role')?.value;
+  const officerSessionCookie = request.cookies.get('kosh_officer_session')?.value || request.cookies.get('bhumi_officer_session')?.value;
+  const landownerSessionCookie = request.cookies.get('kosh_landowner_session')?.value || request.cookies.get('bhumi_landowner_session')?.value;
 
   let parsedRole: UserRole | null = null;
 

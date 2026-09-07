@@ -47,6 +47,7 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
     };
 
     updateQueue();
+    window.addEventListener("kosh-queue-change", updateQueue);
     window.addEventListener("bhumi-queue-change", updateQueue);
 
     const active = offlineStore.getActiveOfficer();
@@ -72,6 +73,7 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("kosh-queue-change", updateQueue);
       window.removeEventListener("bhumi-queue-change", updateQueue);
     };
   }, []);
@@ -136,7 +138,7 @@ export function FieldShell({ children, title, showBack = false }: FieldShellProp
 
             <div className="overflow-hidden">
               <span className="font-bold text-sm text-white truncate block">
-                {title || "BHUMI Field"}
+                {title || "KOSH Field"}
               </span>
               {officer && (
                 <span className="text-[10px] text-sky-200 font-mono truncate block">

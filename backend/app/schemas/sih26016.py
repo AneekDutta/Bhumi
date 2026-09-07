@@ -38,6 +38,7 @@ class SIHProjectSchema(ProvenanceBase):
 
 class SIHCompensationSchema(ProvenanceBase):
     compensation_id: str
+    parcel_id: str | None = None
     case_id: str | None = None
     market_value_base: float | None = 0.0
     multiplier_factor: float | None = 1.0
@@ -48,6 +49,16 @@ class SIHCompensationSchema(ProvenanceBase):
     interest_12pct_amount: float | None = 0.0
     total_compensation: float | None = 0.0
     compensation_status: str | None = None
+    rule_version: str | None = None
+    rule_basis: str | None = None
+    calculation_trace: dict[str, Any] | None = None
+    valuation_inputs: dict[str, Any] | None = None
+    payment_status: str | None = None
+    award_date: str | None = None
+    approved_by: str | None = None
+    approved_at: str | None = None
+    created_at: str | None = None
+    updated_at: str | None = None
 
 
 class SIHRRSchema(ProvenanceBase):

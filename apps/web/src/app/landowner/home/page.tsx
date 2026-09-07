@@ -51,8 +51,8 @@ export default function LandownerHomePage() {
           email: authData.user.email
         });
       } else {
-        // Fallback: Check bhumi_landowner_session cookie
-        const match = typeof document !== "undefined" ? document.cookie.match(/bhumi_landowner_session=([^;]+)/) : null;
+        // Fallback: Check landowner session cookie
+        const match = typeof document !== "undefined" ? document.cookie.match(/(?:kosh_landowner_session|bhumi_landowner_session)=([^;]+)/) : null;
         if (match) {
           try {
             const parsed = JSON.parse(decodeURIComponent(match[1]));

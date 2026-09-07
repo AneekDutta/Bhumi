@@ -67,6 +67,7 @@ export const offlineStore = {
     const current = this.getAll();
     current.unshift(item);
     localStorage.setItem(STORAGE_KEY_QUEUE, JSON.stringify(current));
+    window.dispatchEvent(new CustomEvent("kosh-queue-change", { detail: { count: current.length } }));
     window.dispatchEvent(new CustomEvent("bhumi-queue-change", { detail: { count: current.length } }));
   },
 
@@ -93,6 +94,7 @@ export const offlineStore = {
     if (typeof window === "undefined") return;
     const current = this.getAll().filter((item) => item.id !== id);
     localStorage.setItem(STORAGE_KEY_QUEUE, JSON.stringify(current));
+    window.dispatchEvent(new CustomEvent("kosh-queue-change", { detail: { count: current.length } }));
     window.dispatchEvent(new CustomEvent("bhumi-queue-change", { detail: { count: current.length } }));
   },
 
@@ -104,12 +106,14 @@ export const offlineStore = {
     if (typeof window === "undefined") return;
     const remaining = this.getAll().filter((item) => !item.synced);
     localStorage.setItem(STORAGE_KEY_QUEUE, JSON.stringify(remaining));
+    window.dispatchEvent(new CustomEvent("kosh-queue-change", { detail: { count: remaining.length } }));
     window.dispatchEvent(new CustomEvent("bhumi-queue-change", { detail: { count: remaining.length } }));
   },
 
   clearQueue(): void {
     if (typeof window === "undefined") return;
     localStorage.removeItem(STORAGE_KEY_QUEUE);
+    window.dispatchEvent(new CustomEvent("kosh-queue-change", { detail: { count: 0 } }));
     window.dispatchEvent(new CustomEvent("bhumi-queue-change", { detail: { count: 0 } }));
   },
 

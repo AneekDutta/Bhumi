@@ -31,7 +31,7 @@ export function useRealtimeParcel(
           schema: "public",
           table: "parcels"
         },
-        (payload) => {
+        (payload: any) => {
           const rec: any = payload.new || payload.old;
           if (
             rec?.id === parcelId ||
@@ -54,7 +54,7 @@ export function useRealtimeParcel(
           schema: "public",
           table: "documents"
         },
-        (payload) => {
+        (payload: any) => {
           const rec: any = payload.new || payload.old;
           if (rec?.parcel_id === parcelId) {
             onUpdateRef.current({
@@ -72,7 +72,7 @@ export function useRealtimeParcel(
           schema: "public",
           table: "audit_logs"
         },
-        (payload) => {
+        (payload: any) => {
           const rec: any = payload.new;
           if (rec?.entity_id === parcelId) {
             onUpdateRef.current({
@@ -116,7 +116,7 @@ export function useRealtimeIncidents(
           schema: "public",
           table: "documents"
         },
-        (payload) => {
+        (payload: any) => {
           const rec: any = payload.new || payload.old;
           if (rec?.document_type === "field_incident" || rec?.document_type === "field_verification") {
             if (!parcelId || rec?.parcel_id === parcelId) {
@@ -135,7 +135,7 @@ export function useRealtimeIncidents(
           schema: "public",
           table: "audit_logs"
         },
-        (payload) => {
+        (payload: any) => {
           const rec: any = payload.new;
           if (rec?.action?.includes("INCIDENT") || rec?.action?.includes("VERIF")) {
             if (!parcelId || rec?.entity_id === parcelId) {
@@ -219,7 +219,7 @@ export function useRealtimeComplaints(
           schema: "public",
           table: "documents"
         },
-        (payload) => {
+        (payload: any) => {
           const rec: any = payload.new || payload.old;
           if (rec?.document_type === "landowner_complaint") {
             onUpdateRef.current(payload);
@@ -233,7 +233,7 @@ export function useRealtimeComplaints(
           schema: "public",
           table: "audit_logs"
         },
-        (payload) => {
+        (payload: any) => {
           const rec: any = payload.new;
           if (rec?.action?.includes("COMPLAINT") || rec?.entity_type === "complaint") {
             onUpdateRef.current(payload);

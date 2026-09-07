@@ -149,7 +149,7 @@ export default function GrievanceTrackerPage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-none bg-[#B36B00] text-white uppercase">
-              BHUMI SAMVAAD &bull; CITIZEN GRIEVANCE REDRESSAL
+              KOSH SAMVAAD &bull; CITIZEN GRIEVANCE REDRESSAL
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#14213D] dark:text-white leading-tight">

@@ -13,9 +13,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   try {
     const parcel = await apiClient.getParcel(id);
-    return { title: `Survey No. ${parcel.survey_no} | BHUMI`, description: `Acquisition case details for Parcel ${parcel.survey_no}.` };
+    return { title: `Survey No. ${parcel.survey_no} | KOSH`, description: `Acquisition case details for Parcel ${parcel.survey_no}.` };
   } catch {
-    return { title: 'Parcel Details | BHUMI' };
+    return { title: 'Parcel Details | KOSH' };
   }
 }
 
@@ -64,8 +64,10 @@ export default async function ParcelDetailPage({ params }: { params: Promise<{ i
 
   if (acqCase) {
     try {
-      deadlineInfo = await apiClient.getCaseDeadline(acqCase.id);
-      auditLogs = await apiClient.getCaseAudit(acqCase.id);
+      [deadlineInfo, auditLogs] = await Promise.all([
+        apiClient.getCaseDeadline(acqCase.id),
+        apiClient.getCaseAudit(acqCase.id),
+      ]);
     } catch {}
   }
 

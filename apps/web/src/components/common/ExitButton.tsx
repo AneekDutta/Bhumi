@@ -21,8 +21,11 @@ export function ExitButton({ variant = "header", className = "" }: ExitButtonPro
       console.warn("Sign out notification:", e);
     }
     // Expire session cookies cleanly
+    document.cookie = "kosh_user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
     document.cookie = "bhumi_user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+    document.cookie = "kosh_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
     document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+    document.cookie = "kosh_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
     document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
     // Redirect to respective login gateway

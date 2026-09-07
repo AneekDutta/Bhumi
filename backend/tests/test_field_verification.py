@@ -161,7 +161,10 @@ async def test_unauthenticated_field_api_returns_401(monkeypatch):
         res = await ac.get("/api/v1/sih26016/field/incidents")
         assert res.status_code == 401
         
-        # Fake cookie auth bypass attempt
+        # Fake cookie auth bypass attempt (neither kosh_* nor legacy bhumi_* cookies grant API access)
         res = await ac.get("/api/v1/sih26016/field/incidents", cookies={"bhumi_officer_session": '{"role": "FIELD_OFFICER"}'})
+        assert res.status_code == 401
+
+        res = await ac.get("/api/v1/sih26016/field/incidents", cookies={"kosh_officer_session": '{"role": "FIELD_OFFICER"}'})
         assert res.status_code == 401
 

@@ -1,4 +1,4 @@
-# SIH26016: Land Acquisition Intelligence Platform
+# KOSH — SIH26016: Land Acquisition Decision Support Prototype
 
 Real-Time National Land Acquisition & Management System for end-to-end Digital Monitoring and Decision Support.
 

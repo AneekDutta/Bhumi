@@ -1,7 +1,7 @@
 /**
- * BHUMI PLATFORM — AUTHORITATIVE DATASET REPOSITORY
- * Clean operational state: zero synthetic/larped records.
- * Real parcels are registered dynamically via Supabase or Officer Cadastre Ingestion.
+ * KOSH PLATFORM — AUTHORITATIVE SIH26016 DATASET REPOSITORY
+ * Synchronized directly from data/sih26016/seed_data.json
+ * Features: NH-927A Kota-Jhalawar Bypass Widening, 181 Parcels, 3 Villages
  */
 
 export interface RealProject {

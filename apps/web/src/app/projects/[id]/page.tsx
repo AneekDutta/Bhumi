@@ -10,9 +10,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   try {
     const project = await apiClient.getProject(id);
-    return { title: `${project.name} | BHUMI`, description: `Operational details for ${project.name}.` };
+    return { title: `${project.name} | KOSH`, description: `Operational details for ${project.name}.` };
   } catch {
-    return { title: 'Project Overview | BHUMI' };
+    return { title: 'Project Overview | KOSH' };
   }
 }
 

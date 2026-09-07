@@ -87,9 +87,12 @@ function FieldLoginContent() {
     // Store in offline store
     offlineStore.setActiveOfficer(sessionData);
 
-    // Set cookie for middleware route isolation
+    const officerCookieVal = encodeURIComponent(JSON.stringify(sessionData));
+    document.cookie = "kosh_user_role=FIELD_OFFICER; path=/; max-age=604800; SameSite=Lax";
     document.cookie = "bhumi_user_role=FIELD_OFFICER; path=/; max-age=604800; SameSite=Lax";
-    document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(sessionData))}; path=/; max-age=604800; SameSite=Lax`;
+    document.cookie = `kosh_officer_session=${officerCookieVal}; path=/; max-age=604800; SameSite=Lax`;
+    document.cookie = `bhumi_officer_session=${officerCookieVal}; path=/; max-age=604800; SameSite=Lax`;
+    document.cookie = "kosh_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
     document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
     setTimeout(() => {
@@ -148,7 +151,7 @@ function FieldLoginContent() {
             <Smartphone className="w-7 h-7" />
           </div>
           <h1 className="text-2xl font-black font-display tracking-tight text-[#14213D] dark:text-white">
-            BHUMI Field Ops
+            KOSH Field Ops
           </h1>
           <p className="text-xs text-[#5A6A80] dark:text-slate-400 max-w-xs mx-auto">
             Mobile Cadastral Verification & Ground Issue Escalation Console
@@ -393,7 +396,7 @@ function FieldLoginContent() {
       </div>
 
       <div className="text-center text-[10px] font-mono text-[#5A6A80] dark:text-slate-500 py-3 border-t border-[#DCE2E8] dark:border-white/10">
-        BHUMI · PostGIS & NetworkX Causal Intelligence Engine
+        KOSH · PostGIS & NetworkX Causal Intelligence Engine
       </div>
     </div>
   );

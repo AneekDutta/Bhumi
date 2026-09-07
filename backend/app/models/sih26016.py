@@ -298,6 +298,7 @@ class SIHCompensationRecord(SIHBase):
     __tablename__ = "compensation_records"
 
     compensation_id = Column(Text, primary_key=True)
+    parcel_id = Column(Text, nullable=True)
     case_id = Column(Text, ForeignKey("acquisition_cases.case_id"), nullable=True)
     market_value_base = Column(Numeric, nullable=True)
     multiplier_factor = Column(Numeric, nullable=True)
@@ -307,14 +308,25 @@ class SIHCompensationRecord(SIHBase):
     solatium_amount = Column(Numeric, nullable=True)
     interest_12pct_amount = Column(Numeric, nullable=True)
     total_compensation = Column(Numeric, nullable=True)
-    compensation_status = Column(Text, nullable=True)  # pending | disbursed | disputed | enhanced_by_court
+    compensation_status = Column(Text, nullable=True)  # CALCULATED | APPROVED | PAYMENT_PENDING | PAID | DISPUTED | ON_HOLD
+    rule_version = Column(Text, nullable=False, default="RFCTLARR_2013_DEMO_V1")
+    rule_basis = Column(Text, nullable=False, default="RFCTLARR Act 2013 (First Schedule, Sections 26-30) - Synthetic Demo Configuration v2026.1")
+    calculation_trace = Column(JSONB, nullable=True)
+    valuation_inputs = Column(JSONB, nullable=True)
+    payment_status = Column(Text, nullable=False, default="CALCULATED")
+    award_date = Column(Date, nullable=True)
+    approved_by = Column(Text, nullable=True)
+    approved_at = Column(DateTime(timezone=True), nullable=True)
     source_type = Column(Text, nullable=False, default="MODEL_DERIVED")
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     acquisition_case = relationship("SIHAcquisitionCase", back_populates="compensation_records")
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "compensation_id": self.compensation_id,
+            "parcel_id": self.parcel_id,
             "case_id": self.case_id,
             "market_value_base": float(self.market_value_base) if self.market_value_base is not None else 0,
             "multiplier_factor": float(self.multiplier_factor) if self.multiplier_factor is not None else 1.0,
@@ -325,7 +337,17 @@ class SIHCompensationRecord(SIHBase):
             "interest_12pct_amount": float(self.interest_12pct_amount) if self.interest_12pct_amount is not None else 0,
             "total_compensation": float(self.total_compensation) if self.total_compensation is not None else 0,
             "compensation_status": self.compensation_status,
+            "rule_version": self.rule_version,
+            "rule_basis": self.rule_basis,
+            "calculation_trace": self.calculation_trace,
+            "valuation_inputs": self.valuation_inputs,
+            "payment_status": self.payment_status,
+            "award_date": self.award_date.isoformat() if self.award_date else None,
+            "approved_by": self.approved_by,
+            "approved_at": self.approved_at.isoformat() if self.approved_at else None,
             "source_type": self.source_type,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }
 
 

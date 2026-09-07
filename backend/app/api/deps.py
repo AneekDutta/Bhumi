@@ -124,7 +124,7 @@ async def get_current_user_context(
                 await db.commit()
                 await db.refresh(new_user)
                 user = new_user
-                logger.info({"event": "AUTH_SYNC", "reason": "Auto-created BHUMI user mapping from valid JWT"})
+                logger.info({"event": "AUTH_SYNC", "reason": "Auto-created KOSH user mapping from valid JWT"})
             except Exception as e:
                 await db.rollback()
                 logger.warning(f"Could not auto-create user in DB: {e}")
@@ -139,10 +139,13 @@ async def get_current_user_context(
 
     # --- MOCK MODE ONLY ---
 
-    mock_role = request.headers.get("x-mock-role", "ADMIN")
-    mock_pid = request.headers.get("x-mock-project-id")
-    mock_did = request.headers.get("x-mock-district-id")
-    mock_uid = request.headers.get("x-mock-user-id", "dev-admin-123")
+    # Safely access cookies — FastAPI Request provides this attribute, but lightweight
+    # MockRequest objects used in unit tests may not. Use getattr with an empty-dict fallback.
+    _cookies = getattr(request, "cookies", {}) or {}
+    mock_role = request.headers.get("x-mock-role") or _cookies.get("sih_role") or "ADMIN"
+    mock_pid = request.headers.get("x-mock-project-id") or _cookies.get("sih_project_id")
+    mock_did = request.headers.get("x-mock-district-id") or _cookies.get("sih_district_id")
+    mock_uid = request.headers.get("x-mock-user-id") or _cookies.get("sih_user_id") or "dev-admin-123"
 
     if mock_role == "ADMIN" and not mock_pid and not mock_did:
         return TrustedIdentity(user_id=mock_uid, role=mock_role)

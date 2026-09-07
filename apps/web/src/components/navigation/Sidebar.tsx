@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   LayoutDashboard, 
   Briefcase, 
@@ -19,53 +19,81 @@ import {
   FileText,
   Navigation,
   SlidersHorizontal,
-  Database
+  Database,
+  Scale,
+  ScanLine,
+  PlayCircle,
+  Bot,
+  Mic
 } from "lucide-react";
 
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { ExitButton } from "@/components/common/ExitButton";
+import { useLanguage } from "@/context/LanguageContext";
 
 import { CalaSealLogo } from "@/components/common/CalaSealLogo";
 
 export function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { language, t } = useLanguage();
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   const navGroups = [
     {
-      group: "Operations",
+      groupKey: "nav.operations",
+      fallbackGroup: "Operations",
       items: [
-        { id: "dashboard", href: "/dashboard", label: "National Dashboard", icon: LayoutDashboard }
+        { id: "action-center", translationKey: "nav.action_center", href: "/action-center", label: "Officer Action Center", icon: AlertOctagon, badge: "CORE" },
+        { id: "dashboard", translationKey: "nav.dashboard", href: "/dashboard", label: "National Dashboard", icon: LayoutDashboard }
       ]
     },
     {
-      group: "Projects & Corridors",
+      groupKey: "nav.gov_projects",
+      fallbackGroup: "Government Projects",
       items: [
-        { id: "projects", href: "/projects", label: "Project Portfolio", icon: Briefcase },
-        { id: "project-gis", href: "/projects/gis", label: "Project Spatial Map", icon: Navigation }
+        { id: "projects", translationKey: "nav.project_portfolio", href: "/projects", label: "Project Portfolio", icon: Briefcase },
+        { id: "project-gis", translationKey: "nav.project_gis", href: "/projects/gis", label: "Project Spatial Map", icon: Navigation }
       ]
     },
     {
-      group: "Landowner & Cases",
+      groupKey: "nav.landowner_acq",
+      fallbackGroup: "Landowner & Acquisition",
       items: [
-        { id: "landowner-cases", href: "/landowner-cases", label: "Landowner Grievances", icon: FileText },
-        { id: "parcels", href: "/parcels", label: "Registered Parcels", icon: Layers },
-        { id: "verification", href: "/verification", label: "Field Verification", icon: ShieldCheck },
-        { id: "landowner-gis", href: "/landowner-gis", label: "Land Parcel Map", icon: MapPin }
+        { id: "landowner-cases", translationKey: "nav.landowner_cases", href: "/landowner-cases", label: "Landowner Grievances", icon: FileText },
+        { id: "parcels", translationKey: "nav.registered_parcels", href: "/parcels", label: "Registered Parcels", icon: Layers },
+        { id: "verification", translationKey: "nav.field_verification", href: "/verification", label: "Field Verification", icon: ShieldCheck },
+        { id: "landowner-gis", translationKey: "nav.land_parcel_map", href: "/landowner-gis", label: "Land Parcel Map", icon: MapPin }
       ]
     },
     {
-      group: "Decision Intelligence",
+      groupKey: "nav.intelligence",
+      fallbackGroup: "Intelligence",
       items: [
-        { id: "what-if", href: "/intelligence/what-if", label: "What-If Simulation", icon: SlidersHorizontal },
-        { id: "timeline", href: "/timeline", label: "Statutory Timelines", icon: Clock }
+        { id: "assistant", translationKey: "nav.assistant", href: "/intelligence/assistant", label: "Intelligence & Voice", icon: Bot, badge: "AI" },
+        { id: "golden-demo", translationKey: "nav.golden_demo", href: "/intelligence/golden-demo", label: "Golden Demo Flow", icon: PlayCircle, badge: "DEMO" },
+        { id: "document-intelligence", translationKey: "nav.document_intelligence", href: "/document-intelligence", label: "Document Intelligence", icon: ScanLine },
+        { id: "what-if", translationKey: "nav.what_if", href: "/intelligence/what-if", label: "What-If Simulation", icon: SlidersHorizontal },
+        { id: "timeline", translationKey: "nav.statutory_timelines", href: "/timeline", label: "Statutory Timelines", icon: Clock }
       ]
     },
     {
-      group: "Governance & Audit",
+      groupKey: "nav.governance_law",
+      fallbackGroup: "Governance & Law",
       items: [
-        { id: "reports", href: "/reports", label: "MIS Reports", icon: FileSpreadsheet },
-        { id: "status", href: "/status", label: "System Status", icon: Cpu }
+        { id: "legal-rights", translationKey: "nav.legal_rights", href: "/legal-rights", label: "Legal & Rights", icon: Scale },
+        { id: "reports", translationKey: "nav.reports", href: "/reports", label: "MIS Reports", icon: FileSpreadsheet },
+        { id: "status", translationKey: "nav.system_status", href: "/status", label: "System Status", icon: Cpu }
       ]
     }
   ];
@@ -77,18 +105,20 @@ export function Sidebar() {
   };
 
   const navContent = (
-    <div className="h-full flex flex-col justify-between bg-white dark:bg-[#080E18] text-[#333333] dark:text-[#F0F4FF] transition-colors duration-200">
-      <div>
+    <div className="h-full flex flex-col justify-between bg-white dark:bg-[#080E18] border-r border-[#DCE2E8] dark:border-white/[0.07] text-[#333333] dark:text-[#F0F4FF] transition-colors duration-200">
+      <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
         {/* Brand */}
-        <div className="p-4 pb-3 border-b border-[#DCE2E8] dark:border-white/[0.06] flex items-center justify-between">
+        <div className="p-4 pb-3 border-b border-[#DCE2E8] dark:border-white/[0.06] flex items-center justify-between flex-shrink-0">
           <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <CalaSealLogo size={34} className="w-[34px] h-[34px] flex-shrink-0" variant="navy" />
+            <div className="w-[34px] h-[34px] rounded bg-[#0B2E59] border border-amber-400/30 flex-shrink-0 flex items-center justify-center text-amber-300 font-devanagari font-bold text-base shadow-xs">
+              क
+            </div>
             <div>
               <div className="font-bold text-[#14213D] dark:text-white text-[15px] leading-tight">
-                BHUMI Portal
+                KOSH Console
               </div>
               <div className="text-[10px] text-[#64748B] dark:text-[#94A3B8] font-mono">
-                CALA Directorate · Land Acquisition
+                SIH26016 Prototype · Kota
               </div>
             </div>
           </Link>
@@ -102,18 +132,19 @@ export function Sidebar() {
         </div>
 
         {/* Navigation items */}
-        <nav className="p-3 space-y-4 overflow-y-auto no-scrollbar max-h-[calc(100vh-210px)]">
+        <nav className="p-3 space-y-4 flex-1 min-h-0 overflow-y-auto">
           {navGroups.map((grp) => (
-            <div key={grp.group}>
+            <div key={grp.groupKey}>
               <div className="px-2 mb-1.5 flex items-center justify-between">
-                <span className="text-[10px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase tracking-wider">
-                  {grp.group}
+                <span className="text-[11px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase">
+                  {t(grp.groupKey) || grp.fallbackGroup}
                 </span>
               </div>
               <div className="space-y-0.5">
                 {grp.items.map((item) => {
                   const active = isActive(item.href);
                   const Icon = item.icon;
+                  const itemLabel = t(item.translationKey) || item.label;
                   return (
                     <Link
                       key={item.id}
@@ -126,7 +157,12 @@ export function Sidebar() {
                       }`}
                     >
                       <Icon className={`w-4 h-4 flex-shrink-0 ${active ? "text-[#0B5FA5] dark:text-[#38BDF8]" : "text-[#0B2E59]/70 dark:text-slate-400"}`} strokeWidth={active ? 2 : 1.5} />
-                      <span>{item.label}</span>
+                      <span className="flex-1 truncate">{itemLabel}</span>
+                      {(item as any).badge && (
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-[3px] font-bold bg-[#0B2E59]/10 dark:bg-sky-400/20 text-[#0B2E59] dark:text-sky-300 border border-[#0B2E59]/20 dark:border-sky-400/30">
+                          {(item as any).badge}
+                        </span>
+                      )}
                     </Link>
                   );
                 })}
@@ -137,15 +173,13 @@ export function Sidebar() {
       </div>
 
       {/* Footer Controls: Theme Toggle & User Profile */}
-      <div className="p-3 border-t border-[#DCE2E8] dark:border-white/[0.06] bg-[#F8FAFC] dark:bg-black/20 space-y-2.5">
+      <div className="p-3 border-t border-[#DCE2E8] dark:border-white/[0.06] bg-[#F8FAFC] dark:bg-black/20 space-y-2.5 flex-shrink-0">
         {/* Theme Switcher Pill */}
-        <div className="p-2 rounded-[4px] bg-white dark:bg-slate-900/60 border border-[#DCE2E8] dark:border-white/[0.05] space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-400">
-              Appearance
-            </span>
-          </div>
-          <ThemeToggle variant="pill" className="w-full" />
+        <div className="flex items-center justify-between px-2 py-1 rounded-[4px] bg-white dark:bg-slate-900/60 border border-[#DCE2E8] dark:border-white/[0.05]">
+          <span className="text-[11px] font-semibold text-[#64748B] dark:text-slate-400">
+            {t("nav.appearance")}
+          </span>
+          <ThemeToggle variant="pill" />
         </div>
 
         {/* Officer Profile & Sign Out */}
@@ -159,7 +193,7 @@ export function Sidebar() {
                 Sh. Rajesh Kumar
               </div>
               <div className="text-[10px] text-[#64748B] dark:text-slate-400 truncate">
-                CALA Varanasi Desk
+                CALA Officer · Kota District
               </div>
             </div>
           </div>
@@ -174,14 +208,14 @@ export function Sidebar() {
       {/* Mobile Menu Trigger button */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="md:hidden fixed top-3 left-3 z-40 p-1.5 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 text-[#0B2E59] dark:text-slate-200 shadow-xs"
+        className="md:hidden fixed top-3 left-3 z-50 p-1.5 rounded-[4px] bg-white dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 text-[#0B2E59] dark:text-slate-200 shadow-xs"
         aria-label="Open navigation menu"
       >
         <Menu className="w-5 h-5" />
       </button>
 
-      {/* Desktop Persistent Sidebar (Independent Scroll Column) */}
-      <aside className="hidden md:flex flex-col w-64 h-full flex-shrink-0 border-r border-[#DCE2E8] dark:border-white/[0.07] overflow-y-auto no-scrollbar z-20">
+      {/* Desktop Persistent Sticky Sidebar */}
+      <aside className="hidden md:block w-64 flex-shrink-0 sticky top-[89px] h-[calc(100vh-89px)] overflow-hidden z-30 border-r border-[#DCE2E8] dark:border-white/[0.07]">
         {navContent}
       </aside>
 
@@ -192,7 +226,7 @@ export function Sidebar() {
             className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="relative w-64 h-full z-10 animate-slide-in">
+          <div className="relative w-72 max-w-[85vw] h-full z-10 animate-slide-in shadow-2xl">
             {navContent}
           </div>
         </div>

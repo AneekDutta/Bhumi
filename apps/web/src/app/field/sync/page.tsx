@@ -54,7 +54,7 @@ export default function FieldSyncPage() {
     let syncedCount = 0;
     let failedCount = 0;
 
-    const officerStored = localStorage.getItem("bhumi_field_officer");
+    const officerStored = localStorage.getItem("kosh_field_officer") || localStorage.getItem("bhumi_field_officer");
     const officerId = officerStored ? JSON.parse(officerStored).id : "OFF-001";
 
     try {

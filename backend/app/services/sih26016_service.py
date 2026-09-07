@@ -17,7 +17,11 @@ class SIH26016Service:
     def __init__(self):
         self._data_cache: dict[str, Any] | None = None
         self._cpm_cache: dict[str, Any] | None = None
-        self._parcels_geojson_cache: dict[str, Any] | None = None
+        self._parcels_geojson_cache: dict[str, Any] = {}
+        self._last_sync_time: float = 0.0
+        self._is_dirty: bool = False
+        self.recompute_count: int = 0
+        self.db_sync_count: int = 0
         self._load_data()
 
     def _get_seed_path(self) -> Path:
@@ -46,6 +50,10 @@ class SIH26016Service:
         """Precomputes CPM schedules, scores, and cadastral coordinates."""
         if not self._data_cache or "parcels" not in self._data_cache:
             return
+
+        self.recompute_count += 1
+        self._parcels_geojson_cache.clear()
+        self._is_dirty = False
 
         data = self._data_cache
         edges = data.get("dependency_edges", [])
@@ -145,15 +153,31 @@ class SIH26016Service:
 
         self._data_cache["parcels"] = enriched_parcels
 
-    async def sync_with_db(self, db: Any) -> None:
+    def mark_dirty(self) -> None:
+        """Flags the graph as needing database synchronization and recomputation."""
+        self._is_dirty = True
+        self._parcels_geojson_cache.clear()
+
+    def invalidate_cache(self) -> None:
+        """Forces subsequent sync_with_db to fetch live state from PostgreSQL."""
+        self._is_dirty = True
+        self._last_sync_time = 0.0
+        self._parcels_geojson_cache.clear()
+
+    async def sync_with_db(self, db: Any, force: bool = False) -> None:
         """
         Synchronizes the digital twin with the authoritative PostgreSQL state:
-        1. Reads all persistent dependency_edges from PostgreSQL.
-        2. Synchronizes active complaints from documents table.
-        3. Updates parcel conflicts and recomputes the derived NetworkX CPM graph.
+        Only performs database queries and recomputes the NetworkX CPM graph
+        if marked dirty or forced.
         """
         if db is None or not self._data_cache:
             return
+
+        if not force and not self._is_dirty:
+            return
+
+        import time
+        now = time.time()
 
         from sqlalchemy import text
         try:
@@ -232,11 +256,45 @@ class SIH26016Service:
                 else:
                     if pid not in baseline_conflicts:
                         p["ownership_conflict"] = False
-                        p["conflict_type"] = "none"
-                        p["source_type"] = "SYNTHETIC"
+            # 3. Fetch live compensation_records from PostgreSQL
+            comp_res = await db.execute(text("""
+                SELECT compensation_id, parcel_id, case_id, market_value_base,
+                       multiplier_factor, asset_value, severance_damage,
+                       subtotal_before_solatium, solatium_amount, interest_12pct_amount,
+                       total_compensation, compensation_status, payment_status,
+                       rule_version, rule_basis, calculation_trace, valuation_inputs,
+                       award_date, approved_by, approved_at, source_type, created_at, updated_at
+                FROM compensation_records
+            """))
+            comp_rows = comp_res.mappings().all()
+            if comp_rows:
+                db_comps = []
+                for r in comp_rows:
+                    d = dict(r)
+                    for num_col in [
+                        "market_value_base", "multiplier_factor", "asset_value",
+                        "severance_damage", "subtotal_before_solatium", "solatium_amount",
+                        "interest_12pct_amount", "total_compensation"
+                    ]:
+                        if d.get(num_col) is not None:
+                            d[num_col] = float(d[num_col])
+                    if d.get("award_date"):
+                        d["award_date"] = str(d["award_date"])
+                    if d.get("approved_at"):
+                        d["approved_at"] = str(d["approved_at"])
+                    if d.get("created_at"):
+                        d["created_at"] = str(d["created_at"])
+                    if d.get("updated_at"):
+                        d["updated_at"] = str(d["updated_at"])
+                    db_comps.append(d)
+                self._data_cache["compensation_records"] = db_comps
 
-            # 3. Re-enrich and recompute CPM schedules and critical path status
+            # 4. Re-enrich and recompute CPM schedules and critical path status
             self._enrich_and_compute()
+            self._parcels_geojson_cache.clear()
+            self._is_dirty = False
+            self.db_sync_count += 1
+            self._last_sync_time = time.time()
 
         except Exception as e:
             print(f"[SIH26016Service] Warning in sync_with_db: {e}")
@@ -289,7 +347,8 @@ class SIH26016Service:
         owners = {o["owner_id"]: o for o in data.get("owners", [])}
         projects = {pr["project_id"]: pr for pr in data.get("projects", [])}
         cases = {c["parcel_id"]: c for c in data.get("acquisition_cases", [])}
-        compensations = {cr["case_id"]: cr for cr in data.get("compensation_records", [])}
+        compensations = {cr["case_id"]: cr for cr in data.get("compensation_records", []) if cr.get("case_id")}
+        comp_by_pid = {cr["parcel_id"]: cr for cr in data.get("compensation_records", []) if cr.get("parcel_id")}
         rrs = {rr["case_id"]: rr for rr in data.get("rr_records", [])}
         legals = [lc for lc in data.get("legal_cases", [])]
         documents = [d for d in data.get("documents", []) if d.get("parcel_id") == parcel_id]
@@ -301,7 +360,7 @@ class SIH26016Service:
         pr_info = projects.get(parcel.get("project_id"), {})
         case_info = cases.get(parcel_id, {})
         cid = case_info.get("case_id")
-        comp_info = compensations.get(cid, {}) if cid else {}
+        comp_info = comp_by_pid.get(parcel_id) or (compensations.get(cid, {}) if cid else {})
         rr_info = rrs.get(cid, {}) if cid else {}
         legal_list = [lc for lc in legals if lc.get("case_id") == cid]
 
@@ -366,6 +425,10 @@ class SIH26016Service:
         - Risk Mode: risk_score
         - Critical Path Mode: is_critical_path
         """
+        cache_key = project_id or "all"
+        if self._parcels_geojson_cache and cache_key in self._parcels_geojson_cache:
+            return self._parcels_geojson_cache[cache_key]
+
         parcels = self.get_parcels(project_id)
         villages = {v["village_id"]: v["name"] for v in self._data_cache.get("villages", [])}
         owners = {o["owner_id"]: o["name"] for o in self._data_cache.get("owners", [])}
@@ -407,7 +470,7 @@ class SIH26016Service:
             }
             features.append(feature)
 
-        return {
+        fc = {
             "type": "FeatureCollection",
             "features": features,
             "properties": {
@@ -418,6 +481,8 @@ class SIH26016Service:
                 "source_type": "SYNTHETIC"
             }
         }
+        self._parcels_geojson_cache[cache_key] = fc
+        return fc
 
     def get_critical_path_report(self, project_id: str | None = None) -> dict[str, Any]:
         if not self._data_cache or not self._cpm_cache:

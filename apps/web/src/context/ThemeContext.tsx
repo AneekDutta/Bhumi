@@ -14,7 +14,8 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const THEME_STORAGE_KEY = 'bhumi-theme';
+const THEME_STORAGE_KEY = 'kosh-theme';
+const LEGACY_THEME_STORAGE_KEY = 'bhumi-theme';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('light');
@@ -24,7 +25,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Initialize theme from localStorage on client mount
   useEffect(() => {
     try {
-      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
+      const savedTheme = (localStorage.getItem(THEME_STORAGE_KEY) || localStorage.getItem(LEGACY_THEME_STORAGE_KEY)) as Theme | null;
       if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system')) {
         setThemeState(savedTheme);
       } else {
@@ -69,6 +70,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // Save preference to localStorage
     try {
       localStorage.setItem(THEME_STORAGE_KEY, theme);
+      localStorage.setItem(LEGACY_THEME_STORAGE_KEY, theme);
     } catch {}
 
     // Listen for system theme changes if in 'system' mode

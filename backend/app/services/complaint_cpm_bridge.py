@@ -212,7 +212,7 @@ async def activate_complaint_blocker(
         await db.commit()
 
         # 5. Synchronize authoritative PostgreSQL state to derived NetworkX CPM engine
-        await sih_service.sync_with_db(db)
+        await sih_service.sync_with_db(db, force=True)
 
         cpm_report = sih_service.get_critical_path_report()
         return {
@@ -316,7 +316,7 @@ async def deactivate_complaint_blocker(
         await db.commit()
 
         # 4. Synchronize authoritative PostgreSQL state to derived NetworkX CPM engine
-        await sih_service.sync_with_db(db)
+        await sih_service.sync_with_db(db, force=True)
 
         cpm_report = sih_service.get_critical_path_report()
         return {

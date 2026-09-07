@@ -114,8 +114,12 @@ export default function LandownerRegisterPage() {
         email: cleanEmail,
         role: "LANDOWNER"
       };
+      const cookieData = encodeURIComponent(JSON.stringify(sessionPayload));
+      document.cookie = "kosh_user_role=LANDOWNER; path=/; max-age=604800; SameSite=Lax";
       document.cookie = "bhumi_user_role=LANDOWNER; path=/; max-age=604800; SameSite=Lax";
-      document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+      document.cookie = `kosh_landowner_session=${cookieData}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+      document.cookie = `bhumi_landowner_session=${cookieData}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+      document.cookie = "kosh_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
       document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
       setSuccessMsg("Account registered successfully! Entering Citizen Portal...");
@@ -137,7 +141,7 @@ export default function LandownerRegisterPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-[4px] bg-[#0B2E59] text-amber-400 flex items-center justify-center font-black text-xs border border-[#0B2E59]">
-              भ
+              क
             </div>
             <span className="text-[11px] font-bold tracking-wider uppercase text-[#5A6A80] dark:text-slate-400">
               CALA · Landowner Portal
@@ -157,7 +161,7 @@ export default function LandownerRegisterPage() {
             RFCTLARR 2013 Statutory Compliance
           </div>
           <h1 className="text-xl font-bold font-display tracking-tight text-[#0B2E59] dark:text-white">
-            BHUMI Citizen Portal
+            KOSH Citizen Portal
           </h1>
           <p className="text-xs text-[#5A6A80] dark:text-slate-400 max-w-xs mx-auto">
             Official Landowner & Project-Affected Person Registration
@@ -346,7 +350,7 @@ export default function LandownerRegisterPage() {
       </div>
 
       <div className="text-center text-[10px] font-mono text-[#5A6A80] dark:text-slate-400 py-3 border-t border-[#DCE2E8] dark:border-white/10">
-        BHUMI Citizen Portal · Prototype Deployment (SIH26016) · CALA Directorate
+        KOSH Citizen Portal · Prototype (SIH26016) · PostGIS & NetworkX Causal Intelligence Engine
       </div>
     </div>
   );

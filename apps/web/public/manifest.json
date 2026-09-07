@@ -1,6 +1,6 @@
 {
-  "name": "BHUMI Land Acquisition Field Officer",
-  "short_name": "BHUMI Field",
+  "name": "KOSH Land Acquisition Field Officer",
+  "short_name": "KOSH Field",
   "description": "Mobile Cadastral Verification & Issue Reporting Platform for Land Acquisition",
   "start_url": "/field",
   "display": "standalone",

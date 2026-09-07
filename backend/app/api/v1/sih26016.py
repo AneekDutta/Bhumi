@@ -28,16 +28,14 @@ router = APIRouter()
 
 
 @router.get("/projects", response_model=list[dict[str, Any]])
-async def list_projects(db: AsyncSession = Depends(get_db)):
+async def list_projects():
     """List all digital twin projects with CPM schedules and provenance."""
-    await sih_service.sync_with_db(db)
     return sih_service.get_projects()
 
 
 @router.get("/projects/{project_id}", response_model=dict[str, Any])
-async def get_project(project_id: str, db: AsyncSession = Depends(get_db)):
+async def get_project(project_id: str):
     """Retrieve detailed project corridor specifications."""
-    await sih_service.sync_with_db(db)
     proj = sih_service.get_project_by_id(project_id)
     if not proj:
         raise HTTPException(status_code=404, detail="Project not found")
@@ -48,11 +46,9 @@ async def get_project(project_id: str, db: AsyncSession = Depends(get_db)):
 async def list_parcels(
     project_id: str,
     status: str | None = Query(None, description="Filter by acquisition_status"),
-    critical_only: bool = Query(False, description="Filter only critical-chain parcels"),
-    db: AsyncSession = Depends(get_db)
+    critical_only: bool = Query(False, description="Filter only critical-chain parcels")
 ):
     """List parcels for the specified corridor."""
-    await sih_service.sync_with_db(db)
     parcels = sih_service.get_parcels(project_id)
     if status:
         parcels = [p for p in parcels if p.get("acquisition_status") == status]
@@ -63,24 +59,22 @@ async def list_parcels(
 
 @router.get("/projects/{project_id}/parcels/geojson")
 @router.get("/projects/{project_id}/geojson")
-async def get_parcels_geojson(project_id: str, db: AsyncSession = Depends(get_db)):
+async def get_parcels_geojson(project_id: str):
     """
     Returns GeoJSON FeatureCollection of all cadastral parcels.
     Properties contain styling variables for Normal, Risk, and Critical Path modes.
     """
-    await sih_service.sync_with_db(db)
     return sih_service.get_parcels_geojson(project_id)
 
 
 @router.get("/parcels/{parcel_id}", response_model=dict[str, Any])
-async def get_parcel_detail(parcel_id: str, db: AsyncSession = Depends(get_db)):
+async def get_parcel_detail(parcel_id: str):
     """
     Returns Section 13 full parcel dossier:
     owner, village, area, acquisition status, compensation, R&R, legal disputes,
     documents, verifications, dependencies, criticality score, risk score, and
     MODEL_DERIVED recommended action.
     """
-    await sih_service.sync_with_db(db)
     detail = sih_service.get_parcel_detail(parcel_id)
     if not detail:
         raise HTTPException(status_code=404, detail=f"Parcel {parcel_id} not found")
@@ -88,26 +82,23 @@ async def get_parcel_detail(parcel_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/projects/{project_id}/critical-path", response_model=CriticalPathResponse)
-async def get_critical_path(project_id: str, db: AsyncSession = Depends(get_db)):
+async def get_critical_path(project_id: str):
     """
     Returns CPM Critical Path Method schedule report, zero-float bottlenecks,
     and causal blocking chains.
     """
-    await sih_service.sync_with_db(db)
     return sih_service.get_critical_path_report(project_id)
 
 
 @router.post("/projects/{project_id}/simulate", response_model=SimulationResponse)
 async def simulate_intervention(
     project_id: str,
-    req: SimulationRequest,
-    db: AsyncSession = Depends(get_db)
+    req: SimulationRequest
 ):
     """
     Executes Section 12 What-If simulation by mutating the in-memory dependency graph
     and computing the CPM delay reduction diff without mutating production database.
     """
-    await sih_service.sync_with_db(db)
     res = sih_service.simulate(
         project_id=project_id,
         intervention_type=req.intervention_type,
@@ -118,9 +109,8 @@ async def simulate_intervention(
 
 
 @router.get("/projects/{project_id}/summary")
-async def get_corridor_summary(project_id: str, db: AsyncSession = Depends(get_db)):
+async def get_corridor_summary(project_id: str):
     """Aggregated command center KPI summary for the SIH26016 corridor."""
-    await sih_service.sync_with_db(db)
     proj = sih_service.get_project_by_id(project_id)
     parcels = sih_service.get_parcels(project_id)
     cpm = sih_service.get_critical_path_report(project_id)

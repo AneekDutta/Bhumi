@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { ProvenanceBadge } from "@/components/common/ProvenanceBadge";
+import { calculateStatutoryAward } from "@/lib/statutory/rfctlarrCalculator";
 import { 
   Activity, 
   CheckCircle2, 
@@ -112,11 +114,18 @@ export function AdminParcelWhatIfModal({
   const hasSufficientData = areaSqm > 0;
 
   // Exact statutory calculations under RFCTLARR 2013 First Schedule (Sections 26-30)
-  const baseMarketValue = hasSufficientData ? Math.round(areaSqm * baseRatePerSqm) : 0;
-  const multipliedMarketValue = hasSufficientData ? Math.round(baseMarketValue * ruralMultiplier) : 0;
-  const solatium100Pct = multipliedMarketValue; // Section 30(1): 100% solatium on multiplied market value
-  const interest12Pct = hasSufficientData ? Math.round(baseMarketValue * 0.12) : 0; // Section 30(3): 12% per annum additional compensation
-  const totalStatutoryCompensation = multipliedMarketValue + solatium100Pct + interest12Pct;
+  const award = calculateStatutoryAward({
+    parcelId,
+    areaSqm,
+    circleRatePerSqm: baseRatePerSqm,
+    multiplierFactor: ruralMultiplier,
+    interestYears: 1, // 12% per annum standard simulation
+  });
+  const baseMarketValue = award.marketValueBase;
+  const multipliedMarketValue = award.marketValueAdjusted;
+  const solatium100Pct = award.solatiumAmount;
+  const interest12Pct = award.additionalStatutoryAmount12Pct;
+  const totalStatutoryCompensation = award.totalCompensation;
 
   const activeIntervention = INTERVENTIONS.find((i) => i.id === selectedInterventionId) || INTERVENTIONS[0];
 
@@ -364,7 +373,7 @@ export function AdminParcelWhatIfModal({
               <div className="p-2.5 rounded-[3px] bg-[#E8F5E9] dark:bg-emerald-950/30 border border-[#C8E6C9] dark:border-emerald-800/40">
                 <span className="text-[#1E7E34] dark:text-emerald-300 text-[10px] uppercase font-mono block font-bold">Total Statutory Award</span>
                 <span className="font-mono font-extrabold text-[#1E7E34] dark:text-emerald-400 text-sm">₹{totalStatutoryCompensation.toLocaleString()}</span>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">Incl. 12% statutory interest</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">Incl. 12% additional statutory amount (§ 30(3))</span>
               </div>
             </div>
           </div>

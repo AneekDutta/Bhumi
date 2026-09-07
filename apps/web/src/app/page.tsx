@@ -51,15 +51,16 @@ export default function LandingPage() {
     const sessionData = {
       officer_id: "OFF-CALA-01",
       name: "Sh. Rajesh Kumar",
-      email: "officer@bhumi.cala.gov.in",
+      email: "officer@kosh.sih2026.org",
       role: "ADMIN",
     };
 
-    // Set role & officer session, explicitly purge opposing landowner session
+    const cookieVal = encodeURIComponent(JSON.stringify(sessionData));
+    document.cookie = "kosh_user_role=ADMIN; path=/; max-age=604800; SameSite=Lax";
     document.cookie = "bhumi_user_role=ADMIN; path=/; max-age=604800; SameSite=Lax";
-    document.cookie = `bhumi_officer_session=${encodeURIComponent(
-      JSON.stringify(sessionData)
-    )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+    document.cookie = `kosh_officer_session=${cookieVal}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+    document.cookie = `bhumi_officer_session=${cookieVal}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+    document.cookie = "kosh_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
     document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
     setTimeout(() => {
@@ -100,17 +101,19 @@ export default function LandingPage() {
 
       if (data?.session) {
         const userRole = data.user.user_metadata?.role || "ADMIN";
-        setLoginSuccess("Access authorized. Directing to Operational Console...");
+        setLoginSuccess("Access authorized. Directing to KOSH Command Console...");
         const sessionData = {
           officer_id: data.user.id,
           name: data.user.user_metadata?.full_name || "CALA Officer",
           email: data.user.email,
           role: userRole,
         };
+        const encData = encodeURIComponent(JSON.stringify(sessionData));
+        document.cookie = `kosh_user_role=${userRole}; path=/; max-age=604800; SameSite=Lax`;
         document.cookie = `bhumi_user_role=${userRole}; path=/; max-age=604800; SameSite=Lax`;
-        document.cookie = `bhumi_officer_session=${encodeURIComponent(
-          JSON.stringify(sessionData)
-        )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+        document.cookie = `kosh_officer_session=${encData}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+        document.cookie = `bhumi_officer_session=${encData}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+        document.cookie = "kosh_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
         document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
         setTimeout(() => {
@@ -312,7 +315,7 @@ export default function LandingPage() {
                     required
                     value={officerId}
                     onChange={(e) => setOfficerId(e.target.value)}
-                    placeholder="e.g. OFF-CALA-01 or officer@bhumi.cala.gov.in"
+                    placeholder="e.g. OFF-CALA-01 or officer@kosh.sih2026.org"
                     className="w-full text-xs p-2.5 bg-white dark:bg-[#07080F] border border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded-none focus:outline-none focus:border-[#0B5FA5]"
                   />
                 </div>
@@ -421,7 +424,7 @@ export default function LandingPage() {
               <span>Right to Fair Compensation</span>
             </div>
             <p className="text-[#64748B] dark:text-slate-400 leading-relaxed">
-              Compensation is calculated on current market / circle rates with rural factor multipliers up to 2.0x, mandatory 100% Solatium, and 12% statutory interest, ensuring owners are generously compensated.
+              Compensation is calculated on current market / circle rates with rural factor multipliers up to 2.0x, mandatory 100% Solatium, and 12% additional statutory component (§ 30(3)), ensuring owners are generously compensated.
             </p>
           </div>
 

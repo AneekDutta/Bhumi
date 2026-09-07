@@ -10,10 +10,10 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pb-6 border-b border-slate-800">
           <div className="md:col-span-2 space-y-2">
             <div className="flex items-center space-x-2">
-              <span className="font-extrabold text-base tracking-tight text-white">BHUMI</span>
-              <span className="text-amber-400 font-sans font-semibold text-xs">भूमि</span>
+              <span className="font-extrabold text-base tracking-tight text-white">KOSH</span>
+              <span className="text-amber-400 font-sans font-semibold text-xs">कोष</span>
               <span className="text-slate-600">|</span>
-              <span className="text-slate-300 font-medium">National Land Acquisition & Infrastructure Operations</span>
+              <span className="text-slate-300 font-medium">SIH26016 · Land Acquisition Decision Support Prototype</span>
             </div>
             <p className="text-slate-400 text-xs leading-relaxed max-w-lg">
               Statutory decision system for national land acquisition workflows, contiguous spatial contiguity clustering, and deterministic Critical Path Method (CPM) schedule risk attribution.
@@ -51,11 +51,11 @@ export function Footer() {
         {/* Bottom copyright & disclaimer */}
         <div className="pt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400 text-[11px]">
           <div>
-            BHUMI Platform — Smart India Hackathon Prototype (SIH26016). Not an official government system.
+            &copy; {new Date().getFullYear()} KOSH — SIH26016 · Land Acquisition Decision Support Prototype
           </div>
           <div className="flex items-center space-x-3">
             <span className="flex items-center gap-1 text-slate-400 font-mono">
-              <ShieldCheck className="w-3 h-3 text-emerald-400" /> CALA Operations Platform · RFCTLARR Act 2013
+              <ShieldCheck className="w-3 h-3 text-emerald-400" /> SIH26016 Decision Support Prototype v2.4.0
             </span>
           </div>
         </div>

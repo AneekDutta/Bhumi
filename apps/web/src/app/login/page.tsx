@@ -83,14 +83,16 @@ function LoginPageContent() {
     const sessionData = {
       officer_id: "OFF-CALA-01",
       name: "Sh. Rajesh Kumar",
-      email: "officer@bhumi.gov.in",
+      email: "officer@kosh.sih2026.org",
       role: "ADMIN",
     };
 
+    const cookieVal = encodeURIComponent(JSON.stringify(sessionData));
+    document.cookie = "kosh_user_role=ADMIN; path=/; max-age=604800; SameSite=Lax";
     document.cookie = "bhumi_user_role=ADMIN; path=/; max-age=604800; SameSite=Lax";
-    document.cookie = `bhumi_officer_session=${encodeURIComponent(
-      JSON.stringify(sessionData)
-    )}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+    document.cookie = `kosh_officer_session=${cookieVal}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+    document.cookie = `bhumi_officer_session=${cookieVal}; path=/; max-age=${86400 * 7}; SameSite=Lax`;
+    document.cookie = "kosh_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
     document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
 
     setTimeout(() => {
@@ -108,12 +110,12 @@ function LoginPageContent() {
 
     let loginEmail = emailOrId.trim();
     if (!loginEmail.includes("@")) {
-      loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@bhumi.gov.in`;
+      loginEmail = `${loginEmail.toLowerCase().replace(/\s+/g, "")}@kosh.sih2026.org`;
     }
 
     // Auto-fallback for demo officer credentials
     if (
-      loginEmail.toLowerCase() === "officer@bhumi.gov.in" &&
+      (loginEmail.toLowerCase() === "officer@kosh.sih2026.org" || loginEmail.toLowerCase() === "officer@kosh.gov.in" || loginEmail.toLowerCase() === "officer@bhumi.gov.in") &&
       password === "CommanderPass@2025"
     ) {
       handleInstantDemoLogin();
@@ -128,7 +130,7 @@ function LoginPageContent() {
 
       if (error) {
         // Fallback for officer demo ID
-        if (loginEmail.toLowerCase() === "officer@bhumi.gov.in") {
+        if (loginEmail.toLowerCase() === "officer@kosh.sih2026.org" || loginEmail.toLowerCase() === "officer@kosh.gov.in" || loginEmail.toLowerCase() === "officer@bhumi.gov.in") {
           handleInstantDemoLogin();
           return;
         }
@@ -152,6 +154,7 @@ function LoginPageContent() {
         const role = (data.user?.user_metadata?.role as string)?.toUpperCase() || "ADMIN";
         setSuccessMsg("Security clearance accepted. Loading operational console...");
 
+        document.cookie = `kosh_user_role=${role}; path=/; max-age=604800; SameSite=Lax`;
         document.cookie = `bhumi_user_role=${role}; path=/; max-age=604800; SameSite=Lax`;
 
         if (role === "LANDOWNER") {
@@ -161,7 +164,10 @@ function LoginPageContent() {
             email: data.user.email,
             role: "LANDOWNER",
           };
-          document.cookie = `bhumi_landowner_session=${encodeURIComponent(JSON.stringify(sessionPayload))}; path=/; max-age=604800; SameSite=Lax`;
+          const loVal = encodeURIComponent(JSON.stringify(sessionPayload));
+          document.cookie = `kosh_landowner_session=${loVal}; path=/; max-age=604800; SameSite=Lax`;
+          document.cookie = `bhumi_landowner_session=${loVal}; path=/; max-age=604800; SameSite=Lax`;
+          document.cookie = "kosh_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
           document.cookie = "bhumi_officer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
         } else {
           const sessionData = {
@@ -170,7 +176,10 @@ function LoginPageContent() {
             email: data.user.email,
             role: role,
           };
-          document.cookie = `bhumi_officer_session=${encodeURIComponent(JSON.stringify(sessionData))}; path=/; max-age=604800; SameSite=Lax`;
+          const offVal = encodeURIComponent(JSON.stringify(sessionData));
+          document.cookie = `kosh_officer_session=${offVal}; path=/; max-age=604800; SameSite=Lax`;
+          document.cookie = `bhumi_officer_session=${offVal}; path=/; max-age=604800; SameSite=Lax`;
+          document.cookie = "kosh_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
           document.cookie = "bhumi_landowner_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
         }
 
@@ -199,7 +208,7 @@ function LoginPageContent() {
 
     let resetEmail = emailOrId.trim();
     if (!resetEmail.includes("@")) {
-      resetEmail = `${resetEmail.toLowerCase().replace(/\s+/g, "")}@bhumi.gov.in`;
+      resetEmail = `${resetEmail.toLowerCase().replace(/\s+/g, "")}@kosh.sih2026.org`;
     }
 
     try {
@@ -259,7 +268,7 @@ function LoginPageContent() {
 
   // Quick fill helper for demonstration
   const handleQuickFill = () => {
-    setEmailOrId("officer@bhumi.gov.in");
+    setEmailOrId("officer@kosh.sih2026.org");
     setPassword("CommanderPass@2025");
     setCaptchaInput(captchaCode.replace(/\s+/g, ""));
     setErrorMsg(null);
@@ -278,13 +287,13 @@ function LoginPageContent() {
           <div className="border-b border-[#DCE2E8] dark:border-white/10 pb-3">
             <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-none bg-[#0B2E59]/10 dark:bg-white/10 text-[#0B2E59] dark:text-sky-300 font-mono text-[11px] font-bold mb-2">
               <Shield className="w-3.5 h-3.5" />
-              <span>CENTRAL ADMINISTRATIVE AUTHENTICATION GATEWAY</span>
+              <span>SIH26016 · DEMONSTRATION AUTHENTICATION GATEWAY</span>
             </div>
             <h1 className="text-2xl font-bold text-[#14213D] dark:text-[#F0F4FF] leading-tight">
-              Real-Time National Land Acquisition &amp; Decision Support System
+              KOSH — SIH26016 · Land Acquisition Decision Support Prototype
             </h1>
             <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1 leading-relaxed">
-              Unified digital infrastructure connecting the Ministry of Road Transport &amp; Highways, National Highways Authority of India (NHAI), District CALAs, Field Surveyors, and Affected Landowners under the RFCTLARR Act 2013 &amp; NH Act 1956.
+              Academic decision-support prototype modeling corridor workflows for MoRTH, NHAI, District CALAs, Field Surveyors, and Landowners under the RFCTLARR Act 2013 &amp; NH Act 1956.
             </p>
           </div>
 
@@ -343,7 +352,7 @@ function LoginPageContent() {
                   Citizen Landowner Portal
                 </h3>
                 <p className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1 leading-relaxed">
-                  Bhumi Samvaad citizen interface for checking compensation awards, lodging statutory objections, and tracking DBT disbursals.
+                  KOSH Samvaad citizen interface for checking compensation awards, lodging statutory objections, and tracking DBT disbursals.
                 </p>
                 <div className="mt-2.5 text-[10px] font-bold text-[#B36B00] dark:text-amber-400 flex items-center gap-1">
                   <span>Switch to Citizen Portal</span>
@@ -487,7 +496,7 @@ function LoginPageContent() {
                       required
                       value={emailOrId}
                       onChange={(e) => setEmailOrId(e.target.value)}
-                      placeholder="e.g. officer@bhumi.gov.in"
+                      placeholder="e.g. officer@kosh.sih2026.org"
                       disabled={loading}
                       className="input w-full bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded-none"
                     />
@@ -594,7 +603,7 @@ function LoginPageContent() {
                   <div>
                     <h4 className="font-bold text-[#14213D] dark:text-white text-sm mb-1">Recover Credentials</h4>
                     <p className="text-[11px] text-[#64748B] dark:text-slate-400">
-                      Enter your official government email address to receive authorization reset instructions.
+                      Enter your registered demonstration email address to receive authorization reset instructions.
                     </p>
                   </div>
                   <div>
@@ -606,7 +615,7 @@ function LoginPageContent() {
                       required
                       value={emailOrId}
                       onChange={(e) => setEmailOrId(e.target.value)}
-                      placeholder="officer@bhumi.gov.in"
+                      placeholder="officer@kosh.sih2026.org"
                       className="input w-full bg-white dark:bg-[#07080F] border-[#CBD5E1] dark:border-slate-700 text-[#14213D] dark:text-white rounded-none"
                     />
                   </div>
@@ -631,7 +640,7 @@ function LoginPageContent() {
                   className="text-[11px] font-mono text-[#0B5FA5] dark:text-sky-400 hover:underline inline-flex items-center gap-1.5"
                 >
                   <KeyRound className="w-3 h-3" />
-                  <span>[ Auto-fill officer@bhumi.gov.in ]</span>
+                  <span>[ Auto-fill officer@kosh.sih2026.org ]</span>
                 </button>
 
                 <div className="pt-2 text-left space-y-1.5 border-t border-[#DCE2E8] dark:border-white/10">
@@ -654,14 +663,14 @@ function LoginPageContent() {
 
           </div>
 
-          {/* Official Security Disclaimer Box */}
+          {/* Demonstration Gateway Notice Box */}
           <div className="bg-white dark:bg-[#0B1220] border border-[#DCE2E8] dark:border-white/10 p-3 rounded-none text-xs text-[#64748B] dark:text-slate-400 space-y-1 transition-colors">
             <div className="font-bold text-[#14213D] dark:text-white flex items-center gap-1 text-[11px]">
               <Shield className="w-3.5 h-3.5 text-[#0B5FA5] dark:text-sky-400" />
-              <span>CALA Access Protocol Notice</span>
+              <span>SIH26016 Demonstration Notice</span>
             </div>
             <p className="text-[11px] leading-relaxed">
-              This system is strictly for authorized personnel of the Competent Authority for Land Acquisition (CALA) and designated project directors. Unauthorized access attempts are logged and subject to administrative sanctions.
+              This prototype models administrative decision support for the Ministry of Road Transport &amp; Highways and Competent Authorities for Land Acquisition (CALA) under the RFCTLARR Act 2013 &amp; NH Act 1956.
             </p>
           </div>
 
@@ -676,7 +685,7 @@ export default function LoginPage() {
   return (
     <React.Suspense fallback={
       <div className="w-full h-screen bg-[#F4F6F8] flex items-center justify-center text-slate-600 font-mono text-xs">
-        Loading BHUMI Portal...
+        Loading KOSH Decision Support Prototype...
       </div>
     }>
       <LoginPageContent />

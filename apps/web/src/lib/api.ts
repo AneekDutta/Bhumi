@@ -1,4 +1,5 @@
 import { supabaseDataService } from "@/lib/supabase/supabaseService";
+import { calculateStatutoryAward } from "@/lib/statutory/rfctlarrCalculator";
 const getBaseUrl = () => {
   const configuredUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
   if (configuredUrl) {
@@ -8,18 +9,18 @@ const getBaseUrl = () => {
     }
     return `${envUrl}/api/v1`;
   }
-  
+
   if (typeof window !== 'undefined') {
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       return 'http://127.0.0.1:8000/api/v1';
     }
     return '/api/v1';
   }
-  
+
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}/api/v1`;
   }
-  
+
   // Local development fallback
   if (process.env.NODE_ENV === 'development') {
     return 'http://127.0.0.1:8000/api/v1';
@@ -33,18 +34,34 @@ export const API_URL = getBaseUrl();
 
 import { createClient } from '@/lib/supabase/client';
 
-export const authenticatedFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
-  let session = null;
+let cachedAccessToken: string | null = null;
+let cachedTokenExpiry = 0;
+
+async function getCachedSessionToken(): Promise<string | null> {
+  const now = Date.now();
+  if (cachedAccessToken && now < cachedTokenExpiry) {
+    return cachedAccessToken;
+  }
   try {
     const supabase = createClient();
     const { data } = await supabase.auth.getSession();
-    session = data?.session;
+    const session = data?.session;
+    if (session?.access_token) {
+      cachedAccessToken = session.access_token;
+      cachedTokenExpiry = now + 10_000;
+      return cachedAccessToken;
+    }
   } catch {}
+  cachedAccessToken = null;
+  return null;
+}
 
+export const authenticatedFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+  const token = await getCachedSessionToken();
   const headers = new Headers(init?.headers || {});
 
-  if (session?.access_token) {
-    headers.set('Authorization', `Bearer ${session.access_token}`);
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
   }
 
   let url = input.toString();
@@ -62,6 +79,8 @@ export const authenticatedFetch = async (input: RequestInfo | URL, init?: Reques
   });
 
   if (res.status === 401 || res.status === 403) {
+    cachedAccessToken = null;
+    cachedTokenExpiry = 0;
     throw new Error(`AuthError: ${res.status}`);
   }
   if (!res.ok) {
@@ -70,6 +89,44 @@ export const authenticatedFetch = async (input: RequestInfo | URL, init?: Reques
 
   return res;
 };
+
+// In-memory request deduplication and short-TTL read cache
+const clientCache = new Map<string, { data: any; expires: number }>();
+const inflightRequests = new Map<string, Promise<any>>();
+
+export async function cachedGet<T>(key: string, ttlMs: number, fetcher: () => Promise<T>): Promise<T> {
+  const now = Date.now();
+  const hit = clientCache.get(key);
+  if (hit && now < hit.expires) {
+    return hit.data;
+  }
+  const inflight = inflightRequests.get(key);
+  if (inflight) {
+    return inflight;
+  }
+  const promise = fetcher().then((res) => {
+    clientCache.set(key, { data: res, expires: Date.now() + ttlMs });
+    inflightRequests.delete(key);
+    return res;
+  }).catch((err) => {
+    inflightRequests.delete(key);
+    throw err;
+  });
+  inflightRequests.set(key, promise);
+  return promise;
+}
+
+export function invalidateClientCache(prefix?: string) {
+  if (!prefix) {
+    clientCache.clear();
+    return;
+  }
+  clientCache.forEach((_, k) => {
+    if (k.startsWith(prefix)) {
+      clientCache.delete(k);
+    }
+  });
+}
 
 export async function safeJson<T = any>(res: Response | any, fallback: T): Promise<T> {
   try {
@@ -90,6 +147,117 @@ const fetch = authenticatedFetch;
 export type SimulationRequest = {
   type: string;
   parcel_id: string;
+};
+
+export type ActionEvidenceInfo = {
+  document_id?: string | null;
+  document_type: string;
+  title: string;
+  status: string; // VERIFIED | PENDING_UPLOAD | MISSING | REJECTED
+  verified_at?: string | null;
+  verified_by?: string | null;
+  document_url?: string | null;
+  notes?: string | null;
+};
+
+export type ActionCpmImpact = {
+  is_critical_path: boolean;
+  milestone_id?: string | null;
+  milestone_name?: string | null;
+  operational_delay_cpm_days: number;
+  downstream_blocked_entities_count: number;
+  downstream_summary: string;
+  total_float_days: number;
+  whatif_simulation_route?: string | null;
+};
+
+export type OfficerActionItem = {
+  id: string;
+  deadline_id: string;
+  case_id: string;
+  parcel_id: string;
+  survey_no?: string | null;
+  village_name?: string | null;
+  village_id?: string | null;
+  landowner_name?: string | null;
+  area_hectares?: number | null;
+  current_acquisition_status: string;
+
+  // 1. What Requires Attention
+  action_title: string;
+  required_action: string;
+  responsible_role: string;
+
+  // 2. Why
+  rule_type: string;
+  legal_effect: string;
+  consequence_if_overdue: string;
+  is_mandatory_lapse: boolean;
+
+  // 3. Governing Law
+  legal_provision_id?: string | null;
+  statutory_section: string;
+  act_name: string;
+  legal_citation_text: string;
+  legal_provision_url: string;
+
+  // 4. Applicable Deadline
+  trigger_event: string;
+  trigger_date: string;
+  calculated_due_date: string;
+  days_remaining: number;
+  deadline_status: string;
+
+  // 5. Supporting Evidence
+  evidence_status: string;
+  required_evidence_type: string;
+  evidence_list: ActionEvidenceInfo[];
+
+  // 6. Downstream Project Impact
+  cpm_impact: ActionCpmImpact;
+
+  // Prioritization & Categorization
+  priority_category: string; // CRITICAL | DUE_SOON | BLOCKED | PROJECT_IMPACT | UPCOMING | COMPLETED
+  priority_score: number;
+  priority_reasons: string[];
+
+  // Court Stay / Judicial Tracking
+  order_specific_court_stay: boolean;
+  court_order_reference?: string | null;
+  court_stay_verified: boolean;
+  judicial_verification_status: string;
+  stay_start_date?: string | null;
+  stay_end_date?: string | null;
+  stay_days: number;
+
+  // Causal Chain Context
+  case_notification_date?: string | null;
+  affected_milestone_id?: string | null;
+  affected_milestone_name?: string | null;
+  dependency_summary?: string | null;
+
+  // Completion / Resolution Info
+  completed_date?: string | null;
+  evidence_document_id?: string | null;
+  officer_notes?: string | null;
+  resolved_by?: string | null;
+  statutory_deadline_completed: boolean;
+
+  created_at?: string | null;
+  updated_at?: string | null;
+};
+
+export type OfficerActionSummary = {
+  total_actions: number;
+  critical_count: number;
+  due_soon_count: number;
+  blocked_count: number;
+  project_impact_count: number;
+  upcoming_count: number;
+  completed_count: number;
+  mandatory_lapse_count: number;
+  critical_path_blocker_count: number;
+  disclaimer: string;
 };
 
 // -------------------------------------------------------------
@@ -367,7 +535,7 @@ export const apiClient = {
     } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
     return {
       status: 'ok',
-      app: 'BHUMI Core Decision-Intelligence Gateway',
+      app: 'KOSH Core Decision-Intelligence Gateway',
       version: 'v2.4-PROD',
       services: {
         database: 'Connected (PostgreSQL 16 + PostGIS 3.4)',
@@ -389,22 +557,38 @@ export const apiClient = {
   },
 
   getProject: async (id: string) => {
+    // If corridor ID like P-NH927A, query sih26016 endpoint first
+    if (id.startsWith('P-') || id === 'P-NH927A') {
+      try {
+        const sihRes = await fetch(`${API_URL}/sih26016/projects/${id}`, { cache: 'no-store' });
+        if (sihRes.ok) return await sihRes.json();
+      } catch {}
+    }
     try {
       const res = await fetch(`${API_URL}/projects/${id}`, { cache: 'no-store' });
       if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+    } catch {}
     const matched = NATIONAL_PROJECTS.find(p => p.id === id);
     return matched || null;
   },
 
   getProjectParcels: async (id: string) => {
+    if (id.startsWith('P-') || id === 'P-NH927A') {
+      try {
+        const sihRes = await fetch(`${API_URL}/sih26016/projects/${id}/parcels`, { cache: 'no-store' });
+        if (sihRes.ok) {
+          const data = await sihRes.json();
+          if (data && data.length > 0) return data;
+        }
+      } catch {}
+    }
     try {
       const res = await fetch(`${API_URL}/projects/${id}/parcels`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (data && data.length > 0) return data;
       }
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+    } catch {}
     return MOCK_PARCELS.filter(p => p.project_id === id);
   },
 
@@ -412,7 +596,7 @@ export const apiClient = {
     try {
       const res = await fetch(`${API_URL}/parcels/${id}`, { cache: 'no-store' });
       if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+    } catch {}
     const found = MOCK_PARCELS.find(p => p.id === id || p.survey_no === id);
     return found || null;
   },
@@ -421,7 +605,7 @@ export const apiClient = {
     try {
       const res = await fetch(`${API_URL}/parcels/${id}/cases`, { cache: 'no-store' });
       if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+    } catch {}
     const matchedCases = MOCK_CASES.filter(c => c.parcel_id === id || c.survey_no === id);
     if (matchedCases.length > 0) return matchedCases;
     const parcel = MOCK_PARCELS.find(p => p.id === id || p.survey_no === id);
@@ -446,7 +630,7 @@ export const apiClient = {
     try {
       const res = await fetch(`${API_URL}/acquisition-cases/${id}/deadline`, { cache: 'no-store' });
       if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+    } catch {}
     const matched = MOCK_CASES.find(c => c.id === id || c.parcel_id === id);
     const parcel = MOCK_PARCELS.find(p => p.id === id || p.survey_no === id || (matched && p.id === matched.parcel_id));
     const isLapsed = matched?.lapsed || parcel?.is_lapsed;
@@ -464,7 +648,7 @@ export const apiClient = {
     try {
       const res = await fetch(`${API_URL}/acquisition-cases/${id}/audit`, { cache: 'no-store' });
       if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+    } catch {}
     return [];
   },
 
@@ -472,7 +656,7 @@ export const apiClient = {
     try {
       const res = await fetch(`${API_URL}/projects/${id}/bottlenecks`, { cache: 'no-store' });
       if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+    } catch {}
     const blockers = MOCK_BLOCKERS.filter(b => b.parcel_id.startsWith(id) || !id);
     return blockers.map(b => ({
       status: b.delay_days > 15 ? 'CRITICAL' : 'HIGH',
@@ -489,7 +673,7 @@ export const apiClient = {
     try {
       const res = await fetch(`${API_URL}/impact/${id}`, { cache: 'no-store' });
       if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+    } catch {}
     return getDynamicImpact(id);
   },
 
@@ -501,7 +685,7 @@ export const apiClient = {
         body: JSON.stringify(payload)
       });
       if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+    } catch {}
     const baseImpact = getDynamicImpact(id);
     return {
       before: baseImpact.current_forecast,
@@ -519,11 +703,13 @@ export const apiClient = {
   },
 
   getSpatialClusters: async (projectId: string) => {
-    try {
-      const res = await fetch(`${API_URL}/spatial/${projectId}/clusters`, { cache: 'no-store' });
-      if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
-    return getDynamicClusters(projectId);
+    return cachedGet(`clusters:${projectId}`, 5000, async () => {
+      try {
+        const res = await fetch(`${API_URL}/spatial/${projectId}/clusters`, { cache: 'no-store' });
+        if (res.ok) return await res.json();
+      } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+      return getDynamicClusters(projectId);
+    });
   },
 
   // -------------------------------------------------------------
@@ -546,66 +732,75 @@ export const apiClient = {
   },
 
   getSIHParcelsGeoJSON: async (projectId: string) => {
-    try {
-      const res = await fetch(`${API_URL}/sih26016/projects/${projectId}/parcels/geojson`, { cache: 'no-store' });
-      if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+    return cachedGet(`geojson:${projectId}`, 5000, async () => {
+      try {
+        const res = await fetch(`${API_URL}/sih26016/projects/${projectId}/parcels/geojson`, { cache: 'no-store' });
+        if (res.ok) return await res.json();
+      } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
 
-    // Dynamic client-side fallback FeatureCollection
-    const features = MOCK_PARCELS.map((p) => {
-      const isCritical = p.blocker?.status === 'ACTIVE' || (p.area_hectares > 0.4);
-      const riskScore = p.blocker ? 75 : isCritical ? 45 : 15;
+      // Dynamic client-side fallback FeatureCollection
+      const features = MOCK_PARCELS.map((p) => {
+        const isCritical = p.blocker?.status === 'ACTIVE' || (p.area_hectares > 0.4);
+        const riskScore = p.blocker ? 75 : isCritical ? 45 : 15;
+        return {
+          type: 'Feature',
+          geometry: p.geom || {
+            type: 'Polygon',
+            coordinates: [[[75.95, 24.65], [75.96, 24.65], [75.96, 24.66], [75.95, 24.66], [75.95, 24.65]]]
+          },
+          properties: {
+            parcel_id: p.id,
+            survey_number: p.survey_no,
+            village_name: p.village_name,
+            owner_name: p.owner_name || 'Landholder',
+            area_sqm: Math.round(p.area_hectares * 10000),
+            area_hectares: p.area_hectares,
+            land_use: p.classification,
+            acquisition_status: p.status === 'POSSESSION' ? 'possessed' : p.blocker ? 'disputed' : 'award_declared',
+            ownership_conflict: Boolean(p.blocker),
+            conflict_type: p.blocker?.type || 'none',
+            criticality_score: isCritical ? 72.5 : 28.0,
+            risk_score: riskScore,
+            is_critical_path: isCritical,
+            recommended_action: p.blocker
+              ? `Resolve active ${p.blocker.type.toLowerCase().replace(/_/g, ' ')} via Competent Authority hearing`
+              : 'Proceed with statutory mutation and PFMS award disbursement',
+            source_type: 'SYNTHETIC'
+          }
+        };
+      });
+
       return {
-        type: 'Feature',
-        geometry: p.geom || {
-          type: 'Polygon',
-          coordinates: [[[75.95, 24.65], [75.96, 24.65], [75.96, 24.66], [75.95, 24.66], [75.95, 24.65]]]
-        },
+        type: 'FeatureCollection',
+        features,
         properties: {
-          parcel_id: p.id,
-          survey_number: p.survey_no,
-          village_name: p.village_name,
-          owner_name: p.owner_name || 'Landholder',
-          area_sqm: Math.round(p.area_hectares * 10000),
-          area_hectares: p.area_hectares,
-          land_use: p.classification,
-          acquisition_status: p.status === 'POSSESSION' ? 'possessed' : p.blocker ? 'disputed' : 'award_declared',
-          ownership_conflict: Boolean(p.blocker),
-          conflict_type: p.blocker?.type || 'none',
-          criticality_score: isCritical ? 72.5 : 28.0,
-          risk_score: riskScore,
-          is_critical_path: isCritical,
-          recommended_action: p.blocker
-            ? `Resolve active ${p.blocker.type.toLowerCase().replace(/_/g, ' ')} via Competent Authority hearing`
-            : 'Proceed with statutory mutation and PFMS award disbursement',
+          corridor: 'NH-927A Kota-Jhalawar Bypass Widening',
+          center: [75.98, 24.69],
+          zoom: 12.8,
+          total_parcels: features.length,
           source_type: 'SYNTHETIC'
         }
       };
     });
-
-    return {
-      type: 'FeatureCollection',
-      features,
-      properties: {
-        corridor: 'NH-927A Kota-Jhalawar Bypass Widening',
-        center: [75.98, 24.69],
-        zoom: 12.8,
-        total_parcels: features.length,
-        source_type: 'SYNTHETIC'
-      }
-    };
   },
 
   getSIHParcelDetail: async (parcelId: string) => {
     try {
       const res = await fetch(`${API_URL}/sih26016/parcels/${parcelId}`, { cache: 'no-store' });
       if (res.ok) return await res.json();
-    } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+    } catch {}
 
     const p = MOCK_PARCELS.find(x => x.id === parcelId || x.survey_no === parcelId) || MOCK_PARCELS[0];
     const isCritical = p?.blocker?.status === 'ACTIVE' || ((p?.area_hectares || 0) > 0.4);
-    const baseVal = Math.round((p?.area_hectares || 1) * 2800000);
-    const solatium = baseVal * 1.5;
+    const areaSqm = Math.round((p?.area_hectares || 0.25) * 10000);
+    const award = calculateStatutoryAward({
+      parcelId: p?.id || 'P00001',
+      areaSqm,
+      circleRatePerSqm: 2800,
+      multiplierFactor: 1.5,
+      assetsValue: 350000,
+      interestMonths: 6,
+    });
 
     return {
       parcel_id: p?.id || 'P00001',
@@ -617,7 +812,7 @@ export const apiClient = {
       district: 'Kota',
       state: 'Rajasthan',
       survey_number: p?.survey_no || 'V01-KH-0001',
-      area_sqm: Math.round((p?.area_hectares || 0.25) * 10000),
+      area_sqm: areaSqm,
       area_hectares: p?.area_hectares || 0.25,
       land_use: p?.classification || 'agricultural',
       acquisition_status: p?.status === 'POSSESSION' ? 'possessed' : p?.blocker ? 'disputed' : 'award_declared',
@@ -627,18 +822,18 @@ export const apiClient = {
         owner_type: 'individual'
       },
       compensation: {
-        compensation_id: `CR-${p?.id}`,
-        market_value_base: baseVal,
-        multiplier_factor: 1.5,
-        asset_value: 350000,
-        solatium_amount: solatium,
-        interest_12pct_amount: 145000,
-        total_compensation: baseVal * 1.5 + solatium + 145000,
+        compensation_id: `CR-${p?.id || 'P00001'}`,
+        market_value_base: award.marketValueBase,
+        multiplier_factor: award.multiplierFactor,
+        asset_value: award.attachedAssetsTotal,
+        solatium_amount: award.solatiumAmount,
+        interest_12pct_amount: award.additionalStatutoryAmount12Pct,
+        total_compensation: award.totalCompensation,
         compensation_status: p?.status === 'POSSESSION' ? 'disbursed' : 'pending',
         source_type: 'MODEL_DERIVED'
       },
       rr: {
-        rr_id: `RR-${p?.id}`,
+        rr_id: `RR-${p?.id || 'P00001'}`,
         family_type: 'titleholder',
         housing_entitlement: 250000,
         subsistence_allowance: 36000,
@@ -994,8 +1189,382 @@ export const apiClient = {
   },
   getRealDashboardStats: async () => {
     return await supabaseDataService.getRealDashboardStats();
+  },
+
+  // RFCTLARR Valuation & Compensation Awards
+  getValuationRules: async () => {
+    return cachedGet('valuation_rules', 10000, async () => {
+      const res = await authenticatedFetch('/api/v1/valuation/rules');
+      if (!res.ok) throw new Error('Failed to fetch valuation rules');
+      return res.json();
+    });
+  },
+
+  getParcelValuation: async (parcelId: string) => {
+    const res = await authenticatedFetch(`/api/v1/valuation/parcels/${encodeURIComponent(parcelId)}`);
+    if (!res.ok) throw new Error(`Failed to fetch valuation for parcel ${parcelId}`);
+    return res.json();
+  },
+
+  calculateValuation: async (payload: any) => {
+    const res = await authenticatedFetch('/api/v1/valuation/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error('Failed to calculate statutory valuation');
+    return res.json();
+  },
+
+  calculateAndSaveParcelValuation: async (parcelId: string, payload: any) => {
+    const res = await authenticatedFetch(`/api/v1/valuation/parcels/${encodeURIComponent(parcelId)}/calculate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error('Failed to persist statutory valuation');
+    return res.json();
+  },
+
+  approveAward: async (compensationId: string, notes?: string) => {
+    const res = await authenticatedFetch(`/api/v1/valuation/awards/${encodeURIComponent(compensationId)}/approve`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ notes }),
+    });
+    if (!res.ok) throw new Error('Failed to approve statutory award');
+    return res.json();
+  },
+
+  updateAwardPaymentStatus: async (compensationId: string, status: string, notes?: string) => {
+    const res = await authenticatedFetch(`/api/v1/valuation/awards/${encodeURIComponent(compensationId)}/payment-status`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status, notes }),
+    });
+    if (!res.ok) throw new Error('Failed to update award payment status');
+    return res.json();
+  },
+
+  getLegalDisclaimer: async () => {
+    return cachedGet('legal_disclaimer', 30000, async () => {
+      const res = await authenticatedFetch('/api/v1/legal/disclaimer');
+      return res.json();
+    });
+  },
+
+  getLegalProvisions: async (filters?: { role?: string; stage?: string; category?: string; jurisdiction?: string; search?: string }) => {
+    const params = new URLSearchParams();
+    if (filters?.role) params.set('role', filters.role);
+    if (filters?.stage) params.set('stage', filters.stage);
+    if (filters?.category) params.set('category', filters.category);
+    if (filters?.jurisdiction) params.set('jurisdiction', filters.jurisdiction);
+    if (filters?.search) params.set('search', filters.search);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return cachedGet(`provisions:${qs}`, 10000, async () => {
+      const res = await authenticatedFetch(`/api/v1/legal/provisions${qs}`);
+      return res.json();
+    });
+  },
+
+  getLegalProvisionById: async (id: string) => {
+    return cachedGet(`provision:${id}`, 10000, async () => {
+      const res = await authenticatedFetch(`/api/v1/legal/provisions/${encodeURIComponent(id)}`);
+      return res.json();
+    });
+  },
+
+  getOfficerProceduralGuide: async () => {
+    return cachedGet('officer_guide', 30000, async () => {
+      const res = await authenticatedFetch('/api/v1/legal/officer-guide');
+      return res.json();
+    });
+  },
+
+  getLandownerRightsGuide: async () => {
+    return cachedGet('landowner_guide', 30000, async () => {
+      const res = await authenticatedFetch('/api/v1/legal/landowner-guide');
+      return res.json();
+    });
+  },
+
+  getParcelLegalContext: async (parcelId: string) => {
+    const res = await authenticatedFetch(`/api/v1/legal/parcels/${encodeURIComponent(parcelId)}`);
+    return res.json();
+  },
+
+  getComplaintLegalContext: async (complaintIdOrType: string, parcelId?: string) => {
+    const qs = parcelId ? `?parcel_id=${encodeURIComponent(parcelId)}` : '';
+    const res = await authenticatedFetch(`/api/v1/legal/complaints/${encodeURIComponent(complaintIdOrType)}${qs}`);
+    return res.json();
+  },
+
+  getDeadlineRules: async (filters?: { jurisdiction?: string; role?: string }) => {
+    const params = new URLSearchParams();
+    if (filters?.jurisdiction) params.set('jurisdiction', filters.jurisdiction);
+    if (filters?.role) params.set('role', filters.role);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return cachedGet(`deadline_rules:${qs}`, 10000, async () => {
+      const res = await authenticatedFetch(`/api/v1/deadlines/rules${qs}`);
+      return res.json();
+    });
+  },
+
+  calculateDeadline: async (payload: {
+    rule_id: string;
+    trigger_date: string;
+    extension_days?: number;
+    reference_date?: string;
+    court_order_reference?: string;
+    is_court_stay_verified?: boolean;
+    unpaid_balance_amount?: number;
+    applicant_was_present?: boolean;
+    award_date?: string;
+    condonation_granted?: boolean;
+    condonation_days?: number;
+    condonation_reason?: string;
+  }) => {
+    const res = await authenticatedFetch('/api/v1/deadlines/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  getParcelDeadlines: async (parcelId: string) => {
+    const res = await authenticatedFetch(`/api/v1/deadlines/parcels/${encodeURIComponent(parcelId)}`);
+    return res.json();
+  },
+
+  generateParcelDeadlines: async (parcelId: string, payload: any) => {
+    const res = await authenticatedFetch(`/api/v1/deadlines/parcels/${encodeURIComponent(parcelId)}/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  completeDeadline: async (deadlineId: string, payload: { completed_date: string; evidence_document_id?: string; notes?: string }) => {
+    const res = await authenticatedFetch(`/api/v1/deadlines/${encodeURIComponent(deadlineId)}/complete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  getCorridorDeadlineSummary: async () => {
+    const res = await authenticatedFetch('/api/v1/deadlines/summary');
+    return res.json();
+  },
+
+  // Officer Action Center
+  getOfficerActions: async (filters?: { category?: string; parcel_id?: string; role?: string; search?: string }) => {
+    const params = new URLSearchParams();
+    if (filters?.category) params.set('category', filters.category);
+    if (filters?.parcel_id) params.set('parcel_id', filters.parcel_id);
+    if (filters?.role) params.set('role', filters.role);
+    if (filters?.search) params.set('search', filters.search);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    const res = await authenticatedFetch(`/api/v1/officer-actions${qs}`);
+    return res.json();
+  },
+
+  getOfficerActionSummary: async () => {
+    const res = await authenticatedFetch('/api/v1/officer-actions/summary');
+    return res.json();
+  },
+
+  getOfficerActionDetail: async (actionId: string) => {
+    const res = await authenticatedFetch(`/api/v1/officer-actions/${encodeURIComponent(actionId)}`);
+    return res.json();
+  },
+
+  resolveOfficerAction: async (actionId: string, payload: {
+    completed_date: string;
+    evidence_document_id?: string;
+    officer_notes: string;
+    mark_statutory_complete?: boolean;
+  }) => {
+    const res = await authenticatedFetch(`/api/v1/officer-actions/${encodeURIComponent(actionId)}/resolve`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  recordActionCourtStay: async (actionId: string, payload: {
+    court_order_reference: string;
+    stay_order_date: string;
+    stay_vacated_date?: string;
+    stay_days?: number;
+    judicial_verification_status?: string;
+    court_name?: string;
+    notes?: string;
+  }) => {
+    const res = await authenticatedFetch(`/api/v1/officer-actions/${encodeURIComponent(actionId)}/record-stay`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  // Document Intelligence
+  uploadDocumentForIntelligence: async (formData: FormData) => {
+    const res = await authenticatedFetch(`/api/v1/document-intelligence/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+    return res.json();
+  },
+
+  getDocumentExtraction: async (documentId: string) => {
+    const res = await authenticatedFetch(`/api/v1/document-intelligence/${encodeURIComponent(documentId)}/extraction`);
+    return res.json();
+  },
+
+  updateDocumentReview: async (documentId: string, payload: any) => {
+    const res = await authenticatedFetch(`/api/v1/document-intelligence/${encodeURIComponent(documentId)}/review`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  applyExtractionToWorkflow: async (documentId: string) => {
+    const res = await authenticatedFetch(`/api/v1/document-intelligence/${encodeURIComponent(documentId)}/apply`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    });
+    return res.json();
+  },
+
+  // Acquisition Risk Engine
+  getParcelRiskDossier: async (parcelId: string) => {
+    const res = await authenticatedFetch(`/api/v1/risk/parcel/${encodeURIComponent(parcelId)}`);
+    return res.json();
+  },
+
+  getProjectRiskSummary: async (projectId: string) => {
+    const res = await authenticatedFetch(`/api/v1/risk/project/${encodeURIComponent(projectId)}/summary`);
+    return res.json();
+  },
+
+  // Identity Verification
+  verifyClaimantIdentity: async (payload: any) => {
+    const res = await authenticatedFetch(`/api/v1/identity/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  getStatutoryIdentityDisclaimer: async () => {
+    const res = await authenticatedFetch(`/api/v1/identity/disclaimer`);
+    return res.json();
+  },
+
+  // Intelligence Assistant & Voice Interface
+  askAssistant: async (payload: {
+    query: string;
+    parcel_id?: string;
+    project_id?: string;
+    complaint_id?: string;
+    include_whatif?: boolean;
+  }) => {
+    const res = await authenticatedFetch(`/api/v1/assistant/query`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  summarizeDispute: async (payload: { parcel_id: string; project_id?: string }) => {
+    const res = await authenticatedFetch(`/api/v1/assistant/dispute/summarize`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  recommendResolutions: async (payload: { parcel_id: string; project_id?: string }) => {
+    const res = await authenticatedFetch(`/api/v1/assistant/resolution/recommend`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  simulateWhatIfNL: async (payload: { query: string; parcel_id?: string; project_id?: string }) => {
+    const res = await authenticatedFetch(`/api/v1/assistant/what-if/simulate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  transcribeVoice: async (formData: FormData) => {
+    const res = await authenticatedFetch(`/api/v1/assistant/voice/transcribe`, {
+      method: 'POST',
+      body: formData,
+    });
+    return res.json();
+  },
+
+  synthesizeVoice: async (payload: { text: string; voice?: string; language?: string }) => {
+    const res = await authenticatedFetch(`/api/v1/assistant/voice/synthesize`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+
+  getAssistantIntents: async () => {
+    const res = await authenticatedFetch(`/api/v1/assistant/intents`);
+    return res.json();
   }
 };
+
+
+export const getOfficerActions = (filters?: any) => apiClient.getOfficerActions(filters);
+export const getOfficerActionSummary = () => apiClient.getOfficerActionSummary();
+export const getOfficerActionDetail = (actionId: string) => apiClient.getOfficerActionDetail(actionId);
+export const resolveOfficerAction = (actionId: string, payload: any) => apiClient.resolveOfficerAction(actionId, payload);
+export const recordActionCourtStay = (actionId: string, payload: any) => apiClient.recordActionCourtStay(actionId, payload);
+
+export const getDeadlineRules = (filters?: any) => apiClient.getDeadlineRules(filters);
+export const calculateDeadline = (payload: any) => apiClient.calculateDeadline(payload);
+export const getParcelDeadlines = (parcelId: string) => apiClient.getParcelDeadlines(parcelId);
+export const generateParcelDeadlines = (parcelId: string, payload: any) => apiClient.generateParcelDeadlines(parcelId, payload);
+export const completeDeadline = (deadlineId: string, payload: any) => apiClient.completeDeadline(deadlineId, payload);
+export const getCorridorDeadlineSummary = () => apiClient.getCorridorDeadlineSummary();
+
+export const getLegalDisclaimer = () => apiClient.getLegalDisclaimer();
+export const getLegalProvisions = (filters?: any) => apiClient.getLegalProvisions(filters);
+export const getLegalProvisionById = (id: string) => apiClient.getLegalProvisionById(id);
+export const getOfficerProceduralGuide = () => apiClient.getOfficerProceduralGuide();
+export const getLandownerRightsGuide = () => apiClient.getLandownerRightsGuide();
+export const getParcelLegalContext = (parcelId: string) => apiClient.getParcelLegalContext(parcelId);
+export const getComplaintLegalContext = (complaintIdOrType: string, parcelId?: string) => apiClient.getComplaintLegalContext(complaintIdOrType, parcelId);
+
+export const getValuationRules = () => apiClient.getValuationRules();
+export const getParcelValuation = (parcelId: string) => apiClient.getParcelValuation(parcelId);
+export const calculateValuation = (payload: any) => apiClient.calculateValuation(payload);
+export const calculateAndSaveParcelValuation = (parcelId: string, payload: any) => apiClient.calculateAndSaveParcelValuation(parcelId, payload);
+export const approveAward = (compensationId: string, notes?: string) => apiClient.approveAward(compensationId, notes);
+export const updateAwardPaymentStatus = (compensationId: string, status: string, notes?: string) => apiClient.updateAwardPaymentStatus(compensationId, status, notes);
 
 export const getFieldOfficers = () => apiClient.getFieldOfficers();
 export const getParcels = () => apiClient.getParcels();
@@ -1050,3 +1619,37 @@ export const adminCompleteImplementation = (complaintId: string, adminName: stri
 export const getAllRegisteredParcels = () => apiClient.getAllRegisteredParcels();
 export const getRealDashboardStats = () => apiClient.getRealDashboardStats();
 
+// Intelligence & Risk Exports
+export const uploadDocumentForIntelligence = (formData: FormData) => apiClient.uploadDocumentForIntelligence(formData);
+export const getDocumentExtraction = (documentId: string) => apiClient.getDocumentExtraction(documentId);
+export const updateDocumentReview = (documentId: string, payload: any) => apiClient.updateDocumentReview(documentId, payload);
+export const applyExtractionToWorkflow = (documentId: string) => apiClient.applyExtractionToWorkflow(documentId);
+export const getParcelRiskDossier = (parcelId: string) => apiClient.getParcelRiskDossier(parcelId);
+export const getProjectRiskSummary = (projectId: string) => apiClient.getProjectRiskSummary(projectId);
+export const verifyClaimantIdentity = (payload: any) => apiClient.verifyClaimantIdentity(payload);
+export const getStatutoryIdentityDisclaimer = () => apiClient.getStatutoryIdentityDisclaimer();
+
+// Intelligence Assistant & Voice Interface Exports
+export const askAssistant = (payload: {
+  query: string;
+  parcel_id?: string;
+  project_id?: string;
+  complaint_id?: string;
+  include_whatif?: boolean;
+}) => apiClient.askAssistant(payload);
+
+export const summarizeDispute = (payload: { parcel_id: string; project_id?: string }) =>
+  apiClient.summarizeDispute(payload);
+
+export const recommendResolutions = (payload: { parcel_id: string; project_id?: string }) =>
+  apiClient.recommendResolutions(payload);
+
+export const simulateWhatIfNL = (payload: { query: string; parcel_id?: string; project_id?: string }) =>
+  apiClient.simulateWhatIfNL(payload);
+
+export const transcribeVoice = (formData: FormData) => apiClient.transcribeVoice(formData);
+
+export const synthesizeVoice = (payload: { text: string; voice?: string; language?: string }) =>
+  apiClient.synthesizeVoice(payload);
+
+export const getAssistantIntents = () => apiClient.getAssistantIntents();

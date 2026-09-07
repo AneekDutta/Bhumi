@@ -17,7 +17,8 @@ interface CorridorTwinMapProps {
   height?: string | number;
 }
 
-const mapKey = process.env.NEXT_PUBLIC_MAPTILER_KEY;
+const rawMapKey = process.env.NEXT_PUBLIC_MAPTILER_KEY;
+const mapKey = (rawMapKey && rawMapKey !== 'Gc1lYt64NhTk5BQqkkZ4') ? rawMapKey : undefined;
 const SATELLITE_STYLE = mapKey
   ? `https://api.maptiler.com/maps/hybrid/style.json?key=${mapKey}`
   : {

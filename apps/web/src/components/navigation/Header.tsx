@@ -58,11 +58,11 @@ export function Header() {
 
               <div className="flex flex-col leading-tight">
                 <span className="font-devanagari font-semibold text-base text-white group-hover:text-white/90 transition-colors">
-                  भूमि — CALA
+                  कोष
                 </span>
                 <div className="flex items-baseline space-x-1.5">
                   <span className="font-extrabold text-lg tracking-tight text-white group-hover:text-white/90 transition-colors">
-                    BHUMI
+                    KOSH
                   </span>
                   <span className="text-[10px] text-white/70 tracking-wider uppercase font-medium">
                     Land Acquisition &amp; Management

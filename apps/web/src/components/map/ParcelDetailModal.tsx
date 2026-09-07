@@ -15,9 +15,14 @@ import {
   ShieldAlert,
   ArrowRight,
   GitBranch,
-  Info
+  Info,
+  BookOpen,
+  ExternalLink,
+  Sparkles
 } from 'lucide-react';
 import { ProvenanceBadge } from '@/components/common/ProvenanceBadge';
+import { ValuationAwardCard } from '@/components/map/ValuationAwardCard';
+import { getParcelLegalContext, getParcelDeadlines } from '@/lib/api';
 
 interface ParcelDetailModalProps {
   parcel: any;
@@ -26,6 +31,29 @@ interface ParcelDetailModalProps {
 }
 
 export function ParcelDetailModal({ parcel, onClose, onSimulate }: ParcelDetailModalProps) {
+  const [legalContext, setLegalContext] = React.useState<any>(null);
+  const [deadlines, setDeadlines] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    let active = true;
+    if (parcel?.parcel_id) {
+      getParcelLegalContext(parcel.parcel_id)
+        .then((data) => {
+          if (active) setLegalContext(data);
+        })
+        .catch(() => {});
+
+      getParcelDeadlines(parcel.parcel_id)
+        .then((data) => {
+          if (active && Array.isArray(data)) setDeadlines(data);
+        })
+        .catch(() => {});
+    }
+    return () => {
+      active = false;
+    };
+  }, [parcel?.parcel_id]);
+
   if (!parcel) return null;
 
   const sqM = Number(parcel.area_sqm || 0).toLocaleString();
@@ -166,48 +194,115 @@ export function ParcelDetailModal({ parcel, onClose, onSimulate }: ParcelDetailM
           )}
         </div>
 
-        {/* Section 26-30 Statutory Compensation Breakdown */}
-        <div className="p-4 rounded-[4px] bg-[#F8FAFC] dark:bg-[#0D121F] border border-[#DCE2E8] dark:border-white/10 shadow-xs">
-          <div className="flex justify-between items-center mb-3">
-            <h4 className="m-0 text-xs text-[#5A6A80] dark:text-slate-400 uppercase font-mono font-bold flex items-center gap-1.5">
-              <Coins className="w-3.5 h-3.5 text-[#B36B00] dark:text-amber-400" /> RFCTLARR Act Sec 26–30 Compensation
+        {/* RFCTLARR Act Sec 26-30 Statutory Compensation & Operational Review */}
+        <ValuationAwardCard
+          parcelId={parcel.parcel_id}
+          initialCompensation={comp}
+        />
+
+        {/* Governing Statutory Provisions & Rights */}
+        <div className="p-4 rounded-[4px] bg-[#E6F0FA]/40 dark:bg-sky-950/20 border border-[#B8D5E5] dark:border-sky-800/40 shadow-xs">
+          <div className="flex justify-between items-center mb-2.5">
+            <h4 className="m-0 text-xs text-[#0B2E59] dark:text-sky-400 uppercase font-mono font-bold flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5 text-[#0B5FA5] dark:text-sky-400" /> Applicable Statutory Provisions & Rights
             </h4>
-            <ProvenanceBadge sourceType={comp.source_type || 'MODEL_DERIVED'} size="xs" />
+            <span className="text-[9px] font-mono text-[#0B2E59] dark:text-sky-300 font-bold px-1.5 py-0.5 rounded-[2px] bg-[#0B2E59]/10 dark:bg-sky-400/20">
+              RFCTLARR 2013
+            </span>
           </div>
 
-          <div className="flex flex-col gap-2 text-xs">
-            <div className="flex justify-between">
-              <span className="text-[#5A6A80] dark:text-slate-400">Base Market Value (Sec 26):</span>
-              <span className="text-[#14213D] dark:text-[#F0F4FF] font-mono font-bold">₹{(comp.market_value_base || 0).toLocaleString()}</span>
+          {legalContext?.provisions && legalContext.provisions.length > 0 ? (
+            <div className="flex flex-col gap-2">
+              {legalContext.provisions.slice(0, 3).map((p: any) => (
+                <div
+                  key={p.id}
+                  className="p-2.5 rounded-[3px] bg-white dark:bg-white/5 border border-[#DCE2E8]/70 dark:border-white/5 text-xs flex flex-col gap-1"
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-[#0B2E59] dark:text-sky-300">
+                      {p.section_title || p.section_number}
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold">
+                      Sec {p.section_number}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[#5A6A80] dark:text-slate-300 leading-relaxed">
+                    {p.summary || p.statutory_text?.slice(0, 160) + '...'}
+                  </p>
+                </div>
+              ))}
             </div>
-            <div className="flex justify-between">
-              <span className="text-[#5A6A80] dark:text-slate-400">Rural Multiplier Factor:</span>
-              <span className="text-[#14213D] dark:text-[#F0F4FF] font-mono font-bold">{comp.multiplier_factor || 1.5}x</span>
+          ) : (
+            <div className="text-xs text-[#5A6A80] dark:text-slate-400 italic">
+              Loading applicable statutory provisions...
             </div>
-            <div className="flex justify-between">
-              <span className="text-[#5A6A80] dark:text-slate-400">Asset & Tree Value (Sec 29):</span>
-              <span className="text-[#14213D] dark:text-[#F0F4FF] font-mono font-bold">₹{(comp.asset_value || 0).toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-[#5A6A80] dark:text-slate-400">100% Solatium (Sec 30(1)):</span>
-              <span className="text-[#B36B00] dark:text-amber-400 font-mono font-bold">₹{(comp.solatium_amount || 0).toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-[#5A6A80] dark:text-slate-400">12% Additional Interest (Sec 30(3)):</span>
-              <span className="text-[#0B2E59] dark:text-sky-300 font-mono font-bold">₹{(comp.interest_12pct_amount || 0).toLocaleString()}</span>
-            </div>
-            <div className="h-px bg-[#DCE2E8] dark:border-white/10 my-1" />
-            <div className="flex justify-between font-bold text-xs">
-              <span className="text-[#14213D] dark:text-slate-200">Total Compensation Award:</span>
-              <span className="text-[#1E7E34] dark:text-emerald-400 font-mono text-sm">
-                ₹{(comp.total_compensation || 0).toLocaleString()}
-              </span>
-            </div>
-            <div className="text-[10px] text-[#5A6A80] dark:text-slate-400 mt-0.5">
-              Status: <span className={`font-mono font-bold uppercase ${comp.compensation_status === 'disbursed' ? 'text-[#1E7E34] dark:text-emerald-400' : 'text-[#B36B00] dark:text-amber-400'}`}>{comp.compensation_status || 'pending'}</span>
-            </div>
+          )}
+
+          <div className="flex justify-end mt-2.5">
+            <a
+              href="/legal-rights"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 text-[#0B5FA5] dark:text-sky-400 text-xs font-bold hover:underline"
+            >
+              <span>Open Legal & Rights Knowledge Center</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
           </div>
         </div>
+
+        {/* Case Statutory Clocks & Hard Deadlines */}
+        {deadlines.length > 0 && (
+          <div className="p-4 rounded-[4px] bg-[#FFF8E1]/50 dark:bg-amber-950/20 border border-[#FFE082] dark:border-amber-800/40 shadow-xs">
+            <div className="flex justify-between items-center mb-2.5">
+              <h4 className="m-0 text-xs text-[#B36B00] dark:text-amber-400 uppercase font-mono font-bold flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-[#B36B00] dark:text-amber-400" /> Case Statutory Clocks ({deadlines.length})
+              </h4>
+              <span className="text-[9px] font-mono text-[#B36B00] dark:text-amber-300 font-bold px-1.5 py-0.5 rounded-[2px] bg-[#B36B00]/10 dark:bg-amber-400/20">
+                DECISION SUPPORT
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              {deadlines.map((dl: any) => {
+                const isOverdue = dl.status === 'OVERDUE' || dl.status === 'LAPSED';
+                const isLapse = dl.calculation_trace?.is_mandatory_lapse;
+                const badgeColor = isOverdue ? 'text-[#B32424] bg-[#FFEBEE] border-[#FFCDD2]' : dl.status === 'DUE_SOON' ? 'text-[#B36B00] bg-[#FFF8E1] border-[#FFE082]' : 'text-[#1E7E34] bg-[#E8F5E9] border-[#C8E6C9]';
+                return (
+                  <div
+                    key={dl.id}
+                    className={`p-2.5 rounded-[3px] border text-xs flex flex-col gap-1 ${
+                      isOverdue && isLapse ? 'bg-[#FFEBEE]/40 dark:bg-rose-950/20 border-rose-300' : 'bg-white dark:bg-white/5 border-[#DCE2E8]/70 dark:border-white/5'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-[#14213D] dark:text-slate-200">
+                        {dl.calculation_trace?.rule_name || dl.rule_id}
+                      </span>
+                      <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded border ${badgeColor}`}>
+                        {dl.status}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] text-[#5A6A80] dark:text-slate-400">
+                      <span>Due: <strong className="text-[#14213D] dark:text-slate-200">{dl.calculated_due_date}</strong></span>
+                      <span>Trigger: {dl.trigger_date} ({dl.trigger_event})</span>
+                    </div>
+                    {isLapse && (
+                      <div className="text-[10px] text-[#B32424] dark:text-rose-400 font-semibold italic mt-0.5">
+                        ⚠️ Statutory Lapse Warning: Failure to comply causes proceedings to lapse by operation of law.
+                      </div>
+                    )}
+                    {dl.calculation_trace?.operational_delay_cpm_days > 0 && isOverdue && (
+                      <div className="text-[10px] text-[#B36B00] dark:text-amber-400 font-mono mt-0.5">
+                        CPM Simulation Heuristic: +{dl.calculation_trace.operational_delay_cpm_days}d estimated schedule delay if lapsed.
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Legal Injunctions / Disputes */}
         {legals.length > 0 && (
