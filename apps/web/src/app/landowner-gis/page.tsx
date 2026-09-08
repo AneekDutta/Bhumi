@@ -72,6 +72,8 @@ export default function RealLandownerGISPage() {
 
       if (c.landowner_reported_boundary?.coordinates?.[0]) {
         coords = c.landowner_reported_boundary.coordinates[0];
+      } else if (c.geometry?.coordinates?.[0]) {
+        coords = c.geometry.coordinates[0];
       } else if (c.boundary?.coordinates?.[0]) {
         coords = c.boundary.coordinates[0];
       } else if (Array.isArray(c.coordinates) && c.coordinates.length >= 3) {
@@ -97,14 +99,14 @@ export default function RealLandownerGISPage() {
         ];
       }
 
-      const areaAcres = c.landowner_declared_area?.acres || (c.area_sqm ? (c.area_sqm / 4046.86).toFixed(3) : 0);
-      const areaSqm = c.landowner_declared_area?.sqm || c.area_sqm || 0;
+      const areaAcres = c.area_acres || c.landowner_declared_area?.acres || c.calculated_area?.acres || (c.area_sqm ? (c.area_sqm / 4046.86).toFixed(3) : 0);
+      const areaSqm = c.area_sqm || c.landowner_declared_area?.sqm || c.calculated_area?.sqm || 0;
 
       list.push({
         ...c,
         map_id: c.id || pid,
         parcel_id: pid,
-        owner_name: c.owner_name || 'Citizen Landowner',
+        owner_name: c.owner_name || c.owner_legal_name || 'Citizen Landowner',
         status: c.status || 'Verified by Field Officer',
         area_acres: areaAcres,
         area_sqm: areaSqm,

@@ -316,8 +316,8 @@ export function LandownerGrievanceReviewCard({
             const docs = cmp.landowner_documents || (cmp.document_evidence ? [cmp.document_evidence] : []);
 
             // Real geometry attributes
-            const areaAcres = cmp.landowner_declared_area?.acres || (cmp.area_sqm ? (cmp.area_sqm / 4046.86).toFixed(3) : 0);
-            const areaSqm = cmp.landowner_declared_area?.sqm || cmp.area_sqm || 0;
+            const areaAcres = cmp.area_acres || cmp.landowner_declared_area?.acres || cmp.calculated_area?.acres || (cmp.area_sqm ? (cmp.area_sqm / 4046.86).toFixed(3) : 0);
+            const areaSqm = cmp.area_sqm || cmp.landowner_declared_area?.sqm || cmp.calculated_area?.sqm || 0;
 
             return (
               <div
@@ -375,7 +375,7 @@ export function LandownerGrievanceReviewCard({
                   <div className="pb-2 pt-1 px-1 bg-transparent rounded-none border-b-2 border-[#14213D] dark:border-slate-500">
                     <div className="text-[9px] text-[#64748B] dark:text-slate-400 uppercase font-mono font-semibold">Verified Landowner</div>
                     <div className="text-xs font-bold text-[#14213D] dark:text-[#F0F4FF] mt-0.5">
-                      {cmp.owner_name || "Landowner"}
+                      {cmp.owner_name || cmp.owner_legal_name || "Landowner"}
                     </div>
                   </div>
 

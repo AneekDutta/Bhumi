@@ -40,13 +40,15 @@ export default function FieldVerificationOverviewPage() {
     loadData();
   }, []);
 
-  const pendingVerification = complaints.filter(c => 
-    !c.status || c.status === 'Submitted' || c.status === 'Under Review' || c.status === 'Assigned'
-  );
+  const pendingVerification = complaints.filter(c => {
+    const s = (c.status || '').toUpperCase();
+    return !c.status || s.includes('SUBMITTED') || s.includes('AWAITING') || s.includes('PENDING') || s.includes('ASSIGNED') || s.includes('REVIEW');
+  });
 
-  const verified = complaints.filter(c => 
-    c.status === 'FIELD VERIFIED' || c.status === 'Verified by Field Officer' || c.status === 'Field Verified' || c.status === 'Implementation Initiated' || c.status === 'Implementation Completed' || c.status === 'RESOLVED'
-  );
+  const verified = complaints.filter(c => {
+    const s = (c.status || '').toUpperCase();
+    return (s.includes('VERIFIED') || s.includes('IMPLEMENTATION') || s.includes('RESOLVED')) && !s.includes('DECLINED') && !s.includes('REJECTED');
+  });
 
   const handleQuickVerify = async (complaintId: string) => {
     const notes = prompt("Enter field verification inspection notes (e.g., 'Ground inspection completed. Boundary corners verified with cadastral map.'):", "Ground cadastral inspection verified matching physical boundaries.");

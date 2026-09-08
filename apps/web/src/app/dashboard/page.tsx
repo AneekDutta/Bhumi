@@ -22,6 +22,9 @@ import { apiClient, getRealDashboardStats } from '@/lib/api';
 import { AdminOperationsSection } from '@/components/dashboard/AdminOperationsSection';
 import { MOCK_GOVERNMENT_PROJECTS } from '@/lib/mockProjectData';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'National Operations Console | KOSH',
   description: 'National land acquisition portfolio overview separated into Government Infrastructure Corridors and Real Citizen Grievances.',
@@ -31,13 +34,13 @@ async function getVerifiedComplaints() {
   try {
     const data = await apiClient.getLandownerComplaints({});
     return (data || []).filter((c: any) => {
-      const s = c.status || "";
+      const s = (c.status || "").toUpperCase();
       return (
-        s === "Verified by Field Officer" ||
-        s === "Field Verified" ||
-        s === "Implementation Initiated" ||
-        s === "Implementation Completed" ||
-        s === "RESOLVED"
+        (s.includes("VERIFIED") ||
+         s.includes("IMPLEMENTATION") ||
+         s.includes("RESOLVED")) &&
+        !s.includes("DECLINED") &&
+        !s.includes("REJECTED")
       );
     });
   } catch {

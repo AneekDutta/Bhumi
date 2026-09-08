@@ -600,11 +600,13 @@ export function buildCaseReportData(complaint: any): CaseReportData {
   const simCalc = sim.simulated?.award_breakdown || sim.calculated_impact || {};
   const res = complaint.resolution_notice || complaint.resolution || {};
 
-  const areaAcres = complaint.landowner_declared_area?.acres || (complaint.area_sqm ? (complaint.area_sqm / 4046.86).toFixed(3) : 0);
-  const areaSqm = complaint.landowner_declared_area?.sqm || complaint.area_sqm || 0;
+  const areaAcres = complaint.area_acres || complaint.landowner_declared_area?.acres || complaint.calculated_area?.acres || (complaint.area_sqm ? (complaint.area_sqm / 4046.86).toFixed(3) : 0);
+  const areaSqm = complaint.area_sqm || complaint.landowner_declared_area?.sqm || complaint.calculated_area?.sqm || 0;
 
   // Extract coordinates if available
-  let coordinates = complaint.landowner_boundary_coordinates || [];
+  let coordinates = (Array.isArray(complaint.coordinates) && complaint.coordinates.length > 0)
+    ? complaint.coordinates
+    : complaint.landowner_boundary_coordinates || [];
   if ((!coordinates || coordinates.length === 0) && (complaint.landowner_reported_location || complaint.gps)) {
     const loc = complaint.landowner_reported_location || complaint.gps;
     coordinates = [

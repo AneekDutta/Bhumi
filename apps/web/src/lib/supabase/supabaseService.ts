@@ -1291,8 +1291,26 @@ class SupabaseDataService {
   async getLandownerComplaints(filters?: { owner_id?: string; parcel_id?: string; status?: string }): Promise<any[]> {
     const supabase = this.getClient();
     try {
-      let query = supabase.from("documents").select("*").eq("document_type", "landowner_complaint");
-      const { data, error } = await query;
+      // 1. Fetch complaints and registered parcels in parallel for complete data integrity
+      const [complaintsRes, parcelsRes] = await Promise.all([
+        supabase.from("documents").select("*").eq("document_type", "landowner_complaint"),
+        supabase.from("documents").select("*").eq("document_type", "registered_parcel")
+      ]);
+
+      const parcelMap = new Map<string, any>();
+      if (parcelsRes.data && parcelsRes.data.length > 0) {
+        for (const pd of parcelsRes.data) {
+          let pObj: any = {};
+          try {
+            pObj = JSON.parse(pd.description || "{}");
+          } catch {}
+          if (pd.id) parcelMap.set(pd.id, pObj);
+          if (pObj.parcel_id) parcelMap.set(String(pObj.parcel_id).trim(), pObj);
+          if (pObj.id) parcelMap.set(String(pObj.id).trim(), pObj);
+        }
+      }
+
+      const { data, error } = complaintsRes;
       if (!error && data && data.length > 0) {
         return data
           .map((d: any) => {
@@ -1303,19 +1321,85 @@ class SupabaseDataService {
               parsed = { description: d.description };
             }
 
-            const docs = parsed.landowner_documents || (parsed.document_evidence ? [parsed.document_evidence] : []);
+            const rawPid = parsed.parcel_id || d.parcel_id;
+            const cleanPid = rawPid ? String(rawPid).trim() : null;
+            const parcel = cleanPid ? parcelMap.get(cleanPid) : null;
+
+            // Merge documents uniquely without dropping any landowner-submitted or parcel documents
+            const complaintDocs = parsed.landowner_documents || (parsed.document_evidence ? [parsed.document_evidence] : []);
+            const parcelDocs = parcel?.documents || [];
+            const allDocs = [...complaintDocs];
+            for (const pd of parcelDocs) {
+              if (!allDocs.some((cd: any) => 
+                (cd.storage_path && cd.storage_path === pd.storage_path) || 
+                (cd.id && cd.id === pd.id) || 
+                (cd.file_name && cd.file_name === pd.file_name)
+              )) {
+                allDocs.push(pd);
+              }
+            }
+
+            // Authoritative area metrics (prefer grievance values, fallback to registered parcel)
+            const areaAcres = parsed.area_acres ?? parsed.landowner_declared_area?.acres ?? parcel?.area_acres ?? parcel?.calculated_area?.acres ?? (parcel?.area_sqm ? Number((parcel.area_sqm / 4046.86).toFixed(3)) : 0);
+            const areaSqm = parsed.area_sqm ?? parsed.landowner_declared_area?.sqm ?? parcel?.area_sqm ?? parcel?.calculated_area?.sqm ?? 0;
+            const areaHectares = parsed.area_hectares ?? parsed.landowner_declared_area?.hectares ?? parcel?.area_hectares ?? parcel?.calculated_area?.hectares ?? 0;
+
+            const calcArea = parsed.calculated_area || parcel?.calculated_area || (areaAcres ? {
+              sqm: areaSqm,
+              acres: areaAcres,
+              hectares: areaHectares,
+              label: parcel?.calculated_area?.label || "Calculated Value (GPS-derived)"
+            } : null);
+
+            const declaredArea = parsed.landowner_declared_area || calcArea;
+
+            // Authoritative boundary points and coordinates
+            const coords = (Array.isArray(parsed.coordinates) && parsed.coordinates.length >= 3)
+              ? parsed.coordinates
+              : (Array.isArray(parcel?.coordinates) && parcel.coordinates.length >= 3)
+              ? parcel.coordinates
+              : (Array.isArray(parsed.landowner_reported_boundary?.points) && parsed.landowner_reported_boundary.points.length >= 3)
+              ? parsed.landowner_reported_boundary.points
+              : [];
+
+            // Authoritative geometry / GeoJSON polygon
+            const geom = parsed.geometry || parcel?.geometry || parcel?.geom || (parsed.landowner_reported_boundary?.coordinates ? {
+              type: "Polygon",
+              coordinates: parsed.landowner_reported_boundary.coordinates
+            } : (coords.length >= 3 ? {
+              type: "Polygon",
+              coordinates: [[
+                ...coords.map((pt: any) => [pt.lng ?? pt[0], pt.lat ?? pt[1]]),
+                [coords[0].lng ?? coords[0][0], coords[0].lat ?? coords[0][1]]
+              ]]
+            } : null));
+
+            const reportedBoundary = parsed.landowner_reported_boundary || (geom ? {
+              type: "Polygon",
+              coordinates: geom.coordinates,
+              points: coords,
+              area_acres: areaAcres,
+              area_sqm: areaSqm,
+              area_hectares: areaHectares
+            } : null);
+
+            const ownerLegalName = parsed.owner_legal_name || parcel?.owner_legal_name || parsed.owner_name || "Landowner";
+            const ownerName = parsed.owner_name || parcel?.owner_legal_name || parcel?.owner_name || "Landowner";
 
             return {
+              ...parsed,
               id: d.id,
               complaint_id: parsed.complaint_id || `CMP-${d.id.slice(0, 6).toUpperCase()}`,
               title: d.title,
-              owner_id: parsed.owner_id || "O00004",
-              owner_name: parsed.owner_name || "Landowner",
-              contact_village: parsed.contact_village || "Corridor Sector",
-              mobile_number: parsed.mobile_number || "",
-              parcel_id: parsed.parcel_id || d.parcel_id || null,
-              survey_number: parsed.survey_number || "Unregistered Claim",
-              project_id: parsed.project_id || "P-NH927A",
+              owner_id: parsed.owner_id || parcel?.owner_id || "O00004",
+              owner_name: ownerName,
+              owner_legal_name: ownerLegalName,
+              contact_village: parsed.contact_village || parcel?.village_name || parcel?.contact_village || "Corridor Sector",
+              village: parsed.contact_village || parcel?.village_name || parcel?.contact_village || "Corridor Sector",
+              mobile_number: parsed.mobile_number || parcel?.mobile_number || "",
+              parcel_id: parsed.parcel_id || d.parcel_id || parcel?.parcel_id || null,
+              survey_number: parsed.survey_number || parcel?.survey_number || parcel?.survey_no || "Unregistered Claim",
+              project_id: parsed.project_id || parcel?.project_id || "P-NH927A",
               complaint_type: parsed.complaint_type || "Compensation or Boundary Issue",
               description: parsed.description || d.title,
               priority: parsed.priority || "NORMAL",
@@ -1323,13 +1407,22 @@ class SupabaseDataService {
               submitted_at: parsed.submitted_at || d.created_at,
               updated_at: d.updated_at || d.created_at,
               photos: parsed.photos || [],
-              gps: parsed.gps || parsed.landowner_reported_location || null,
-              document_evidence: parsed.document_evidence || (docs.length > 0 ? docs[0] : null),
-              landowner_documents: docs,
+              gps: parsed.gps || parsed.landowner_reported_location || (coords.length > 0 ? { lat: coords[0].lat, lng: coords[0].lng } : null),
+              document_evidence: parsed.document_evidence || (allDocs.length > 0 ? allDocs[0] : null),
+              landowner_documents: allDocs,
+              documents: allDocs,
               proximity_verification: parsed.proximity_verification || null,
               landowner_reported_location: parsed.landowner_reported_location || parsed.gps || null,
-              landowner_reported_boundary: parsed.landowner_reported_boundary || null,
-              landowner_declared_area: parsed.landowner_declared_area || null,
+              landowner_reported_boundary: reportedBoundary,
+              landowner_declared_area: declaredArea,
+              calculated_area: calcArea,
+              area_acres: areaAcres,
+              area_sqm: areaSqm,
+              area_hectares: areaHectares,
+              coordinates: coords,
+              geometry: geom,
+              geom: geom,
+              boundary: geom || reportedBoundary,
               is_demo_simulation: !!parsed.is_demo_simulation,
               data_classification: parsed.data_classification || (parsed.is_demo_simulation ? "DEMO DATA / SIMULATION" : "LANDOWNER-REPORTED / UNVERIFIED"),
               assigned_officer: parsed.assigned_officer || null,
@@ -1338,7 +1431,7 @@ class SupabaseDataService {
               field_verified_location: parsed.field_verified_location || null,
               field_verified_area: parsed.field_verified_area || null,
               field_gps_accuracy: parsed.field_gps_accuracy || null,
-              verification_status: parsed.verification_status || null,
+              verification_status: parsed.verification_status || (parsed.field_verification ? parsed.field_verification.status : null),
               field_verification: parsed.field_verification || parsed.verification || null,
               rejection: parsed.rejection || null,
               verification: parsed.field_verification || parsed.verification || null,
@@ -2310,6 +2403,70 @@ class SupabaseDataService {
     };
     parsedDesc.status = "FIELD VERIFIED";
 
+    // Enrich complaint description with authoritative registered parcel metrics so Admin side receives complete original data
+    const rawPid = parsedDesc.parcel_id || existing?.parcel_id;
+    if (rawPid && rawPid !== "null" && rawPid !== "unregistered") {
+      try {
+        const parcel = await this.getParcelById(String(rawPid).trim());
+        if (parcel) {
+          if (!parsedDesc.owner_legal_name && parcel.owner_legal_name) {
+            parsedDesc.owner_legal_name = parcel.owner_legal_name;
+          }
+          if (parcel.calculated_area) {
+            parsedDesc.calculated_area = parcel.calculated_area;
+            if (!parsedDesc.landowner_declared_area) {
+              parsedDesc.landowner_declared_area = parcel.calculated_area;
+            }
+          }
+          if (parcel.area_acres != null && parsedDesc.area_acres == null) {
+            parsedDesc.area_acres = parcel.area_acres;
+          }
+          if (parcel.area_sqm != null && parsedDesc.area_sqm == null) {
+            parsedDesc.area_sqm = parcel.area_sqm;
+          }
+          if (parcel.area_hectares != null && parsedDesc.area_hectares == null) {
+            parsedDesc.area_hectares = parcel.area_hectares;
+          }
+          if (Array.isArray(parcel.coordinates) && parcel.coordinates.length >= 3 && (!parsedDesc.coordinates || parsedDesc.coordinates.length < 3)) {
+            parsedDesc.coordinates = parcel.coordinates;
+          }
+          if (parcel.geometry && !parsedDesc.geometry) {
+            parsedDesc.geometry = parcel.geometry;
+          }
+          if (parcel.geom && !parsedDesc.geom) {
+            parsedDesc.geom = parcel.geom;
+          }
+          if (!parsedDesc.landowner_reported_boundary && parcel.geometry) {
+            parsedDesc.landowner_reported_boundary = {
+              type: "Polygon",
+              coordinates: parcel.geometry.coordinates,
+              points: parcel.coordinates || [],
+              area_acres: parcel.area_acres,
+              area_sqm: parcel.area_sqm,
+              area_hectares: parcel.area_hectares
+            };
+          }
+          if (Array.isArray(parcel.documents) && parcel.documents.length > 0) {
+            const curDocs = parsedDesc.landowner_documents || (parsedDesc.document_evidence ? [parsedDesc.document_evidence] : []);
+            const allDocs = [...curDocs];
+            for (const pd of parcel.documents) {
+              if (!allDocs.some((cd: any) => 
+                (cd.storage_path && cd.storage_path === pd.storage_path) || 
+                (cd.id && cd.id === pd.id) || 
+                (cd.file_name && cd.file_name === pd.file_name)
+              )) {
+                allDocs.push(pd);
+              }
+            }
+            parsedDesc.landowner_documents = allDocs;
+            parsedDesc.documents = allDocs;
+          }
+        }
+      } catch (err) {
+        console.warn("Could not enrich complaint with parcel data during field verification:", err);
+      }
+    }
+
     try {
       await supabase
         .from("documents")
@@ -2931,6 +3088,7 @@ class SupabaseDataService {
     let randr_settled_count = 0;
     const affectedFamiliesSet = new Set<string>();
     const sectorStatsMap = new Map<string, { parcels: number; verified: number; acquired_acres: number }>();
+    const registeredParcelMap = new Map<string, any>();
 
     try {
       const { data: parcelsData } = await supabase
@@ -2942,6 +3100,10 @@ class SupabaseDataService {
         for (const pItem of parcelsData) {
           try {
             const p = JSON.parse(pItem.description || "{}");
+            if (pItem.id) registeredParcelMap.set(pItem.id, p);
+            if (p.parcel_id) registeredParcelMap.set(String(p.parcel_id).trim(), p);
+            if (p.id) registeredParcelMap.set(String(p.id).trim(), p);
+
             const acres = Number(p.calculated_area_acres || p.area_acres || (p.calculated_area_sqm ? p.calculated_area_sqm / 4046.86 : 0)) || 0;
             area_proposed_acres += acres;
             const ownerKey = p.owner_id || p.owner_legal_name || p.owner_name;
@@ -2972,29 +3134,34 @@ class SupabaseDataService {
             if (p.status) s = p.status;
           } catch {}
 
-          const cAcres = Number(p.landowner_declared_area?.acres || p.landowner_reported_boundary?.area_acres || 0) || 0;
-          const ownerKey = p.owner_id || p.owner_name;
+          const rawPid = p.parcel_id || (item as any).parcel_id;
+          const cleanPid = rawPid ? String(rawPid).trim() : null;
+          const linkedParcel = cleanPid ? registeredParcelMap.get(cleanPid) : null;
+          const cAcres = Number(p.area_acres || p.landowner_declared_area?.acres || p.calculated_area?.acres || linkedParcel?.area_acres || linkedParcel?.calculated_area?.acres || p.landowner_reported_boundary?.area_acres || 0) || 0;
+
+          const ownerKey = p.owner_id || p.owner_name || linkedParcel?.owner_legal_name;
           if (ownerKey) affectedFamiliesSet.add(ownerKey);
 
-          const sector = p.contact_village || "Corridor Sector";
+          const sector = p.contact_village || linkedParcel?.village_name || linkedParcel?.contact_village || "Corridor Sector";
           const sec = sectorStatsMap.get(sector) || { parcels: 0, verified: 0, acquired_acres: 0 };
 
-          if (s === "Pending Field Verification" || s.includes("SUBMITTED") || s.includes("AWAITING")) {
+          const upperStatus = s.toUpperCase();
+          if (upperStatus.includes("SUBMITTED") || upperStatus.includes("AWAITING") || upperStatus.includes("PENDING")) {
             pending_field_verification++;
             area_notified_acres += cAcres;
-          } else if (s === "Verified by Field Officer" || s === "Field Verified") {
+          } else if (upperStatus.includes("VERIFIED") && !upperStatus.includes("DECLINED") && !upperStatus.includes("REJECTED")) {
             verified_by_field_officer++;
             area_notified_acres += cAcres;
             sec.verified += 1;
             const assessed = Number(p.finalized_acquisition?.compensation_assessed) || Math.round(cAcres * 1850000 * 2.24);
             compensation_assessed_inr += assessed;
-          } else if (s === "Implementation Initiated") {
+          } else if (upperStatus.includes("INITIATED")) {
             implementation_initiated++;
             area_notified_acres += cAcres;
             sec.verified += 1;
             const assessed = Number(p.finalized_acquisition?.compensation_assessed) || Math.round(cAcres * 1850000 * 2.24);
             compensation_assessed_inr += assessed;
-          } else if (s === "Implementation Completed" || s === "RESOLVED") {
+          } else if (upperStatus.includes("COMPLETED") || upperStatus.includes("RESOLVED")) {
             implementation_completed++;
             const acqAcres = Number(p.finalized_acquisition?.area_acquired_acres) || cAcres;
             area_acquired_acres += acqAcres;
@@ -3007,7 +3174,7 @@ class SupabaseDataService {
             if (p.finalized_acquisition?.randr_status || p.complaint_type?.includes("Rehabilitation")) {
               randr_settled_count++;
             }
-          } else if (s === "Rejected by Field Officer" || s === "REJECTED") {
+          } else if (upperStatus.includes("REJECTED") || upperStatus.includes("DECLINED")) {
             rejected_by_field_officer++;
           }
           sectorStatsMap.set(sector, sec);

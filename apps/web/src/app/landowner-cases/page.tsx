@@ -95,7 +95,7 @@ function LandownerCasesContent() {
   }).length;
 
   const totalAcres = verifiedComplaints.reduce((sum, c) => {
-    const ac = c.landowner_declared_area?.acres || (c.area_sqm ? c.area_sqm / 4046.86 : 0);
+    const ac = c.area_acres || c.landowner_declared_area?.acres || c.calculated_area?.acres || (c.area_sqm ? c.area_sqm / 4046.86 : 0);
     return sum + Number(ac);
   }, 0);
 

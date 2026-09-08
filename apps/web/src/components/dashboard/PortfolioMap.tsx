@@ -35,6 +35,8 @@ export function PortfolioMap({
       // 1. Check GeoJSON polygon
       if (c.landowner_reported_boundary?.coordinates?.[0]) {
         coords = c.landowner_reported_boundary.coordinates[0];
+      } else if (c.geometry?.coordinates?.[0]) {
+        coords = c.geometry.coordinates[0];
       } else if (c.boundary?.coordinates?.[0]) {
         coords = c.boundary.coordinates[0];
       } else if (Array.isArray(c.coordinates) && c.coordinates.length >= 3) {
@@ -67,9 +69,9 @@ export function PortfolioMap({
         parcel_id: pId,
         centroid,
         polygonCoordinates: coords,
-        area_acres: c.landowner_declared_area?.acres || (c.area_sqm ? (c.area_sqm / 4046.86).toFixed(3) : 0),
-        area_sqm: c.landowner_declared_area?.sqm || c.area_sqm || 0,
-        owner_name: c.owner_name || "Landowner",
+        area_acres: c.area_acres || c.landowner_declared_area?.acres || c.calculated_area?.acres || (c.area_sqm ? (c.area_sqm / 4046.86).toFixed(3) : 0),
+        area_sqm: c.area_sqm || c.landowner_declared_area?.sqm || c.calculated_area?.sqm || 0,
+        owner_name: c.owner_name || c.owner_legal_name || "Landowner",
         status: c.status || "Verified by Field Officer"
       };
     });

@@ -197,13 +197,7 @@ function LandingPageContent() {
   const searchParams = useSearchParams();
 
   // Panel View State: "UPDATES" (default) or "OFFICER_LOGIN"
-  const [panelView, setPanelView] = useState<"UPDATES" | "OFFICER_LOGIN">(() => {
-    if (typeof window !== "undefined") {
-      const p = new URLSearchParams(window.location.search);
-      if (p.get("login") === "officer" || p.get("login") === "true") return "OFFICER_LOGIN";
-    }
-    return "UPDATES";
-  });
+  const [panelView, setPanelView] = useState<"UPDATES" | "OFFICER_LOGIN">("UPDATES");
   const [activeFilter, setActiveFilter] = useState<"ALL" | "STATUTORY" | "CORRIDOR">("ALL");
 
   const scrollRef = useRef<HTMLDivElement>(null);

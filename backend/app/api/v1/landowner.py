@@ -272,6 +272,25 @@ async def verify_complaint(
     desc["verification"] = payload.model_dump()
     desc["status"] = "VERIFIED"
     
+    # Enrich with authoritative parcel data if present in DB
+    target_pid = desc.get("parcel_id") or (str(doc["parcel_id"]) if doc.get("parcel_id") else None)
+    if target_pid:
+        try:
+            p_res = await db.execute(
+                text("SELECT description FROM documents WHERE document_type = 'registered_parcel' AND (id::text = :pid OR title LIKE :pid_like) LIMIT 1"),
+                {"pid": target_pid, "pid_like": f"%{target_pid}%"}
+            )
+            p_row = p_res.mappings().first()
+            if p_row and p_row.get("description"):
+                p_desc = p_row["description"] if isinstance(p_row["description"], dict) else json.loads(p_row["description"])
+                for k in ["calculated_area", "area_acres", "area_sqm", "area_hectares", "coordinates", "geometry", "owner_legal_name"]:
+                    if k in p_desc and (k not in desc or not desc[k]):
+                        desc[k] = p_desc[k]
+                if "calculated_area" in p_desc and not desc.get("landowner_declared_area"):
+                    desc["landowner_declared_area"] = p_desc["calculated_area"]
+        except Exception:
+            pass
+
     await db.execute(text("UPDATE documents SET description = :desc, status = 'VERIFIED' WHERE id = :id"), {"desc": json.dumps(desc), "id": doc["id"]})
     
     await db.execute(
@@ -410,18 +429,7 @@ async def get_owner_by_id(
         return {}
 
 
-OWNER_PARCEL_MAPPING = {
-    "O00001": ["P001", "P002", "P003", "P005", "P006"],
-    "O00002": ["P004"],
-    "O00003": ["P007", "P008"],
-    "O00004": ["P009"],
-    "O00005": ["P010"],
-    "O00006": ["P011", "P012", "P014", "P015"],
-    "O00007": [],
-    "O00008": ["P013"],
-    "O00009": ["P016", "P017"],
-    "O00010": ["P018"],
-}
+OWNER_PARCEL_MAPPING: dict[str, list[str]] = {}
 
 @router.get("/owners/{owner_id}/parcels")
 async def get_owner_parcels(
