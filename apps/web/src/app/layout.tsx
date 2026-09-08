@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from 'next';
 import { AppShell } from '@/components/layout/AppShell';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { LanguageProvider } from '@/context/LanguageContext';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: {
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </I18nProvider>
           </LanguageProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
