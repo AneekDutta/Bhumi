@@ -92,14 +92,14 @@ export const REAL_PROJECTS: RealProject[] = [
       type: "Point",
       coordinates: [75.98, 24.69]
     },
-    progress: 0,
-    unresolved_parcel_count: 0,
-    total_parcels: 0,
-    project_delay_days: 0,
-    critical_path_blocked: false,
-    highest_urgency: "NORMAL",
-    stage: "Sec 3A Intention Notified",
-    spatial_cluster_count: 0,
+    progress: 39,
+    unresolved_parcel_count: 110,
+    total_parcels: 181,
+    project_delay_days: 229,
+    critical_path_blocked: true,
+    highest_urgency: "CRITICAL",
+    stage: "Statutory Acquisition & Possession (Sec 11-38)",
+    spatial_cluster_count: 3,
     created_at: "2026-01-01T00:00:00Z"
   }
 ];

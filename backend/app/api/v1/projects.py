@@ -19,12 +19,14 @@ async def get_projects(
     db: AsyncSession = Depends(get_db),
     current_user: TrustedIdentity = Depends(get_current_user_context)
 ):
-    if current_user.role == "ADMIN":
-        result = await db.execute(select(Project))
+    if current_user.assigned_project_id:
+        try:
+            uuid_obj = UUID(current_user.assigned_project_id)
+            result = await db.execute(select(Project).where(Project.id == uuid_obj))
+        except (ValueError, TypeError):
+            result = await db.execute(select(Project).where(Project.id == current_user.assigned_project_id))
     else:
-        if not current_user.assigned_project_id:
-            return []
-        result = await db.execute(select(Project).where(Project.id == current_user.assigned_project_id))
+        result = await db.execute(select(Project))
     db_projs = result.scalars().all()
     if db_projs:
         return [

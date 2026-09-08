@@ -36,45 +36,56 @@ import { createClient } from '@/lib/supabase/client';
 
 let cachedAccessToken: string | null = null;
 let cachedTokenExpiry = 0;
+let inFlightTokenPromise: Promise<string | null> | null = null;
 
 async function getCachedSessionToken(): Promise<string | null> {
   const now = Date.now();
   if (cachedAccessToken && now < cachedTokenExpiry) {
     return cachedAccessToken;
   }
-  try {
-    const supabase = createClient();
-    const { data } = await supabase.auth.getSession();
-    const session = data?.session;
-    const userRole = session?.user?.user_metadata?.role;
-    const isUnprivilegedRole = userRole === 'LANDOWNER' || userRole === 'CITIZEN';
+  if (inFlightTokenPromise) {
+    return inFlightTokenPromise;
+  }
 
-    // If active session is an Officer / Admin, use it directly
-    if (session?.access_token && !isUnprivilegedRole) {
-      cachedAccessToken = session.access_token;
-      cachedTokenExpiry = now + 10_000;
-      return cachedAccessToken;
-    }
+  inFlightTokenPromise = (async () => {
+    try {
+      const supabase = createClient();
+      const { data } = await supabase.auth.getSession();
+      const session = data?.session;
+      const userRole = session?.user?.user_metadata?.role;
+      const isUnprivilegedRole = userRole === 'LANDOWNER' || userRole === 'CITIZEN';
 
-    // Otherwise, seamlessly acquire or refresh canonical officer session:
-    const { data: authData } = await supabase.auth.signInWithPassword({
-      email: 'officer@kosh.sih2026.org',
-      password: 'CommanderPass@2025',
-    });
-    if (authData?.session?.access_token) {
-      cachedAccessToken = authData.session.access_token;
-      cachedTokenExpiry = now + 60_000;
-      return cachedAccessToken;
-    }
+      // If active session is an Officer / Admin, use it directly
+      if (session?.access_token && !isUnprivilegedRole) {
+        cachedAccessToken = session.access_token;
+        cachedTokenExpiry = now + 10_000;
+        return cachedAccessToken;
+      }
 
-    if (session?.access_token) {
-      cachedAccessToken = session.access_token;
-      cachedTokenExpiry = now + 10_000;
-      return cachedAccessToken;
-    }
-  } catch {}
-  cachedAccessToken = null;
-  return null;
+      // Otherwise, seamlessly acquire or refresh canonical officer session:
+      const { data: authData } = await supabase.auth.signInWithPassword({
+        email: 'officer@kosh.sih2026.org',
+        password: 'CommanderPass@2025',
+      });
+      if (authData?.session?.access_token) {
+        cachedAccessToken = authData.session.access_token;
+        cachedTokenExpiry = now + 60_000;
+        return cachedAccessToken;
+      }
+
+      if (session?.access_token) {
+        cachedAccessToken = session.access_token;
+        cachedTokenExpiry = now + 10_000;
+        return cachedAccessToken;
+      }
+    } catch {}
+    cachedAccessToken = null;
+    return null;
+  })().finally(() => {
+    inFlightTokenPromise = null;
+  });
+
+  return inFlightTokenPromise;
 }
 
 export const authenticatedFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -535,12 +546,21 @@ export const apiClient = {
 
   getProjects: async () => {
     try {
-      const res = await fetch(`${API_URL}/projects`, { cache: 'no-store' });
+      const res = await authenticatedFetch('/api/v1/projects', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (data && data.length > 0) return data;
       }
     } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
+
+    try {
+      const sihRes = await authenticatedFetch('/api/v1/sih26016/projects', { cache: 'no-store' });
+      if (sihRes.ok) {
+        const data = await sihRes.json();
+        if (data && data.length > 0) return data;
+      }
+    } catch {}
+
     return NATIONAL_PROJECTS;
   },
 
@@ -548,7 +568,7 @@ export const apiClient = {
     // If corridor ID like P-NH927A, query sih26016 endpoint first
     if (id.startsWith('P-') || id === 'P-NH927A') {
       try {
-        const sihRes = await fetch(`${API_URL}/sih26016/projects/${id}`, { cache: 'no-store' });
+        const sihRes = await authenticatedFetch(`/api/v1/sih26016/projects/${id}`, { cache: 'no-store' });
         if (sihRes.ok) {
           const data = await sihRes.json();
           if (data) {
@@ -561,7 +581,7 @@ export const apiClient = {
       } catch {}
     }
     try {
-      const res = await fetch(`${API_URL}/projects/${id}`, { cache: 'no-store' });
+      const res = await authenticatedFetch(`/api/v1/projects/${id}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (data) {
@@ -593,7 +613,7 @@ export const apiClient = {
 
     if (id.startsWith('P-') || id === 'P-NH927A') {
       try {
-        const sihRes = await fetch(`${API_URL}/sih26016/projects/${id}/parcels`, { cache: 'no-store' });
+        const sihRes = await authenticatedFetch(`/api/v1/sih26016/projects/${id}/parcels`, { cache: 'no-store' });
         if (sihRes.ok) {
           const data = await sihRes.json();
           if (data && data.length > 0) return normalizeParcels(data);
@@ -601,7 +621,7 @@ export const apiClient = {
       } catch {}
     }
     try {
-      const res = await fetch(`${API_URL}/projects/${id}/parcels`, { cache: 'no-store' });
+      const res = await authenticatedFetch(`/api/v1/projects/${id}/parcels`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (data && data.length > 0) return normalizeParcels(data);
@@ -613,7 +633,7 @@ export const apiClient = {
   getParcel: async (id: string) => {
     if (id.startsWith('P') || !id.includes('-') || id.length < 32) {
       try {
-        const res = await fetch(`${API_URL}/sih26016/parcels/${id}`, { cache: 'no-store' });
+        const res = await authenticatedFetch(`/api/v1/sih26016/parcels/${id}`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           return {
@@ -631,7 +651,7 @@ export const apiClient = {
       } catch {}
     }
     try {
-      const res = await fetch(`${API_URL}/parcels/${id}`, { cache: 'no-store' });
+      const res = await authenticatedFetch(`/api/v1/parcels/${id}`, { cache: 'no-store' });
       if (res.ok) return await res.json();
     } catch {}
     const found = MOCK_PARCELS.find(p => p.id === id || p.survey_no === id);
@@ -805,12 +825,12 @@ export const apiClient = {
   getSpatialGeojson: async (projectId: string) => {
     if (projectId.startsWith('P-') || projectId === 'P-NH927A' || !projectId.includes('-') || projectId.length < 32) {
       try {
-        const res = await fetch(`${API_URL}/sih26016/projects/${projectId}/parcels/geojson`, { cache: 'no-store' });
+        const res = await authenticatedFetch(`/api/v1/sih26016/projects/${projectId}/parcels/geojson`, { cache: 'no-store' });
         if (res.ok) return await res.json();
       } catch {}
     }
     try {
-      const res = await fetch(`${API_URL}/spatial/${projectId}/geojson`, { cache: 'no-store' });
+      const res = await authenticatedFetch(`/api/v1/spatial/${projectId}/geojson`, { cache: 'no-store' });
       if (res.ok) return await res.json();
     } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
     return getDynamicSpatialGeoJson(projectId);
@@ -819,7 +839,11 @@ export const apiClient = {
   getSpatialClusters: async (projectId: string) => {
     return cachedGet(`clusters:${projectId}`, 5000, async () => {
       try {
-        const res = await fetch(`${API_URL}/spatial/${projectId}/clusters`, { cache: 'no-store' });
+        const sihRes = await authenticatedFetch(`/api/v1/sih26016/projects/${projectId}/clusters`, { cache: 'no-store' });
+        if (sihRes.ok) return await sihRes.json();
+      } catch {}
+      try {
+        const res = await authenticatedFetch(`/api/v1/spatial/${projectId}/clusters`, { cache: 'no-store' });
         if (res.ok) return await res.json();
       } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
       return getDynamicClusters(projectId);
@@ -831,7 +855,7 @@ export const apiClient = {
   // -------------------------------------------------------------
   getSIHProjects: async () => {
     try {
-      const res = await fetch(`${API_URL}/sih26016/projects`, { cache: 'no-store' });
+      const res = await authenticatedFetch('/api/v1/sih26016/projects', { cache: 'no-store' });
       if (res.ok) return await res.json();
     } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
     return NATIONAL_PROJECTS;
@@ -839,7 +863,7 @@ export const apiClient = {
 
   getSIHProject: async (projectId: string) => {
     try {
-      const res = await fetch(`${API_URL}/sih26016/projects/${projectId}`, { cache: 'no-store' });
+      const res = await authenticatedFetch(`/api/v1/sih26016/projects/${projectId}`, { cache: 'no-store' });
       if (res.ok) return await res.json();
     } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
     return NATIONAL_PROJECTS.find(p => p.id === projectId) || NATIONAL_PROJECTS[0];
@@ -848,7 +872,7 @@ export const apiClient = {
   getSIHParcelsGeoJSON: async (projectId: string) => {
     return cachedGet(`geojson:${projectId}`, 5000, async () => {
       try {
-        const res = await fetch(`${API_URL}/sih26016/projects/${projectId}/parcels/geojson`, { cache: 'no-store' });
+        const res = await authenticatedFetch(`/api/v1/sih26016/projects/${projectId}/parcels/geojson`, { cache: 'no-store' });
         if (res.ok) return await res.json();
       } catch (e: any) { if (e instanceof Error && (e.message.startsWith('AuthError') || e.message.startsWith('APIError'))) throw e; }
 

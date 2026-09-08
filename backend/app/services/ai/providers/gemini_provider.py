@@ -95,7 +95,8 @@ class GeminiAIProvider(AIProvider):
     def __init__(self, api_key: Optional[str] = None, model_name: Optional[str] = None):
         self._api_key = settings.GEMINI_API_KEY if api_key is None else api_key
         self.model_name = model_name or settings.GEMINI_MODEL or "gemini-flash-latest"
-        self._active_model = self.model_name
+        # Prioritize stable GA gemini-flash-lite-latest over legacy gemini-flash-latest to avoid transient 503 spikes
+        self._active_model = "gemini-flash-lite-latest" if self.model_name == "gemini-flash-latest" else self.model_name
         self._client: Optional[genai.Client] = None
 
         if self._api_key:
@@ -128,7 +129,7 @@ class GeminiAIProvider(AIProvider):
     ) -> Any:
         """Executes Gemini generate_content with bounded backoff and resilient model failover for transient 503/429 spikes."""
         candidate_models = [self._active_model]
-        for fallback_m in ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-flash-lite-latest"]:
+        for fallback_m in ["gemini-flash-lite-latest", "gemini-2.5-flash", "gemini-3.6-flash", "gemini-3.7-flash"]:
             if fallback_m not in candidate_models:
                 candidate_models.append(fallback_m)
         if self.model_name not in candidate_models:
@@ -153,8 +154,10 @@ class GeminiAIProvider(AIProvider):
                         for code in ["429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE", "spikes in demand"]
                     )
                     if current_model != candidate_models[-1] and is_transient:
+                        curr_idx = candidate_models.index(current_model)
+                        next_model = candidate_models[curr_idx + 1] if curr_idx + 1 < len(candidate_models) else candidate_models[-1]
                         logger.warning(
-                            f"Model {current_model} unavailable ({err_msg[:70]}...). Seamlessly failing over to {candidate_models[-1]}..."
+                            f"Model {current_model} unavailable ({err_msg[:70]}...). Seamlessly failing over to {next_model}..."
                         )
                         break
                     if attempt < max_retries and is_transient:
