@@ -449,7 +449,7 @@ export default function IntelligenceAssistantPage() {
               {serverProvider?.provider === 'gemini' ? (
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 flex items-center gap-1">
                   <Sparkles className="w-3 h-3 text-sky-500" />
-                  REAL GENERATIVE AI · {serverProvider?.model || 'gemini-flash-latest'}
+                  GENERATIVE AI
                 </span>
               ) : serverProvider?.provider === 'local' ? (
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1">
@@ -676,19 +676,10 @@ export default function IntelligenceAssistantPage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  {result.provider === 'gemini' ? (
-                    <span className="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 flex items-center gap-1">
-                      <Sparkles className="w-3 h-3 text-sky-500" />
-                      AI: {result.model || 'gemini-flash-latest'}
-                    </span>
-                  ) : result.provider === 'local' ? (
+                  {result.provider === 'local' && (
                     <span className="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1">
                       <Cpu className="w-3 h-3 text-amber-500" />
                       LOCAL ENGINE
-                    </span>
-                  ) : (
-                    <span className="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/30 flex items-center gap-1">
-                      MOCK BENCHMARK
                     </span>
                   )}
 
